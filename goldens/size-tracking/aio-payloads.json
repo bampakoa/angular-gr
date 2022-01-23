@@ -1,0 +1,26 @@
+{
+  "aio": {
+    "master": {
+      "uncompressed": {
+        "runtime": 4330,
+        "main": 458531,
+        "polyfills": 37123,
+        "styles": 69863,
+        "light-theme": 77232,
+        "dark-theme": 77356
+      }
+    }
+  },
+  "aio-local": {
+    "master": {
+      "uncompressed": {
+        "runtime": 4330,
+        "main": 457719,
+        "polyfills": 37271,
+        "styles": 69863,
+        "light-theme": 77232,
+        "dark-theme": 77356
+      }
+    }
+  }
+}

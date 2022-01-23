@@ -1,0 +1,58 @@
+/* HeroesComponent's private CSS styles */
+.search input {
+  margin: 1rem 0;
+}
+
+.heroes {
+  list-style-type: none;
+  padding: 0;
+}
+
+.heroes li {
+  position: relative;
+}
+
+.heroes li:hover {
+  left: .1em;
+}
+
+.heroes a {
+  color: black;
+  display: block;
+  font-size: 1.2rem;
+  background-color: #eee;
+  margin: .5em 0;
+  padding: .5em 0;
+  border-radius: 4px;
+}
+
+.heroes a:hover {
+  color: #2c3a41;
+  background-color: #e6e6e6;
+}
+
+.heroes .badge {
+  padding: .5em .6em;
+  color: white;
+  background-color: #435B60;
+  min-width: 16px;
+  margin-right: .8em;
+  border-radius: 4px 0 0 4px;
+}
+
+button.delete {
+  position: absolute;
+  right: -8px;
+  top: 5px;
+  background-color: gray;
+  color: white;
+  padding: 5px 8px;
+  width: 2em;
+}
+
+.heroes input {
+  max-width: 12rem;
+  padding: .25rem;
+  position: absolute;
+  top: 8px;
+}

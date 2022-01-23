@@ -1,0 +1,36 @@
+# BEGIN-DEV-ONLY
+load("//tools:defaults.bzl", "pkg_npm")
+
+pkg_npm(
+    name = "npm_package",
+    srcs = glob(
+        ["*"],
+        exclude = ["yarn.lock"],
+    ) + [
+        "//packages/bazel/src:package_assets",
+        "//packages/bazel/src/ng_module:package_assets",
+        "//packages/bazel/src/api-extractor:package_assets",
+        "//packages/bazel/src/ng_package:package_assets",
+        "//packages/bazel/src/ngc-wrapped:package_assets",
+        "//packages/bazel/third_party/github.com/bazelbuild/bazel/src/main/protobuf:package_assets",
+    ],
+    substitutions = {
+        "(#|//)\\s+BEGIN-DEV-ONLY[\\w\\W]+?(#|//)\\s+END-DEV-ONLY": "",
+        # The partial compilation transition is applied in the user workspace. We do not want to require
+        # users having to define the build setting, so we directly point the flag label to the place where
+        # we expect `@angular/bazel` being located. Note: This expects the `@npm//` workspace to be used.
+        "//packages/bazel/src:partial_compilation": "@npm//@angular/bazel/src:partial_compilation",
+        "//packages/bazel/": "//@angular/bazel/",
+        "@npm//@bazel/typescript/internal:": "//@bazel/typescript/internal:",
+    },
+    tags = ["release-with-framework"],
+    # Do not add more to this list.
+    # Dependencies on the full npm_package cause long re-builds.
+    visibility = ["//integration:__subpackages__"],
+    deps = [
+        "//packages/bazel/src/api-extractor:lib",
+        "//packages/bazel/src/ng_package:lib",
+        "//packages/bazel/src/ngc-wrapped:ngc_lib",
+    ],
+)
+# END-DEV-ONLY
