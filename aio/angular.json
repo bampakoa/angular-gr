@@ -221,6 +221,16 @@
               "devServerTarget": "site:serve:ci"
             }
           }
+        },
+        "deploy": {
+          "builder": "@angular/fire:deploy",
+          "options": {
+            "prerender": false,
+            "ssr": false,
+            "browserTarget": "site:build:stable",
+            "firebaseProject": "aio-greece",
+            "firebaseHostingSite": "aio-greece"
+          }
         }
       }
     }

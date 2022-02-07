@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "aio-greece": {
+      "hosting": {
+        "site": [
+          "aio-greece"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "aio-greece"
+  }
+}
