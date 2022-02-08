@@ -1,88 +1,88 @@
-# What is Angular?
+# Τι είναι το Angular?
 
-This topic can help you understand Angular: what Angular is, what advantages it provides, and what you might expect as you start to build your applications.
+Αυτό το θέμα μπορεί να σας βοηθήσει να κατανοήσετε το Angular: τι είναι το Angular, ποια πλεονεκτήματα παρέχει και τι μπορείτε να περιμένετε καθώς ξεκινάτε να δημιουργείτε τις εφαρμογές σας.
 
-Angular is a development platform, built on [TypeScript](https://www.typescriptlang.org/). As a platform, Angular includes:
+Το Angular είναι μια πλατφόρμα ανάπτυξης, που βασίζεται στην [TypeScript](https://www.typescriptlang.org/). Ως πλατφόρμα, το Angular περιλαμβάνει:
 
-* A component-based framework for building scalable web applications
-* A collection of well-integrated libraries that cover a wide variety of features, including routing, forms management, client-server communication, and more
-* A suite of developer tools to help you develop, build, test, and update your code
+* Ένα framework βασισμένο σε components για την δημιουργία επεκτάσιμων διαδικτυακών εφαρμογών
+* Μια συλλογή από ενσωματωμένες βιβλιοθήκες που καλύπτουν μια μεγάλη ποικιλία λειτουργιών, όπως η δρομολόγηση, η διαχείριση φορμών, η επικοινωνία πελάτη - διακομιστή, και άλλα
+* Μια σουίτα εργαλείων ανάπτυξης που θα σας βοηθήσουν να αναπτύξετε, να δημιουργήσετε, να δοκιμάσετε, και να ενημερώσετε τον κώδικά σας
 
-With Angular, you're taking advantage of a platform that can scale from single-developer projects to enterprise-level applications. Angular is designed to make updating as straightforward as possible, so take advantage of the latest developments with a minimum of effort. Best of all, the Angular ecosystem consists of a diverse group of over 1.7 million developers, library authors, and content creators.
+Με το Angular, εκμεταλλεύεστε μια πλατφόρμα που μπορεί να επεκταθεί από απλά projects μέχρι εφαρμογές σε επίπεδο επιχειρήσεων. Το Angular έχει σχεδιαστεί για να κάνει την ενημέρωση όσο το δυνατόν πιο απλή, επομένως επωφεληθείτε από τις τελευταίες εξελίξεις με ελάχιστη προσπάθεια. Το καλύτερο όλων είναι ότι το Angular οικοσύστημα αποτελείται από μια ομάδα με πάνω από 1,7 εκατομμύρια προγραμματιστές, δημιουργούς βιβλιοθηκών, και άλλου περιεχομένου.
 
 <div class="alert is-helpful">
 
-See the <live-example name="what-is-angular"></live-example> for a working example containing the code snippets in this guide.
+Δείτε το <live-example name="what-is-angular"></live-example> για ένα παράδειγμα που περιέχει τα αποσπάσματα κώδικα αυτού του οδηγού.
 
 </div>
 
 {@a essentials}
-## Angular applications: The essentials
+## Εφαρμογές Angular: Τα βασικά
 
-This section explains the core ideas behind Angular. Understanding these ideas can help you design and build your applications more effectively.
+Αυτή η ενότητα εξηγεί τις βασικές ιδέες πίσω από το Angular. Η κατανόηση αυτών των ιδεών μπορεί να σας βοηθήσει να σχεδιάσετε και να δημιουργήσετε τις εφαρμογές σας πιο αποτελεσματικά.
 
 {@a components}
 ### Components
 
-Components are the building blocks that compose an application. A component includes a TypeScript class with a `@Component()` decorator, an HTML template, and styles. The `@Component()` decorator specifies the following Angular-specific information:
+Τα components αποτελούν τα δομικά στοιχεία που συνθέτουν μια εφαρμογή. Ένα component περιλαμβάνει ένα TypeScript class με ένα `@Component()` decorator, ένα HTML template, και styles. To `@Component()` decorator καθορίζει τις παρακάτω πληροφορίες που σχετίζονται με το Angular:
 
-* A CSS selector that defines how the component is used in a template. HTML elements in your template that match this selector become instances of the component.
-* An HTML template that instructs Angular how to render the component.
-* An optional set of CSS styles that define the appearance of the template's HTML elements.
+* Ένας CSS selector που ορίζει πως χρησιμοποιείται το component σε ένα template. Τα στοιχεία HTML στο template που ταιριάζουν με αυτόν τον selector μετατρέπονται σε οντότητες του component.
+* Ένα HTML template που καθοδηγεί το Angular πως να εμφανίσει το component.
+* Ένα προαιρετικό σύνολο από CSS styles που καθορίζει την εμφάνιση των στοιχείων HTML του template.
 
-The following is a minimal Angular component.
+Το παρακάτω είναι ένα απλό Angular component.
 
 <code-example
   path="what-is-angular/src/app/hello-world/hello-world.component.ts"></code-example>
 
-To use this component, you write the following in a template:
+Για να χρησιμοποιήσετε αυτό το component, γράψτε τα ακόλουθα σε ένα template:
 
 <code-example path="what-is-angular/src/app/app.component.html" region="hello-world-selector"></code-example>
 
-When Angular renders this component, the resulting DOM looks like this:
+Όταν το Angular φορτώσει αυτό το component, το DOM που προκύπτει μοιάζει με αυτό:
 
 <code-example path="what-is-angular/src/app/hello-world-example.html" language="html"></code-example>
 
-Angular's component model offers strong encapsulation and an intuitive application structure. Components also make your application painless to unit test and can improve the overall readability of your code.
+Η χρήση των components στο Angular προσφέρει ισχυρό enapsulation και μια διαισθητική δομή της εφαρμογής. Τα components επίσης βοηθάνε στην εύκολη διενέργεια unit test για την εφαρμογή σας και μπορούν να βελτιώσουν τη συνολική αναγνωσιμότητα του κώδικά σας.
 
-For more information on what to do with components, see the [Components](guide/component-overview) section.
+Για περισσότερες πληροφορίες σχετικά με το τι μπορείτε να κάνετε με τα components, ανατρέξτε στην ενότητα [Components](guide/component-overview).
 
 {@a templates}
 ### Templates
 
-Every component has an HTML template that declares how that component renders. You define this template either inline or by file path.
+Κάθε component έχει ένα HTML template που ορίζει πως εμφανίζεται αυτό το component. Μπορείτε να ορίσετε αυτό το template είτε ενσωματωμένο στον κώδικα είτε χρησιμοποιώντας μια διαδρομή αρχείου.
 
-Angular extends HTML with additional syntax that lets you insert dynamic values from your component. Angular automatically updates the rendered DOM when your component’s state changes. One application of this feature is inserting dynamic text, as shown in the following example.
+Το Angular επεκτείνει το HTML με πρόσθετη σύνταξη που σας επιτρέπει να εισάγετε δυναμικές τιμές από το component σας. Το Angular ενημερώνει αυτόματα το DOM όταν αλλάζει η κατάσταση του component σας. Μια εφαρμογή αυτής της δυνατότητας είναι η εισαγωγή δυναμικού κειμένου, όπως φαίνεται στο παρακάτω παράδειγμα.
 
 <code-example path="what-is-angular/src/app/hello-world-interpolation/hello-world-interpolation.component.html" region="say-hello"></code-example>
 
-The value for message comes from the component class:
+Η τιμή του message προέρχεται από το component class:
 
 <code-example path="what-is-angular/src/app/hello-world-interpolation/hello-world-interpolation.component.ts"></code-example>
 
-When the application loads the component and its template, the user sees the following:
+Όταν η εφαρμογή φορτώνει το component και το template, ο χρήστης βλέπει τα εξής:
 
 <code-example language="html">
 &lt;p&gt;Hello, World!&lt;/p&gt;
 </code-example>
 
-Notice the use of double curly braces--they instruct Angular to interpolate the contents within them.
+Παρατηρήστε την χρήση των διπλών αγκύλων--δίνουν εντολή στο Angular να παρεμβάλει το περιεχόμενό ανάμεσά τους.
 
-Angular also supports property bindings, to help you set values for properties and attributes of HTML elements and pass values to your application's presentation logic.
+Το Angular υποστηρίζει επίσης property bindings, για να σας βοηθήσει να ορίσετε τιμές για properties και attributes στοιχείων HTML καθώς και να περάσετε τιμές στην λογική παρουσίασης της εφαρμογής.
 
 <code-example path="what-is-angular/src/app/hello-world-bindings/hello-world-bindings.component.html" region="bindings"></code-example>
 
-Notice the use of the square brackets--that syntax indicates that you're binding the property or attribute to a value in the component class.
+Παρατηρήστε την χρήση των τετράγωνων αγκύλων--αυτή η σύνταξη υποδεικνύει ότι συνδέετε ένα property ή attribute σε μια τιμή του component class.
 
-Declare event listeners to listen for and respond to user actions such as keystrokes, mouse movements, clicks, and touches. You declare an event listener by specifying the event name in parentheses:
+Δηλώστε event listeners για να ανταποκρίνεστε σε ενέργειες του χρήστη όπως πληκτρολογήσεις, κινήσεις του ποντικιού, κλικ και αγγίγματα. Δηλώνετε ένα event listener καθορίζοντας το όνομα του event σε παρένθεση:
 
 <code-example path="what-is-angular/src/app/hello-world-bindings/hello-world-bindings.component.html" region="event-binding"></code-example>
 
-The preceding example calls a method, which is defined in the component class:
+Το προηγούμενο παράδειγμα καλεί μια μέθοδο, που ορίζεται στο component class:
 
 <code-example path="what-is-angular/src/app/hello-world-bindings/hello-world-bindings.component.ts" region="method"></code-example>
 
-The following is a combined example of Interpolation, Property Binding and Event Binding within an Angular template:
+Το παρακάτω είναι ένα συνδυασμένο παράδειγμα Interpolation, Property Binding και Event Binding σε ένα Angular template:
 
 <code-tabs linenums="true">
   <code-pane
@@ -96,9 +96,9 @@ The following is a combined example of Interpolation, Property Binding and Event
   </code-pane>
 </code-tabs>
 
-Add additional functionality to your templates through the use of [directives](guide/built-in-directives). The most popular directives in Angular are `*ngIf` and `*ngFor`. Use directives to perform a variety of tasks, such as dynamically modifying the DOM structure. And create your own custom directives to create great user experiences.
+Προσθέστε επιπλέον λειτουργικότητα στα templates σας με την χρήση των [directives](guide/built-in-directives). Τα πιο διαδεδομένα directives στο Angular είναι το `*ngIf` και `*ngFor`. Χρησιμοποιείστε directives για να εκτελέσετε μια ποικιλία εργασιών, όπως η δυναμική τροποποίηση της δομής του DOM. Και δημιουργήστε τα δικά σας προσαρμοσμένα directives για να δημιουργήσετε εξαιρετικές εμπειρίες χρήστη.
 
-The following code is an example of the `*ngIf` directive.
+Ο παρακάτω κώδικας είναι ένα παράδειγμα του directive `*ngIf`.
 
 <code-tabs linenums="true">
   <code-pane
@@ -112,100 +112,100 @@ The following code is an example of the `*ngIf` directive.
   </code-pane>
 </code-tabs>
 
-Angular's declarative templates let you cleanly separate your application's logic from its presentation. Templates are based on standard HTML, for ease in building, maintaining, and updating.
+Τα declarative templates του Angular σας επιτρέπουν να διαχωρίσετε ξεκάθαρα την λογική της εφαρμογής σας από την παρουσίασή της. Τα templates βασίζονται σε τυπικό HTML, για ευκολία στην κατασκευή, τη συντήρηση και την ενημέρωση.
 
-For more information on templates, see the [Templates](guide/template-syntax) section.
+Για περισσότερες πληροφορίες σχετικά με τα templates, ανατρέξτε στην ενότητα [Templates](guide/template-syntax).
 
 {@a di}
 ### Dependency injection
 
-Dependency injection lets you declare the dependencies of your TypeScript classes without taking care of their instantiation. Instead, Angular handles the instantiation for you. This design pattern lets you write more testable and flexible code. Even though understanding dependency injection is not critical to start using Angular, we strongly recommend it as a best practice and many aspects of Angular take advantage of it to some degree.
+Το dependency injection σας επιτρέπει να δηλώνετε τις εξαρτήσεις των TypeScript classes χωρίς να φροντίζετε για την δημιουργία τους. Αντίθετα, το Angular χειρίζεται την δημιουργία για εσάς. Αυτό το μοτίβο σχεδίασης σας επιτρέπει να γράφετε πιο ελεγχόμενο και ευέλικτο κώδικα. Παρόλο που η κατανόηση του dependency injection δεν είναι αναγκαία για να ξεκινήσετε να χρησιμοποιείτε το Angular, το συνιστούμε ανεπιφύλακτα ως βέλτιστη πρακτική και πολλές πτυχές του Angular το εκμεταλλεύονται αυτό σε κάποιο βαθμό.
 
-To illustrate how dependency injection works, consider the following example. The first file, `logger.service.ts`, defines a `Logger` class. This class contains a `writeCount` function that logs a number to the console.
+Για να δείξουμε πως λειτουργεί το dependency injection, θεωρούμε το παρακάτω παράδειγμα. Το πρώτο αρχείο, `logger.service.ts`, ορίζει ένα class `Logger` το οποίο περιέχει την συνάρτηση `writeCount` που καταγράφει έναν αριθμό στην κονσόλα.
 
 <code-example path="what-is-angular/src/app/logger.service.ts"></code-example>
 
-Next, the `hello-world-di.component.ts` file defines an Angular component. This component contains a button that uses the `writeCount` function of the Logger class. To access that function, the `Logger` service is injected into the `HelloWorldDI` class by adding `private logger: Logger` to the constructor.
+Στη συνέχεια, το αρχείο `hello-world-di.component.ts` ορίζει ένα Angular component. Αυτό το component περιέχει ένα πλήκτρο που χρησιμοποιεί την συνάρτηση `writeCount` από το Logger class. Για να αποκτήσουμε πρόσβαση σε αυτήν την συνάρτηση, η υπηρεσία `Logger` εισάγεται μέσα στο class `HelloWorldDI` προσθέτοντας το `private logger: Logger` στον constructor.
 
 <code-example path="what-is-angular/src/app/hello-world-di/hello-world-di.component.ts"></code-example>
 
-For more information about dependency injection and Angular, see the [Dependency injection in Angular](guide/dependency-injection) section.
+Για περισσότερες πληροφορίες σχετικά με το dependency injection και το Angular, ανατρέξτε στην ενότητα [Dependency injection in Angular](guide/dependency-injection).
 
 {@a cli}
 
 ## Angular CLI
 
-The Angular CLI is the fastest, straightforward, and recommended way to develop Angular applications. The Angular CLI makes a number of tasks trouble-free. Here are some examples:
+Το Angular CLI είναι ο πιο απλός, γρήγορος και συνιστώμενος τρόπος για την ανάπτυξη εφαρμογών Angular. Το Angular CLI διευκολύνει μια σειρά απο εργασίες. Παρακάτω είναι μερικά παραδείγματα:
 
 <table>
 <tr>
 <td><a href="cli/build">ng build</a></td>
-<td>Compiles an Angular app into an output directory.</td>
+<td>Μεταγλωττίζει μια εφαρμογή Angular και εξάγει τα παραγόμενα αρχεία σε έναν φάκελο.</td>
 </tr>
 <tr>
 <td><a href="cli/serve">ng serve</a></td>
-<td>Builds and serves your application, rebuilding on file changes.</td>
+<td>Δημιουργεί και φορτώνει την εφαρμογή σας, παρακολουθώντας τα αρχεία για τυχόν αλλαγές.</td>
 </tr>
 <tr>
 <td><a href="cli/generate">ng generate</a></td>
-<td>Generates or modifies files based on a schematic.</td>
+<td>Δημιουργεί ή τροποποιεί αρχεία με βάση ένα schematic.</td>
 </tr>
 <tr>
 <td><a href="cli/test">ng test</a></td>
-<td>Runs unit tests on a given project.</td>
+<td>Εκτελεί τα unit tests σε ένα συγκεκριμένο project.</td>
 </tr>
 <tr>
 <td><a href="cli/e2e">ng e2e</a></td>
-<td>Builds and serves an Angular application, then runs end-to-end tests.</td>
+<td>Δημιουργεί και φορτώνει μια εφαρμογή Angular και, στη συνέχεια, εκτελεί τα end-to-end tests.</td>
 </tr>
 </table>
 
-You'll find the Angular CLI a valuable tool for building out your applications.
+Θα δείτε ότι το Angular CLI είναι ένα πολύτιμο εργαλείο για να δημιουργείτε τις εφαρμογές σας.
 
-For more information about the Angular CLI, see the [CLI Reference](/cli) section.
+Για περισσότερες πληροφορίες σχετικά με το Angular CLI, ανατρέξτε στην ενότητα [CLI Reference](/cli).
 
 {@a 1p-libraries}
-## First-party libraries
+## First-party βιβλιοθήκες
 
-The section, [Angular applications: The essentials](#essentials), provides a brief overview of a couple of the key architectural elements you'll use when building Angular applications. But the many benefits of Angular really become apparent when your application grows and you want to add additional functions such as site navigation or user input. Use the Angular platform to incorporate one of the many first-party libraries that Angular provides.
+Η ενότητα, [Εφαρμογές Angular: Τα βασικά](#essentials), παρέχει μια σύντομη επισκόπηση μερικών από τα βασικά αρχιτεκτονικά στοιχεία που θα χρησιμοποιήσετε κατά την κατασκευή εφαρμογών Angular. Αλλά τα πολλά οφέλη του Angular γίνονται πραγματικά εμφανή όταν η εφαρμογή σας μεγαλώνει και θέλετε να προσθέσετε πρόσθετες λειτουργίες, όπως η πλοήγηση ή η εισαγωγή δεδομένων από τον χρήστη. Χρησιμοποιήστε την πλατφόρμα Angular για να ενσωματώσετε μία από τις πολλές first-party βιβλιοθήκες που παρέχει.
 
-Some of the libraries available to you include:
+Μερικές απο τις διαθέσιμες βιβλιοθήκες περιλαμβάνουν:
 <table>
 <tr>
 <td><a href="guide/router">Angular Router</a></td>
-<td>Advanced client-side navigation and routing based on Angular components. Supports lazy-loading, nested routes, custom path matching, and more.</td>
+<td>Προηγμένη client-side πλοήγηση και δρομολόγηση που βασίζεται στα Angular components. Υποστηρίζει lazy-loading, nested routes, προσαρμοσμένη αντιστοίχιση διαδρομής και πολλά άλλα.</td>
 </tr>
 <tr>
 <td><a href="guide/forms-overview">Angular Forms</td>
-<td>Uniform system for form participation and validation.</td>
+<td>Ενιαίο σύστημα για δημιουργία και επικύρωση φορμών.</td>
 <tr>
 <td><a href="guide/http">Angular HttpClient</a></td>
-<td>Robust HTTP client that can power more advanced client-server communication.</td>
+<td>HTTP client που μπορεί να χρησηιμοποιηθεί ακόμα και στα πιο προηγμένα συστήματα επικοινωνίας πελάτη-διακομιστή.</td>
 </tr>
 <tr>
 <td><a href="guide/animations">Angular Animations</a></td>
-<td>Rich system for driving animations based on application state.</td>
+<td>Σύστημα για την χρήση animations που βασίζονται στην κατάσταση της εφαρμογής.</td>
 </tr>
 <tr>
 <td><a href="guide/service-worker-intro">Angular PWA</a>
-<td>Tools for building Progressive Web Applications (PWAs) including a service worker and Web app manifest.</td>
+<td>Εργαλεία για την δημιουργία Progressive Web Applications (PWAs) συμπεριλαμβανομένου ενός service worker και ενός αρχείου Web app manifest.</td>
 </tr>
 <tr>
 <td><a href="guide/schematics">Angular Schematics</td>
-<td>Automated scaffolding, refactoring, and update tools that simplify development at large scale.</td>
+<td>Αυτοματοποιημένα εργαλεία για την δημιουργία, ανακατασκευή, και ενημέρωση που απλοποιούν την ανάπτυξη σε μεγάλη κλίμακα.</td>
 </tr>
 </table>
 
-These libraries expand your application's functionality while also letting you focus more on the features that make your application unique. Add these libraries knowing that they're designed to integrate seamlessly into and update simultaneously with the Angular framework.
+Αυτές οι βιβλιοθήκες επεκτείνουν τη λειτουργικότητα της εφαρμογής σας, ενώ σας επιτρέπουν επίσης να εστιάσετε περισσότερο στις δυνατότητες που κάνουν την εφαρμογή σας μοναδική. Προσθέστε αυτές τις βιβλιοθήκες γνωρίζοντας ότι έχουν σχεδιαστεί για να ενσωματώνονται απρόσκοπτα και να ενημερώνονται ταυτόχρονα με το Angular framework.
 
-These libraries are only required if and when they can help you add functionality to your applications or solve a particular problem.
+Αυτές οι βιβλιοθήκες απαιτούνται μόνο εάν και όταν μπορούν να σας βοηθήσουν να προσθέσετε λειτουργικότητα στις εφαρμογές σας ή να λύσετε ένα συγκεκριμένο πρόβλημα.
 
-## Next steps
+## Επόμενα βήματα
 
-This topic is intended to give you a brief overview of what Angular is, the advantages it provides, and what to expect as you start to build your applications.
+Αυτό το θέμα έχει σκοπό να σας δώσει μια σύντομη επισκόπηση του τι είναι το Angular, τα πλεονεκτήματα που παρέχει και τι να περιμένετε καθώς ξεκινάτε να δημιουργείτε τις εφαρμογές σας.
 
-To see Angular in action, see our [Getting Started](start) tutorial. This tutorial uses [stackblitz.com](https://stackblitz.com/), for you to explore a working example of Angular without any installation requirements.
+Για να δείτε το Angular σε δράση, ανατρέξτε στον οδηγό [Πως να ξεκινήσετε](start). Αυτός ο οδηγός χρησιμοποιεί το [stackblitz.com](https://stackblitz.com/), για να εξερευνήσετε ένα παράδειγμα του Angular χωρίς απαιτήσεις εγκατάστασης.
 
-To explore Angular's capabilities further, we recommend reading through the sections, Understanding Angular and Developer Guides.
+Για να εξερευνήσετε περαιτέρω τις δυνατότητες του Angular, συνιστούμε να διαβάσετε τις ενότητες, Κατανόηση του Angular και Οδηγίες Προγραμματιστή.
 
 @reviewed 2021-10-28
