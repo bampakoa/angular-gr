@@ -1,119 +1,119 @@
-# Adding navigation
+# Προσθήκη πλοήγησης
 
-This guide builds on the first step of the Getting Started tutorial, [Get started with a basic Angular app](start "Get started with a basic Angular app").
+Αυτός ο οδηγός βασίζεται στο πρώτο βήμα του οδηγού Ξεκινώντας με το Angular, [Ξεκινήστε με μια βασική εφαρμογή Angular](start "Get started with a basic Angular app").
 
-At this stage of development, the online store application has a basic product catalog.
+Σε αυτό το στάδιο ανάπτυξης, η εφαρμογή ηλεκτρονικού καταστήματος διαθέτει έναν βασικό κατάλογο προϊόντων.
 
-In the following sections, you'll add the following features to the application:
+Στις παρακάτω ενότητες, θα προσθέσετε τις ακόλουθες δυνατότητες στην εφαρμογή:
 
-* Type a URL in the address bar to navigate to a corresponding product page.
-* Click links on the page to navigate within your single-page application.
-* Click the browser's back and forward buttons to navigate the browser history intuitively.
+* Πληκτρολογήστε μια διεύθυνση URL στη γραμμή διευθύνσεων για να πλοηγηθείτε στην αντίστοιχη σελίδα προϊόντος.
+* Κάντε κλικ σε συνδέσμους στη σελίδα για πλοήγηση μέσα στην εφαρμογή.
+* Κάντε κλικ στα κουμπιά πίσω και εμπρός του προγράμματος περιήγησης για να περιηγηθείτε στο ιστορικό του.
 
 {@a define-routes}
 
-## Associate a URL path with a component
+## Συσχετίστε μια διαδρομή URL με ένα component
 
-The application already uses the Angular `Router` to navigate to the `ProductListComponent`.
-This section shows you how to define a route to show individual product details.
+Η εφαρμογή χρησιμοποιεί ήδη το Angular `Router` για να πλοηγηθεί στο `ProductListComponent`.
+Αυτή η ενότητα σάς δείχνει πώς να ορίσετε μια διαδρομή για την εμφάνιση μεμονωμένων λεπτομερειών προϊόντος.
 
-1. Generate a new component for product details.
-    In the terminal generate a new `product-details` component by running the following command:
+1. Δημιουργείστε ένα νέο component για τις λεπτομέρειες του προϊόντος.
+    Στο terminal δημιουργείστε ένα νέο component `product-details` εκτελώντας την ακόλουθη εντολή:
 
     ```sh
     ng generate component product-details
     ```
 
-1. In `app.module.ts`, add a route for product details, with a `path` of `products/:productId` and `ProductDetailsComponent` for the `component`.
+1. Στο `app.module.ts`, προσθέστε μια διαδρομή για τις λεπτομέρειες προϊόντος, ορίζοντας το `path` ως `products/:productId` και το `ProductDetailsComponent` για το `component`.
 
     <code-example header="src/app/app.module.ts" path="getting-started/src/app/app.module.ts" region="product-details-route">
     </code-example>
 
-1. Open `product-list.component.html`.
+1. Ανοίξτε το `product-list.component.html`.
 
-1. Modify the product name anchor to include a `routerLink` with the `product.id` as a parameter.
+1. Τροποποιήστε το στοιχείο anchor για το όνομα του προϊόντος ώστε να περιέχει ένα `routerLink` με την τιμή `product.id` ως παράμετρο.
 
     <code-example header="src/app/product-list/product-list.component.html" path="getting-started/src/app/product-list/product-list.component.html" region="router-link">
     </code-example>
 
-    The `RouterLink` directive helps you customize the anchor element.
-    In this case, the route, or URL, contains one fixed segment, `/products`.
-    The final segment is variable, inserting the `id` property of the current product.
-    For example, the URL for a product with an `id` of 1 would be similar to `https://getting-started-myfork.stackblitz.io/products/1`.
+    Το directive `RouterLink` βοηθά να προσαρμόσετε το στοιχείο anchor.
+    Σε αυτήν την περίπτωση, η διαδρομή ή η διεύθυνση URL περιέχει ένα σταθερό τμήμα, `/products`.
+    Το τελικό τμήμα είναι μεταβλητό, εισάγοντας την ιδιότητα `id` του τρέχοντος προϊόντος.
+    Για παράδειγμα, η διεύθυνση URL για ένα προϊόν με `id` 1 θα ήταν παρόμοια με το `https://getting-started-myfork.stackblitz.io/products/1`.
 
- 1. Verify that the router works as intended by clicking the product name.
-    The application should display the `ProductDetailsComponent`, which currently says "product-details works!"
+ 1. Βεβαιωθείτε ότι το router λειτουργεί όπως προβλέπεται κάνοντας κλικ στο όνομα του προϊόντος.
+    Η εφαρμογή θα πρέπει να εμφανίζει το `ProductDetailsComponent`, το οποίο προς το παρόν λέει "product-details works!"
 
-    Notice that the URL in the preview window changes.
-    The final segment is `products/#`  where `#` is the number of the route you clicked.
+    Παρατηρήστε ότι η διεύθυνση URL στο παράθυρο προεπισκόπησης αλλάζει.
+    Το τελικό τμήμα είναι `products/#`  όπου `#` είναι ο αριθμός της διαδρομής που κάνατε κλικ.
 
     <div class="lightbox">
       <img src="generated/images/guide/start/product-details-works.png" alt="Product details view with updated URL">
     </div>
 
-## View product details
+## Προβολή λεπτομερειών προϊόντος
 
-The `ProductDetailsComponent` handles the display of each product.
-The Angular Router displays components based on the browser's URL and [your defined routes](#define-routes).
+Το `ProductDetailsComponent` χειρίζεται την εμφάνιση κάθε προϊόντος.
+Το Angular Router εμφανίζει components με βάση τη διεύθυνση URL του προγράμματος περιήγησης και τις [καθορισμένες διαδρομές σας](#define-routes).
 
-In this section, you'll use the Angular Router to combine the `products` data and route information to display the specific details for each product.
+Σε αυτήν την ενότητα, θα χρησιμοποιήσετε το Angular Router για να συνδυάσετε τα δεδομένα `products` και τις πληροφορίες διαδρομής για να εμφανίσετε τις συγκεκριμένες λεπτομέρειες για κάθε προϊόν.
 
-1. In `product-details.component.ts`, import `ActivatedRoute` from `@angular/router`, and the `products` array from `../products`.
+1. Στο `product-details.component.ts`, κάντε import το `ActivatedRoute` από το `@angular/router`, και την λίστα `products` από το `../products`.
 
     <code-example header="src/app/product-details/product-details.component.ts" path="getting-started/src/app/product-details/product-details.component.1.ts" region="imports">
     </code-example>
 
-1. Define the `product` property.
+1. Ορίστε την ιδιότητα `product`.
 
     <code-example header="src/app/product-details/product-details.component.ts" path="getting-started/src/app/product-details/product-details.component.1.ts" region="product-prop">
     </code-example>
 
-1. Inject `ActivatedRoute` into the `constructor()` by adding `private route: ActivatedRoute` as an argument within the constructor's parentheses.
+1. Εισάγετε το `ActivatedRoute` μέσα στο `constructor()` προσθέτοντας `private route: ActivatedRoute`ως όρισμα μέσα στις παρενθέσεις του constructor.
 
     <code-example header="src/app/product-details/product-details.component.ts" path="getting-started/src/app/product-details/product-details.component.1.ts" region="props-methods">
     </code-example>
 
-    `ActivatedRoute` is specific to each component that the Angular Router loads.
-    `ActivatedRoute` contains information about the route and the route's parameters.
+    Το `ActivatedRoute` είναι συγκεκριμένο για κάθε component που φορτώνει το Angular Router.
+    Το `ActivatedRoute` περιέχει πληροφορίες σχετικά με τη διαδρομή και τις παραμέτρους της διαδρομής.
 
-    By injecting `ActivatedRoute`, you are configuring the component to use a service.
-    The [Managing Data](start/start-data "Try it: Managing Data") step covers services in more detail.
+    Με την εισαγωγή του `ActivatedRoute`, διαμορφώνετε το component ώστε να χρησιμοποιεί ένα service.
+    Το βήμα [Διαχείριση δεδομένων](start/start-data "Try it: Managing Data") καλύπτει τα services με περισσότερες λεπτομέρειες.
 
-1. In the `ngOnInit()` method, extract the `productId` from the route parameters and find the corresponding product in the `products` array.
+1. Στην μέθοδο `ngOnInit()`, διαβάστε το `productId` από τις παραμέτρους διαδρομής και βρείτε το αντίστοιχο προϊόν στην λίστα `products`.
 
     <code-example path="getting-started/src/app/product-details/product-details.component.1.ts" header="src/app/product-details/product-details.component.ts" region="get-product">
     </code-example>
 
-    The route parameters correspond to the path variables you define in the route.
-    To access the route parameters, we use `route.snapshot`, which is the `ActivatedRouteSnapshot` that contains information about the active route at that particular moment in time.
-    The URL that matches the route provides the `productId` .
-    Angular uses the `productId` to display the details for each unique product.
+    Οι παράμετροι διαδρομής αντιστοιχούν στις μεταβλητές διαδρομής που ορίζετε στη διαδρομή.
+    Για να αποκτήσουμε πρόσβαση στις παραμέτρους διαδρομής, χρησιμοποιούμε το `route.snapshot`, το οποίο είναι το `ActivatedRouteSnapshot` που περιέχει πληροφορίες σχετικά με την ενεργή διαδρομή τη συγκεκριμένη χρονική στιγμή.
+    Η διεύθυνση URL που αντιστοιχεί στη διαδρομή παρέχει το `productId` .
+    Το Angular χρησιμοποιεί το `productId` για να εμφανίσει τις λεπτομέρειες για κάθε μοναδικό προϊόν.
 
-1. Update the `ProductDetailsComponent` template to display product details with an `*ngIf`.
-    If a product exists, the `<div>` renders with a name, price, and description.
+1. Ενημερώστε το template του `ProductDetailsComponent` για να εμφανίσετε τις λεπτομέρειες του προϊόντος με ένα `*ngIf`.
+    Εάν υπάρχει ένα προϊόν, το `<div>` εμφανίζεται με ένα όνομα, μια τιμή και μια περιγραφή.
 
     <code-example header="src/app/product-details/product-details.component.html" path="getting-started/src/app/product-details/product-details.component.html" region="details">
     </code-example>
 
-    The line, `<h4>{{ product.price | currency }}</h4>`, uses the `currency` pipe to transform `product.price` from a number to a currency string.
-    A pipe is a way you can transform data in your HTML template.
-    For more information about Angular pipes, see [Pipes](guide/pipes "Pipes").
+    Η γραμμή, `<h4>{{ product.price | currency }}</h4>`, χρησιμοποιεί το pipe `currency` για να μετατρέψει το `product.price` από έναν αριθμό σε κείμενο που περιλαμβάνει το σύμβολο του νομίσματος.
+    Το pipe είναι ένας τρόπος με τον οποίο μπορείτε να μετατρέψετε δεδομένα στο HTML template σας.
+    Για περισσότερες πληροφορίες σχετικά με τα Angular pipes, ανατρέξτε στην ενότητα [Pipes](guide/pipes "Pipes").
 
-When users click on a name in the product list, the router navigates them to the distinct URL for the product, shows the `ProductDetailsComponent`, and displays the product details.
+Όταν οι χρήστες κάνουν κλικ σε ένα όνομα στη λίστα προϊόντων, το router τους πλοηγεί στη διακριτή διεύθυνση URL για το προϊόν, εμφανίζει το `ProductDetailsComponent`, και εμφανίζει τις λεπτομέρειες του προϊόντος.
 
 <div class="lightbox">
   <img src="generated/images/guide/start/product-details-routed.png" alt="Product details page with updated URL and full details displayed">
 </div>
 
-For more information about the Angular Router, see [Routing & Navigation](guide/router "Routing & Navigation guide").
+Για περισσότερες πληροφορίες σχετικά με το Angular Router, ανατρέξτε στην ενότητα [Δρομολόγηση και πλοήγηση](guide/router "Routing & Navigation guide").
 
-## What's next
+## Στην συνέχεια
 
-You have configured your application so you can view product details, each with a distinct URL.
+Έχετε διαμορφώσει την εφαρμογή σας ώστε να μπορείτε να προβάλλετε τις λεπτομέρειες του προϊόντος, το καθένα με μια ξεχωριστή διεύθυνση URL.
 
-To continue exploring Angular:
+Για να συνεχίσετε την εξερεύνηση του Angular:
 
-* Continue to [Managing Data](start/start-data "Try it: Managing Data") to add a shopping cart feature, manage cart data, and retrieve external data for shipping prices.
-* Skip ahead to [Deployment](start/start-deployment "Try it: Deployment") to deploy your application to Firebase or move to local development.
+* Συνεχίστε στη [Διαχείριση δεδομένων](start/start-data "Try it: Managing Data") για να προσθέσετε μια λειτουργία καλαθιού αγορών, να διαχειριστείτε τα δεδομένα του καλαθιού και να ανακτήσετε εξωτερικά δεδομένα για τις τιμές αποστολής.
+* Συνεχίστε στο [Deployment](start/start-deployment "Try it: Deployment") για να ανεβάσετε την εφαρμογή σας στο Firebase ή να μεταβείτε σε τοπική ανάπτυξη.
 
 @reviewed 2021-09-15

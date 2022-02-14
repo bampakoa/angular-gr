@@ -125,7 +125,7 @@
 
 <code-example path="what-is-angular/src/app/logger.service.ts"></code-example>
 
-Στη συνέχεια, το αρχείο `hello-world-di.component.ts` ορίζει ένα Angular component. Αυτό το component περιέχει ένα πλήκτρο που χρησιμοποιεί την συνάρτηση `writeCount` από το Logger class. Για να αποκτήσουμε πρόσβαση σε αυτήν την συνάρτηση, η υπηρεσία `Logger` εισάγεται μέσα στο class `HelloWorldDI` προσθέτοντας το `private logger: Logger` στον constructor.
+Στη συνέχεια, το αρχείο `hello-world-di.component.ts` ορίζει ένα Angular component. Αυτό το component περιέχει ένα πλήκτρο που χρησιμοποιεί την συνάρτηση `writeCount` από το Logger class. Για να αποκτήσουμε πρόσβαση σε αυτήν την συνάρτηση, το service `Logger` εισάγεται μέσα στο class `HelloWorldDI` προσθέτοντας το `private logger: Logger` στον constructor.
 
 <code-example path="what-is-angular/src/app/hello-world-di/hello-world-di.component.ts"></code-example>
 
