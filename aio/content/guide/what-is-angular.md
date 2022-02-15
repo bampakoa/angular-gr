@@ -24,7 +24,7 @@
 {@a components}
 ### Components
 
-Τα components αποτελούν τα δομικά στοιχεία που συνθέτουν μια εφαρμογή. Ένα component περιλαμβάνει ένα TypeScript class με ένα `@Component()` decorator, ένα HTML template, και styles. To `@Component()` decorator καθορίζει τις παρακάτω πληροφορίες που σχετίζονται με το Angular:
+Τα components αποτελούν τα δομικά στοιχεία που συνθέτουν μια εφαρμογή. Ένα component περιλαμβάνει ένα TypeScript class με ένα `@Component()` decorator, ένα HTML template, και styles. To decorator `@Component()` καθορίζει τις παρακάτω πληροφορίες που σχετίζονται με το Angular:
 
 * Ένας CSS selector που ορίζει πως χρησιμοποιείται το component σε ένα template. Τα στοιχεία HTML στο template που ταιριάζουν με αυτόν τον selector μετατρέπονται σε οντότητες του component.
 * Ένα HTML template που καθοδηγεί το Angular πως να εμφανίσει το component.
@@ -125,7 +125,7 @@
 
 <code-example path="what-is-angular/src/app/logger.service.ts"></code-example>
 
-Στη συνέχεια, το αρχείο `hello-world-di.component.ts` ορίζει ένα Angular component. Αυτό το component περιέχει ένα πλήκτρο που χρησιμοποιεί την συνάρτηση `writeCount` από το Logger class. Για να αποκτήσουμε πρόσβαση σε αυτήν την συνάρτηση, το service `Logger` εισάγεται μέσα στο class `HelloWorldDI` προσθέτοντας το `private logger: Logger` στον constructor.
+Στη συνέχεια, το αρχείο `hello-world-di.component.ts` ορίζει ένα Angular component. Αυτό το component περιέχει ένα πλήκτρο που χρησιμοποιεί την συνάρτηση `writeCount` από το class Logger. Για να αποκτήσουμε πρόσβαση σε αυτήν την συνάρτηση, το service `Logger` εισάγεται μέσα στο class `HelloWorldDI` προσθέτοντας το `private logger: Logger` στον constructor.
 
 <code-example path="what-is-angular/src/app/hello-world-di/hello-world-di.component.ts"></code-example>
 

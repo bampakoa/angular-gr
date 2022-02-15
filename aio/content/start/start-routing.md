@@ -68,7 +68,7 @@
     <code-example header="src/app/product-details/product-details.component.ts" path="getting-started/src/app/product-details/product-details.component.1.ts" region="product-prop">
     </code-example>
 
-1. Εισάγετε το `ActivatedRoute` μέσα στο `constructor()` προσθέτοντας `private route: ActivatedRoute`ως όρισμα μέσα στις παρενθέσεις του constructor.
+1. Εισάγετε το `ActivatedRoute` μέσα στον `constructor()` προσθέτοντας `private route: ActivatedRoute`ως όρισμα μέσα στις παρενθέσεις του constructor.
 
     <code-example header="src/app/product-details/product-details.component.ts" path="getting-started/src/app/product-details/product-details.component.1.ts" region="props-methods">
     </code-example>

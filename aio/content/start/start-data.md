@@ -1,307 +1,307 @@
-# Managing data
+# Διαχείριση δεδομένων
 
-This guide builds on the second step of the [Getting started with a basic Angular application](start) tutorial, [Adding navigation](start/start-routing "Adding navigation").
-At this stage of development, the store application has a product catalog with two views: a product list and product details.
-Users can click on a product name from the list to see details in a new view, with a distinct URL, or route.
+Αυτός ο οδηγός βασίζεται στο δεύτερο βήμα του οδηγού [Ξεκινήστε με μια βασική εφαρμογή Angular](start), [Προσθήκη πλοήγησης](start/start-routing "Adding navigation").
+Σε αυτό το στάδιο ανάπτυξης, η εφαρμογή καταστήματος διαθέτει κατάλογο προϊόντων με δύο προβολές: λίστα προϊόντων και λεπτομέρειες προϊόντων.
+Οι χρήστες μπορούν να κάνουν κλικ σε ένα όνομα προϊόντος από τη λίστα για να δουν λεπτομέρειες σε μια νέα προβολή, με ξεχωριστή διεύθυνση URL ή διαδρομή.
 
-This step of the tutorial guides you through creating a shopping cart in the following phases:
+Αυτό το βήμα του οδηγού σάς καθοδηγεί στη δημιουργία ενός καλαθιού αγορών στις ακόλουθες φάσεις:
 
-* Update the product details view to include a **Buy** button, which adds the current product to a list of products that a cart service manages.
-* Add a cart component, which displays the items in the cart.
-* Add a shipping component, which retrieves shipping prices for the items in the cart by using Angular's `HttpClient` to retrieve shipping data from a `.json` file.
+* Ενημερώστε την προβολή λεπτομερειών προϊόντος για να συμπεριλάβετε ένα κουμπί **Buy**, το οποίο προσθέτει το τρέχον προϊόν σε μια λίστα προϊόντων που διαχειρίζεται ένα service καλαθιού αγορών.
+* Προσθέστε ένα component για το καλάθι, το οποίο εμφανίζει τα είδη στο καλάθι.
+* Προσθέστε ένα component για την αποστολή, το οποίο ανακτά τις τιμές αποστολής για τα είδη στο καλάθι χρησιμοποιώντας το Angular `HttpClient` για την ανάκτηση δεδομένων αποστολής από ένα αρχείο `.json`.
 
 {@a create-cart-service}
 
-## Create the shopping cart service
+## Δημιουργήστε το service καλαθιού αγορών
 
-In Angular, a service is an instance of a class that you can make available to any part of your application using Angular's [dependency injection system](guide/glossary#dependency-injection-di "Dependency injection definition").
+Στο Angular, ένα service είναι μια οντότητα ενός class που μπορείτε να διαθέσετε σε οποιοδήποτε μέρος της εφαρμογής σας χρησιμοποιώντας το σύστημα του [dependency injection](guide/glossary#dependency-injection-di "Dependency injection definition") του Angular.
 
-Currently, users can view product information, and the application can simulate sharing and  notifications about product changes.
+Προς το παρόν, οι χρήστες μπορούν να δουν πληροφορίες για ένα προϊόν, και η εφαρμογή μπορεί να προσομοιώνει την κοινή χρήση και τις ειδοποιήσεις σχετικά με αλλαγές προϊόντων.
 
-The next step is to build a way for users to add products to a cart.
-This section walks you through adding a **Buy** button and setting up a cart service to store information about products in the cart.
+Το επόμενο βήμα είναι να δημιουργήσετε έναν τρόπο ώστε οι χρήστες να προσθέτουν προϊόντα σε ένα καλάθι.
+Αυτή η ενότητα σάς καθοδηγεί στην προσθήκη ενός κουμπιού **Buy** and και στη ρύθμιση ενός service καλαθιού για αποθήκευση πληροφοριών σχετικά με τα προϊόντα στο καλάθι.
 
 {@a generate-cart-service}
 
-### Define a cart service
+### Καθορίστε ένα service καλαθιού
 
-This section walks you through creating the `CartService` that tracks products added to shopping cart.
+Αυτή η ενότητα σας καθοδηγεί στη δημιουργία του `CartService` που παρακολουθεί τα προϊόντα που προστίθενται στο καλάθι αγορών.
 
-1. In the terminal generate a new `cart` service by running the following command:
+1. Στο terminal δημιουργείστε ένα νέο service `cart` εκτελώντας την ακόλουθη εντολή:
 
     ```sh
     ng generate service cart
     ```
 
-1. Import the `Product` interface from `./products.ts` into the `cart.service.ts` file, and in the `CartService` class, define an `items` property to store the array of the current products in the cart.
+1. Κάντε import το interface `Product` από το `./products.ts` στο αρχείο `cart.service.ts`, και στο class `CartService`, ορίστε μια ιδιότητα `items` για να αποθηκεύσετε την λίστα των τρέχοντων προϊόντων στο καλάθι.
 
     <code-example path="getting-started/src/app/cart.service.ts" header="src/app/cart.service.ts" region="props"></code-example>
 
-1. Define methods to add items to the cart, return cart items, and clear the cart items.
+1. Καθορίστε μεθόδους για να προσθέσετε είδη στο καλάθι, να διαβάσετε τα είδη του καλαθιού και να διαγράψετε τα είδη του καλαθιού.
 
     <code-example path="getting-started/src/app/cart.service.ts" header="src/app/cart.service.ts" region="methods"></code-example>
 
-    * The `addToCart()` method appends a product to an array of `items`.
+    * Η μέθοδος `addToCart()` προσθέτει ένα προϊόν στην λίστα `items`.
 
-    * The `getItems()` method collects the items users add to the cart and returns each item with its associated quantity.
+    * Η μέθοδος `getItems()` συλλέγει τα είδη που προσθέτουν οι χρήστες στο καλάθι και επιστρέφει κάθε είδος με τη σχετική ποσότητα.
 
-    * The `clearCart()` method returns an empty array of items, which empties the cart.
+    * Η μέθοδος `clearCart()` επιστρέφει μια κενή λίστα από είδη, η οποία αδειάζει το καλάθι.
 
 {@a product-details-use-cart-service}
 
-### Use the cart service
+### Χρησιμοποιήστε το service καλαθιού
 
-This section walks you through using the `CartService` to add a product to the cart.
+Αυτή η ενότητα σάς καθοδηγεί στη χρήση του `CartService` για να προσθέσετε ένα προϊόν στο καλάθι.
 
-1. In `product-details.component.ts`, import the cart service.
+1. Στο `product-details.component.ts`, κάντε import το service του καλαθιού.
 
     <code-example header="src/app/product-details/product-details.component.ts" path="getting-started/src/app/product-details/product-details.component.ts" region="cart-service">
     </code-example>
 
-1. Inject the cart service by adding it to the `constructor()`.
+1. Εισάγετε το service καλαθιού προσθέτοντάς το στον `constructor()`.
 
     <code-example path="getting-started/src/app/product-details/product-details.component.ts" header="src/app/product-details/product-details.component.ts" region="inject-cart-service">
         </code-example>
 
-1. Define the `addToCart()` method, which adds the current product to the cart.
+1. Ορίστε την μέθοδο `addToCart()`, που προσθέτει το τρέχον προϊόν στο καλάθι.
 
     <code-example path="getting-started/src/app/product-details/product-details.component.ts" header="src/app/product-details/product-details.component.ts" region="add-to-cart"></code-example>
 
-    The `addToCart()` method does the following:
-    * Takes the current `product` as an argument.
-    * Uses the `CartService` `addToCart()` method to add the product to the cart.
-    * Displays a message that you've added a product to the cart.
+    Η μέθοδος `addToCart()` κάνει τα εξής:
+    * Παίρνει το τρέχων `product` σαν παράμετρο.
+    * Χρησιμοποιεί την μέθοδο `addToCart()` του `CartService` για να προσθέσει το προϊόν στο καλάθι.
+    * Εμφανίζει ένα μήνυμα ότι έχετε προσθέσει ένα προϊόν στο καλάθι.
 
-1. In `product-details.component.html`, add a button with the label **Buy**, and bind the `click()` event to the `addToCart()` method.
-    This code updates the product details template with a **Buy** button that adds the current product to the cart.
+1. Στο `product-details.component.html`, προσθέστε ένα κουμπί με το κείμενο **Buy**, και συνδέστε το event `click()` με την μέθοδο `addToCart()`.
+    Αυτός ο κώδικας ενημερώνει το template των λεπτομερειών προϊόντος με ένα κουμπί **Buy** που προσθέτει το τρέχον προϊόν στο καλάθι.
 
     <code-example header="src/app/product-details/product-details.component.html" path="getting-started/src/app/product-details/product-details.component.html">
     </code-example>
 
-1. Verify that the new **Buy** button appears as expected by refreshing the application and clicking on a product's name to display its details.
+1. Βεβαιωθείτε ότι το νέο κουμπί **Buy** εμφανίζεται όπως αναμένεται, ανανεώνοντας την εφαρμογή και κάνοντας κλικ στο όνομα ενός προϊόντος για να εμφανιστούν τα στοιχεία του.
 
     <div class="lightbox">
       <img src='generated/images/guide/start/product-details-buy.png' alt="Display details for selected product with a Buy button">
     </div>
 
- 1. Click the **Buy** button to add the product to the stored list of items in the cart and display a confirmation message.
+ 1. Κάντε κλικ στο κουμπί **Buy** για να προσθέσετε το προϊόν στην αποθηκευμένη λίστα ειδών στο καλάθι και να εμφανίσετε ένα μήνυμα επιβεβαίωσης.
 
     <div class="lightbox">
       <img src='generated/images/guide/start/buy-alert.png' alt="Display details for selected product with a Buy button">
     </div>
 
-## Create the cart view
+## Δημιουργήστε την προβολή καλαθιού
 
-For customers to see their cart, you can create the cart view in two steps:
+Για να δουν οι πελάτες το καλάθι τους, μπορείτε να δημιουργήσετε την προβολή καλαθιού σε δύο βήματα:
 
-1. Create a cart component and configure routing to the new component.
-1. Display the cart items.
+1. Δημιουργήστε ένα component καλαθιού και διαμορφώστε τη δρομολόγηση για το component.
+1. Εμφανίστε τα είδη του καλαθιού.
 
-### Set up the cart component
+### Ρυθμίστε το component καλαθιού
 
- To create the cart view, follow the same steps you did to create the `ProductDetailsComponent` and configure routing for the new component.
+ Για να δημιουργήσετε την προβολή καλαθιού, ακολουθήστε τα ίδια βήματα που κάνατε για να δημιουργήσετε το `ProductDetailsComponent` και διαμορφώστε τη δρομολόγηση για το νέο component.
 
-1. Generate a new component named `cart` in the terminal by running the following command:
+1. Δημιουργήστε ένα νέο component με το όνομα `cart` στο terminal εκτελώντας την ακόλουθη εντολή:
 
     ```sh
     ng generate component cart
     ```
 
-    This command will generate the `cart.component.ts` file and it associated template and styles files.
+    Αυτή η εντολή θα δημιουργήσει το αρχείο `cart.component.ts` και τα σχετικά αρχεία template and στυλ.
 
     <code-example header="src/app/cart/cart.component.ts" path="getting-started/src/app/cart/cart.component.1.ts"></code-example>
 
-    StackBlitz also generates an `ngOnInit()` by default in components.  You can ignore the `CartComponent` `ngOnInit()` for this tutorial.
+    Το StackBlitz δημιουργεί επίσης ένα `ngOnInit()` στα components.  Μπορείτε να αγνοήσετε το `ngOnInit()` του `CartComponent` για αυτόν τον οδηγό.
 
-1. Note that the newly created `CartComponent` is added to the module's `declarations` in `app.module.ts`.
+1. Παρατηρήστε ότι το νέο `CartComponent` προστέθηκε στα `declarations` του `app.module.ts`.
 
     <code-example header="src/app/app.module.ts" path="getting-started/src/app/app.module.ts" region="declare-cart">
     </code-example>
 
-1. Still in `app.module.ts`, add a route for the component `CartComponent`, with a `path` of `cart`.
+1. Παραμένοντας στο `app.module.ts`, προσθέστε μια διαδρομή για το component `CartComponent`, βάζοντας σαν τιμή του `path` το `cart`.
 
     <code-example header="src/app/app.module.ts" path="getting-started/src/app/app.module.ts" region="cart-route">
     </code-example>
 
-1. Update the **Checkout** button so that it routes to the `/cart` URL.
-    In `top-bar.component.html`, add a `routerLink` directive pointing to `/cart`.
+1. Ενημερώστε το κουμπί **Checkout** ώστε να οδηγεί στη διεύθυνση URL `/cart`.
+    Στο `top-bar.component.html`, προσθέστε ένα directive `routerLink` που οδηγεί στο `/cart`.
 
     <code-example header="src/app/top-bar/top-bar.component.html" path="getting-started/src/app/top-bar/top-bar.component.html" region="cart-route">
     </code-example>
 
-1. Verify the new `CartComponent` works as expected by clicking the **Checkout** button.
-    You can see the "cart works!" default text, and the URL has the pattern `https://getting-started.stackblitz.io/cart`, where `getting-started.stackblitz.io` may be different for your StackBlitz project.
+1. Επαληθεύστε ότι το νέο `CartComponent` λειτουργεί όπως αναμένεται, κάνοντας κλικ στο κουμπί **Checkout**.
+   Μπορείτε να δείτε το κείμενο "cart works!", και η διεύθυνση URL έχει το μοτίβο `https://getting-started.stackblitz.io/cart`, όπου το `getting-started.stackblitz.io` μπορεί να είναι διαφορετικό για το StackBlitz project σας.
 
     <div class="lightbox">
       <img src='generated/images/guide/start/cart-works.png' alt="Display cart view before customizing">
     </div>
 
-### Display the cart items
+### Εμφάνιση των ειδών του καλαθιού
 
-This section shows you how to use the cart service to display the products in the cart.
+Αυτή η ενότητα σάς δείχνει πώς να χρησιμοποιήσετε το service καλαθιού για να εμφανίσετε τα προϊόντα στο καλάθι.
 
 
-1. In `cart.component.ts`, import the `CartService` from the `cart.service.ts` file.
+1. Στο `cart.component.ts`, κάντε import το `CartService` από το αρχείο `cart.service.ts`.
 
     <code-example header="src/app/cart/cart.component.ts" path="getting-started/src/app/cart/cart.component.2.ts" region="imports">
     </code-example>
 
-1. Inject the `CartService` so that the `CartComponent` can use it by adding it to the `constructor()`.
+1. Εισάγετε το `CartService` έτσι ώστε το `CartComponent` να μπορεί να το χρησιμοποιήσει προσθέτοντάς το στον `constructor()`.
 
     <code-example path="getting-started/src/app/cart/cart.component.2.ts" header="src/app/cart/cart.component.ts" region="inject-cart">
     </code-example>
 
-1. Define the `items` property to store the products in the cart.
+1. Καθορίστε την ιδιότητα `items` για να αποθηκεύσετε τα προϊόντα στο καλάθι.
 
     <code-example path="getting-started/src/app/cart/cart.component.2.ts" header="src/app/cart/cart.component.ts" region="items">
     </code-example>
 
-    This code sets the items using the `CartService` `getItems()` method.
-    You defined this method [when you created `cart.service.ts`](#generate-cart-service).
+    Αυτός ο κώδικας ορίζει τα είδη χρησιμοποιώντας την μέθοδο `getItems()` του `CartService`.
+    Ορίσατε αυτή την μέθοδο [όταν δημιουργήσατε το `cart.service.ts`](#generate-cart-service).
 
-1. Update the cart template with a header, and use a `<div>` with an `*ngFor` to display each of the cart items with its name and price.
-    The resulting `CartComponent` template is as follows.
+1. Ενημερώστε το template του καλαθιού με μια κεφαλίδα και χρησιμοποιήστε ένα `<div>` με ένα `*ngFor` για να εμφανίσετε καθένα από τα είδη του καλαθιού με το όνομα και την τιμή του.
+    Tο `CartComponent` που προκύπτει είναι το εξής.
 
     <code-example header="src/app/cart/cart.component.html" path="getting-started/src/app/cart/cart.component.2.html" region="prices">
     </code-example>
 
-1. Verify that your cart works as expected:
+1. Βεβαιωθείτε ότι το καλάθι σας λειτουργεί όπως αναμένεται:
 
-    * Click **My Store**
-    * Click on a product name to display its details.
-    * Click **Buy** to add the product to the cart.
-    * Click **Checkout** to see the cart.
+    * Κάντε κλικ στο **My Store**
+    * Κάντε κλικ στο όνομα ενός προϊόντος για να εμφανίσετε τα στοιχεία του.
+    * Κάντε κλικ στο **Buy** για να προσθέσετε το προϊόν στο καλάθι.
+    * Κάντε κλικ στο **Checkout** για να δείτε το καλάθι.
 
     <div class="lightbox">
       <img src='generated/images/guide/start/cart-page-full.png' alt="Cart view with products added">
     </div>
 
-For more information about services, see [Introduction to Services and Dependency Injection](guide/architecture-services "Concepts > Intro to Services and DI").
+Για περισσότερες πληροφορίες σχετικά με τα services, ανατρέξτε στην ενότητα [Εισαγωγή στα Services και Dependency Injection](guide/architecture-services "Concepts > Intro to Services and DI").
 
-## Retrieve shipping prices
+## Ανάκτηση τιμών αποστολής
 
-Servers often return data in the form of a stream.
-Streams are useful because they make it easy to transform the returned data and make modifications to the way you request that data.
-Angular `HttpClient` is a built-in way to fetch data from external APIs and provide them to your application as a stream.
+Οι διακομιστές συχνά επιστρέφουν δεδομένα με τη μορφή ροής.
+Οι ροές είναι χρήσιμες επειδή διευκολύνουν τον μετασχηματισμό των επιστρεφόμενων δεδομένων και την πραγματοποίηση τροποποιήσεων στον τρόπο που ζητάτε αυτά τα δεδομένα.
+Το Angular `HttpClient` είναι ένας ενσωματωμένος τρόπος λήψης δεδομένων από εξωτερικά API και παροχής τους στην εφαρμογή σας ως ροή.
 
-This section shows you how to use `HttpClient` to retrieve shipping prices from an external file.
+Αυτή η ενότητα σάς δείχνει πώς να χρησιμοποιήσετε το `HttpClient` για να ανακτήσετε τις τιμές αποστολής από ένα εξωτερικό αρχείο.
 
-The application that StackBlitz generates for this guide comes with predefined shipping data in `assets/shipping.json`.
-Use this data to add shipping prices for items in the cart.
+Η εφαρμογή που δημιουργεί το StackBlitz για αυτόν τον οδηγό συνοδεύεται από προκαθορισμένα δεδομένα αποστολής στο `assets/shipping.json`.
+Χρησιμοποιήστε αυτά τα δεδομένα για να προσθέσετε τιμές αποστολής για προϊόντα στο καλάθι.
 
 <code-example header="src/assets/shipping.json" path="getting-started/src/assets/shipping.json">
 </code-example>
 
-### Configure `AppModule` to use `HttpClient`
+### Ρυθμίστε το `AppModule` να χρησιμοποιεί το `HttpClient`
 
-To use Angular's `HttpClient`, you must configure your application to use `HttpClientModule`.
+Για να χρησιμοποιήσετε το `HttpClient` του Angular, πρέπει να ρυθμίσετε την εφαρμογή σας ώστε να χρησιμοποιεί το `HttpClientModule`.
 
-Angular's `HttpClientModule` registers the providers your application needs to use the `HttpClient` service throughout your application.
+Το `HttpClientModule` του Angular καταχωρεί τους providers που χρειάζεται η εφαρμογή σας για να χρησιμοποιεί το service `HttpClient` σε όλη την εφαρμογή σας.
 
-1. In `app.module.ts`, import `HttpClientModule` from the `@angular/common/http` package at the top of the file with the other imports.
-    As there are a number of other imports, this code snippet omits them for brevity.
-    Be sure to leave the existing imports in place.
+1. Στο `app.module.ts`, κάντε import το `HttpClientModule` από το πακέτο `@angular/common/http` στην κορυφή του αρχείου μαζί με τα υπόλοιπα imports.
+    Καθώς υπάρχουν πολλά άλλα imports, αυτό το απόσπασμα κώδικα τα παραλείπει για συντομία.
+    Φροντίστε να αφήσετε τα υπάρχοντα imports στην θέση τους.
 
     <code-example header="src/app/app.module.ts" path="getting-started/src/app/app.module.ts" region="http-client-module-import">
     </code-example>
 
-1. To register Angular's `HttpClient` providers globally, add `HttpClientModule` to the `AppModule` `@NgModule()` `imports` array.
+1. Για να καταχωρήσετε τους providers του Angular `HttpClient` σε όλη την εφαρμογή, προσθέστε το `HttpClientModule` στα `imports` του `@NgModule()` του `AppModule` .
 
     <code-example path="getting-started/src/app/app.module.ts" header="src/app/app.module.ts" region="http-client-module">
     </code-example>
 
-### Configure `CartService` to use `HttpClient`
+### Ρυθμίστε το `CartService` να χρησιμοποιεί το `HttpClient`
 
-The next step is to inject the `HttpClient` service into your service so your application can fetch data and interact with external APIs and resources.
+Το επόμενο βήμα είναι να εισάγετε το service `HttpClient` στο δικό σας service ώστε η εφαρμογή σας να μπορεί να ανακτά δεδομένα και να αλληλεπιδρά με εξωτερικά API και πόρους.
 
-1. In `cart.service.ts`, import `HttpClient` from the `@angular/common/http` package.
+1. Στο `cart.service.ts`, κάντε import το `HttpClient` από το πακέτο `@angular/common/http`.
 
     <code-example header="src/app/cart.service.ts" path="getting-started/src/app/cart.service.ts" region="import-http">
     </code-example>
 
-1. Inject `HttpClient` into the `CartService` `constructor()`.
+1. Εισάγετε το `HttpClient` μέσα στον `constructor()` του `CartService`.
 
     <code-example path="getting-started/src/app/cart.service.ts" header="src/app/cart.service.ts" region="inject-http">
     </code-example>
 
-### Configure `CartService` to get shipping prices
+### Ρυθμίστε το `CartService` να παίρνει τιμές αποστολής
 
-To get shipping data, from `shipping.json`, You can use the `HttpClient` `get()` method.
+Για να λάβετε δεδομένα αποστολής, από το `shipping.json`, μπορείτε να χρησιμοποιήσετε τη μέθοδο `get()` του `HttpClient`.
 
-1. In `cart.service.ts`, below the `clearCart()` method, define a new `getShippingPrices()` method that uses the `HttpClient` `get()` method.
+1. Στο `cart.service.ts`, κάτω από την μέθοδο `clearCart()`, ορίστε μια νέα μέθοδο `getShippingPrices()` που χρησιμοποιεί την μέθοδο `get()` του `HttpClient`.
 
     <code-example header="src/app/cart.service.ts" path="getting-started/src/app/cart.service.ts" region="get-shipping"></code-example>
 
-For more information about Angular's `HttpClient`, see the [Client-Server Interaction](guide/http "Server interaction through HTTP") guide.
+Για περισσότερες πληροφορίες σχετικά με το `HttpClient` του Angular, ανατρέξτε στον οδηγό [Αλληλεπίδραση πελάτη-διακομιστή](guide/http "Server interaction through HTTP").
 
-## Create a shipping component
+## Δημιουργήστε το component αποστολής
 
-Now that you've configured your application to retrieve shipping data, you can create a place to render that data.
+Τώρα που έχετε ρυθμίσει την εφαρμογή σας να ανακτά δεδομένα αποστολής, μπορείτε να δημιουργήσετε ένα μέρος για την εμφάνιση αυτών των δεδομένων.
 
-1. Generate a cart component named `shipping` in the terminal by running the following command:
+1. Δημιουργήστε ένα component καλαθιού με το όνομα `shipping` στο terminal εκτελώντας την ακόλουθη εντολή:
 
     ```sh
     ng generate component shipping
     ```
 
-    This command will generate the `shipping.component.ts` file and it associated template and styles files.
+    Η προηγούμενη εντολή θα δημιουργήσει το αρχείο `shipping.component.ts` και τα αντίστοιχα αρχεία template και στυλ.
 
     <code-example header="src/app/shipping/shipping.component.ts" path="getting-started/src/app/shipping/shipping.component.1.ts"></code-example>
 
-1. In `app.module.ts`, add a route for shipping.
-    Specify a `path` of `shipping` and a component of `ShippingComponent`.
+1. Στο `app.module.ts`, προσθέστε μια διαδρομή για την αποστολή.
+    Καθορίστε το `path` ως `shipping` και το component ως `ShippingComponent`.
 
     <code-example header="src/app/app.module.ts" path="getting-started/src/app/app.module.ts" region="shipping-route"></code-example>
 
-    There's no link to the new shipping component yet, but you can see its template in the preview pane by entering the URL its route specifies.
-    The URL has the pattern: `https://angular-ynqttp--4200.local.webcontainer.io/shipping` where the `angular-ynqttp--4200.local.webcontainer.io` part may be different for your StackBlitz project.
+    Δεν υπάρχει ακόμη σύνδεσμος προς το νέο component, αλλά μπορείτε να δείτε το template του στο παράθυρο προεπισκόπησης εισάγοντας τη διεύθυνση URL που καθορίζει η διαδρομή του.
+    Η διεύθυνση URL έχει το μοτίβο: `https://angular-ynqttp--4200.local.webcontainer.io/shipping` όπου το τμήμα `angular-ynqttp--4200.local.webcontainer.io` μπορεί να είναι διαφορετικό για το δικό σας StackBlitz project.
 
-### Configuring the `ShippingComponent` to use `CartService`
+### Ρυθμίστε το `ShippingComponent` να χρησιμοποιεί το `CartService`
 
-This section guides you through modifying the `ShippingComponent` to retrieve shipping data via HTTP from the `shipping.json` file.
+Αυτή η ενότητα σάς καθοδηγεί να τροποποιήσετε το `ShippingComponent` ώστε να ανακτά τα δεδομένα αποστολής μέσω HTTP από το αρχείο  `shipping.json`.
 
-1. In `shipping.component.ts`, import `CartService`.
+1. Στο `shipping.component.ts`, κάντε import το `CartService`.
 
     <code-example header="src/app/shipping/shipping.component.ts" path="getting-started/src/app/shipping/shipping.component.ts" region="imports"></code-example>
 
-1. Inject the cart service in the `ShippingComponent` `constructor()`.
+1. Εισάγετε το service του καλαθιού στον `constructor()` του `ShippingComponent`.
 
     <code-example path="getting-started/src/app/shipping/shipping.component.ts" header="src/app/shipping/shipping.component.ts" region="inject-cart-service"></code-example>
 
-1. Define a `shippingCosts` property that sets the `shippingCosts` property using the `getShippingPrices()` method from the `CartService`.
+1. Καθορίστε μια ιδιότητα `shippingCosts` χρησιμοποιώντας την μέθοδο `getShippingPrices()` από το `CartService`.
 
     <code-example path="getting-started/src/app/shipping/shipping.component.ts" header="src/app/shipping/shipping.component.ts" region="props"></code-example>
 
-1. Update the `ShippingComponent` template to display the shipping types and prices using the `async` pipe.
+1. Ενημερώστε το template του `ShippingComponent` ώστε να εμφανίζει τους τύπους αποστολής και τις τιμές χρησιμοποιώντας το pipe `async`.
 
     <code-example header="src/app/shipping/shipping.component.html" path="getting-started/src/app/shipping/shipping.component.html"></code-example>
 
-    The `async` pipe returns the latest value from a stream of data and continues to do so for the life of a given component.
-    When Angular destroys that component, the `async` pipe automatically stops.
-    For detailed information about the `async` pipe, see the [AsyncPipe API documentation](/api/common/AsyncPipe).
+    Το pipe `async` επιστρέφει την πιο πρόσφατη τιμή από μια ροή δεδομένων και συνεχίζει να το κάνει για τη διάρκεια ζωής ενός συγκεκριμένου component.
+    Όταν το Angular καταστρέφει αυτό το component, το pipe `async` αυτόματα σταματάει.
+    Για λεπτομερείς πληροφορίες σχετικά με το pipe `async`, ανατρέξτε στις [οδηγίες χρήσης API του AsyncPipe](/api/common/AsyncPipe).
 
-1. Add a link from the `CartComponent` view to the `ShippingComponent` view.
+1. Προσθέστε έναν σύνδεσμο από την προβολή του `CartComponent` στην προβολή του `ShippingComponent`.
 
     <code-example header="src/app/cart/cart.component.html" path="getting-started/src/app/cart/cart.component.2.html"></code-example>
 
-1. Click the **Checkout** button to see the updated cart.
-    Remember that changing the application causes the preview to refresh, which empties the cart.
+1. Πατήστε το κουμπί **Checkout** για να δείτε το ενημερωμένο καλάθι.
+    Να θυμάστε ότι η αλλαγή της εφαρμογής προκαλεί ανανέωση της προεπισκόπησης, η οποία αδειάζει το καλάθι.
 
     <div class="lightbox">
       <img src='generated/images/guide/start/cart-empty-with-shipping-prices.png' alt="Cart with link to shipping prices">
     </div>
 
-    Click on the link to navigate to the shipping prices.
+    Κάντε κλικ στον σύνδεσμο για να πλοηγηθείτε στις τιμές αποστολής.
 
     <div class="lightbox">
       <img src='generated/images/guide/start/shipping-prices.png' alt="Display shipping prices">
     </div>
 
-## What's next
+## Στην συνέχεια
 
-You now have a store application with a product catalog, a shopping cart, and you can  look up shipping prices.
+Τώρα έχετε μια εφαρμογή καταστήματος με κατάλογο προϊόντων, καλάθι αγορών και μπορείτε να αναζητήσετε τιμές αποστολής.
 
-To continue exploring Angular:
+Για να συνεχίσετε την εξερεύνηση του Angular:
 
-* Continue to [Forms for User Input](start/start-forms "Forms for User Input") to finish the application by adding the shopping cart view and a checkout form.
-* Skip ahead to [Deployment](start/start-deployment "Deployment") to move to local development, or deploy your application to Firebase or your own server.
+* Συνεχίστε στο [Φόρμες για εισαγωγή δεδομένων από τον χρήστη](start/start-forms "Forms for User Input") για να ολοκληρώσετε την εφαρμογή προσθέτοντας την προβολή καλαθιού αγορών και μια φόρμα ολοκλήρωσης αγοράς.
+* Συνεχίστε στο [Deployment](start/start-deployment "Deployment") για να μεταβείτε σε τοπική ανάπτυξη, ή να ανεβάσετε την εφαρμογή σας στο Firebase ή σε έναν δικό σας διακομιστή.

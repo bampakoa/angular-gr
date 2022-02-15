@@ -185,7 +185,7 @@
     * `product-alerts.component.css`
 
 1. Ανοίξτε το `product-alerts.component.ts`.
-  Ο `@Component()` decorator υποδεικνύει ότι το ακόλουθο class είναι ένα component.
+  Ο decorator `@Component()` υποδεικνύει ότι το ακόλουθο class είναι ένα component.
   Το `@Component()`παρέχει επίσης μεταδεδομένα σχετικά με το component, συμπεριλαμβανομένου του selector, των templates, και των στυλ του.
 
   <code-example header="src/app/product-alerts/product-alerts.component.ts" path="getting-started/src/app/product-alerts/product-alerts.component.1.ts" region="as-generated"></code-example>
@@ -201,8 +201,8 @@
 
   <code-example path="getting-started/src/app/product-alerts/product-alerts.component.1.ts" region="imports" header="src/app/product-alerts/product-alerts.component.ts"></code-example>
 
-1. Στο `ProductAlertsComponent` class, ορίστε μια ιδιότητα με το όνομα `product` χρησιμοποιώντας τον `@Input()` decorator.
-  Ο `@Input()` decorator υποδηλώνει ότι η τιμή της ιδιότητας προέρχεται από το parent component, `ProductListComponent`.
+1. Στο class `ProductAlertsComponent`, ορίστε μια ιδιότητα με το όνομα `product` χρησιμοποιώντας τον decorator `@Input()`.
+  Ο decorator `@Input()` υποδηλώνει ότι η τιμή της ιδιότητας προέρχεται από το parent component, `ProductListComponent`.
 
   <code-example path="getting-started/src/app/product-alerts/product-alerts.component.1.ts" region="input-decorator" header="src/app/product-alerts/product-alerts.component.ts"></code-example>
 
@@ -219,7 +219,7 @@
 
   <code-example header="src/app/product-list/product-list.component.html" path="getting-started/src/app/product-list/product-list.component.5.html" region="app-product-alerts"></code-example>
 
-Το νέο component ειδοποίησης προϊόντως δέχεται ένα προϊόν σαν input από τη λίστα προϊόντων.
+Το νέο component ειδοποίησης προϊόντος δέχεται ένα προϊόν σαν input από τη λίστα προϊόντων.
 Με αυτό το input, εμφανίζεται ή αποκρύπτεται το κουμπί **Notify Me**, με βάση την τιμή του προϊόντος.
 Η τιμή του Phone XL είναι πάνω από 700 $, επομένως το κουμπί **Notify Me** εμφανίζεται σε αυτό το προϊόν.
 
@@ -245,7 +245,7 @@ To `ProductAlertsComponent` πρέπει πρέπει να εκπέμψει έν
 
   <code-example header="src/app/product-alerts/product-alerts.component.ts" path="getting-started/src/app/product-alerts/product-alerts.component.ts" region="imports"></code-example>
 
-1. Στο component class, ορίστε μια ιδιότητα με το όνομα `notify` χρησιμοποιώντας τον `@Output()` decorator και μια οντότητα `EventEmitter()`.
+1. Στο component class, ορίστε μια ιδιότητα με το όνομα `notify` χρησιμοποιώντας τον decorator `@Output()` και μια οντότητα `EventEmitter()`.
   Ο ορισμός του `ProductAlertsComponent` με ένα `@Output()` επιτρέπει στο `ProductAlertsComponent` να εκπέμπει ένα event όταν η τιμή της ιδιότητας `notify` αλλάζει.
 
   <code-example path="getting-started/src/app/product-alerts/product-alerts.component.ts" header="src/app/product-alerts/product-alerts.component.ts" region="input-output"></code-example>
