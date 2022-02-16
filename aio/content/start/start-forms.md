@@ -1,75 +1,75 @@
-# Using forms for user input
+# Χρήση φορμών για εισαγωγή δεδομένων
 
-This guide builds on the [Managing Data](start/start-data "Try it: Managing Data") step of the Getting Started tutorial, [Get started with a basic Angular app](start "Get started with a basic Angular app").
+Αυτός ο οδηγός βασίζεται στο βήμα [Διαχείριση δεδομένων](start/start-data "Try it: Managing Data") του σεμιναρίου Πως να ξεκινήσετε, [Ξεκινήστε με μια βασική εφαρμογή Angular](start "Get started with a basic Angular app").
 
-This section walks you through adding a form-based checkout feature to collect user information as part of checkout.
+Αυτή η ενότητα σάς καθοδηγεί στην προσθήκη μιας λειτουργίας ολοκλήρωσης αγοράς χρησιμοποιώντας μια φόρμα για τη συλλογή πληροφοριών από τον χρήστη ως μέρος της ολοκλήρωσης αγοράς.
 
-## Define the checkout form model
+## Καθορίστε το μοντέλο της φόρμας ολοκλήρωσης αγοράς
 
-This step shows you how to set up the checkout form model in the component class.
-The form model determines the status of the form.
+Αυτό το βήμα σάς δείχνει πώς να ρυθμίσετε το μοντέλο φόρμας της ολοκλήρωσης αγοράς στο component class.
+Το μοντέλο της φόρμας καθορίζει την κατάσταση της φόρμας.
 
-1. Open `cart.component.ts`.
+1. Ανοίχτε το `cart.component.ts`.
 
-1. Import the `FormBuilder` service from the `@angular/forms` package.
-  This service provides convenient methods for generating controls.
+1. Κάντε import το service `FormBuilder` από το πακέτο `@angular/forms`.
+  Αυτό το service παρέχει βολικές μεθόδους για τη δημιουργία controls.
 
   <code-example header="src/app/cart/cart.component.ts" path="getting-started/src/app/cart/cart.component.ts" region="imports">
   </code-example>
 
-1. Inject the `FormBuilder` service in the `CartComponent` `constructor()`.
-  This service is part of the `ReactiveFormsModule` module, which you've already imported.
+1. Εισάγετε το service `FormBuilder` στον `constructor()` του `CartComponent`.
+  Αυτό το service είναι μέρος του module `ReactiveFormsModule`, που έχετε κάνει ήδη import.
 
   <code-example header="src/app/cart/cart.component.ts" path="getting-started/src/app/cart/cart.component.ts" region="inject-form-builder">
   </code-example>
 
-1. To gather the user's name and address, use the `FormBuilder` `group()` method to set the `checkoutForm` property to a form model containing `name` and `address` fields.
+1. Για να συλλέξετε το όνομα και τη διεύθυνση του χρήστη, χρησιμοποιήστε τη μέθοδο `group()` του `FormBuilder` για να ορίσετε την ιδιότητα `checkoutForm` σε ένα μοντέλο της φόρμας που περιέχει τα πεδία `name` και `address`.
 
   <code-example header="src/app/cart/cart.component.ts" path="getting-started/src/app/cart/cart.component.ts" region="checkout-form-group"></code-example>
 
-1. Define an `onSubmit()` method to process the form.
-  This method allows users to submit their name and address.
-  In addition, this method uses the `clearCart()` method of the `CartService` to reset the form and clear the cart.
+1. Καθορίστε μια μέθοδο `onSubmit()` για την επεξεργασία της φόρμας.
+  Αυτή η μέθοδος επιτρέπει στους χρήστες να υποβάλουν το όνομα και τη διεύθυνσή τους.
+  Επιπλέον, αυτή η μέθοδος χρησιμοποιεί τη μέθοδο `clearCart()` του `CartService` για να επαναφέρει τη φόρμα στην αρχική της μορφή και να καθαρίσει το καλάθι.
 
-  The entire cart component class is as follows:
+  Το component class του καλαθιού που προκύπτει έχει ως εξής:
 
   <code-example header="src/app/cart/cart.component.ts" path="getting-started/src/app/cart/cart.component.ts">
   </code-example>
 
-## Create the checkout form
+## Δημιουργήστε τη φόρμα ολοκλήρωσης αγοράς
 
-Use the following steps to add a checkout form at the bottom of the Cart view.
+Ακολουθήστε τα παρακάτω βήματα για να προσθέσετε μια φόρμα ολοκλήρωσης αγοράς στο κάτω μέρος της προβολής του καλαθιού.
 
-1. At the bottom of `cart.component.html`, add an HTML `<form>` element and a **Purchase** button.
+1. Στο κάτω μέρος του `cart.component.html`, προσθέστε ένα στοιχείο HTML `<form>` και ένα κουμπί **Purchase**.
 
-1. Use a `formGroup` property binding to bind `checkoutForm` to the HTML `<form>`.
+1. Χρησιμοποιήστε property binding στο `formGroup` για να συνδέσετε το `checkoutForm` με το HTML `<form>`.
 
   <code-example header="src/app/cart/cart.component.html" path="getting-started/src/app/cart/cart.component.3.html" region="checkout-form">
   </code-example>
 
-1. On the `form` tag, use an `ngSubmit` event binding to listen for the form submission and call the `onSubmit()` method with the `checkoutForm` value.
+1. Στο στοιχείο HTML `form`, χρησιμοποιήστε ένα event binding `ngSubmit` για να ειδοποιηθείτε κατά την υποβολή της φόρμας και καλέστε την μέθοδο `onSubmit()` με την τιμή `checkoutForm`.
 
   <code-example path="getting-started/src/app/cart/cart.component.html" header="src/app/cart/cart.component.html (cart component template detail)" region="checkout-form-1">
   </code-example>
 
-1. Add `<input>` fields for `name` and `address`, each with a `formControlName` attribute that binds to the `checkoutForm` form controls for `name` and `address` to their `<input>` fields.
-  The complete component is as follows:
+1. Προσθέστε πεδία `<input>` για το `name` και το `address`, το καθένα με ένα attribute `formControlName` που συνδέει τα controls της φόρμας `checkoutForm` με το `name` και το `address` στα πεδία `<input>`.
+  Το τελικό component έχει ως εξής:
 
   <code-example path="getting-started/src/app/cart/cart.component.html" header="src/app/cart/cart.component.html" region="checkout-form-2">
   </code-example>
 
-After putting a few items in the cart, users can review their items, enter their name and address, and submit their purchase.
+Αφού βάλουν μερικά προϊόντα στο καλάθι, οι χρήστες μπορούν να ελέγξουν τα προϊόντα τους, να εισαγάγουν το όνομα και τη διεύθυνσή τους και να υποβάλουν την αγορά τους.
 
 <div class="lightbox">
   <img src='generated/images/guide/start/cart-with-items-and-form.png' alt="Cart view with checkout form">
 </div>
 
-To confirm submission, open the console to see an object containing the name and address you submitted.
+Για να επιβεβαιώσετε την υποβολή, ανοίξτε την κονσόλα και θα δείτε ένα αντικείμενο που περιέχει το όνομα και τη διεύθυνση που υποβάλατε.
 
-## What's next
+## Στην συνέχεια
 
-You have a complete online store application with a product catalog, a shopping cart, and a checkout function.
+Έχετε μια πλήρη εφαρμογή ηλεκτρονικού καταστήματος με έναν κατάλογο προϊόντων, ένα καλάθι αγορών και μια λειτουργία ολοκλήρωσης αγοράς.
 
-[Continue to the "Deployment" section](start/start-deployment "Try it: Deployment") to move to local development, or deploy your app to Firebase or your own server.
+[Συνεχίστε στην ενότητα "Deployment"](start/start-deployment "Try it: Deployment") για να μεταβείτε σε τοπική ανάπτυξη, ή να ανεβάσετε την εφαρμογή σας στο Firebase ή στον δικό σας διακομιστή.
 
 @reviewed 2021-09-15

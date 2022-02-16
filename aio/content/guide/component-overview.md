@@ -19,8 +19,8 @@ To view or download the example code used in this topic, see the <live-example><
 
 To create a component, verify that you have met the following prerequisites:
 
-1. [Install the Angular CLI.](guide/setup-local#install-the-angular-cli)
-1. [Create an Angular workspace](guide/setup-local#create-a-workspace-and-initial-application) with initial application.
+1. [Install the Angular CLI.](guide/setup-local#εγκαταστήστε-το-angular-cli)
+1. [Create an Angular workspace](guide/setup-local#δημιουργήστε-έναν-χώρο-εργασίας-και-μια-αρχική-εφαρμογή) with initial application.
    If you don't have a project, create one using `ng new <project-name>`, where `<project-name>` is the name of your Angular application.
 
 ## Creating a component

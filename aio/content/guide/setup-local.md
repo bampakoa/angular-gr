@@ -1,62 +1,62 @@
-# Setting up the local environment and workspace
+# Ρύθμιση του τοπικού περιβάλλοντος και του χώρου εργασίας
 
-This guide explains how to set up your environment for Angular development using the [Angular CLI tool](cli "CLI command reference").
-It includes information about prerequisites, installing the CLI, creating an initial workspace and starter app, and running that app locally to verify your setup.
+Αυτός ο οδηγός εξηγεί πώς να ρυθμίσετε το περιβάλλον σας για ανάπτυξη Angular χρησιμοποιώντας το [εργαλείο Angular CLI](cli "CLI command reference").
+Περιλαμβάνει πληροφορίες σχετικά με τα προαπαιτούμενα, την εγκατάσταση του CLI, τη δημιουργία ενός αρχικού χώρου εργασίας και μιας αρχικής εφαρμογής και την εκτέλεση αυτής της εφαρμογής τοπικά για την επαλήθευση της ρύθμισής σας.
 
 <div class="callout is-helpful">
-<header>Try Angular without local setup</header>
+<header>Δοκιμαστε το Angular χωρις τοπικη ρυθμιση</header>
 
-If you are new to Angular, you might want to start with [Try it now!](start), which introduces the essentials of Angular in the context of a ready-made basic online store app for you to examine and modify. This standalone tutorial takes advantage of the interactive [StackBlitz](https://stackblitz.com/) environment for online development. You don't need to set up your local environment until you're ready.
+Εάν είστε νέοι στο Angular, ίσως να θέλετε να ξεκινήσετε με το [Δοκιμάστε το τώρα!](start), το οποίο εξηγεί τα βασικά στοιχεία του Angular στο πλαίσιο μιας έτοιμης βασικής εφαρμογής ηλεκτρονικού καταστήματος που μπορείτε να εξετάσετε και να τροποποιήσετε. Αυτό το αυτόνομο σεμινάριο εκμεταλλεύεται το διαδραστικό περιβάλλον του [StackBlitz](https://stackblitz.com/) για ανάπτυξη στο διαδίκτυο. Δεν χρειάζεται να ρυθμίσετε το τοπικό σας περιβάλλον μέχρι να είστε έτοιμοι.
 
 </div>
 
 
 {@a devenv}
 {@a prerequisites}
-## Prerequisites
+## Προαπαιτούμενα
 
-To use the Angular framework, you should be familiar with the following:
+Για να χρησιμοποιήσετε το Angular framework, θα πρέπει να γνωρίζετε τα εξής:
 
 * [JavaScript](https://developer.mozilla.org/en-US/docs/Web/JavaScript/A_re-introduction_to_JavaScript)
 * [HTML](https://developer.mozilla.org/docs/Learn/HTML/Introduction_to_HTML)
 * [CSS](https://developer.mozilla.org/docs/Learn/CSS/First_steps)
 
-Knowledge of [TypeScript](https://www.typescriptlang.org/) is helpful, but not required.
+Η γνώση [TypeScript](https://www.typescriptlang.org/) είναι χρήσιμη, αλλά δεν απαιτείται.
 
-To install Angular on your local system, you need the following:
+Για να εγκαταστήσετε το Angular στο τοπικό σας σύστημα, χρειάζεστε τα εξής:
 
 {@a nodejs}
 
 * **Node.js**
 
-  Angular requires an [active LTS or maintenance LTS](https://nodejs.org/about/releases) version of Node.js.
+  Το Angular απαιτεί μια [ενεργή ή maintenance LTS](https://nodejs.org/about/releases) έκδοση του Node.js.
 
   <div class="alert is-helpful">
 
-  For information about specific version requirements, see the `engines` key in the [package.json](https://unpkg.com/browse/@angular/core/package.json) file.
+  Για πληροφορίες σχετικά με συγκεκριμένες απαιτήσεις έκδοσης, ανατρέξτε στην ιδιότητα `engines` στο αρχείο [package.json](https://unpkg.com/browse/@angular/core/package.json).
 
   </div>
 
-  For more information on installing Node.js, see [nodejs.org](https://nodejs.org "Nodejs.org").
-  If you are unsure what version of Node.js runs on your system, run `node -v` in a terminal window.
+  Για περισσότερες πληροφορίες σχετικά με την εγκατάσταση του Node.js, ανατρέξτε στο [nodejs.org](https://nodejs.org "Nodejs.org").
+  Εάν δεν είστε βέβαιοι ποια έκδοση του Node.js χρησιμοποιείτε στο σύστημά σας, εκτελέστε το `node -v` σε ένα παράθυρο terminal.
 
 {@a npm}
 
-* **npm package manager**
+* **Διαχειριστής πακέτων npm**
 
-  Angular, the Angular CLI, and Angular applications depend on [npm packages](https://docs.npmjs.com/getting-started/what-is-npm) for many features and functions.
-  To download and install npm packages, you need an npm package manager.
-  This guide uses the [npm client](https://docs.npmjs.com/cli/install) command line interface, which is installed with `Node.js` by default.
-  To check that you have the npm client installed, run `npm -v` in a terminal window.
+  Το Angular, το Angular CLI, και οι εφαρμογές Angular εξαρτώνται από [πακέτα npm](https://docs.npmjs.com/getting-started/what-is-npm) για πολλές δυνατότητες και λειτουργίες.
+  Για λήψη και εγκατάσταση πακέτων npm, χρειάζεστε έναν διαχειριστή πακέτων npm.
+  Αυτός ο οδηγός χρησιμοποιεί το [πρόγραμμα-πελάτη npm](https://docs.npmjs.com/cli/install) της γραμμής εντολών, το οποίο είναι προ-εγκατεστημένο με το `Node.js`.
+  Για να ελέγξετε ότι έχετε εγκαταστήσει το πρόγραμμα-πελάτη npm, εκτελέστε το `npm -v` σε ένα παράθυρο terminal.
 
 
 {@a install-cli}
 
-## Install the Angular CLI
+## Εγκαταστήστε το Angular CLI
 
-You use the Angular CLI to create projects, generate application and library code, and perform a variety of ongoing development tasks such as testing, bundling, and deployment.
+Χρησιμοποιείτε το Angular CLI για να δημιουργείτε projects, να δημιουργείτε κώδικα εφαρμογών και βιβλιοθηκών, και να εκτελείτε μια ποικιλία από συνεχείς εργασίες ανάπτυξης, όπως testing, bundling και deployment.
 
-To install the Angular CLI, open a terminal window and run the following command:
+Για να εγκαταστήσετε το Angular CLI, ανοίξτε ένα παράθυρο terminal και εκτελέστε την ακόλουθη εντολή:
 
 <code-example language="sh">
   npm install -g @angular/cli<aio-angular-dist-tag class="pln"></aio-angular-dist-tag>
@@ -64,47 +64,47 @@ To install the Angular CLI, open a terminal window and run the following command
 
 {@a create-proj}
 
-## Create a workspace and initial application
+## Δημιουργήστε έναν χώρο εργασίας και μια αρχική εφαρμογή
 
-You develop apps in the context of an Angular [**workspace**](guide/glossary#workspace).
+Αναπτύσσετε εφαρμογές στο πλαίσιο ενός [**χώρου εργασίας**](guide/glossary#workspace) Angular.
 
-To create a new workspace and initial starter app:
+Για να δημιουργήσετε έναν νέο χώρο εργασίας και μια αρχική εφαρμογή:
 
-1. Run the CLI command `ng new` and provide the name `my-app`, as shown here:
+1. Εκτελέστε την εντολή CLI `ng new` και δώστε το όνομα `my-app`, όπως φαίνεται εδώ:
 
    <code-example language="sh">
       ng new my-app
 
     </code-example>
 
-2. The `ng new` command prompts you for information about features to include in the initial app. Accept the defaults by pressing the Enter or Return key.
+2. Η εντολή `ng new` σας ζητά πληροφορίες σχετικά με λειτουργίες που θα συμπεριλάβει στην αρχική εφαρμογή. Αποδεχτείτε τις προεπιλογές πατώντας το πλήκτρο Enter ή Return.
 
-The Angular CLI installs the necessary Angular npm packages and other dependencies. This can take a few minutes.
+Το Angular CLI εγκαθιστά τα απαραίτητα πακέτα npm του Angular και άλλες εξαρτήσεις. Αυτό μπορεί να διαρκέσει μερικά λεπτά.
 
-The CLI creates a new workspace and a simple Welcome app, ready to run.
+Το CLI δημιουργεί έναν νέο χώρο εργασίας και μια απλή εφαρμογή καλωσορίσματος, έτοιμη για εκτέλεση.
 
 {@a serve}
 
-## Run the application
+## Εκτελέστε την εφαρμογή
 
-The Angular CLI includes a server, for you to build and serve your app locally.
+Το Angular CLI περιλαμβάνει έναν διακομιστή, για να δημιουργήσετε και να τρέξετε την εφαρμογή σας τοπικά.
 
-1. Navigate to the workspace folder, such as `my-app`.
+1. Πλοηγηθείτε στο φάκελο του χώρου εργασίας, όπως `my-app`.
 
-1. Run the following command:
+1. Εκτελέστε την ακόλουθη εντολή:
 
 <code-example language="sh">
   cd my-app
   ng serve --open
 </code-example>
 
-The `ng serve` command launches the server, watches your files,
-and rebuilds the app as you make changes to those files.
+Η εντολή `ng serve` εκκινεί τον διακομιστή, παρακολουθεί τα αρχεία σας,
+και αναδομεί την εφαρμογή καθώς κάνετε αλλαγές σε αυτά τα αρχεία.
 
-The `--open` (or just `-o`) option automatically opens your browser
-to `http://localhost:4200/`.
+Η επιλογή `--open` (ή για συντομία `-o`) ανοίγει αυτόματα το πρόγραμμα περιήγησής σας
+στο `http://localhost:4200/`.
 
-If your installation and setup was successful, you should see a page similar to the following.
+Εάν η εγκατάσταση και η ρύθμιση ήταν επιτυχείς, θα πρέπει να δείτε μια σελίδα παρόμοια με την παρακάτω.
 
 
 <div class="lightbox">
@@ -112,14 +112,14 @@ If your installation and setup was successful, you should see a page similar to 
 </div>
 
 
-## Next steps
+## Επόμενα βήματα
 
-* For a more thorough introduction to the fundamental concepts and terminology of Angular single-page app architecture and design principles, read the [Angular Concepts](guide/architecture) section.
+* Για μια πιο εμπεριστατωμένη εισαγωγή στις θεμελιώδεις έννοιες και την ορολογία της αρχιτεκτονικής και σχεδίασης μιας εφαρμογής Angular, διαβάστε την ενότητα [Έννοιες του Angular](guide/architecture).
 
-* Work through the [Tour of Heroes Tutorial](tutorial), a complete hands-on exercise that introduces you to the app development process using the Angular CLI and walks through important subsystems.
+* Εργαστείτε μέσω του [σεμιναρίου Tour of Heroes](tutorial), μιας ολοκληρωμένης πρακτικής άσκησης που σας εισάγει στη διαδικασία ανάπτυξης εφαρμογών χρησιμοποιώντας το Angular CLI και περιηγείται σε σημαντικά υποσυστήματα.
 
-* To learn more about using the Angular CLI, see the [CLI Overview](cli "CLI Overview"). In addition to creating the initial workspace and app scaffolding, use the CLI to generate Angular code such as components and services. The CLI supports the full development cycle, including building, testing, bundling, and deployment.
+* Για να μάθετε περισσότερα σχετικά με τη χρήση του Angular CLI, ανατρέξτε στην [Επισκόπηση CLI](cli "CLI Overview"). Εκτός από τη δημιουργία του αρχικού χώρου εργασίας και της κατασκευής της εφαρμογής, χρησιμοποιήστε το CLI για να δημιουργήσετε κώδικα Angular όπως components και services. Το CLI υποστηρίζει τον πλήρη κύκλο ανάπτυξης, συμπεριλαμβανομένης της κατασκευής, του testing, του bundling και του deployment.
 
-* For more information about the Angular files generated by `ng new`, see [Workspace and Project File Structure](guide/file-structure).
+* Για περισσότερες πληροφορίες σχετικά με τα αρχεία Angular που δημιουργούνται από το `ng new`, ανατρέξτε στο [Δομή χώρου εργασίας και αρχείων project](guide/file-structure).
 
 @reviewed 2021-09-15
