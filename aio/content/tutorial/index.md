@@ -1,87 +1,85 @@
-<h1 class="no-toc">Tour of Heroes app and tutorial</h1>
+<h1 class="no-toc">Εφαρμογή και σεμινάριο Tour of Heroes</h1>
 
 <div class="callout is-helpful">
-<header>Getting Started</header>
+<header>Πως να ξεκινησετε</header>
 
-In this tutorial, you build your own application from the ground up, providing experience with the typical development process, as well as an introduction to basic app-design concepts, tools, and terminology.
+Σε αυτό το σεμινάριο, δημιουργείτε τη δική σας εφαρμογή από την αρχή, αποκτώντας εμπειρία με την τυπική διαδικασία ανάπτυξης, καθώς και μια εισαγωγή σε βασικές έννοιες σχεδίασης εφαρμογών, εργαλεία και ορολογία.
 
-If you're completely new to Angular, you might want to try the [**Try it now**](start) quick-start application first.
-It is based on a ready-made  partially-completed project, which you can examine and modify in the StackBlitz interactive development environment, where you can see the results in real time.
+Εάν είστε εντελώς νέοι στο Angular, ίσως θέλετε να δοκιμάσετε πρώτα την εφαρμογή γρήγορης εκκίνησης [**Δοκιμάστε το τώρα**](start).
+Βασίζεται σε ένα έτοιμο μερικώς ολοκληρωμένο project, το οποίο μπορείτε να εξετάσετε και να τροποποιήσετε στο διαδραστικό περιβάλλον ανάπτυξης του StackBlitz, όπου μπορείτε να δείτε τα αποτελέσματα σε πραγματικό χρόνο.
 
-The "Try it" tutorial covers the same major topics&mdash;components, template syntax, routing, services, and accessing data using HTTP&mdash;in a condensed format, following the most current best practices.
+Το σεμινάριο "Δοκιμάστε το" καλύπτει τα ίδια κύρια θέματα&mdash;components, σύνταξη template, δρομολόγηση, services, και πρόσβαση σε δεδομένα με την χρήση του HTTP&mdash;σε συνοπτική μορφή, ακολουθώντας τις πιο πρόσφατες καλύτερες πρακτικές.
 
 </div>
 
-This _Tour of Heroes_ tutorial shows you how to set up your local development environment and develop an application using the [Angular CLI tool](cli "CLI command reference"), and provides an introduction to the fundamentals of Angular.
+Αυτό το σεμινάριο  _Tour of Heroes_ δείχνει πώς να ρυθμίσετε το τοπικό σας περιβάλλον ανάπτυξης και να αναπτύξετε μια εφαρμογή χρησιμοποιώντας το [εργαλείο Angular CLI](cli "CLI command reference"), και παρέχει μια εισαγωγή στις βασικές αρχές του Angular.
 
-The _Tour of Heroes_ application that you build helps a staffing agency manage its stable of heroes.
-The application has many of the features you'd expect to find in any data-driven application.
-The finished application acquires and displays a list of heroes, edits a selected hero's detail, and navigates among different views of heroic data.
+Η εφαρμογή _Tour of Heroes_ που δημιουργείτε βοηθά μια εταιρεία στελέχωσης να διαχειρίζεται τους ήρωές της.
+Η εφαρμογή έχει πολλές από τις δυνατότητες που θα περιμένατε να βρείτε σε οποιαδήποτε εφαρμογή που βασίζεται σε δεδομένα.
+Η τελική εφαρμογή διαβάζει και εμφανίζει μια λίστα ηρώων, επεξεργάζεται τις λεπτομέρειες ενός επιλεγμένου ήρωα και πλοηγείται ανάμεσα σε διαφορετικές προβολές δεδομένων ηρώων.
 
-You will find references to and expansions of this application domain in many of the examples used throughout the Angular documentation, but you don't necessarily need to work through this tutorial to understand those examples.
+Θα βρείτε αναφορές και επεκτάσεις αυτής της εφαρμογής σε πολλά από τα παραδείγματα που χρησιμοποιούνται σε όλες τις οδηγίες χρήσης του Angular, αλλά δεν χρειάζεται απαραίτητα να κάνετε αυτό το σεμινάριο για να κατανοήσετε αυτά τα παραδείγματα.
 
-By the end of this tutorial you will be able to do the following:
+Μέχρι το τέλος αυτού του σεμιναρίου θα μπορείτε να κάνετε τα εξής:
 
-* Use built-in Angular [directives](guide/glossary#directive "Directives definition") to show and hide elements and display lists of hero data.
-* Create Angular [components](guide/glossary#component "Components definition") to display hero details and show an array of heroes.
-* Use one-way [data binding](guide/glossary#data-binding "Data binding definition") for read-only data.
-* Add editable fields to update a model with two-way data binding.
-* Bind component methods to user events, like keystrokes and clicks.
-* Enable users to select a hero from a master list and edit that hero in the details view.
-* Format data with [pipes](guide/glossary#pipe "Pipe definition").
-* Create a shared [service](guide/glossary#service "Service definition") to assemble the heroes.
-* Use [routing](guide/glossary#router "Router definition") to navigate among different views and their components.
+* Χρήση των ενσωματωμένων [directives](guide/glossary#directive "Directives definition") του Angular για να εμφανίσετε και να αποκρύψετε στοιχεία και να εμφανίσετε λίστες με δεδομένα ηρώων.
+* Δημιουργία [components](guide/glossary#component "Components definition") του Angular για να εμφανίσετε τις λεπτομέρειες ενός ήρωα και μια λίστα από ήρωες.
+* Χρήση one-way [data binding](guide/glossary#data-binding "Data binding definition")  για δεδομένα μόνο για ανάγνωση.
+* Προσθήκη επεξεργάσιμων πεδίων για να ενημερώσετε ένα μοντέλο με two-way data binding.
+* Σύνδεση μεθόδων του component σε events του χρήστη, όπως πληκτρολογήσεις και κλικ.
+* Επιτρέψτε στους χρήστες να επιλέξουν έναν ήρωα από μια κύρια λίστα και να επεξεργαστούν αυτόν τον ήρωα στην προβολή λεπτομερειών.
+* Μορφοποίηση δεδομένων με [pipes](guide/glossary#pipe "Pipe definition").
+* Δημιουργία ενός κοινόχρηστου [service](guide/glossary#service "Service definition") για να κατασκευάσετε τους ήρωες.
+* Χρήση [δρομολόγησης](guide/glossary#router "Router definition") για πλοήγηση μεταξύ διαφορετικών προβολών και των components τους.
 
-You'll learn enough Angular to get started and gain confidence that
-Angular can do whatever you need it to do.
+Θα μάθετε αρκετά το Angular για να ξεκινήσετε και θα αποκτήσετε σιγουριά ότι το Angular μπορεί να κάνει ό,τι χρειαστείτε.
 
 <div class="callout is-helpful">
-<header>Solution</header>
+<header>Λυση</header>
 
-After completing all tutorial steps, the final application will look like this: <live-example name="toh-pt6"></live-example>.
+Μετά την ολοκλήρωση όλων των βημάτων εκμάθησης, η τελική εφαρμογή θα μοιάζει με αυτό: <live-example name="toh-pt6"></live-example>.
 
 </div>
 
-## What you'll build
+## Τι θα κατασκευάσετε
 
-Here's a visual idea of where this tutorial leads, beginning with the "Dashboard"
-view and the most heroic heroes:
+Ακολουθεί μια οπτική ιδέα για το πού οδηγεί αυτό το σεμινάριο, ξεκινώντας με την προβολή "Dashboard"
+και τους πιο γενναίους ήρωες:
 
 <div class="lightbox">
   <img src='generated/images/guide/toh/heroes-dashboard-1.png' alt="Output of heroes dashboard">
 </div>
 
-You can click the two links above the dashboard ("Dashboard" and "Heroes")
-to navigate between this Dashboard view and a Heroes view.
+Μπορείτε να κάνετε κλικ στους δύο συνδέσμους ("Dashboard" και "Heroes")
+για να πλοηγηθείτε μεταξύ της Dashboard προβολής και μιας προβολής Heroes.
 
-If you click the dashboard hero "Magneta," the router opens a "Hero Details" view
-where you can change the hero's name.
+Εάν κάνετε κλικ στον ήρωα "Magneta," το router ανοίγει μια προβολή "Hero Details"
+όπου μπορείτε να αλλάξετε το όνομα του ήρωα.
 
 <div class="lightbox">
   <img src='generated/images/guide/toh/hero-details-1.png' alt="Details of hero in app">
 </div>
 
-Clicking the "Back" button returns you to the Dashboard.
-Links at the top take you to either of the main views.
-If you click "Heroes," the application displays the "Heroes" master list view.
+Κάνοντας κλικ στο κουμπί "Back" επιστρέφετε στο Dashboard.
+Οι σύνδεσμοι στο επάνω μέρος σάς μεταφέρουν σε οποιαδήποτε από τις κύριες προβολές. 
+Εάν κάνετε κλικ στο "Heroes," η εφαρμογή εμφανίζει την προβολή της κύριας λίστας "Heroes".
 
 
 <div class="lightbox">
   <img src='generated/images/guide/toh/heroes-list-2.png' alt="Output of heroes list app">
 </div>
 
-When you click a different hero name, the read-only mini detail beneath the list reflects the new choice.
+Όταν κάνετε κλικ σε ένα διαφορετικό όνομα ήρωα, οι μίνι λεπτομέρειες  κάτω από τη λίστα αναπαριστούν την νέα επιλογή.
 
-You can click the "View Details" button to drill into the
-editable details of the selected hero.
+Μπορείτε να πατήσετε το κουμπί  "View Details" για να διερευνήσετε τις επεξεργάσιμες λεπτομέρειες του επιλεγμένου ήρωα.
 
-The following diagram captures all of the navigation options.
+Το παρακάτω διάγραμμα καταγράφει όλες τις επιλογές πλοήγησης.
 
 <div class="lightbox">
   <img src='generated/images/guide/toh/nav-diagram.png' alt="View navigations">
 </div>
 
-Here's the application in action:
+Εδώ είναι η εφαρμογή σε δράση:
 
 <div class="lightbox">
   <img src='generated/images/guide/toh/toh-anim.gif' alt="Tour of Heroes in Action">

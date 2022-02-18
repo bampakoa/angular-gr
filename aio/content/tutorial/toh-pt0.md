@@ -1,53 +1,53 @@
-# Create a new project
+# Δημιουργήστε ένα νέο project
 
-You begin by creating an initial application using the Angular CLI. Throughout this tutorial, you’ll modify and extend that starter application to create the Tour of Heroes application.
+Ξεκινάτε δημιουργώντας μια αρχική εφαρμογή χρησιμοποιώντας το Angular CLI. Σε όλο αυτό το σεμινάριο, θα τροποποιήσετε και θα επεκτείνετε αυτήν την αρχική εφαρμογή για να δημιουργήσετε την εφαρμογή Tour of Heroes.
 
-In this part of the tutorial, you'll do the following:
+Σε αυτό το μέρος του σεμιναρίου, θα κάνετε τα εξής:
 
-1. Set up your environment.
-2. Create a new workspace and initial application project.
-3. Serve the application.
-4. Make changes to the application.
+1. Ρύθμιση του περιβάλλον σας.
+2. Δημιουργία ενός νέου χώρου εργασίας και ενός αρχικού project της εφαρμογής.
+3. Εκτέλεση της εφαρμογής.
+4. Τροποποίηση της εφαρμογής.
 
 <div class="alert is-helpful">
 
-  For the sample application that this page describes, see the <live-example></live-example>.
+  Για το δείγμα εφαρμογής που περιγράφει αυτή η σελίδα, ανατρέξτε στο <live-example></live-example>.
 
 </div>
 
-## Set up your environment
+## Ρυθμίστε το περιβάλλον σας
 
-To set up your development environment, follow the instructions in [Local Environment Setup](guide/setup-local "Setting up for Local Development").
+Για να ρυθμίσετε το περιβάλλον ανάπτυξής σας, ακολουθήστε τις οδηγίες στο [Ρύθμιση τοπικού περιβάλλοντος](guide/setup-local "Setting up for Local Development").
 
 
-## Create a new workspace and an initial application
+## Δημιουργήστε έναν νέο χώρο εργασίας και μια αρχική εφαρμογή
 
-You develop applications in the context of an Angular [workspace](guide/glossary#workspace). A workspace contains the files for one or more [projects](guide/glossary#project). A project is the set of files that comprise an application or a library. For this tutorial, you will create a new workspace.
+Αναπτύσσετε εφαρμογές στο πλαίσιο ενός [χώρου εργασίας](guide/glossary#workspace) Angular. Ένας χώρος εργασίας περιέχει τα αρχεία για ένα ή περισσότερα [projects](guide/glossary#project). Ένα project είναι το σύνολο των αρχείων που περιλαμβάνει μια εφαρμογή ή μια βιβλιοθήκη. Για αυτό το σεμινάριο, θα δημιουργήσετε έναν νέο χώρο εργασίας.
 
-To create a new workspace and an initial application project:
+Για να δημιουργήσετε έναν νέο χώρο εργασίας και ένα αρχικό έργο της εφαρμογής:
 
-  1. Ensure that you are not already in an Angular workspace folder. For example, if you have previously created the Getting Started workspace, change to the parent of that folder.
-  2. Run the CLI command `ng new` and provide the name `angular-tour-of-heroes`, as shown here:
+  1. Βεβαιωθείτε ότι δεν βρίσκεστε ήδη σε φάκελο χώρου εργασίας Angular. Για παράδειγμα, εάν έχετε δημιουργήσει προηγουμένως τον χώρο εργασίας "Πώς να ξεκινήσετε", περιηγηθείτε στον προηγούμενο φάκελό του.
+  2. Εκτελέστε την εντολή CLI `ng new` και δώστε το όνομα `angular-tour-of-heroes`, όπως φαίνεται εδώ:
 
   <code-example language="sh">
      ng new angular-tour-of-heroes
   </code-example>
 
-  3. The `ng new` command prompts you for information about features to include in the initial application project. Accept the defaults by pressing the Enter or Return key.
+  3. Η εντολή `ng new` σάς ζητά πληροφορίες σχετικά με τις λειτουργίες που θα συμπεριλάβει στο αρχικό project της εφαρμογής. Αποδεχτείτε τις προεπιλογές πατώντας το πλήκτρο Enter ή Return.
 
-The Angular CLI installs the necessary Angular `npm` packages and other dependencies. This can take a few minutes.
+Το Angular CLI εγκαθιστά τα απαραίτητα `npm` πακέτα του Angular και άλλες εξαρτήσεις. Αυτό μπορεί να διαρκέσει μερικά λεπτά.
 
-It also creates the following workspace and starter project files:
+Δημιουργεί επίσης τον ακόλουθο χώρο εργασίας και τα αρχεία του αρχικού project:
 
-  * A new workspace, with a root folder named `angular-tour-of-heroes`.
-  * An initial skeleton app project in the `src/app` subfolder.
-  * Related configuration files.
+  * Έναν νέο χώρο εργασίας, με έναν κύριο φάκελο που ονομάζεται `angular-tour-of-heroes`.
+  * Ένα αρχικό project της βασικής εφαρμογής στον υποφάκελο `src/app`.
+  * Σχετικά αρχεία παραμετροποίησης.
 
-The initial app project contains a simple Welcome application, ready to run.
+Το αρχικό project της εφαρμογής περιέχει μια απλή εφαρμογή καλωσορίσματος, έτοιμη για εκτέλεση.
 
-## Serve the application
+## Εκτελέστε την εφαρμογή
 
-Go to the workspace directory and launch the application.
+Μεταβείτε στον φάκελο του χώρου εργασίας και ξεκινήστε την εφαρμογή.
 
 <code-example language="sh">
   cd angular-tour-of-heroes
@@ -56,68 +56,68 @@ Go to the workspace directory and launch the application.
 
 <div class="alert is-helpful">
 
-The `ng serve` command builds the app, starts the development server,
-watches the source files, and rebuilds the application as you make changes to those files.
+Η εντολή `ng serve` δημιουργεί την εφαρμογή, ξεκινά τον διακομιστή ανάπτυξης,
+παρακολουθεί τα αρχεία προέλευσης και αναδομεί την εφαρμογή καθώς κάνετε αλλαγές σε αυτά τα αρχεία.
 
-The `--open` flag opens a browser to `http://localhost:4200/`.
+Η επιλογή `--open` ανοίγει το πρόγραμμα περιήγησης στο `http://localhost:4200/`.
 
 </div>
 
-You should see the application running in your browser.
+Θα πρέπει να δείτε την εφαρμογή να εκτελείται στο πρόγραμμα περιήγησής σας.
 
 ## Angular components
 
-The page you see is the _application shell_.
-The shell is controlled by an Angular **component** named `AppComponent`.
+Η σελίδα που βλέπετε είναι το _κέλυφος της εφαρμογής_.
+Το κέλυφος ελέγχεται από ένα Angular **component** που ονομάζεται `AppComponent`.
 
-_Components_ are the fundamental building blocks of Angular applications.
-They display data on the screen, listen for user input, and take action based on that input.
+Τα _Components_ είναι τα θεμελιώδη δομικά στοιχεία των εφαρμογών Angular.
+Εμφανίζουν δεδομένα στην οθόνη, παρακολουθούν την εισαγωγή δεδομένων από τον χρήστη και ενεργούν με βάση αυτά τα δεδομένα.
 
-## Make changes to the application
+## Κάντε αλλαγές στην εφαρμογή
 
-Open the project in your favorite editor or IDE and navigate to the `src/app` folder to make some changes to the starter application.
+Ανοίξτε το project στο αγαπημένο σας πρόγραμμα επεξεργασίας ή IDE και μεταβείτε στον φάκελο `src/app` για να κάνετε κάποιες αλλαγές στην αρχική εφαρμογή.
 
-You'll find the implementation of the shell `AppComponent` distributed over three files:
+Θα βρείτε την υλοποίηση του κελύφους `AppComponent` κατανεμημένη σε τρία αρχεία:
 
-1. `app.component.ts`&mdash; the component class code, written in TypeScript.
-1. `app.component.html`&mdash; the component template, written in HTML.
-1. `app.component.css`&mdash; the component's private CSS styles.
+1. `app.component.ts`&mdash; ο κώδικας του component class, γραμμένο σε TypeScript.
+1. `app.component.html`&mdash; το template του component template, γραμμένο σε HTML.
+1. `app.component.css`&mdash; τα CSS styles του component.
 
-### Change the application title
+### Αλλάξτε τον τίτλο της εφαρμογής
 
-Open the component class file (`app.component.ts`) and change the value of the `title` property to 'Tour of Heroes'.
+Ανοίξτε το αρχείο του component class (`app.component.ts`) και αλλάξτε την τιμή της ιδιότητας `title` σε 'Tour of Heroes'.
 
 <code-example path="toh-pt0/src/app/app.component.ts" region="set-title" header="app.component.ts (class title property)"></code-example>
 
-Open the component template file (`app.component.html`) and
-delete the default template generated by the Angular CLI.
-Replace it with the following line of HTML.
+Ανοίξτε το αρχείο template του component (`app.component.html`) και
+διαγράψτε το προεπιλεγμένο template που δημιουργήθηκε από το Angular CLI.
+Αντικαταστήστε το με την ακόλουθη γραμμή HTML.
 
 <code-example path="toh-pt0/src/app/app.component.html"
   header="app.component.html (template)"></code-example>
 
-The double curly braces are Angular's *interpolation binding* syntax.
-This interpolation binding presents the component's `title` property value
-inside the HTML header tag.
+Οι διπλές αγκύλες είναι η σύνταξη *interpolation binding* του Angular.
+Αυτό το interpolation binding παρουσιάζει την τιμή της ιδιότητας `title` του component
+μέσα στο στοιχείο header του HTML.
 
-The browser refreshes and displays the new application title.
+Το πρόγραμμα περιήγησης ανανεώνει την εφαρμογή και εμφανίζει τον νέο τίτλο.
 
 {@a app-wide-styles}
 
-### Add application styles
+### Προσθέστε στυλ στην εφαρμογή
 
-Most apps strive for a consistent look across the application.
-The CLI generated an empty `styles.css` for this purpose.
-Put your application-wide styles there.
+Οι περισσότερες εφαρμογές προσπαθούν να έχουν μια συνεπή εμφάνιση σε όλη την εφαρμογή.
+Το CLI δημιούργησε ένα κενό `styles.css` για αυτόν τον σκοπό.
+Τοποθετήστε εκεί τα στυλ της εφαρμογής σας.
 
-Open `src/styles.css` and add the code below to the file.
+Ανοίξτε το `src/styles.css` και προσθέστε τον παρακάτω κώδικα στο αρχείο.
 
 <code-example path="toh-pt0/src/styles.1.css" header="src/styles.css (excerpt)">
 </code-example>
 
-## Final code review
+## Επισκόπηση τελικού κώδικα
 
-Here are the code files discussed on this page.
+Εδώ είναι τα αρχεία κώδικα που συζητήθηκαν σε αυτήν τη σελίδα.
 
 <code-tabs>
 
@@ -133,8 +133,8 @@ Here are the code files discussed on this page.
   </code-pane>
 </code-tabs>
 
-## Summary
+## Περίληψη
 
-* You created the initial application structure using the Angular CLI.
-* You learned that Angular components display data.
-* You used the double curly braces of interpolation to display the application title.
+* Δημιουργήσατε την αρχική δομή της εφαρμογής χρησιμοποιώντας το Angular CLI.
+* Μάθατε ότι τα Angular components εμφανίζουν δεδομένα.
+* Χρησιμοποιήσατε τις διπλές αγκύλες του interpolation για να εμφανίσετε τον τίτλο της εφαρμογής.
