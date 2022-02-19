@@ -1,227 +1,226 @@
-# Display a selection list
+# Εμφάνιση λίστας επιλογών
 
-In this page, you'll expand the Tour of Heroes application to display a list of heroes, and
-allow users to select a hero and display the hero's details.
+Σε αυτήν τη σελίδα, θα επεκτείνετε την εφαρμογή Tour of Heroes για να εμφανίσετε μια λίστα με ήρωες και
+θα επιτρέψετε στους χρήστες να επιλέξουν έναν ήρωα και να εμφανίσουν τα στοιχεία του ήρωα.
 
 <div class="alert is-helpful">
 
-  For the sample application that this page describes, see the <live-example></live-example>.
+  Για το δείγμα εφαρμογής που περιγράφει αυτή η σελίδα, ανατρέξτε στο <live-example></live-example>.
 
 </div>
 
 
-## Create mock heroes
+## Δημιουργήστε εικονικούς ήρωες
 
-You'll need some heroes to display.
+Θα χρειαστείτε μερικούς ήρωες για να εμφανίσετε.
 
-Eventually you'll get them from a remote data server.
-For now, you'll create some _mock heroes_ and pretend they came from the server.
+Τελικά θα τους πάρετε από έναν απομακρυσμένο διακομιστή δεδομένων.
+Προς το παρόν, θα δημιουργήσετε μερικούς _εικονικούς ήρωες_ και θα προσποιηθείτε ότι προέρχονται από τον διακομιστή.
 
-Create a file called `mock-heroes.ts` in the `src/app/` folder.
-Define a `HEROES` constant as an array of ten heroes and export it.
-The file should look like this.
+Δημιουργήστε ένα αρχείο με το όνομα `mock-heroes.ts` στον φάκελο `src/app/`.
+Καθορίστε μια σταθερή ιδιότητα `HEROES` ως μια λίστα δέκα ηρώων και κάντε την export.
+Το αρχείο πρέπει να μοιάζει με αυτό.
 
 <code-example path="toh-pt2/src/app/mock-heroes.ts" header="src/app/mock-heroes.ts"></code-example>
 
-## Displaying heroes
+## Εμφάνιση ηρώων
 
-Open the `HeroesComponent` class file and import the mock `HEROES`.
+Ανοίξτε το αρχείο class του `HeroesComponent` και κάντε import το εικονικό `HEROES`.
 
 <code-example path="toh-pt2/src/app/heroes/heroes.component.ts" region="import-heroes" header="src/app/heroes/heroes.component.ts (import HEROES)">
 </code-example>
 
-In the same file (`HeroesComponent` class), define a component property called `heroes` to expose the `HEROES` array for binding.
+Στο ίδιο αρχείο (class `HeroesComponent`), ορίστε μια ιδιότητα του component που ονομάζεται `heroes` για να κάνετε την λίστα `HEROES` διαθέσιμη για binding.
 
 <code-example path="toh-pt2/src/app/heroes/heroes.component.ts" header="src/app/heroes/heroes.component.ts" region="component">
 </code-example>
 
-### List heroes with `*ngFor`
+### Δημιουργήστε μια λίστα ηρώων με `*ngFor`
 
-Open the `HeroesComponent` template file and make the following changes:
+Ανοίξτε το αρχείο template του `HeroesComponent` και κάντε τις ακόλουθες αλλαγές:
 
-* Add an `<h2>` at the top,
-* Below it add an HTML unordered list (`<ul>`)
-* Insert an `<li>` within the `<ul>` that displays properties of a `hero`.
-* Sprinkle some CSS classes for styling (you'll add the CSS styles shortly).
+* Προσθέστε ένα `<h2>` στην κορυφή,
+* Κάτω από αυτό προσθέστε μια μη-ταξινομημένη λίστα HTML (`<ul>`)
+* Εισαγάγετε ένα `<li>` μέσα στο `<ul>` που εμφανίζει τις ιδιότητες του `hero`.
+* Ενσωματώστε μερικές CSS classes για στυλ (θα προσθέσετε τα CSS styles σύντομα).
 
-Make it look like this:
+Κάντε το να μοιάζει με αυτό:
 
 <code-example path="toh-pt2/src/app/heroes/heroes.component.1.html" region="list" header="heroes.component.html (heroes template)"></code-example>
 
-That displays an error since the property 'hero' does not exist. To have access to each individual hero and list them all, add an `*ngFor` to the `<li>` to iterate through the list of heroes:
+Αυτό εμφανίζει ένα σφάλμα αφού η ιδιότητα 'hero' δεν υπάρχει. Για να έχετε πρόσβαση σε κάθε μεμονωμένο ήρωα και να τους εμφανίσετε όλους, προσθέστε ένα `*ngFor` στο `<li>` για να προσπελάσετε την λίστα των ηρώων:
 
 <code-example path="toh-pt2/src/app/heroes/heroes.component.1.html" region="li">
 </code-example>
 
-The [`*ngFor`](guide/built-in-directives#ngFor) is Angular's _repeater_ directive.
-It repeats the host element for each element in a list.
+Το [`*ngFor`](guide/built-in-directives#ngFor) είναι ένα  _επαναλαμβανόμενο_ directive του Angular.
+Επαναλαμβάνει το στοιχείο στο οποίο αναφέρεται για κάθε στοιχείο στην λίστα.
 
-The syntax in this example is as follows:
+Η σύνταξη σε αυτό το παράδειγμα είναι η εξής:
 
-* `<li>` is the host element.
-* `heroes` holds the mock heroes list from the `HeroesComponent` class, the mock heroes list.
-* `hero` holds the current hero object for each iteration through the list.
+* `<li>` είναι το στοιχείο στο οποίο αναφέρεται.
+* `heroes` περιέχει την λίστα των εικονικών ηρώων από το class `HeroesComponent`, τη λίστα εικονικών ηρώων.
+* `hero` περιέχει το τρέχων αντικείμενο του ήρωα για κάθε επανάληψη μέσα από τη λίστα.
 
 <div class="alert is-important">
 
-Don't forget the asterisk (*) in front of `ngFor`. It's a critical part of the syntax.
+Μην ξεχνάτε τον αστερίσκο (*) μπροστά από το `ngFor`. Είναι ένα κρίσιμο μέρος της σύνταξης.
 
 </div>
 
-After the browser refreshes, the list of heroes appears.
+Μετά την ανανέωση του προγράμματος περιήγησης, εμφανίζεται η λίστα των ηρώων.
 
 {@a styles}
 
-### Style the heroes
+### Προσθέστε στυλ στους ήρωες
 
-The heroes list should be attractive and should respond visually when users
-hover over and select a hero from the list.
+Η λίστα ηρώων πρέπει να είναι ελκυστική και να ανταποκρίνεται οπτικά όταν οι χρήστες
+τοποθετήσουν το δείκτη του ποντικιού από πάνω και επιλέξουν έναν ήρωα από τη λίστα.
 
-In the [first tutorial](tutorial/toh-pt0#app-wide-styles), you set the basic styles for the entire application in `styles.css`.
-That stylesheet didn't include styles for this list of heroes.
+Στο [πρώτο σεμινάριο](tutorial/toh-pt0#app-wide-styles), ορίσατε τα βασικά στυλ για ολόκληρη την εφαρμογή στο `styles.css`.
+Εκείνο το αρχείο δεν περιλάμβανε στυλ για αυτήν τη λίστα ηρώων.
 
-You could add more styles to `styles.css` and keep growing that stylesheet as you add components.
+Θα μπορούσατε να προσθέσετε περισσότερα στυλ στο `styles.css` και να συνεχίσετε να αναπτύσσετε εκείνο το αρχείο στυλ καθώς προσθέτετε components.
 
-You may prefer instead to define private styles for a specific component and keep everything a component needs&mdash; the code, the HTML,
-and the CSS &mdash;together in one place.
+Ίσως προτιμάτε να ορίσετε στυλ που απευθύνονται για ένα συγκεκριμένο component και να διατηρήσετε όλα όσα χρειάζεται ένα component&mdash; τον κώδικα, το HTML,
+και το CSS &mdash;μαζί σε ένα μέρος.
 
-This approach makes it easier to re-use the component somewhere else
-and deliver the component's intended appearance even if the global styles are different.
+Αυτή η προσέγγιση διευκολύνει την εκ νέου χρήση του component κάπου αλλού
+και προσφέρει την επιδιωκόμενη εμφάνιση του component ακόμα κι αν τα καθολικά στυλ είναι διαφορετικά.
 
-You define private styles either inline in the `@Component.styles` array or
-as stylesheet file(s) identified in the `@Component.styleUrls` array.
+Ορίζετε στυλ για συγκεκριμένο component είτε ενσωματωμένα στον πίνακα `@Component.styles` είτε
+ως αρχείο(α) στυλ στον πίνακα `@Component.styleUrls`.
 
-When the CLI generated the `HeroesComponent`, it created an empty `heroes.component.css` stylesheet for the `HeroesComponent`
-and pointed to it in `@Component.styleUrls` like this.
+Όταν το CLI δημιούργησε το `HeroesComponent`, δημιούργησε ένα κενό αρχείο στυλ `heroes.component.css` για το `HeroesComponent`
+και το πρόσθεσε στο `@Component.styleUrls` ώς εξής.
 
 <code-example path="toh-pt2/src/app/heroes/heroes.component.ts" region="metadata"
  header="src/app/heroes/heroes.component.ts (@Component)">
 </code-example>
 
-Open the `heroes.component.css` file and paste in the private CSS styles for the `HeroesComponent`.
-You'll find them in the [final code review](#final-code-review) at the bottom of this guide.
+Ανοίξτε το αρχείο `heroes.component.css` και επικολλήστε τα CSS styles για το `HeroesComponent`.
+Θα τα βρείτε στην [τελική επισκόπηση του κώδικα](#final-code-review) στο κάτω μέρος αυτού του οδηγού.
 
 <div class="alert is-important">
 
-Styles and stylesheets identified in `@Component` metadata are scoped to that specific component.
-The `heroes.component.css` styles apply only to the `HeroesComponent` and don't affect the outer HTML or the HTML in any other component.
+Τα στυλ και τα αρχεία στυλ που περιέχονται στα μεταδεδομένα `@Component` απευθύνονται σε αυτό το συγκεκριμένο component.
+Τα στυλ στο `heroes.component.css` εφαρμόζονται μόνο στο `HeroesComponent` και δεν επηρεάζουν το εξωτερικό HTML ή το HTML σε οποιοδήποτε άλλο component.
 
 </div>
 
-## Viewing details
+## Προβολή λεπτομερειών
 
-When the user clicks a hero in the list, the component should display the selected hero's details at the bottom of the page.
+Όταν ο χρήστης κάνει κλικ σε έναν ήρωα στη λίστα, το component πρέπει να εμφανίζει τα στοιχεία του επιλεγμένου ήρωα στο κάτω μέρος της σελίδας.
 
-In this section, you'll listen for the hero item click event
-and update the hero detail.
+Σε αυτήν την ενότητα, θα αναγνωρίσετε το event click του ήρωα και θα ενημερώσετε τις λεπτομέρειές του ήρωα.
 
-### Add a click event binding
+### Προσθήκη ενός binding για το event click
 
-Add a click event binding to the `<li>` like this:
+Προσθέστε ένα binding για το event click στο `<li>` ως εξής:
 
 <code-example path="toh-pt2/src/app/heroes/heroes.component.1.html" region="selectedHero-click" header="heroes.component.html (template excerpt)"></code-example>
 
-This is an example of Angular's [event binding](guide/event-binding) syntax.
+Αυτό είναι ένα παράδειγμα της σύνταξης [event binding](guide/event-binding) του Angular.
 
-The parentheses around `click` tell Angular to listen for the `<li>` element's  `click` event.
-When the user clicks in the `<li>`, Angular executes the `onSelect(hero)` expression.
-
-
-In the next section, define an `onSelect()` method in `HeroesComponent` to
-display the hero that was defined in the `*ngFor` expression.
+Οι παρενθέσεις γύρω από το `click` δίνουν εντολή στο Angular να αναγνωρίσει το event `click` του στοιχείου  `<li>`.
+Όταν ο χρήστης κάνει κλικ στο `<li>`, το Angular εκτελεί την έκφραση `onSelect(hero)`.
 
 
-### Add the click event handler
+Στην επόμενη ενότητα, ορίστε μια μέθοδο `onSelect()` στο `HeroesComponent` για
+να εμφανίστε τον ήρωα που ορίστηκε στην έκφραση `*ngFor`.
 
-Rename the component's `hero` property to `selectedHero` but don't assign it.
-There is no _selected hero_ when the application starts.
 
-Add the following `onSelect()` method, which assigns the clicked hero from the template
-to the component's `selectedHero`.
+### Προσθέστε έναν handler στο click event
+
+Μετονομάστε την ιδιότητα `hero` του component σε `selectedHero` αλλά μην της δώσετε τιμή.
+Δεν υπάρχει _επιλεγμένος ήρωας_ όταν ξεκινά η εφαρμογή.
+
+Προσθέστε την ακόλουθη μέθοδο `onSelect()`, η οποία θέτει τον ήρωα που έγινε κλικ από το template
+στο `selectedHero` του component.
 
 <code-example path="toh-pt2/src/app/heroes/heroes.component.ts" region="on-select" header="src/app/heroes/heroes.component.ts (onSelect)"></code-example>
 
-### Add a details section
+### Προσθέστε μια ενότητα λεπτομερειών
 
-Currently, you have a list in the component template. To click on a hero on the list
-and reveal details about that hero, you need a section for the details to render in the
-template. Add the following to `heroes.component.html` beneath the list section:
+Προς το παρόν, έχετε μια λίστα στο template του component. Για να κάνετε κλικ σε έναν ήρωα στη λίστα
+και na αποκαλύψετε λεπτομέρειες για αυτόν τον ήρωα, χρειάζεστε μια ενότητα για να εμφανίσετε τις λεπτομέρειες στο
+template. Προσθέστε τα ακόλουθα στο `heroes.component.html` κάτω από την ενότητα της λίστας:
 
 <code-example path="toh-pt2/src/app/heroes/heroes.component.html" region="selectedHero-details" header="heroes.component.html (selected hero details)"></code-example>
 
-After the browser refreshes, the application is broken.
+Μετά την ανανέωση του προγράμματος περιήγησης, η εφαρμογή δεν δουλεύει σωστά.
 
-Open the browser developer tools and look in the console for an error message like this:
+Ανοίξτε τα developer tools του προγράμματος περιήγησης και αναζητήστε στο console ένα μήνυμα σφάλματος όπως αυτό:
 
 <code-example language="sh">
   HeroesComponent.html:3 ERROR TypeError: Cannot read property 'name' of undefined
 </code-example>
 
-#### What happened?
+#### Τι συνέβη?
 
-When the application starts, the `selectedHero` is `undefined` _by design_.
+Όταν ξεκινά η εφαρμογή, το `selectedHero` είναι `undefined` _λόγω σχεδιασμού_.
 
-Binding expressions in the template that refer to properties of `selectedHero`&mdash;expressions like `{{selectedHero.name}}`&mdash;_must fail_ because there is no selected hero.
-
-
-#### The fix - hide empty details with _*ngIf_
+Εκφράσεις binding στο template που αναφέρονται σε ιδιότητες του `selectedHero`&mdash;εκφράσεις όπως `{{selectedHero.name}}`&mdash;_πρέπει έχουν σφάλμα_ επειδή δεν υπάρχει επιλεγμένος ήρωας.
 
 
-The component should only display the selected hero details if the `selectedHero` exists.
+#### Η διόρθωση - απόκρυψη των κενών λεπτομερειών με _*ngIf_
 
-Wrap the hero detail HTML in a `<div>`.
-Add Angular's `*ngIf` directive to the `<div>` and set it to `selectedHero`.
+
+Το component θα πρέπει να εμφανίζει τα επιλεγμένα στοιχεία ήρωα μόνο εάν υπάρχει το `selectedHero`.
+
+Προσθέστε ένα `<div>` γύρω από το HTML των λεπτομερειών του ήρωα.
+Προσθέστε το directive `*ngIf` του Angular στο `<div>` και ορίστε το στο `selectedHero`.
 
 
 <div class="alert is-important">
 
-Don't forget the asterisk (*) in front of `ngIf`. It's a critical part of the syntax.
+Μην ξεχνάτε τον αστερίσκο (*) μπροστά από το `ngIf`. Είναι ένα κρίσιμο μέρος της σύνταξης.
 
 </div>
 
 <code-example path="toh-pt2/src/app/heroes/heroes.component.html" region="ng-if" header="src/app/heroes/heroes.component.html (*ngIf)"></code-example>
 
-After the browser refreshes, the list of names reappears.
-The details area is blank.
-Click a hero in the list of heroes and its details appear.
-The application seems to be working again.
-The heroes appear in a list and details about the clicked hero appear at the bottom of the page.
+Μετά την ανανέωση του προγράμματος περιήγησης, η λίστα με τα ονόματα εμφανίζεται ξανά.
+Η περιοχή λεπτομερειών είναι κενή.
+Κάντε κλικ σε έναν ήρωα στη λίστα των ηρώων και εμφανίζονται τα στοιχεία του.
+Η εφαρμογή φαίνεται να λειτουργεί ξανά.
+Οι ήρωες εμφανίζονται σε μια λίστα και λεπτομέρειες σχετικά με τον ήρωα στον οποίο έγινε κλικ εμφανίζονται στο κάτω μέρος της σελίδας.
 
 
-#### Why it works
+#### Γιατί λειτουργεί
 
-When `selectedHero` is undefined, the `ngIf` removes the hero detail from the DOM. There are no `selectedHero` bindings to consider.
+Όταν το `selectedHero` δεν έχει οριστεί, το `ngIf` αφαιρεί τη λεπτομέρεια του ήρωα από το DOM. Δεν υπάρχουν bindings στο `selectedHero` που πρέπει να ληφθούν υπόψη.
 
-When the user picks a hero, `selectedHero` has a value and
-`ngIf` puts the hero detail into the DOM.
+Όταν ο χρήστης επιλέγει έναν ήρωα, το `selectedHero` έχει μια τιμή και
+το `ngIf` τοποθετεί τη λεπτομέρεια του ήρωα στο DOM.
 
-### Style the selected hero
+### Δώστε στυλ στον επιλεγμένο ήρωα
 
-To help identify the selected hero, you can use the `.selected` CSS class in the [styles you added earlier](#styles).
-To apply the `.selected` class to the `<li>` when the user clicks it, use class binding.
+Για να βοηθήσετε στην αναγνώριση του επιλεγμένου ήρωα, μπορείτε να χρησιμοποιήσετε το CSS class `.selected` στα [στυλ που προσθέσατε νωρίτερα](#styles).
+Για να εφαρμόσετε το class `.selected` στο `<li>` όταν ο χρήστης κάνει κλικ σε αυτό, χρησιμοποιήστε class binding.
 
 <div class="lightbox">
   <img src='generated/images/guide/toh/heroes-list-selected.png' alt="Selected hero with dark background and light text that differentiates it from unselected list items">
 </div>
 
-Angular's [class binding](guide/attribute-binding#class-binding) can add and remove a CSS class conditionally.
-Add `[class.some-css-class]="some-condition"` to the element you want to style.
+Το [class binding](guide/attribute-binding#class-binding) του Angular μπορεί να προσθέσει και να αφαιρέσει ένα CSS class υπό συνθήκες.
+Προσθέστε το `[class.some-css-class]="some-condition"` στο στοιχείο που θέλετε να αποκτήσει στυλ.
 
-Add the following `[class.selected]` binding to the `<li>` in the `HeroesComponent` template:
+Προσθέστε το ακόλουθο binding `[class.selected]` στο `<li>` που βρίσκεται στο template του `HeroesComponent`:
 
 <code-example path="toh-pt2/src/app/heroes/heroes.component.1.html" region="class-selected" header="heroes.component.html (toggle the 'selected' CSS class)"></code-example>
 
-When the current row hero is the same as the `selectedHero`, Angular adds the `selected` CSS class. When the two heroes are different, Angular removes the class.
+Όταν η τρέχουσα γραμμή ήρωα είναι η ίδια με το `selectedHero`, το Angular προσθέτει το CSS class `selected`. Όταν οι δύο ήρωες είναι διαφορετικοί, το Angular αφαιρεί το class.
 
-The finished `<li>` looks like this:
+Το τελικό `<li>` μοιάζει με αυτό:
 
 <code-example path="toh-pt2/src/app/heroes/heroes.component.html" region="li" header="heroes.component.html (list item hero)"></code-example>
 
 {@a final-code-review}
 
-## Final code review
+## Τελική επισκόπηση του κώδικα
 
-Here are the code files discussed on this page, including the `HeroesComponent` styles.
+Αυτά είναι τα αρχεία κώδικα που συζητήθηκαν σε αυτήν τη σελίδα, συμπεριλαμβανομένων των στυλ του `HeroesComponent`.
 
 <code-tabs>
 
@@ -239,10 +238,10 @@ Here are the code files discussed on this page, including the `HeroesComponent` 
 
 </code-tabs>
 
-## Summary
+## Περίληψη
 
-* The Tour of Heroes application displays a list of heroes with a detail view.
-* The user can select a hero and see that hero's details.
-* You used `*ngFor` to display a list.
-* You used `*ngIf` to conditionally include or exclude a block of HTML.
-* You can toggle a CSS style class with a `class` binding.
+* Η εφαρμογή Tour of Heroes εμφανίζει μια λίστα ηρώων με προβολή λεπτομερειών.
+* Ο χρήστης μπορεί να επιλέξει έναν ήρωα και να δει τα στοιχεία αυτού του ήρωα.
+* Χρησιμοποιήσατε το `*ngFor` για να εμφανίσετε μια λίστα.
+* Χρησιμοποιήσατε το `*ngIf` για να συμπεριλάβετε ή να εξαιρέσετε υπό συνθήκες ένα κομμάτι HTML.
+* Μπορείτε να αλλάξετε ένα class με στυλ CSS χρησιμοποιώντας ένα binding `class`.
