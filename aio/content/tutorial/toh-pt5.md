@@ -1,32 +1,31 @@
-# Add navigation with routing
+# Προσθήκη πλοήγησης με δρομολόγηση
 
-There are new requirements for the Tour of Heroes app:
+Υπάρχουν νέες απαιτήσεις για την εφαρμογή Tour of Heroes:
 
-* Add a *Dashboard* view.
-* Add the ability to navigate between the *Heroes* and *Dashboard* views.
-* When users click a hero name in either view, navigate to a detail view of the selected hero.
-* When users click a *deep link* in an email, open the detail view for a particular hero.
+* Προσθέστε μια προβολή *Dashboard*.
+* Προσθέστε τη δυνατότητα πλοήγησης μεταξύ των προβολών *Heroes* και *Dashboard*.
+* Όταν οι χρήστες κάνουν κλικ σε ένα όνομα ήρωα σε οποιαδήποτε προβολή, μεταβείτε σε μια αναλυτική προβολή του επιλεγμένου ήρωα.
+* Όταν οι χρήστες κάνουν κλικ σε ένα *deep link* σε ένα μήνυμα ηλεκτρονικού ταχυδρομείου, ανοίξτε την προβολή λεπτομερειών για έναν συγκεκριμένο ήρωα.
 
 <div class="alert is-helpful">
 
-  For the sample application that this page describes, see the <live-example></live-example>.
+  Για το δείγμα εφαρμογής που περιγράφει αυτή η σελίδα, ανατρέξτε στο <live-example></live-example>.
 
 </div>
 
-When you’re done, users will be able to navigate the application like this:
+Όταν τελειώσετε, οι χρήστες θα μπορούν να πλοηγηθούν στην εφαρμογή ως εξής:
 
 <div class="lightbox">
   <img src='generated/images/guide/toh/nav-diagram.png' alt="View navigations">
 </div>
 
-## Add the `AppRoutingModule`
+## Προσθέστε το `AppRoutingModule`
 
-In Angular, the best practice is to load and configure the router in a separate, top-level module
-that is dedicated to routing and imported by the root `AppModule`.
+Στο Angular, η καλύτερη πρακτική είναι να φορτώσετε και να ρυθμίσετε το router σε ένα ξεχωριστό module στο πρώτο επίπεδο της εφαρμογής που είναι αφοσιωμένο στη δρομολόγηση και εισάγεται από το root `AppModule`.
 
-By convention, the module class name is `AppRoutingModule` and it belongs in the `app-routing.module.ts` in the `src/app` folder.
+Κατά σύμβαση, το όνομα του class του module είναι `AppRoutingModule` και ανήκει στο `app-routing.module.ts` στον φάκελο `src/app`.
 
-Use the CLI to generate it.
+Χρησιμοποιήστε το CLI για να το δημιουργήσετε.
 
 <code-example language="sh">
   ng generate module app-routing --flat --module=app
@@ -34,52 +33,52 @@ Use the CLI to generate it.
 
 <div class="alert is-helpful">
 
-`--flat` puts the file in `src/app` instead of its own folder.<br>
-`--module=app` tells the CLI to register it in the `imports` array of the `AppModule`.
+`--flat` βάζει το αρχείο στο `src/app` αντί για το δικό του φάκελο.<br>
+`--module=app` λέει στο CLI να το καταχωρήσει στον πίνακα `imports` του `AppModule`.
 </div>
 
-The generated file looks like this:
+Το αρχείο που δημιουργείται μοιάζει με αυτό:
 
 <code-example path="toh-pt5/src/app/app-routing.module.0.ts" header="src/app/app-routing.module.ts (generated)">
 </code-example>
 
-Replace it with the following:
+Αντικαταστήστε το με το εξής:
 
 <code-example path="toh-pt5/src/app/app-routing.module.1.ts" header="src/app/app-routing.module.ts (updated)">
 </code-example>
 
-First, the `app-routing.module.ts` file imports `RouterModule` and `Routes` so the application can have routing functionality. The next import, `HeroesComponent`, will give the Router somewhere to go once you configure the routes.
+Πρώτα, το αρχείο `app-routing.module.ts` κάνει import το `RouterModule` και το `Routes` ώστε η εφαρμογή να έχει λειτουργικότητα δρομολόγησης. Το επόμενο import, `HeroesComponent`, θα δώσει στο Router κάπου να πάει μόλις διαμορφώσετε τις διαδρομές.
 
-Notice that the `CommonModule` references and `declarations` array are unnecessary, so are no
-longer part of `AppRoutingModule`. The following sections explain the rest of the `AppRoutingModule` in more detail.
+Παρατηρήστε ότι οι αναφορές `CommonModule` και ο πίνακας `declarations` δεν είναι απαραίτητες, επομένως δεν είναι
+πλέον μέρος του `AppRoutingModule`. Οι ακόλουθες ενότητες εξηγούν το υπόλοιπο `AppRoutingModule` με περισσότερες λεπτομέρειες.
 
 
-### Routes
+### Διαδρομές
 
-The next part of the file is where you configure your routes.
-*Routes* tell the Router which view to display when a user clicks a link or
-pastes a URL into the browser address bar.
+Το επόμενο μέρος του αρχείου είναι όπου διαμορφώνετε τις διαδρομές σας.
+Το *Routes* λέει στο Router ποια προβολή θα εμφανίζεται όταν ένας χρήστης κάνει κλικ σε έναν σύνδεσμο ή
+επικολλά μια διεύθυνση URL στη γραμμή διευθύνσεων του προγράμματος περιήγησης.
 
-Since `app-routing.module.ts` already imports `HeroesComponent`, you can use it in the `routes` array:
+Εφόσον το `app-routing.module.ts` εισάγει ήδη το `HeroesComponent`, μπορείτε να το χρησιμοποιήσετε στον πίνακα `routes`:
 
 <code-example path="toh-pt5/src/app/app-routing.module.ts" header="src/app/app-routing.module.ts"
   region="heroes-route">
 </code-example>
 
-A typical Angular `Route` has two properties:
+Ένα τυπικό `Route` του Angular έχει δύο ιδιότητες:
 
-* `path`: a string that matches the URL in the browser address bar.
-* `component`: the component that the router should create when navigating to this route.
+* `path`: ένα κείμενο που ταιριάζει με τη διεύθυνση URL στη γραμμή διευθύνσεων του προγράμματος περιήγησης.
+* `component`: το component που πρέπει να δημιουργήσει το router κατά την πλοήγηση σε αυτήν τη διαδρομή.
 
-This tells the router to match that URL to `path: 'heroes'`
-and display the `HeroesComponent` when the URL is something like `localhost:4200/heroes`.
+Αυτό λέει στο router να αντιστοιχίσει αυτήν τη διεύθυνση URL με τη διαδρομή `path: 'heroes'`
+και να εμφανίσει το `HeroesComponent` όταν η διεύθυνση URL είναι κάτι σαν `localhost:4200/heroes`.
 
 ### `RouterModule.forRoot()`
 
-The `@NgModule` metadata initializes the router and starts it listening for browser location changes.
+Τα μεταδεδομένα του `@NgModule` αρχικοποιούν το router και το ξεκινά να ακούει για αλλαγές στο location του προγράμματος περιήγησης.
 
-The following line adds the `RouterModule` to the `AppRoutingModule` `imports` array and
-configures it with the `routes` in one step by calling
+Η ακόλουθη γραμμή προσθέτει το `RouterModule` στον πίνακα `imports` του `AppRoutingModule` και
+το διαμορφώνει με το `routes` σε ένα βήμα καλώντας το
 `RouterModule.forRoot()`:
 
 <code-example path="toh-pt5/src/app/app-routing.module.ts" header="src/app/app-routing.module.ts" region="ngmodule-imports">
@@ -87,103 +86,103 @@ configures it with the `routes` in one step by calling
 
 <div class="alert is-helpful">
 
-  The method is called `forRoot()` because you configure the router at the application's root level.
-  The `forRoot()` method supplies the service providers and directives needed for routing,
-  and performs the initial navigation based on the current browser URL.
+  Η μέθοδος ονομάζεται `forRoot()` επειδή ρυθμίζετε τις παραμέτρους του router στο πρώτο επίπεδο της εφαρμογής.
+  Η μέθοδος `forRoot()` παρέχει τους providers των services και τα directives που απαιτούνται για τη δρομολόγηση,
+  και εκτελεί την αρχική πλοήγηση με βάση την τρέχουσα διεύθυνση URL του προγράμματος περιήγησης.
 
 </div>
 
-Next, `AppRoutingModule` exports `RouterModule` so it will be available throughout the application.
+Στη συνέχεια, το `AppRoutingModule` κάνει export το `RouterModule` ώστε να είναι διαθέσιμο σε όλη την εφαρμογή.
 
 <code-example path="toh-pt5/src/app/app-routing.module.ts" header="src/app/app-routing.module.ts (exports array)" region="export-routermodule">
 </code-example>
 
-## Add `RouterOutlet`
+## Προσθήκη `RouterOutlet`
 
-Open the `AppComponent` template and replace the `<app-heroes>` element with a `<router-outlet>` element.
+Ανοίξτε το template του `AppComponent` και αντικαταστήστε το στοιχείο `<app-heroes>` με ένα στοιχείο `<router-outlet>`.
 
 <code-example path="toh-pt5/src/app/app.component.html" region="outlet" header="src/app/app.component.html (router-outlet)">
 </code-example>
 
-The `AppComponent` template no longer needs `<app-heroes>` because the application will only display the `HeroesComponent` when the user navigates to it.
+Το template του `AppComponent` δεν χρειάζεται πλέον το `<app-heroes>` επειδή η εφαρμογή θα εμφανίζει το `HeroesComponent` μόνο όταν ο χρήστης πλοηγηθεί σε αυτό.
 
-The `<router-outlet>` tells the router where to display routed views.
+Το `<router-outlet>` λέει στο router πού να εμφανίζει τις δρομολογημένες προβολές.
 
 <div class="alert is-helpful">
 
-The `RouterOutlet` is one of the router directives that became available to the `AppComponent`
-because `AppModule` imports `AppRoutingModule` which exported `RouterModule`. The `ng generate` command you ran at the start of this tutorial added this import because of the `--module=app` flag. If you manually created `app-routing.module.ts` or used a tool other than the CLI to do so, you'll need to import `AppRoutingModule` into `app.module.ts` and add it to the `imports` array of the `NgModule`.
+Το `RouterOutlet` είναι ένα από τα directives του router που έγιναν διαθέσιμα στο `AppComponent`
+επειδή το `AppModule` κάνει import το `AppRoutingModule` το οποίο κάνει export το `RouterModule`. Η εντολή `ng generate` που εκτελέσατε στην αρχή αυτού του σεμιναρίου, πρόσθεσε αυτό το import λόγω της επιλογής `--module=app`. Εάν δημιουργήσατε χειροκίνητα το `app-routing.module.ts` ή χρησιμοποιήσατε ένα εργαλείο διαφορετικό από το CLI για να το κάνετε αυτό, θα χρειαστεί να κάνετε import το `AppRoutingModule` στο `app.module.ts` και να το προσθέσετε στον πίνακα `imports` του `NgModule`.
 
 </div>
 
-#### Try it
+#### Δοκιμάστε το
 
-You should still be running with this CLI command.
+Θα πρέπει ακόμα να το εκτελείτε με αυτήν την εντολή CLI.
 
 <code-example language="sh">
   ng serve
 </code-example>
 
-The browser should refresh and display the application title but not the list of heroes.
+Το πρόγραμμα περιήγησης πρέπει να ανανεώσει και να εμφανίσει τον τίτλο της εφαρμογής αλλά όχι τη λίστα των ηρώων.
 
-Look at the browser's address bar.
-The URL ends in `/`.
-The route path to `HeroesComponent` is `/heroes`.
+Κοιτάξτε τη γραμμή διευθύνσεων του προγράμματος περιήγησης.
+Η διεύθυνση URL τελειώνει σε `/`.
+Η διαδρομή προς το `HeroesComponent` είναι `/heroes`.
 
-Append `/heroes` to the URL in the browser address bar.
-You should see the familiar heroes master/detail view.
+Προσθέστε το `/heroes` στην διεύθυνση URL στη γραμμή διευθύνσεων του προγράμματος περιήγησης.
+Θα πρέπει να δείτε την γνωστή προβολή master/detail των ηρώων.
 
-Remove `/heroes` from the URL in the browser address bar.
-The browser should refresh and display the application title but not the list of heroes.
+Καταργήστε το `/heroes` από τη διεύθυνση URL στη γραμμή διευθύνσεων του προγράμματος περιήγησης.
+Το πρόγραμμα περιήγησης πρέπει να ανανεώσει και να εμφανίσει τον τίτλο της εφαρμογής αλλά όχι τη λίστα των ηρώων.
 
 {@a routerlink}
 
-## Add a navigation link (`routerLink`)
+## Προσθήκη συνδέσμου πλοήγησης (`routerLink`)
 
-Ideally, users should be able to click a link to navigate rather
-than pasting a route URL into the address bar.
+Ιδανικά, οι χρήστες θα πρέπει να μπορούν να κάνουν κλικ σε έναν σύνδεσμο για πλοήγηση
+παρά να επικολλήσουν μια διεύθυνση URL διαδρομής στη γραμμή διευθύνσεων.
 
-Add a `<nav>` element and, within that, an anchor element that, when clicked,
-triggers navigation to the `HeroesComponent`.
-The revised `AppComponent` template looks like this:
+Προσθέστε ένα στοιχείο `<nav>` και, μέσα σε αυτό, ένα στοιχείο anchor στο οποίο, όταν κάνετε κλικ,
+ενεργοποιεί την πλοήγηση στο `HeroesComponent`.
+Το αναθεωρημένο template του `AppComponent` μοιάζει με αυτό:
 
 <code-example path="toh-pt5/src/app/app.component.html" region="heroes" header="src/app/app.component.html (heroes RouterLink)">
 </code-example>
 
-A [`routerLink` attribute](#routerlink) is set to `"/heroes"`,
-the string that the router matches to the route to `HeroesComponent`.
-The `routerLink` is the selector for the [`RouterLink` directive](/api/router/RouterLink)
-that turns user clicks into router navigations.
-It's another of the public directives in the `RouterModule`.
+Ένα [attribute `routerLink`](#routerlink) έχει οριστεί ως `"/heroes"`,
+το οποίο είναι το κείμενο που αντιστοιχεί το router στη διαδρομή προς το `HeroesComponent`.
+Το `routerLink` είναι το selector για το [directive `RouterLink`](/api/router/RouterLink)
+που μετατρέπει τα κλικ των χρηστών σε πλοήγηση του router.
+Είναι άλλο ένα από τα public directives στο `RouterModule`.
 
-The browser refreshes and displays the application title and heroes link,
-but not the heroes list.
+Το πρόγραμμα περιήγησης ανανεώνει και εμφανίζει τον τίτλο της εφαρμογής και τον σύνδεσμο των ηρώων,
+αλλά όχι την λίστα των ηρώων.
 
-Click the link.
-The address bar updates to `/heroes` and the list of heroes appears.
+Κάντε κλικ στον σύνδεσμο.
+Η γραμμή διευθύνσεων αλλάζει σε `/heroes` και εμφανίζεται η λίστα των ηρώων.
 
 <div class="alert is-helpful">
 
-Make this and future navigation links look better by adding private CSS styles to `app.component.css`
-as listed in the [final code review](#appcomponent) below.
+Κάντε αυτόν και τους μελλοντικούς συνδέσμους πλοήγησης να φαίνονται καλύτεροι προσθέτοντας CSS styles στο `app.component.css`
+όπως αναφέρεται στην [τελική επισκόπηση κώδικα](#appcomponent) παρακάτω.
 
 </div>
 
 
-## Add a dashboard view
+## Προσθέστε μια προβολή dashboard
 
-Routing makes more sense when there are multiple views.
-So far there's only the heroes view.
+Η δρομολόγηση έχει πιο νόημα όταν υπάρχουν πολλές προβολές.
+Μέχρι στιγμής υπάρχει μόνο η προβολή των ηρώων.
 
-Add a `DashboardComponent` using the CLI:
+Προσθέστε ένα `DashboardComponent` χρησιμοποιώντας το CLI:
 
 <code-example language="sh">
   ng generate component dashboard
 </code-example>
 
-The CLI generates the files for the `DashboardComponent` and declares it in `AppModule`.
+Το CLI δημιουργεί τα αρχεία για το `DashboardComponent` και το δηλώνει στο `AppModule`.
 
-Replace the default file content in these three files as follows:
+Αντικαταστήστε το προεπιλεγμένο περιεχόμενο αρχείων σε αυτά τα τρία αρχεία ως εξής:
 
 <code-tabs>
   <code-pane
@@ -199,121 +198,121 @@ Replace the default file content in these three files as follows:
   </code-pane>
 </code-tabs>
 
-The  _template_ presents a grid of hero name links.
+Το _template_ παρουσιάζει ένα πλέγμα από συνδέσμους ονόματος ηρώων.
 
-* The `*ngFor` repeater creates as many links as are in the component's `heroes` array.
-* The links are styled as colored blocks by the `dashboard.component.css`.
-* The links don't go anywhere yet but [they will shortly](#hero-details).
+* Το `*ngFor` δημιουργεί όσους συνδέσμους υπάρχουν στην λίστα `heroes` του component.
+* Οι σύνδεσμοι διαμορφώνονται ως χρωματιστά κομμάτια από το `dashboard.component.css`.
+* Οι σύνδεσμοι δεν πάνε πουθενά ακόμα, αλλά [θα πάνε σύντομα](#hero-details).
 
-The _class_ is similar to the `HeroesComponent` class.
-* It defines a `heroes` array property.
-* The constructor expects Angular to inject the `HeroService` into a private `heroService` property.
-* The `ngOnInit()` lifecycle hook calls `getHeroes()`.
+Το _class_ είναι παρόμοιο με το class `HeroesComponent`.
+* Ορίζει μια ιδιότητα λίστας `heroes`.
+* Το constructor αναμένει από το Angular να εισάγει το `HeroService` σε μια private ιδιότητα `heroService`.
+* Το lifecycle hook `ngOnInit()` καλεί την `getHeroes()`.
 
-This `getHeroes()` returns the sliced list of heroes at positions 1 and 5, returning only four of the Top Heroes (2nd, 3rd, 4th, and 5th).
+Αυτή η `getHeroes()` επιστρέφει τη λίστα των ηρώων σε κομμάτια στις θέσεις 1 και 5, επιστρέφοντας μόνο τέσσερις από τους Top Heroes (2ος, 3ος, 4ος, και 5ος).
 
 <code-example path="toh-pt5/src/app/dashboard/dashboard.component.ts" header="src/app/dashboard/dashboard.component.ts" region="getHeroes">
 </code-example>
 
-### Add the dashboard route
+### Προσθέστε τη διαδρομή του dashboard
 
-To navigate to the dashboard, the router needs an appropriate route.
+Για πλοήγηση στο dashboard, το router χρειάζεται μια κατάλληλη διαδρομή.
 
-Import the `DashboardComponent` in the `app-routing-module.ts` file.
+Κάντε import το `DashboardComponent` στο αρχείο `app-routing-module.ts`.
 
 <code-example path="toh-pt5/src/app/app-routing.module.ts" region="import-dashboard" header="src/app/app-routing.module.ts (import DashboardComponent)">
 </code-example>
 
-Add a route to the `routes` array that matches a path to the `DashboardComponent`.
+Προσθέστε μια διαδρομή στην λίστα `routes` που ταιριάζει με μια διαδρομή προς το `DashboardComponent`.
 
 <code-example path="toh-pt5/src/app/app-routing.module.ts" header="src/app/app-routing.module.ts" region="dashboard-route">
 </code-example>
 
-### Add a default route
+### Προσθέστε μια προεπιλεγμένη διαδρομή
 
-When the application starts, the browser's address bar points to the web site's root.
-That doesn't match any existing route so the router doesn't navigate anywhere.
-The space below the `<router-outlet>` is blank.
+Όταν ξεκινά η εφαρμογή, η γραμμή διευθύνσεων του προγράμματος περιήγησης οδηγεί στην κεντρική σελίδα του ιστότοπου.
+Αυτό δεν ταιριάζει με καμία υπάρχουσα διαδρομή, επομένως το router δεν πλοηγείται πουθενά.
+Ο χώρος κάτω από το `<router-outlet>` είναι κενός.
 
-To make the application navigate to the dashboard automatically, add the following
-route to the `routes` array.
+Για να κάνετε την εφαρμογή να πλοηγηθεί αυτόματα στο dashboard, προσθέστε την ακόλουθη
+διαδρομή στην λίστα `routes`.
 
 <code-example path="toh-pt5/src/app/app-routing.module.ts" header="src/app/app-routing.module.ts" region="redirect-route">
 </code-example>
 
-This route redirects a URL that fully matches the empty path to the route whose path is `'/dashboard'`.
+Αυτή η διαδρομή ανακατευθύνει μια διεύθυνση URL που ταιριάζει πλήρως με την κενή διαδρομή στη διαδρομή της οποίας η ιδιότητα path έχει την τιμή `'/dashboard'`.
 
-After the browser refreshes, the router loads the `DashboardComponent`
-and the browser address bar shows the `/dashboard` URL.
+Μετά την ανανέωση του προγράμματος περιήγησης, το router φορτώνει το `DashboardComponent`
+και η γραμμή διευθύνσεων του προγράμματος περιήγησης εμφανίζει τη διεύθυνση URL `/dashboard`.
 
-### Add dashboard link to the shell
+### Προσθήκη συνδέσμου του dashboard στο κέλυφος
 
-The user should be able to navigate back and forth between the
-`DashboardComponent` and the `HeroesComponent` by clicking links in the
-navigation area near the top of the page.
+Ο χρήστης θα πρέπει να μπορεί να πλοηγείται εμπρός και πίσω μεταξύ του
+`DashboardComponent` και του `HeroesComponent` κάνοντας κλικ στους συνδέσμους στη
+περιοχή πλοήγησης κοντά στην κορυφή της σελίδας.
 
-Add a dashboard navigation link to the `AppComponent` shell template, just above the *Heroes* link.
+Προσθέστε έναν σύνδεσμο πλοήγησης του dashboard στο template του κελύφους `AppComponent`, ακριβώς πάνω από τον σύνδεσμο *Heroes*.
 
 <code-example path="toh-pt5/src/app/app.component.html" header="src/app/app.component.html">
 </code-example>
 
-After the browser refreshes you can navigate freely between the two views by clicking the links.
+Μετά την ανανέωση του προγράμματος περιήγησης, μπορείτε να πλοηγηθείτε ελεύθερα μεταξύ των δύο προβολών κάνοντας κλικ στους συνδέσμους.
 
 {@a hero-details}
-## Navigating to hero details
+## Πλοήγηση στις λεπτομέρειες του ήρωα
 
-The `HeroDetailComponent` displays details of a selected hero.
-At the moment the `HeroDetailComponent` is only visible at the bottom of the `HeroesComponent`
+Το `HeroDetailComponent` εμφανίζει τις λεπτομέρειες ενός επιλεγμένου ήρωα.
+Προς το παρόν το `HeroDetailComponent` είναι ορατό μόνο στο κάτω μέρος του `HeroesComponent`
 
-The user should be able to get to these details in three ways.
+Ο χρήστης θα πρέπει να μπορεί να φτάσει σε αυτές τις λεπτομέρειες με τρεις τρόπους.
 
-1. By clicking a hero in the dashboard.
-1. By clicking a hero in the heroes list.
-1. By pasting a "deep link" URL into the browser address bar that identifies the hero to display.
+1. Κάνοντας κλικ σε έναν ήρωα στο dashboard.
+1. Κάνοντας κλικ σε έναν ήρωα στη λίστα ηρώων.
+1. Επικολλώντας μια διεύθυνση URL "deep link" στη γραμμή διευθύνσεων του προγράμματος περιήγησης που προσδιορίζει τον ήρωα που θα εμφανιστεί.
 
-In this section, you'll enable navigation to the `HeroDetailComponent`
-and liberate it from the `HeroesComponent`.
+Σε αυτήν την ενότητα, θα ενεργοποιήσετε την πλοήγηση στο `HeroDetailComponent`
+και θα το αποδεσμεύσετε από το `HeroesComponent`.
 
-### Delete _hero details_ from `HeroesComponent`
+### Διαγραφή _στοιχείων ήρωα_ από το `HeroesComponent`
 
-When the user clicks a hero item in the `HeroesComponent`,
-the application should navigate to the `HeroDetailComponent`,
-replacing the heroes list view with the hero detail view.
-The heroes list view should no longer show hero details as it does now.
+Όταν ο χρήστης κάνει κλικ σε ένα ήρωα στο `HeroesComponent`,
+η εφαρμογή θα πρέπει να μεταβεί στο `HeroDetailComponent`,
+αντικαθιστώντας την προβολή της λίστας ηρώων με την προβολή λεπτομερειών του ήρωα.
+Η προβολή λίστας ηρώων δεν θα πρέπει πλέον να εμφανίζει τις λεπτομέρειες του ήρωα όπως τώρα.
 
-Open the `HeroesComponent` template (`heroes/heroes.component.html`) and
-delete the `<app-hero-detail>` element from the bottom.
+Ανοίξτε το template του `HeroesComponent` (`heroes/heroes.component.html`) και
+αφαιρέστε το στοιχείο `<app-hero-detail>` από το κάτω μέρος.
 
-Clicking a hero item now does nothing.
-You'll [fix that shortly](#heroes-component-links) after you enable routing to the `HeroDetailComponent`.
+Κάνοντας κλικ σε έναν ήρωα τώρα δεν γίνεται τίποτα.
+Θα το [διορθώσετε σύντομα](#heroes-component-links) αφού ενεργοποιήσετε τη δρομολόγηση στο `HeroDetailComponent`.
 
-### Add a _hero detail_ route
+### Προσθέστε μια διαδρομή _στοιχείων ήρωα_
 
-A URL like `~/detail/11` would be a good URL for navigating to the *Hero Detail* view of the hero whose `id` is `11`.
+Μια διεύθυνση URL όπως το `~/detail/11` θα ήταν μια καλή διεύθυνση URL για πλοήγηση στην προβολή *Hero Detail* του ήρωα του οποίου το `id` είναι `11`.
 
-Open `app-routing.module.ts` and import `HeroDetailComponent`.
+Ανοίξτε το `app-routing.module.ts` και κάντε import το `HeroDetailComponent`.
 
 <code-example path="toh-pt5/src/app/app-routing.module.ts" region="import-herodetail" header="src/app/app-routing.module.ts (import HeroDetailComponent)">
 </code-example>
 
-Then add a _parameterized_ route to the `routes` array that matches the path pattern to the _hero detail_ view.
+Στη συνέχεια, προσθέστε μια _παραμετροποιημένη_ διαδρομή στην λίστα `routes` που ταιριάζει με το μοτίβο διαδρομής στην προβολή _στοιχεία ήρωα_.
 
 <code-example path="toh-pt5/src/app/app-routing.module.ts" header="src/app/app-routing.module.ts" region="detail-route">
 </code-example>
 
-The colon (:) in the `path` indicates that `:id` is a placeholder for a specific hero `id`.
+Η άνω και κάτω τελεία (:) στο `path` υποδηλώνει ότι το `:id` θα αντικατασταθεί από ένα συγκεκριμένο `id` ήρωα.
 
-At this point, all application routes are in place.
+Σε αυτό το σημείο, όλες οι διαδρομές εφαρμογής είναι στη θέση τους.
 
 <code-example path="toh-pt5/src/app/app-routing.module.ts" region="routes" header="src/app/app-routing.module.ts (all routes)">
 </code-example>
 
-### `DashboardComponent` hero links
+### Σύνδεσμοι ηρώων του `DashboardComponent`
 
-The `DashboardComponent` hero links do nothing at the moment.
+Οι σύνδεσμοι ηρώων του `DashboardComponent` δεν κάνουν τίποτα αυτή τη στιγμή.
 
-Now that the router has a route to `HeroDetailComponent`,
-fix the dashboard hero links to navigate using the _parameterized_ dashboard route.
+Τώρα που το router έχει μια διαδρομή προς το `HeroDetailComponent`,
+διορθώστε τους συνδέσμους των ηρώων του dashboard ώστε να κάνουν πλοήγηση χρησιμοποιώντας την _παραμετροποιημένη_ διαδρομή του dashboard.
 
 <code-example
   path="toh-pt5/src/app/dashboard/dashboard.component.html"
@@ -321,164 +320,164 @@ fix the dashboard hero links to navigate using the _parameterized_ dashboard rou
   header="src/app/dashboard/dashboard.component.html (hero links)">
 </code-example>
 
-You're using Angular [interpolation binding](guide/interpolation) within the `*ngFor` repeater
-to insert the current iteration's `hero.id` into each
+Χρησιμοποιείτε το [interpolation binding](guide/interpolation) του Angular μέσα στο `*ngFor`
+για να εισαγάγετε το `hero.id` της τρέχουσας επανάληψης σε καθένα
 [`routerLink`](#routerlink).
 
 {@a heroes-component-links}
-### `HeroesComponent` hero links
+### Σύνδεσμοι ηρώων του `HeroesComponent`
 
-The hero items in the `HeroesComponent` are `<li>` elements whose click events
-are bound to the component's `onSelect()` method.
+Οι ήρωες στο `HeroesComponent` είναι στοιχεία `<li>` των οποίων τα events click
+είναι συνδεδεμένα με την μέθοδο `onSelect()` του component.
 
 <code-example path="toh-pt4/src/app/heroes/heroes.component.html" region="list" header="src/app/heroes/heroes.component.html (list with onSelect)">
 </code-example>
 
-Strip the `<li>` back to just its `*ngFor`,
-wrap the badge and name in an anchor element (`<a>`),
-and add a `routerLink` attribute to the anchor that
-is the same as in the dashboard template
+Αφαιρέστε το περιεχόμενο του `<li>` μόνο στο `*ngFor` του,
+προσθέστε ένα στοιχείο anchor (`<a>`) γύρω από το badge και το name,
+και προσθέστε ένα attribute `routerLink` στο anchor το οποίο
+είναι το ίδιο όπως στο template του dashboard.
 
 <code-example path="toh-pt5/src/app/heroes/heroes.component.html" region="list" header="src/app/heroes/heroes.component.html (list with links)">
 </code-example>
 
-You'll have to fix the private stylesheet (`heroes.component.css`) to make
-the list look as it did before.
-Revised styles are in the [final code review](#heroescomponent) at the bottom of this guide.
+Θα πρέπει να διορθώσετε το αρχείο στυλ (`heroes.component.css`) για να κάνετε
+την λίστα να φαίνεται όπως πριν.
+Τα αναθεωρημένα στυλ βρίσκονται στην [τελική επισκόπηση κώδικα](#heroescomponent) στο κάτω μέρος αυτού του οδηγού.
 
-#### Remove dead code (optional)
+#### Αφαίρεση αχρησιμοποίητου κώδικα (προαιρετικό)
 
-While the `HeroesComponent` class still works,
-the `onSelect()` method and `selectedHero` property are no longer used.
+Ενώ το class `HeroesComponent` εξακολουθεί να λειτουργεί,
+η μέθοδος `onSelect()` και η ιδιότητα `selectedHero` δεν χρησιμοποιούνται πλέον.
 
-It's nice to tidy up and you'll be grateful to yourself later.
-Here's the class after pruning away the dead code.
+Είναι ωραίο να τακτοποιείτε και θα είστε ευγνώμονες στον εαυτό σας αργότερα.
+Εδώ είναι το class μετά την απομάκρυνση του αχρησιμοποίητου κώδικα.
 
 <code-example path="toh-pt5/src/app/heroes/heroes.component.ts" region="class" header="src/app/heroes/heroes.component.ts (cleaned up)">
 </code-example>
 
-## Routable `HeroDetailComponent`
+## `HeroDetailComponent` με δυνατότητα δρομολόγησης
 
-Previously, the parent `HeroesComponent` set the `HeroDetailComponent.hero`
-property and the `HeroDetailComponent` displayed the hero.
+Προηγουμένως, το parent `HeroesComponent` έθετε την ιδιότητα `HeroDetailComponent.hero`
+και το `HeroDetailComponent` εμφάνιζε τον ήρωα.
 
-`HeroesComponent` doesn't do that anymore.
-Now the router creates the `HeroDetailComponent` in response to a URL such as `~/detail/11`.
+Το `HeroesComponent` δεν το κάνει πια.
+Τώρα το router δημιουργεί το `HeroDetailComponent` ως απόκριση σε μια διεύθυνση URL όπως το `~/detail/11`.
 
-The `HeroDetailComponent` needs a new way to obtain the hero-to-display.
-This section explains the following:
+Το `HeroDetailComponent` χρειάζεται έναν νέο τρόπο για να αποκτήσει τον ήρωα-που-θα-εμφανίσει.
+Αυτή η ενότητα εξηγεί τα ακόλουθα:
 
-* Get the route that created it
-* Extract the `id` from the route
-* Acquire the hero with that `id` from the server using the `HeroService`
+* Αποκτήστε τη διαδρομή που το δημιούργησε
+* Εξαγάγετε το `id` από τη διαδρομή
+* Αποκτήστε τον ήρωα με αυτό το `id` από τον διακομιστή χρησιμοποιώντας το `HeroService`
 
-Add the following imports:
+Προσθέστε τα ακόλουθα imports:
 
 <code-example path="toh-pt5/src/app/hero-detail/hero-detail.component.ts" region="added-imports" header="src/app/hero-detail/hero-detail.component.ts">
 </code-example>
 
 {@a hero-detail-ctor}
 
-Inject the `ActivatedRoute`, `HeroService`, and `Location` services
-into the constructor, saving their values in private fields:
+Εισαγάγετε τα services `ActivatedRoute`, `HeroService`, και `Location`
+στο constructor, αποθηκεύοντας τις τιμές τους σε private πεδία:
 
 <code-example path="toh-pt5/src/app/hero-detail/hero-detail.component.ts" header="src/app/hero-detail/hero-detail.component.ts" region="ctor">
 </code-example>
 
-The [`ActivatedRoute`](api/router/ActivatedRoute) holds information about the route to this instance of the `HeroDetailComponent`.
-This component is interested in the route's parameters extracted from the URL.
-The "id" parameter is the `id` of the hero to display.
+Το [`ActivatedRoute`](api/router/ActivatedRoute) περιέχει πληροφορίες σχετικά με τη διαδρομή προς αυτήν την οντότητα του `HeroDetailComponent`.
+Αυτό το component ενδιαφέρεται για τις παραμέτρους της διαδρομής που εξάγονται από τη διεύθυνση URL.
+Η παράμετρος "id" είναι το `id` του ήρωα που θα εμφανιστεί.
 
-The [`HeroService`](tutorial/toh-pt4) gets hero data from the remote server
-and this component will use it to get the hero-to-display.
+Το [`HeroService`](tutorial/toh-pt4) λαμβάνει δεδομένα ηρώων από τον απομακρυσμένο διακομιστή
+και αυτό το component θα τα χρησιμοποιήσει για να πάρει τον ήρωα-προς-εμφάνιση.
 
-The [`location`](api/common/Location) is an Angular service for interacting with the browser.
-You'll use it [later](#goback) to navigate back to the view that navigated here.
+Το [`location`](api/common/Location) είναι ένα service του Angular για αλληλεπίδραση με το πρόγραμμα περιήγησης.
+Θα το χρησιμοποιήσετε [αργότερα](#goback) για να επιστρέψετε στην προβολή που πλοηγήθηκε εδώ.
 
-### Extract the `id` route parameter
+### Εξαγάγετε την παράμετρο διαδρομής `id`
 
-In the `ngOnInit()` [lifecycle hook](guide/lifecycle-hooks#oninit)
-call `getHero()` and define it as follows.
+Στο [lifecycle hook](guide/lifecycle-hooks#oninit) `ngOnInit()` 
+καλέστε την `getHero()` και ορίστε την ως εξής.
 
 <code-example path="toh-pt5/src/app/hero-detail/hero-detail.component.ts" header="src/app/hero-detail/hero-detail.component.ts" region="ngOnInit">
 </code-example>
 
-The `route.snapshot` is a static image of the route information shortly after the component was created.
+Το `route.snapshot` είναι μια στατική εικόνα των πληροφοριών διαδρομής λίγο μετά τη δημιουργία του component.
 
-The `paramMap` is a dictionary of route parameter values extracted from the URL.
-The `"id"` key returns the `id` of the hero to fetch.
+To `paramMap` είναι ένα dictionary από τιμές παραμέτρων διαδρομής που εξάγονται από τη διεύθυνση URL.
+Το κλειδί `"id"` επιστρέφει το `id` του ήρωα που πρέπει να ανακτηθεί.
 
-Route parameters are always strings.
-The JavaScript `Number` function converts the string to a number,
-which is what a hero `id` should be.
+Οι παράμετροι διαδρομής είναι πάντα κείμενο.
+Η συνάρτηση `Number` της JavaScript μετατρέπει το κείμενο σε αριθμό,
+που είναι αυτό που πρέπει να είναι το `id` ενός ήρωα.
 
-The browser refreshes and the application crashes with a compiler error.
-`HeroService` doesn't have a `getHero()` method.
-Add it now.
+Το πρόγραμμα περιήγησης ανανεώνεται και η εφαρμογή αποτυγχάνει με ένα σφάλμα μεταγλώττισης.
+Το `HeroService` δεν διαθέτει μέθοδο `getHero()`.
+Προσθέστε το τώρα.
 
-### Add `HeroService.getHero()`
+### Προσθήκη `HeroService.getHero()`
 
-Open `HeroService` and add the following `getHero()` method with the `id` after the `getHeroes()` method:
+Ανοίξτε το `HeroService` και προσθέστε την ακόλουθη μέθοδο `getHero()` με το `id` μετά τη μέθοδο `getHeroes()`:
 
 <code-example path="toh-pt5/src/app/hero.service.ts" region="getHero" header="src/app/hero.service.ts (getHero)">
 </code-example>
 
 <div class="alert is-important">
 
-Note the backticks ( &#96; ) that define a JavaScript
-[_template literal_](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals) for embedding the `id`.
+Παρατηρήστε τα backticks ( &#96; ) που ορίζουν ένα
+[_template literal_](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals) στην JavaScript για ενσωμάτωση του `id`.
 </div>
 
-Like [`getHeroes()`](tutorial/toh-pt4#observable-heroservice),
-`getHero()` has an asynchronous signature.
-It returns a _mock hero_ as an `Observable`, using the RxJS `of()` function.
+Όπως η [`getHeroes()`](tutorial/toh-pt4#observable-heroservice),
+η `getHero()` έχει ασύγχρονη μορφή.
+Επιστρέφει έναν _εικονικό ήρωα_ ως `Observable`, χρησιμοποιώντας τη συνάρτηση `of()` του RxJS.
 
-You'll be able to re-implement `getHero()` as a real `Http` request
-without having to change the `HeroDetailComponent` that calls it.
+Θα μπορείτε να υλοποιήσετε ξανά την `getHero()` ώς ένα πραγματικό αίτημα `Http`
+χωρίς να χρειαστεί να αλλάξετε το `HeroDetailComponent` που το καλεί.
 
-#### Try it
+#### Δοκιμάστε το
 
-The browser refreshes and the application is working again.
-You can click a hero in the dashboard or in the heroes list and navigate to that hero's detail view.
+Το πρόγραμμα περιήγησης ανανεώνεται και η εφαρμογή λειτουργεί ξανά.
+Μπορείτε να κάνετε κλικ σε έναν ήρωα στο dashboard ή στη λίστα ηρώων και να μεταβείτε στην προβολή λεπτομερειών αυτού του ήρωα.
 
-If you paste `localhost:4200/detail/11` in the browser address bar,
-the router navigates to the detail view for the hero with `id: 11`,  "Dr Nice".
+Εάν επικολλήσετε το `localhost:4200/detail/11` στη γραμμή διευθύνσεων του προγράμματος περιήγησης,
+το router πλοηγείται στην προβολή λεπτομερειών για τον ήρωα με `id: 11`,  "Dr Nice".
 
 {@a goback}
 
-### Find the way back
+### Βρείτε τον δρόμο της επιστροφής
 
-By clicking the browser's back button,
-you can go back to the hero list or dashboard view,
-depending upon which sent you to the detail view.
+Κάνοντας κλικ στο κουμπί επιστροφής του προγράμματος περιήγησης,
+μπορείτε να επιστρέψετε στη λίστα ηρώων ή στην προβολή του dashboard,
+ανάλογα με το ποιο σας έστειλε στην προβολή λεπτομερειών.
 
-It would be nice to have a button on the `HeroDetail` view that can do that.
+Θα ήταν ωραίο να υπάρχει ένα κουμπί στην προβολή `HeroDetail` που μπορεί να το κάνει αυτό.
 
-Add a *go back* button to the bottom of the component template and bind it
-to the component's `goBack()` method.
+Προσθέστε ένα κουμπί *επιστροφή πίσω* στο κάτω μέρος του template του component και συνδέστε το
+στη μέθοδο `goBack()` του component.
 
 <code-example path="toh-pt5/src/app/hero-detail/hero-detail.component.html" region="back-button" header="src/app/hero-detail/hero-detail.component.html (back button)">
 </code-example>
 
-Add a `goBack()` _method_ to the component class that navigates backward one step
-in the browser's history stack
-using the `Location` service that you [injected previously](#hero-detail-ctor).
+Προσθέστε μια _μέθοδο_ `goBack()` στο class του component που πλοηγείται προς τα πίσω ένα βήμα
+στο ιστορικό του προγράμματος περιήγησης
+χρησιμοποιώντας το service `Location` που [εισαγάγατε πριν](#hero-detail-ctor).
 
 <code-example path="toh-pt5/src/app/hero-detail/hero-detail.component.ts" region="goBack" header="src/app/hero-detail/hero-detail.component.ts (goBack)">
 
 </code-example>
 
 
-Refresh the browser and start clicking.
-Users can navigate around the app, from the dashboard to hero details and back,
-from heroes list to the mini detail to the hero details and back to the heroes again.
+Ανανεώστε το πρόγραμμα περιήγησης και ξεκινήστε να κάνετε κλικ.
+Οι χρήστες μπορούν να περιηγηθούν στην εφαρμογή, από το dashboard έως τις λεπτομέρειες του ήρωα και πίσω,
+από τη λίστα ηρώων στη μίνι λεπτομέρεια στις λεπτομέρειες του ήρωα και πάλι πίσω στους ήρωες.
 
-The details will look better when you add the private CSS styles to `hero-detail.component.css`
-as listed in one of the ["final code review"](#final-code-review) tabs below.
+Οι λεπτομέρειες θα φαίνονται καλύτερες όταν προσθέσετε τα CSS styles στο `hero-detail.component.css`
+όπως αναφέρεται σε μία από τις καρτέλες της ["τελικής επισκόπησης κώδικα"](#τελική-επισκόπηση-κώδικα) παρακάτω.
 
-## Final code review
+## Τελική επισκόπηση κώδικα
 
-Here are the code files discussed on this page.
+Αυτά είναι τα αρχεία κώδικα που συζητήθηκαν σε αυτήν τη σελίδα.
 
 {@a approutingmodule}
 {@a appmodule}
@@ -567,13 +566,13 @@ Here are the code files discussed on this page.
   </code-pane>
 </code-tabs>
 
-## Summary
+## Περίληψη
 
-* You added the Angular router to navigate among different components.
-* You turned the `AppComponent` into a navigation shell with `<a>` links and a `<router-outlet>`.
-* You configured the router in an `AppRoutingModule`
-* You defined routes, a redirect route, and a parameterized route.
-* You used the `routerLink` directive in anchor elements.
-* You refactored a tightly-coupled master/detail view into a routed detail view.
-* You used router link parameters to navigate to the detail view of a user-selected hero.
-* You shared the `HeroService` among multiple components.
+* Προσθέσατε το router του Angular για πλοήγηση μεταξύ διαφορετικών components.
+* Μετατρέψατε το `AppComponent` σε κέλυφος πλοήγησης με συνδέσμους`<a>` και ένα `<router-outlet>`.
+* Διαμορφώσατε το router σε ένα `AppRoutingModule`
+* Ορίσατε διαδρομές, μια διαδρομή ανακατεύθυνσης και μια παραμετροποιημένη διαδρομή.
+* Χρησιμοποιήσατε το directive `routerLink` σε στοιχεία anchor.
+* Αναμορφώσατε μια tightly-coupled προβολή master/detail σε μια δρομολογημένη προβολή λεπτομερειών.
+* Χρησιμοποιήσατε παραμέτρους συνδέσμων του router για να πλοηγηθείτε στην προβολή λεπτομερειών ενός ήρωα επιλεγμένου από τον χρήστη.
+* Κάνατε κοινόχρηστο το `HeroService` μεταξύ πολλών components.

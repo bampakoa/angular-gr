@@ -1,530 +1,528 @@
-# Get data from a server
+# Λήψη δεδομένων από διακομιστή
 
-In this tutorial, you'll add the following data persistence features with help from
-Angular's `HttpClient`.
+Σε αυτό το σεμινάριο, θα προσθέσετε τις ακόλουθες λειτουργίες διατήρησης δεδομένων με τη βοήθεια του
+`HttpClient` του Angular.
 
-* The `HeroService` gets hero data with HTTP requests.
-* Users can add, edit, and delete heroes and save these changes over HTTP.
-* Users can search for heroes by name.
+* Το `HeroService` λαμβάνει δεδομένα ηρώων με αιτήματα HTTP.
+* Οι χρήστες μπορούν να προσθέσουν, να επεξεργαστούν και να διαγράψουν ήρωες και να αποθηκεύσουν αυτές τις αλλαγές μέσω HTTP.
+* Οι χρήστες μπορούν να αναζητήσουν ήρωες με όνομα.
 
 <div class="alert is-helpful">
 
-  For the sample application that this page describes, see the <live-example></live-example>.
+  Για το δείγμα εφαρμογής που περιγράφει αυτή η σελίδα, ανατρέξτε στο <live-example></live-example>.
 
 </div>
 
-## Enable HTTP services
+## Ενεργοποίηση υπηρεσιών HTTP
 
-`HttpClient` is Angular's mechanism for communicating with a remote server over HTTP.
+Το `HttpClient` είναι ο μηχανισμός του Angular για την επικοινωνία με έναν απομακρυσμένο διακομιστή μέσω HTTP.
 
-Make `HttpClient` available everywhere in the application in two steps. First, add it to the root `AppModule` by importing it:
+Κάντε το `HttpClient` διαθέσιμο παντού στην εφαρμογή σε δύο βήματα. Πρώτα, προσθέστε το στο κεντρικό `AppModule` κάνοντάς το import:
 
 <code-example path="toh-pt6/src/app/app.module.ts" region="import-http-client" header="src/app/app.module.ts (HttpClientModule import)">
 </code-example>
 
-Next, still in the `AppModule`, add `HttpClientModule` to the `imports` array:
+Στη συνέχεια, ακόμα στο `AppModule`, προσθέστε το `HttpClientModule` στον πίνακα `imports`:
 
 <code-example path="toh-pt6/src/app/app.module.ts" region="import-httpclientmodule" header="src/app/app.module.ts (imports array excerpt)">
 </code-example>
 
 
-## Simulate a data server
+## Προσομοίωση διακομιστή δεδομένων
 
-This tutorial sample mimics communication with a remote data server by using the
-[In-memory Web API](https://github.com/angular/angular/tree/master/packages/misc/angular-in-memory-web-api "In-memory Web API") module.
+Αυτό το δείγμα εκμάθησης μιμείται την επικοινωνία με έναν απομακρυσμένο διακομιστή δεδομένων χρησιμοποιώντας το
+module [In-memory Web API](https://github.com/angular/angular/tree/master/packages/misc/angular-in-memory-web-api "In-memory Web API").
 
-After installing the module, the application will make requests to and receive responses from the `HttpClient`
-without knowing that the *In-memory Web API* is intercepting those requests,
-applying them to an in-memory data store, and returning simulated responses.
+Μετά την εγκατάσταση του module, η εφαρμογή θα κάνει αιτήματα και θα λαμβάνει απαντήσεις από το `HttpClient`
+χωρίς να γνωρίζει ότι το *In-memory Web API* παρεμποδίζει αυτά τα αιτήματα,
+τα εφαρμόζει σε ένα αποθηκευτικό χώρο δεδομένων στην μνήμη, και επιστρέφει προσομοιωμένες απαντήσεις.
 
-By using the In-memory Web API, you won't have to set up a server to learn about `HttpClient`.
+Χρησιμοποιώντας το In-memory Web API, δεν θα χρειαστεί να ρυθμίσετε έναν διακομιστή για να μάθετε για το `HttpClient`.
 
 <div class="alert is-important">
 
-**Important:** the In-memory Web API module has nothing to do with HTTP in Angular.
+**Σημαντικό:** το module In-memory Web API δεν έχει καμία σχέση με το HTTP στο Angular.
 
-If you're reading this tutorial to learn about `HttpClient`, you can [skip over](#import-heroes) this step.
-If you're coding along with this tutorial, stay here and add the In-memory Web API now.
+Εάν διαβάζετε αυτόν τον οδηγό για να μάθετε για το `HttpClient`, μπορείτε να [παρακάμψετε](#import-heroes) αυτό το βήμα.
+Εάν γράφετε κώδικα μαζί με αυτό το σεμινάριο, μείνετε εδώ και προσθέστε το In-memory Web API τώρα.
 
 </div>
 
-Install the In-memory Web API package from npm with the following command:
+Εγκαταστήστε το πακέτο In-memory Web API από το npm με την ακόλουθη εντολή:
 
 <code-example language="sh">
   npm install angular-in-memory-web-api --save
 </code-example>
 
-In the `AppModule`, import the `HttpClientInMemoryWebApiModule` and the `InMemoryDataService` class,
-which you will create in a moment.
+Στο `AppModule`, κάντε import το `HttpClientInMemoryWebApiModule` και το class `InMemoryDataService`,
+που θα δημιουργήσετε σε μια στιγμή.
 
 <code-example path="toh-pt6/src/app/app.module.ts" region="import-in-mem-stuff" header="src/app/app.module.ts (In-memory Web API imports)">
 </code-example>
 
-After the `HttpClientModule`, add the `HttpClientInMemoryWebApiModule`
-to the `AppModule` `imports` array and configure it with the `InMemoryDataService`.
+Μετά το `HttpClientModule`, προσθέστε το `HttpClientInMemoryWebApiModule`
+στον πίνακα `imports` του `AppModule` και ρυθμίστε τον με το `InMemoryDataService`.
 
 <code-example path="toh-pt6/src/app/app.module.ts" header="src/app/app.module.ts (imports array excerpt)" region="in-mem-web-api-imports">
 </code-example>
 
-The `forRoot()` configuration method takes an `InMemoryDataService` class
-that primes the in-memory database.
+Η μέθοδος διαμόρφωσης `forRoot()` παίρνει ένα class `InMemoryDataService`
+που εκκινεί τη βάση δεδομένων στη μνήμη.
 
-Generate the class `src/app/in-memory-data.service.ts` with the following command:
+Δημιουργήστε το class `src/app/in-memory-data.service.ts` με την ακόλουθη εντολή:
 
 <code-example language="sh">
   ng generate service InMemoryData
 </code-example>
 
-Replace the default contents of `in-memory-data.service.ts` with the following:
+Αντικαταστήστε τα προεπιλεγμένα περιεχόμενα του `in-memory-data.service.ts` με τα εξής:
 
 <code-example path="toh-pt6/src/app/in-memory-data.service.ts" region="init" header="src/app/in-memory-data.service.ts"></code-example>
 
-The `in-memory-data.service.ts` file will take over the function of `mock-heroes.ts`.
-However, don't delete `mock-heroes.ts` yet, as you still need it for a few more steps of this tutorial.
+Το αρχείο `in-memory-data.service.ts` θα αναλάβει τη λειτουργία του `mock-heroes.ts`.
+Ωστόσο, μην διαγράψετε ακόμα το `mock-heroes.ts`, καθώς το χρειάζεστε για μερικά ακόμη βήματα αυτού του σεμιναρίου.
 
-When the server is ready, you'll detach the In-memory Web API, and the application's requests will go through to the server.
+Όταν ο διακομιστής είναι έτοιμος, θα αποσυνδέσετε το In-memory Web API, και τα αιτήματα της εφαρμογής θα περάσουν από τον διακομιστή.
 
 
 {@a import-heroes}
-## Heroes and HTTP
+## Ήρωες και HTTP
 
-In the `HeroService`, import `HttpClient` and `HttpHeaders`:
+Στο `HeroService`, κάντε import το `HttpClient` και το `HttpHeaders`:
 
 <code-example path="toh-pt6/src/app/hero.service.ts" region="import-httpclient" header="src/app/hero.service.ts (import HTTP symbols)">
 </code-example>
 
-Still in the `HeroService`, inject `HttpClient` into the constructor in a private property called `http`.
+Ακόμα στο `HeroService`, εισάγετε το `HttpClient` στο constructor σε μια private ιδιότητα που ονομάζεται `http`.
 
 <code-example path="toh-pt6/src/app/hero.service.ts" header="src/app/hero.service.ts" region="ctor" >
 </code-example>
 
-Notice that you keep injecting the `MessageService` but since you'll call it so frequently, wrap it in a private `log()` method:
+Παρατηρήστε ότι συνεχίζετε να εισάγετε το `MessageService` αλλά επειδή θα το καλείτε τόσο συχνά, βάλτε το σε μια private μέθοδο `log()`:
 
 <code-example path="toh-pt6/src/app/hero.service.ts" header="src/app/hero.service.ts" region="log" >
 </code-example>
 
-Define the `heroesUrl` of the form `:base/:collectionName` with the address of the heroes resource on the server.
- Here `base` is the resource to which requests are made,
- and `collectionName` is the heroes data object in the `in-memory-data-service.ts`.
+Καθορίστε το `heroesUrl` στην μορφή `:base/:collectionName` με τη διεύθυνση του πόρου των ηρώων στον διακομιστή.
+ Εδώ το `base` είναι ο πόρος στον οποίο υποβάλλονται τα αιτήματα,
+ και το `collectionName` είναι το αντικείμενο δεδομένων των ηρώων στο `in-memory-data-service.ts`.
 
 <code-example path="toh-pt6/src/app/hero.service.ts" header="src/app/hero.service.ts" region="heroesUrl" >
 </code-example>
 
-### Get heroes with `HttpClient`
+### Λήψη ηρώων με το `HttpClient`
 
-The current `HeroService.getHeroes()`
-uses the RxJS `of()` function to return an array of mock heroes
-as an `Observable<Hero[]>`.
+Το τρέχον `HeroService.getHeroes()`
+χρησιμοποιεί τη συνάρτηση `of()` του RxJS για να επιστρέψει μια σειρά από εικονικούς ήρωες
+ως ένα `Observable<Hero[]>`.
 
 <code-example path="toh-pt4/src/app/hero.service.ts" region="getHeroes-1" header="src/app/hero.service.ts (getHeroes with RxJs 'of()')">
 </code-example>
 
-Convert that method to use `HttpClient` as follows:
+Μετατρέψτε αυτήν τη μέθοδο για να χρησιμοποιεί το `HttpClient` ως εξής:
 
 <code-example path="toh-pt6/src/app/hero.service.ts" header="src/app/hero.service.ts" region="getHeroes-1">
 </code-example>
 
-Refresh the browser. The hero data should successfully load from the
-mock server.
+Ανανεώστε το πρόγραμμα περιήγησης. Τα δεδομένα του ήρωα θα πρέπει να φορτωθούν με επιτυχία από τον
+εικονικό διακομιστή.
 
-You've swapped `of()` for `http.get()` and the application keeps working without any other changes
-because both functions return an `Observable<Hero[]>`.
+Αντικαταστήσατε το `of()` με το `http.get()` και η εφαρμογή συνεχίζει να λειτουργεί χωρίς άλλες αλλαγές
+επειδή και οι δύο συναρτήσεις επιστρέφουν ένα `Observable<Hero[]>`.
 
-### `HttpClient` methods return one value
+### Οι μέθοδοι `HttpClient` επιστρέφουν μία τιμή
 
-All `HttpClient` methods return an RxJS `Observable` of something.
+Όλες οι μέθοδοι του `HttpClient` επιστρέφουν ένα `Observable` του RxJS από κάτι.
 
-HTTP is a request/response protocol.
-You make a request, it returns a single response.
+Το HTTP είναι ένα πρωτόκολλο αίτησης/απάντησης.
+Κάνετε ένα αίτημα, επιστρέφει μία μόνο απάντηση.
 
-In general, an observable _can_ return multiple values over time.
-An observable from `HttpClient` always emits a single value and then completes, never to emit again.
+Γενικά, ένα observable _μπορεί_ να επιστρέψει πολλαπλές τιμές με την πάροδο του χρόνου.
+Ένα observable από το `HttpClient` επιστρέφει πάντα μια μεμονωμένη τιμή και στη συνέχεια ολοκληρώνεται, για να μην επιστρέψει άλλη.
 
-This particular `HttpClient.get()` call returns an `Observable<Hero[]>`; that is, "_an observable of hero arrays_". In practice, it will only return a single hero array.
+Αυτή η συγκεκριμένη κλήση `HttpClient.get()` επιστρέφει ένα `Observable<Hero[]>`. Δηλαδή, "_ένα observable από λίστες ηρώων_". Στην πράξη, θα επιστρέψει μόνο μία λίστα ηρώων.
 
-### `HttpClient.get()` returns response data
+### Το `HttpClient.get()` επιστρέφει τα δεδομένα της απάντησης
 
-`HttpClient.get()` returns the body of the response as an untyped JSON object by default.
-Applying the optional type specifier, `<Hero[]>` , adds TypeScript capabilities, which reduce errors during compile time.
+Το `HttpClient.get()` επιστρέφει το περιεχόμενο της απάντησης ως ένα αντικείμενο JSON χωρίς τύπο απο προεπιλογή.
+Η εφαρμογή του προαιρετικού τύπου, `<Hero[]>` , προσθέτει δυνατότητες TypeScript, οι οποίες μειώνουν τα σφάλματα κατά τη διάρκεια της μεταγλώττισης.
 
-The server's data API determines the shape of the JSON data.
-The _Tour of Heroes_ data API returns the hero data as an array.
+Το API δεδομένων του διακομιστή καθορίζει το σχήμα των δεδομένων JSON.
+Το API δεδομένων του _Tour of Heroes_ επιστρέφει τα δεδομένα του ήρωα ως λίστα.
 
 <div class="alert is-helpful">
 
-Other APIs may bury the data that you want within an object.
-You might have to dig that data out by processing the `Observable` result
-with the RxJS `map()` operator.
+Άλλα API ενδέχεται να περιέχουν τα δεδομένα που θέλετε μέσα σε ένα αντικείμενο.
+Ίσως χρειαστεί να ανακαλύψετε αυτά τα δεδομένα επεξεργαζόμενοι το αποτέλεσμα του `Observable`
+με τον τελεστή `map()` του RxJS.
 
-Although not discussed here, there's an example of `map()` in the `getHeroNo404()`
-method included in the sample source code.
+Αν και δεν συζητείται εδώ, υπάρχει ένα παράδειγμα του `map()` στην μέθοδο `getHeroNo404()`
+που περιλαμβάνεται στο δείγμα του πηγαίου κώδικα.
 
 </div>
 
-### Error handling
+### Διαχείριση σφαλμάτων
 
-Things go wrong, especially when you're getting data from a remote server.
-The `HeroService.getHeroes()` method should catch errors and do something appropriate.
+Τα πράγματα μπορεί να πάνε στραβά, ειδικά όταν λαμβάνετε δεδομένα από έναν απομακρυσμένο διακομιστή.
+Η μέθοδος `HeroService.getHeroes()` θα πρέπει να εντοπίσει σφάλματα και να κάνει κάτι κατάλληλο.
 
-To catch errors, you **"pipe" the observable** result from `http.get()` through an RxJS `catchError()` operator.
+Για να εντοπίσετε σφάλματα, **"περάστε" το αποτέλεσμα του observable** από το `http.get()` μέσω ενός τελεστή `catchError()` του RxJS.
 
-Import the `catchError` symbol from `rxjs/operators`, along with some other operators you'll need later.
+Κάντε import το σύμβολο `catchError` από το `rxjs/operators`, μαζί με κάποιους άλλους τελεστές που θα χρειαστείτε αργότερα.
 
 <code-example path="toh-pt6/src/app/hero.service.ts" header="src/app/hero.service.ts" region="import-rxjs-operators">
 </code-example>
 
-Now extend the observable result with the `pipe()` method and
-give it a `catchError()` operator.
+Τώρα επεκτείνετε το αποτέλεσμα του observable με τη μέθοδο `pipe()` και
+δώστε του έναν τελεστή `catchError()`.
 
 <code-example path="toh-pt6/src/app/hero.service.ts" region="getHeroes-2" header="src/app/hero.service.ts">
 </code-example>
 
-The `catchError()` operator intercepts an **`Observable` that failed**.
-The operator then passes the error to the error handling function.
+Ο τελεστής `catchError()` παρεμβάλλεται σε ένα **`Observable` που απέτυχε**.
+Στη συνέχεια, ο τελεστής μεταβιβάζει το σφάλμα στη συνάρτηση χειρισμού σφαλμάτων.
 
-The following `handleError()` method reports the error and then returns an
-innocuous result so that the application keeps working.
+Η ακόλουθη μέθοδος `handleError()` αναφέρει το σφάλμα και στη συνέχεια επιστρέφει ένα
+αβλαβές αποτέλεσμα, ώστε η εφαρμογή να συνεχίσει να λειτουργεί.
 
 #### `handleError`
 
-The following `handleError()` will be shared by many `HeroService` methods
-so it's generalized to meet their different needs.
+Το ακόλουθο `handleError()` θα είναι κοινόχρηστο από πολλές μεθόδους του `HeroService`
+οπότε γενικεύεται για να καλύψει τις διαφορετικές ανάγκες τους.
 
-Instead of handling the error directly, it returns an error handler function to `catchError` that it
-has configured with both the name of the operation that failed and a safe return value.
+Αντί να χειριστεί το σφάλμα απευθείας, επιστρέφει μια συνάρτηση για να χειριστεί το σφάλμα στο `catchError` που
+έχει ρυθμιστεί τόσο με το όνομα της λειτουργίας που απέτυχε όσο και με μια ασφαλή επιστρεφόμενη τιμή.
 
 <code-example path="toh-pt6/src/app/hero.service.ts" header="src/app/hero.service.ts" region="handleError">
 </code-example>
 
-After reporting the error to the console, the handler constructs
-a user friendly message and returns a safe value to the application so the application can keep working.
+Αφού αναφέρει το σφάλμα στο console, η συνάρτηση κατασκευάζει
+ένα φιλικό προς το χρήστη μήνυμα και επιστρέφει μια ασφαλή τιμή στην εφαρμογή, ώστε η εφαρμογή να μπορεί να συνεχίσει να λειτουργεί.
 
-Because each service method returns a different kind of `Observable` result,
-`handleError()` takes a type parameter so it can return the safe value as the type that the application expects.
+Επειδή κάθε μέθοδος του service επιστρέφει ένα διαφορετικό είδος αποτελέσματος `Observable`,
+το `handleError()` λαμβάνει μια παράμετρο τύπου ώστε να μπορεί να επιστρέψει την ασφαλή τιμή ως τον τύπο που αναμένει η εφαρμογή.
 
-### Tap into the Observable
+### Πατήστε στο Observable
 
-The `HeroService` methods will **tap** into the flow of observable values
-and send a message, using the `log()` method, to the message area at the bottom of the page.
+Οι μεθόδοι του `HeroService` θα **πατήσουν** στη ροή των τιμών του observable
+και θα στείλουν ένα μήνυμα, χρησιμοποιώντας τη μέθοδο `log()`, στην περιοχή μηνυμάτων στο κάτω μέρος της σελίδας.
 
-They'll do that with the RxJS `tap()` operator,
-which looks at the observable values, does something with those values,
-and passes them along.
-The `tap()` call back doesn't touch the values themselves.
+Θα το κάνουν με τον τελεστή `tap()` του RxJS,
+που κοιτάζει τις τιμές του observable, κάνει κάτι με αυτές τις τιμές,
+και τις μεταδίδει.
+Η κλήση του `tap()` δεν αγγίζει τις ίδιες τις τιμές.
 
-Here is the final version of `getHeroes()` with the `tap()` that logs the operation.
+Εδώ είναι η τελική έκδοση του `getHeroes()` με το `tap()` που καταγράφει τη λειτουργία.
 
 <code-example path="toh-pt6/src/app/hero.service.ts" header="src/app/hero.service.ts"  region="getHeroes" >
 </code-example>
 
-### Get hero by id
+### Λήψη ήρωα βάσει id
 
-Most web APIs support a _get by id_ request in the form `:baseURL/:id`.
+Τα περισσότερα web APIs υποστηρίζουν ένα αίτημα _λήψη βάσει id_ της μορφής `:baseURL/:id`.
 
-Here, the _base URL_ is the `heroesURL` defined in the [Heroes and HTTP](tutorial/toh-pt6#heroes-and-http) section (`api/heroes`) and _id_ is
-the number of the hero that you want to retrieve. For example, `api/heroes/11`.
+Εδώ, το _base URL_ είναι το `heroesURL` που ορίστηκε στην ενότητα [Ήρωες και HTTP](tutorial/toh-pt6#ήρωες-και-http) (`api/heroes`) και το _id_ είναι ο αριθμός του ήρωα που θέλετε να ανακτήσετε. Για παράδειγμα, `api/heroes/11`.
 
-Update the `HeroService` `getHero()` method with the following to make that request:
+Ενημερώστε τη μέθοδο `getHero()` του `HeroService` με τα εξής για να κάνετε αυτό το αίτημα:
 
 <code-example path="toh-pt6/src/app/hero.service.ts" region="getHero" header="src/app/hero.service.ts"></code-example>
 
-There are three significant differences from  `getHeroes()`:
+Υπάρχουν τρεις σημαντικές διαφορές από την `getHeroes()`:
 
-* `getHero()` constructs a request URL with the desired hero's id.
-* The server should respond with a single hero rather than an array of heroes.
-* `getHero()` returns an `Observable<Hero>` ("_an observable of Hero objects_")
- rather than an observable of hero _arrays_ .
+* Η `getHero()` κατασκευάζει μια διεύθυνση URL για το αίτημα με το επιθυμητό id του ήρωα.
+* Ο διακομιστής θα πρέπει να ανταποκριθεί με έναν μόνο ήρωα αντί για μια σειρά ηρώων.
+* Η `getHero()` επιστρέφει ένα `Observable<Hero>` ("_ένα observable από αντικείμενα Hero_")
+ παρά ένα observable από _λίστες_ hero.
 
-## Update heroes
+## Ενημέρωση ηρώων
 
-Edit a hero's name in the hero detail view.
-As you type, the hero name updates the heading at the top of the page.
-But when you click the "go back button", the changes are lost.
+Επεξεργαστείτε το όνομα ενός ήρωα στην προβολή λεπτομερειών ήρωα.
+Καθώς πληκτρολογείτε, το όνομα του ήρωα ενημερώνει την επικεφαλίδα στο επάνω μέρος της σελίδας.
+Όταν όμως κάνετε κλικ στο "κουμπί επιστροφής", οι αλλαγές χάνονται.
 
-If you want changes to persist, you must write them back to
-the server.
+Εάν θέλετε να διατηρηθούν οι αλλαγές, πρέπει να τις ξαναγράψετε
+στον διακομιστή.
 
-At the end of the hero detail template, add a save button with a `click` event
-binding that invokes a new component method named `save()`.
+Στο τέλος του template των λεπτομερειών ήρωα, προσθέστε ένα κουμπί αποθήκευσης με ένα event binding `click`
+που καλεί μια νέα μέθοδο του component με το όνομα `save()`.
 
 <code-example path="toh-pt6/src/app/hero-detail/hero-detail.component.html" region="save" header="src/app/hero-detail/hero-detail.component.html (save)"></code-example>
 
-In the `HeroDetail` component class, add the following `save()` method, which persists hero name changes using the hero service
-`updateHero()` method and then navigates back to the previous view.
+Στο class του component `HeroDetail`, προσθέστε την ακόλουθη μέθοδο `save()`, η οποία διατηρεί τις αλλαγές στο όνομα του ήρωα χρησιμοποιώντας την μέθοδο
+`updateHero()` του service και, στη συνέχεια, πλοηγείται πίσω στην προηγούμενη προβολή.
 
 <code-example path="toh-pt6/src/app/hero-detail/hero-detail.component.ts" region="save" header="src/app/hero-detail/hero-detail.component.ts (save)"></code-example>
 
-#### Add `HeroService.updateHero()`
+#### Προσθήκη `HeroService.updateHero()`
 
-The overall structure of the `updateHero()` method is similar to that of
-`getHeroes()`, but it uses `http.put()` to persist the changed hero
-on the server. Add the following to the `HeroService`.
+Η συνολική δομή της μεθόδου `updateHero()` είναι παρόμοια με αυτή της
+`getHeroes()`, αλλά χρησιμοποιεί το `http.put()` για να διατηρήσει τον αλλαγμένο ήρωα
+στον διακομιστή. Προσθέστε τα ακόλουθα στο `HeroService`.
 
 <code-example path="toh-pt6/src/app/hero.service.ts" region="updateHero" header="src/app/hero.service.ts (update)">
 </code-example>
 
-The `HttpClient.put()` method takes three parameters:
-* the URL
-* the data to update (the modified hero in this case)
-* options
+Η μέθοδος `HttpClient.put()` παίρνει τρεις παραμέτρους:
+* το URL
+* τα δεδομένα προς ενημέρωση (ο τροποποιημένος ήρωας σε αυτήν την περίπτωση)
+* επιλογές
 
-The URL is unchanged. The heroes web API knows which hero to update by looking at the hero's `id`.
+Η διεύθυνση URL παραμένει αμετάβλητη. Το web API των ηρώων γνωρίζει ποιον ήρωα να ενημερώσει κοιτάζοντας το `id` του ήρωα.
 
-The heroes web API expects a special header in HTTP save requests.
-That header is in the `httpOptions` constant defined in the `HeroService`. Add the following to the `HeroService` class.
+Το web API των ηρώων περιμένει μια ειδική κεφαλίδα στα αιτήματα αποθήκευσης HTTP.
+Αυτή η κεφαλίδα βρίσκεται στη σταθερά `httpOptions` που ορίζεται στο `HeroService`. Προσθέστε τα ακόλουθα στο class `HeroService`.
 
 <code-example path="toh-pt6/src/app/hero.service.ts" region="http-options" header="src/app/hero.service.ts">
 </code-example>
 
-Refresh the browser, change a hero name and save your change. The `save()`
-method in `HeroDetailComponent` navigates to the previous view.
-The hero now appears in the list with the changed name.
+Ανανεώστε το πρόγραμμα περιήγησης, αλλάξτε ένα όνομα ήρωα και αποθηκεύστε την αλλαγή σας. Η μέθοδος `save()`
+στο `HeroDetailComponent` μεταβαίνει στην προηγούμενη προβολή.
+Ο ήρωας εμφανίζεται τώρα στη λίστα με το αλλαγμένο όνομα.
 
 
-## Add a new hero
+## Προσθέστε έναν νέο ήρωα
 
-To add a hero, this application only needs the hero's name. You can use an `<input>`
-element paired with an add button.
+Για να προσθέσετε έναν ήρωα, αυτή η εφαρμογή χρειάζεται μόνο το όνομα του ήρωα. Μπορείτε να χρησιμοποιήσετε ένα στοιχείο `<input>`
+μαζί με ένα κουμπί προσθήκης.
 
-Insert the following into the `HeroesComponent` template, after
-the heading:
+Εισαγάγετε τα ακόλουθα στο template του `HeroesComponent`, μετά
+την επικεφαλίδα:
 
 <code-example path="toh-pt6/src/app/heroes/heroes.component.html" region="add" header="src/app/heroes/heroes.component.html (add)"></code-example>
 
-In response to a click event, call the component's click handler, `add()`, and then
-clear the input field so that it's ready for another name. Add the following to the
-`HeroesComponent` class:
+Ως απάντηση σε ένα event click, καλέστε την μέθοδο του component, `add()`, και μετά
+διαγράψτε το πεδίο εισαγωγής ώστε να είναι έτοιμο για άλλο όνομα. Προσθέστε τα παρακάτω στο
+class `HeroesComponent`:
 
 <code-example path="toh-pt6/src/app/heroes/heroes.component.ts" region="add" header="src/app/heroes/heroes.component.ts (add)"></code-example>
 
-When the given name is non-blank, the handler creates a `Hero`-like object
-from the name (it's only missing the `id`) and passes it to the services `addHero()` method.
+Όταν το όνομα δεν είναι κενό, η μέθοδος δημιουργεί ένα αντικείμενο που μοιάζει με `Hero`
+από το όνομα (λείπει μόνο το `id`) και το μεταβιβάζει στη μέθοδο `addHero()` του service.
 
-When `addHero()` saves successfully, the `subscribe()` callback
-receives the new hero and pushes it into to the `heroes` list for display.
+Όταν η `addHero()` αποθηκεύει με επιτυχία,, η επιστροφή της κλήσης του `subscribe()`
+λαμβάνει τον νέο ήρωα και τον προσθέτει στη λίστα `heroes` για εμφάνιση.
 
-Add the following `addHero()` method to the `HeroService` class.
+Προσθέστε την ακόλουθη μέθοδο `addHero()` στο class `HeroService`.
 
 <code-example path="toh-pt6/src/app/hero.service.ts" region="addHero" header="src/app/hero.service.ts (addHero)"></code-example>
 
-`addHero()` differs from `updateHero()` in two ways:
+Η `addHero()` διαφέρει από την `updateHero()` με δύο τρόπους:
 
-* It calls `HttpClient.post()` instead of `put()`.
-* It expects the server to generate an id for the new hero,
-which it returns in the `Observable<Hero>` to the caller.
+* Καλεί την `HttpClient.post()` αντί για την `put()`.
+* Αναμένει από τον διακομιστή να δημιουργήσει ένα id για τον νέο ήρωα,
+το οποίο επιστρέφει στο `Observable<Hero>` σε αυτόν που το κάλεσε.
 
-Refresh the browser and add some heroes.
+Ανανεώστε το πρόγραμμα περιήγησης και προσθέστε μερικούς ήρωες.
 
-## Delete a hero
+## Διαγράψτε έναν ήρωα
 
-Each hero in the heroes list should have a delete button.
+Κάθε ήρωας στη λίστα ηρώων θα πρέπει να έχει ένα κουμπί διαγραφής.
 
-Add the following button element to the `HeroesComponent` template, after the hero
-name in the repeated `<li>` element.
+Προσθέστε το ακόλουθο στοιχείο button στο template του `HeroesComponent`, μετά το όνομα του ήρωα
+στο επαναλαμβανόμενο στοιχείο `<li>`.
 
 <code-example path="toh-pt6/src/app/heroes/heroes.component.html" header="src/app/heroes/heroes.component.html" region="delete"></code-example>
 
-The HTML for the list of heroes should look like this:
+Το HTML για τη λίστα των ηρώων θα πρέπει να μοιάζει με αυτό:
 
 <code-example path="toh-pt6/src/app/heroes/heroes.component.html" region="list" header="src/app/heroes/heroes.component.html (list of heroes)"></code-example>
 
-To position the delete button at the far right of the hero entry,
-add some CSS to the `heroes.component.css`. You'll find that CSS
-in the [final review code](#heroescomponent) below.
+Για να τοποθετήσετε το κουμπί διαγραφής στη δεξιά πλευρά της καταχώρισης του ήρωα,
+προσθέστε λίγο CSS στο `heroes.component.css`. Θα βρείτε αυτό το CSS
+στην [τελική επισκόπηση του κώδικα](#heroescomponent) παρακάτω.
 
-Add the `delete()` handler to the component class.
+Προσθέστε την μέθοδο `delete()` στο class του component.
 
 <code-example path="toh-pt6/src/app/heroes/heroes.component.ts" region="delete" header="src/app/heroes/heroes.component.ts (delete)"></code-example>
 
-Although the component delegates hero deletion to the `HeroService`,
-it remains responsible for updating its own list of heroes.
-The component's `delete()` method immediately removes the _hero-to-delete_ from that list,
-anticipating that the `HeroService` will succeed on the server.
+Παρόλο που το component εκχωρεί τη διαγραφή ήρωα στο `HeroService`,
+παραμένει υπεύθυνο για την ενημέρωση της δικής του λίστας ηρώων.
+Η μέθοδος`delete()` του component αφαιρεί αμέσως τον _ήρωα-προς-διαγραφή_ από αυτήν τη λίστα,
+προβλέποντας ότι το `HeroService` θα πετύχει στον διακομιστή.
 
-There's really nothing for the component to do with the `Observable` returned by
-`heroService.delete()` **but it must subscribe anyway**.
+Πραγματικά δεν υπάρχει τίποτα που να κάνει το component με το `Observable` που επιστράφηκε από
+την `heroService.delete()` **αλλά πρέπει να κάνει subscribe ούτως ή άλλως**.
 
 <div class="alert is-important">
 
-  If you neglect to `subscribe()`, the service will not send the delete request to the server.
-  As a rule, an `Observable` _does nothing_ until something subscribes.
+  Εάν αμελήσετε να κάνετε `subscribe()`, το service δεν θα στείλει το αίτημα διαγραφής στον διακομιστή.
+  Κατά κανόνα, ένα `Observable` _δεν κάνει τίποτα_ μέχρι κάτι να κάνει subscribe.
 
-  Confirm this for yourself by temporarily removing the `subscribe()`,
-  clicking "Dashboard", then clicking "Heroes".
-  You'll see the full list of heroes again.
+  Επιβεβαιώστε το μόνοι σας αφαιρώντας προσωρινά το `subscribe()`,
+  κάνοντας κλικ στο "Dashboard" και μετά κάνοντας κλικ στο "Heroes".
+  Θα δείτε ξανά την πλήρη λίστα των ηρώων.
 
 </div>
 
-Next, add a `deleteHero()` method to `HeroService` like this.
+Στη συνέχεια, προσθέστε μια μέθοδο `deleteHero()` στο `HeroService` όπως αυτή.
 
 <code-example path="toh-pt6/src/app/hero.service.ts" region="deleteHero" header="src/app/hero.service.ts (delete)"></code-example>
 
-Note the following key points:
+Σημειώστε τα ακόλουθα βασικά σημεία:
 
-* `deleteHero()` calls `HttpClient.delete()`.
-* The URL is the heroes resource URL plus the `id` of the hero to delete.
-* You don't send data as you did with `put()` and `post()`.
-* You still send the `httpOptions`.
+* Η `deleteHero()` καλεί την `HttpClient.delete()`.
+* Η διεύθυνση URL είναι η διεύθυνση URL του πόρου των ηρώων συν το `id` του ήρωα προς διαγραφή.
+* Δεν στέλνετε δεδομένα όπως κάνατε με την `put()` και την `post()`.
+* Εξακολουθείτε να στέλνετε το `httpOptions`.
 
-Refresh the browser and try the new delete functionality.
+Ανανεώστε το πρόγραμμα περιήγησης και δοκιμάστε τη νέα λειτουργία διαγραφής.
 
-## Search by name
+## Αναζήτηση με το όνομα
 
-In this last exercise, you learn to chain `Observable` operators together
-so you can minimize the number of similar HTTP requests
-and consume network bandwidth economically.
+Σε αυτήν την τελευταία άσκηση, μαθαίνετε να συνδέετε τους τελεστές `Observable` μεταξύ τους
+ώστε να μπορείτε να ελαχιστοποιήσετε τον αριθμό παρόμοιων αιτημάτων HTTP
+και να καταναλώνετε οικονομικά το εύρος ζώνης του δικτύου.
 
-You will add a heroes search feature to the Dashboard.
-As the user types a name into a search box,
-you'll make repeated HTTP requests for heroes filtered by that name.
-Your goal is to issue only as many requests as necessary.
+Θα προσθέσετε μια δυνατότητα αναζήτησης ηρώων στο Dashboard.
+Καθώς ο χρήστης πληκτρολογεί ένα όνομα σε ένα πλαίσιο αναζήτησης,
+θα κάνετε επαναλαμβανόμενα αιτήματα HTTP για ήρωες που φιλτράρονται με αυτό το όνομα.
+Ο στόχος σας είναι να στείλετε μόνο όσα αιτήματα χρειάζεται.
 
 #### `HeroService.searchHeroes()`
 
-Start by adding a `searchHeroes()` method to the `HeroService`.
+Ξεκινήστε προσθέτοντας μια μέθοδο `searchHeroes()` στο `HeroService`.
 
 <code-example path="toh-pt6/src/app/hero.service.ts" region="searchHeroes" header="src/app/hero.service.ts">
 </code-example>
 
-The method returns immediately with an empty array if there is no search term.
-The rest of it closely resembles `getHeroes()`, the only significant difference being
-the URL, which includes a query string with the search term.
+Η μέθοδος επιστρέφει αμέσως με μια κενή λίστα εάν δεν υπάρχει όρος αναζήτησης.
+Το υπόλοιπο μοιάζει πολύ με τη `getHeroes()`, με τη μόνη σημαντική διαφορά
+να είναι η διεύθυνση URL, η οποία περιλαμβάνει ένα query string με τον όρο αναζήτησης.
 
-### Add search to the Dashboard
+### Προσθήκη αναζήτησης στο Dashboard
 
-Open the `DashboardComponent` template and
-add the hero search element, `<app-hero-search>`, to the bottom of the markup.
+Ανοίξτε το template του `DashboardComponent` και
+προσθέστε το στοιχείο αναζήτησης ήρωα, `<app-hero-search>`, στο κάτω μέρος.
 
 <code-example path="toh-pt6/src/app/dashboard/dashboard.component.html" header="src/app/dashboard/dashboard.component.html"></code-example>
 
-This template looks a lot like the `*ngFor` repeater in the `HeroesComponent` template.
+Αυτό το template μοιάζει πολύ με το `*ngFor` στο template του `HeroesComponent`.
 
-For this to work, the next step is to add a component with a selector that matches `<app-hero-search>`.
+Για να λειτουργήσει αυτό, το επόμενο βήμα είναι να προσθέσετε ένα component με έναν selector που ταιριάζει με το `<app-hero-search>`.
 
 
-### Create `HeroSearchComponent`
+### Δημιουργήστε το `HeroSearchComponent`
 
-Create a `HeroSearchComponent` with the CLI.
+Δημιουργήστε ένα `HeroSearchComponent` με το CLI.
 
 <code-example language="sh">
   ng generate component hero-search
 </code-example>
 
-The CLI generates the three `HeroSearchComponent` files and adds the component to the `AppModule` declarations.
+Το CLI δημιουργεί τα τρία αρχεία του `HeroSearchComponent` και προσθέτει το component στα declarations του `AppModule`.
 
-Replace the generated `HeroSearchComponent` template with an `<input>` and a list of matching search results, as follows.
+Αντικαταστήστε το template του `HeroSearchComponent` που δημιουργήθηκε με ένα `<input>` και μια λίστα με τα αντίστοιχα αποτελέσματα αναζήτησης, ως εξής.
 
 <code-example path="toh-pt6/src/app/hero-search/hero-search.component.html" header="src/app/hero-search/hero-search.component.html"></code-example>
 
-Add private CSS styles to `hero-search.component.css`
-as listed in the [final code review](#herosearchcomponent) below.
+Προσθέστε CSS styles στο `hero-search.component.css`
+όπως αναφέρεται στην [τελική επισκόπηση κώδικα](#herosearchcomponent) παρακάτω.
 
-As the user types in the search box, an input event binding calls the
-component's `search()` method with the new search box value.
+Καθώς ο χρήστης πληκτρολογεί στο πλαίσιο αναζήτησης, ένα event binding στο input καλεί την
+μέθοδο `search()` του component με τη νέα τιμή του πλαισίου αναζήτησης.
 
 {@a asyncpipe}
 
 ### `AsyncPipe`
 
-The `*ngFor` repeats hero objects. Notice that the `*ngFor` iterates over a list called `heroes$`, not `heroes`. The `$` is a convention that indicates `heroes$` is an `Observable`, not an array.
+Το `*ngFor` επαναλαμβάνει αντικείμενα ήρωα. Παρατηρήστε ότι το `*ngFor` επαναλαμβάνεται πάνω από μια λίστα που ονομάζεται `heroes$` και όχι `heroes`. Το `$` είναι μια σύμβαση που υποδεικνύει ότι το `heroes$` είναι ένα `Observable` και όχι μια λίστα.
 
 
 <code-example path="toh-pt6/src/app/hero-search/hero-search.component.html" header="src/app/hero-search/hero-search.component.html" region="async"></code-example>
 
-Since `*ngFor` can't do anything with an `Observable`, use the
-pipe character (`|`) followed by `async`. This identifies Angular's `AsyncPipe` and subscribes to an `Observable` automatically so you won't have to
-do so in the component class.
+Εφόσον το `*ngFor` δεν μπορεί να κάνει τίποτα με ένα `Observable`, χρησιμοποιήστε τον χαρακτήρα
+pipe (`|`) ακολουθούμενο από το `async`. Αυτό προσδιορίζει το `AsyncPipe` του Angular και κάνει subscribe σε ένα `Observable` οπότε δεν θα χρειαστεί να το κάνετε στο class του component.
 
-### Edit the `HeroSearchComponent` class
+### Επεξεργαστείτε το class `HeroSearchComponent`
 
-Replace the generated `HeroSearchComponent` class and metadata as follows.
+Αντικαταστήστε το class `HeroSearchComponent` που δημιουργήθηκε και τα μεταδεδομένα ως εξής.
 
 <code-example path="toh-pt6/src/app/hero-search/hero-search.component.ts" header="src/app/hero-search/hero-search.component.ts"></code-example>
 
-Notice the declaration of `heroes$` as an `Observable`:
+Παρατηρήστε τη δήλωση του `heroes$` ως `Observable`:
 
 <code-example path="toh-pt6/src/app/hero-search/hero-search.component.ts" header="src/app/hero-search/hero-search.component.ts" region="heroes-stream">
 </code-example>
 
-You'll set it in [`ngOnInit()`](#search-pipe).
-Before you do, focus on the definition of `searchTerms`.
+Θα το ορίσετε στην [`ngOnInit()`](#search-pipe).
+Προτού το κάνετε, εστιάστε στον ορισμό του `searchTerms`.
 
-### The `searchTerms` RxJS subject
+### Το `searchTerms` είναι ένα subject του RxJS
 
-The `searchTerms` property is an RxJS `Subject`.
+Η ιδιότητα `searchTerms` είναι ένα `Subject` του RxJS.
 
 <code-example path="toh-pt6/src/app/hero-search/hero-search.component.ts" header="src/app/hero-search/hero-search.component.ts" region="searchTerms"></code-example>
 
-A `Subject` is both a source of observable values and an `Observable` itself.
-You can subscribe to a `Subject` as you would any `Observable`.
+Ένα `Subject` είναι ταυτόχρονα πηγή τιμών observable και το ίδιο το `Observable`.
+Μπορείτε να κάνετε subscribe σε ένα `Subject` όπως θα κάνατε σε οποιοδήποτε `Observable`.
 
-You can also push values into that `Observable` by calling its `next(value)` method
-as the `search()` method does.
+Μπορείτε επίσης να προσθέσετε τιμές σε αυτό το `Observable` καλώντας τη μέθοδό του `next(value)`
+όπως κάνει η μέθοδος `search()`.
 
-The event binding to the textbox's `input` event calls the `search()` method.
+Το event binding στο event `input` του πλαισίου κειμένου καλεί τη μέθοδο `search()`.
 
 <code-example path="toh-pt6/src/app/hero-search/hero-search.component.html" header="src/app/hero-search/hero-search.component.html" region="input"></code-example>
 
-Every time the user types in the textbox, the binding calls `search()` with the textbox value, a "search term".
-The `searchTerms` becomes an `Observable` emitting a steady stream of search terms.
+Κάθε φορά που ο χρήστης πληκτρολογεί στο πλαίσιο κειμένου, το binding καλεί την `search()` με την τιμή του πλαισίου κειμένου, έναν "όρο αναζήτησης".
+Το `searchTerms` γίνεται ένα `Observable` που επιστρέφει μια σταθερή ροή όρων αναζήτησης.
 
 {@a search-pipe}
 
-### Chaining RxJS operators
+### Εκτελώντας τελεστές του RxJS μαζί
 
-Passing a new search term directly to the `searchHeroes()` after every user keystroke would create an excessive amount of HTTP requests,
-taxing server resources and burning through data plans.
+Η μεταβίβαση ενός νέου όρου αναζήτησης απευθείας στην `searchHeroes()` μετά από κάθε πάτημα πλήκτρων χρήστη θα δημιουργούσε υπερβολικό αριθμό αιτημάτων HTTP,
+χρεώνοντας τους πόρους του διακομιστή και εξαντλώντας τα πακέτα δεδομένων.
 
-Instead, the `ngOnInit()` method pipes the `searchTerms` observable through a sequence of RxJS operators that reduce the number of calls to the `searchHeroes()`,
-ultimately returning an observable of timely hero search results (each a `Hero[]`).
+Αντίθετα, η μέθοδος `ngOnInit()` διοχετεύει το observable `searchTerms` μέσω μιας ακολουθίας τελεστών RxJS που μειώνουν τον αριθμό των κλήσεων στην `searchHeroes()`,
+επιστρέφοντας τελικά ένα observable  από έγκαιρα αποτελέσματα αναζήτησης ηρώων (το κάθε ένα `Hero[]`).
 
-Here's a closer look at the code.
+Εδώ είναι μια πιο προσεκτική ματιά στον κώδικα.
 
 <code-example path="toh-pt6/src/app/hero-search/hero-search.component.ts" header="src/app/hero-search/hero-search.component.ts" region="search">
 </code-example>
 
-Each operator works as follows:
+Κάθε τελεστής λειτουργεί ως εξής:
 
-* `debounceTime(300)` waits until the flow of new string events pauses for 300 milliseconds
-before passing along the latest string. You'll never make requests more frequently than 300ms.
+* `debounceTime(300)` περιμένει έως ότου η ροή των νέων events κειμένου σταματήσει για 300 χιλιοστά του δευτερολέπτου
+πριν περάσει το τελευταίο κείμενο. Δεν θα κάνετε ποτέ αιτήματα συχνότερα από 300 ms.
 
-* `distinctUntilChanged()` ensures that a request is sent only if the filter text changed.
+* `distinctUntilChanged()` διασφαλίζει ότι ένα αίτημα αποστέλλεται μόνο εάν το κείμενο του φίλτρου έχει αλλάξει.
 
-* `switchMap()` calls the search service for each search term that makes it through `debounce()` and `distinctUntilChanged()`.
-It cancels and discards previous search observables, returning only the latest search service observable.
+* `switchMap()` καλεί το service αναζήτησης για κάθε όρο αναζήτησης που έρχεται από το `debounce()` και το `distinctUntilChanged()`.
+Ακυρώνει και απορρίπτει προηγούμενα observables αναζήτησης, επιστρέφοντας μόνο το πιο πρόσφατο observable αναζήτησης του service.
 
 
 <div class="alert is-helpful">
 
-  With the [switchMap operator](https://www.learnrxjs.io/learn-rxjs/operators/transformation/switchmap),
-  every qualifying key event can trigger an `HttpClient.get()` method call.
-  Even with a 300ms pause between requests, you could have multiple HTTP requests in flight
-  and they may not return in the order sent.
+  Με τον [τελεστή switchMap](https://www.learnrxjs.io/learn-rxjs/operators/transformation/switchmap),
+  κάθε event που πληροί τις προϋποθέσεις μπορεί να ενεργοποιήσει μια κλήση της μεθόδου `HttpClient.get()`.
+  Ακόμη και με μια παύση 300 ms μεταξύ των αιτημάτων, θα μπορούσατε να έχετε πολλαπλά ενεργά αιτήματα HTTP
+  και μπορεί να μην επιστρέψουν με την σειρά που τα στείλατε.
 
-  `switchMap()` preserves the original request order while returning only the observable from the most recent HTTP method call.
-  Results from prior calls are canceled and discarded.
+  Το `switchMap()` διατηρεί την αρχική σειρά αιτήματος ενώ επιστρέφει μόνο το observable πό την πιο πρόσφατη κλήση μεθόδου HTTP.
+  Τα αποτελέσματα από προηγούμενες κλήσεις ακυρώνονται και απορρίπτονται.
 
-  Note that canceling a previous `searchHeroes()` Observable
-  doesn't actually abort a pending HTTP request.
-  Unwanted results are discarded before they reach your application code.
+  Σημειώστε ότι η ακύρωση ενός προηγούμενου Observable `searchHeroes()`
+  δεν ακυρώνει στην πραγματικότητα ένα εκκρεμές αίτημα HTTP.
+  Τα ανεπιθύμητα αποτελέσματα απορρίπτονται πριν φτάσουν στον κώδικα της εφαρμογής σας.
 
 </div>
 
-Remember that the component _class_ does not subscribe to the `heroes$` _observable_.
-That's the job of the [`AsyncPipe`](#asyncpipe) in the template.
+Να θυμάστε ότι το _class_ του component δεν κάνει subscribe στο _observable_ `heroes$`.
+Αυτή είναι η δουλειά του [`AsyncPipe`](#asyncpipe) στο template.
 
-#### Try it
+#### Δοκιμάστε το
 
-Run the application again. In the *Dashboard*, enter some text in the search box.
-If you enter characters that match any existing hero names, you'll see something like this.
+Εκτελέστε ξανά την εφαρμογή. Στο *Dashboard*, πληκτρολογήστε κάποιο κείμενο στο πλαίσιο αναζήτησης.
+Εάν εισαγάγετε χαρακτήρες που ταιριάζουν με τυχόν υπάρχοντα ονόματα ηρώων, θα δείτε κάτι σαν αυτό.
 
 <div class="lightbox">
   <img src='generated/images/guide/toh/toh-hero-search.gif' alt="Hero Search field with the letters 'm' and 'a' along with four search results that match the query displayed in a list beneath the search input">
 </div>
 
-## Final code review
+## Τελική επισκόπηση κώδικα
 
-Here are the code files discussed on this page (all in the `src/app/` folder).
+Αυτά είναι τα αρχεία κώδικα που συζητήθηκαν σε αυτήν τη σελίδα (όλα στον φάκελο `src/app/`).
 
 {@a heroservice}
 {@a inmemorydataservice}
@@ -606,16 +604,16 @@ Here are the code files discussed on this page (all in the `src/app/` folder).
   </code-pane>
 </code-tabs>
 
-## Summary
+## Περίληψη
 
-You're at the end of your journey, and you've accomplished a lot.
-* You added the necessary dependencies to use HTTP in the app.
-* You refactored `HeroService` to load heroes from a web API.
-* You extended `HeroService` to support `post()`, `put()`, and `delete()` methods.
-* You updated the components to allow adding, editing, and deleting of heroes.
-* You configured an in-memory web API.
-* You learned how to use observables.
+Βρίσκεστε στο τέλος του ταξιδιού σας και έχετε καταφέρει πολλά.
+* Προσθέσατε τις απαραίτητες εξαρτήσεις για να χρησιμοποιήσετε το HTTP στην εφαρμογή.
+* Ανακατασκευάσατε το `HeroService` για να φορτώσετε ήρωες από ένα web API.
+* Επεκτείνατε το `HeroService` για να υποστηρίζει τις μεθόδους `post()`, `put()` και `delete()`.
+* Ενημερώσατε τα components για να επιτρέπεται η προσθήκη, η επεξεργασία και η διαγραφή ηρώων.
+* Διαμορφώσατε ένα web API στην΄μνήμη.
+* Μάθατε πώς να χρησιμοποιείτε observables.
 
-This concludes the "Tour of Heroes" tutorial.
-You're ready to learn more about Angular development in the fundamentals section,
-starting with the [Architecture](guide/architecture "Architecture") guide.
+Αυτό ολοκληρώνει το σεμινάριο "Tour of Heroes".
+Είστε έτοιμοι να μάθετε περισσότερα σχετικά με την ανάπτυξη Angular στην ενότητα βασικών στοιχείων,
+ξεκινώντας με τον οδηγό [Αρχιτεκτονική](guide/architecture "Architecture").

@@ -678,52 +678,52 @@
       ]
     },
     {
-      "title": "Tutorials",
-      "tooltip": "End-to-end tutorials for learning Angular concepts and patterns.",
+      "title": "Σεμινάρια",
+      "tooltip": "Ολοκληρωμένα εκπαιδευτικά μαθήματα για εκμάθηση εννοιών και μοτίβων Angular.",
       "children": [
         {
-          "title": "Tutorial: Tour of Heroes",
-          "tooltip": "The Tour of Heroes app is used as a reference point in many Angular examples.",
+          "title": "Σεμινάριο: Tour of Heroes",
+          "tooltip": "Η εφαρμογή Tour of Heroes χρησιμοποιείται ως σημείο αναφοράς σε πολλά παραδείγματα Angular.",
           "children": [
             {
               "url": "tutorial",
-              "title": "Introduction",
-              "tooltip": "Introduction to the Tour of Heroes app and tutorial"
+              "title": "Εισαγωγή",
+              "tooltip": "Εισαγωγή στην εφαρμογή και το σεμινάριο Tour of Heroes"
             },
             {
               "url": "tutorial/toh-pt0",
-              "title": "Create a Project",
-              "tooltip": "Creating the application shell"
+              "title": "Δημιουργήστε ένα νέο project",
+              "tooltip": "Δημιουργία του κελύφους της εφαρμογής"
             },
             {
               "url": "tutorial/toh-pt1",
-              "title": "1. The Hero Editor",
-              "tooltip": "Part 1: Build a simple editor"
+              "title": "1. Επεξεργασία ήρωα",
+              "tooltip": "Part 1: Δημιουργήστε ένα απλό πρόγραμμα επεξεργασίας"
             },
             {
               "url": "tutorial/toh-pt2",
-              "title": "2. Display a List",
-              "tooltip": "Part 2: Build a master/detail page with a list of heroes."
+              "title": "2. Εμφάνιση λίστας",
+              "tooltip": "Part 2: Δημιουργήστε μια σελίδα master/detail με μια λίστα ηρώων."
             },
             {
               "url": "tutorial/toh-pt3",
-              "title": "3. Create a Feature Component",
-              "tooltip": "Part 3: Refactor the master/detail views into separate components."
+              "title": "3. Δημιουργήστε ένα feature component",
+              "tooltip": "Part 3: Ανακατασκευάστε τις προβολές master/detail σε ξεχωριστά components."
             },
             {
               "url": "tutorial/toh-pt4",
-              "title": "4. Add Services",
-              "tooltip": "Part 4: Create a reusable service to manage hero data."
+              "title": "4. Προσθήκη services",
+              "tooltip": "Part 4: Δημιουργήστε ένα επαναχρησιμοποιήσιμο service για τη διαχείριση δεδομένων ηρώων."
             },
             {
               "url": "tutorial/toh-pt5",
-              "title": "5. Add Navigation",
-              "tooltip": "Part 5: Add the Angular router and navigate among the views."
+              "title": "5. Προσθήκη πλοήγησης",
+              "tooltip": "Part 5: Προσθέστε το Angular router και πλοηγηθείτε μεταξύ των προβολών."
             },
             {
               "url": "tutorial/toh-pt6",
-              "title": "6. Get Data from a Server",
-              "tooltip": "Part 6: Use HTTP to retrieve and save hero data."
+              "title": "6. Λήψη δεδομένων από διακομιστή",
+              "tooltip": "Part 6: Χρησιμοποιήστε HTTP για να ανακτήσετε και να αποθηκεύσετε δεδομένα ήρωα."
             }
           ]
         },
