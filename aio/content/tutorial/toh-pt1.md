@@ -26,26 +26,26 @@
 <code-example path="toh-pt1/src/app/heroes/heroes.component.ts" region="v1" header="app/heroes/heroes.component.ts (initial version)"></code-example>
 
 Κάντε πάντα import το σύμβολο `Component` από την κεντρική βιβλιοθήκη του Angular
-και προσθέστε το `@Component` στο component class.
+και προσθέστε το `@Component` στο class του component.
 
 Το `@Component` είναι μια συνάρτηση decorator που καθορίζει τα μεταδεδομένα Angular για το component.
 
 Το CLI δημιούργησε τρεις ιδιότητες για τα μεταδεδομένα:
 
-1. `selector`&mdash; τον CSS selector του στοιχείου του component
+1. `selector`&mdash; το selector CSS του στοιχείου του component
 1. `templateUrl`&mdash; την θέση του αρχείου template του component.
-1. `styleUrls`&mdash; την θέση των CSS styles του component.
+1. `styleUrls`&mdash; την θέση των στυλ CSS του component.
 
 {@a selector}
 
-Ο [selector του στοιχείου CSS](https://developer.mozilla.org/en-US/docs/Web/CSS/Type_selectors),
+Το [selector του στοιχείου CSS](https://developer.mozilla.org/en-US/docs/Web/CSS/Type_selectors),
 `'app-heroes'`, αντιστοιχεί με το όνομα του στοιχείου HTML που προσδιορίζει αυτό το component μέσα στο template ενός άλλου component.
 
 Το `ngOnInit()` είναι ένα [lifecycle hook](guide/lifecycle-hooks#oninit).
 Το Angular καλεί το `ngOnInit()` λίγο μετά τη δημιουργία ενός component.
 Είναι ένα καλό μέρος για να βάλετε τη λογική αρχικοποίησης.
 
-Πάντα να κάνετε `export` το component class για να μπορείτε να το κάνετε `import` αλλού ... όπως στο `AppModule`.
+Πάντα να κάνετε `export` το class του component για να μπορείτε να το κάνετε `import` αλλού ... όπως στο `AppModule`.
 
 ### Προσθέστε μια ιδιότητα `hero`
 
@@ -65,12 +65,12 @@
 
 Για να εμφανίσετε το `HeroesComponent`, πρέπει να το προσθέσετε στο template του κελύφους `AppComponent`.
 
-Να θυμάστε ότι το `app-heroes` είναι ο [selector στοιχείου](#selector) για το `HeroesComponent`.
+Να θυμάστε ότι το `app-heroes` είναι το [selector στοιχείου](#selector) για το `HeroesComponent`.
 Προσθέστε λοιπόν ένα στοιχείο `<app-heroes>` στο αρχείο template του `AppComponent`, ακριβώς κάτω από τον τίτλο.
 
 <code-example path="toh-pt1/src/app/app.component.html" header="src/app/app.component.html"></code-example>
 
-Υποθέτοντας ότι η εντολή CLI `ng serve` εξακολουθεί να εκτελείται,
+Υποθέτοντας ότι η εντολή `ng serve` του CLI εξακολουθεί να εκτελείται,
 το πρόγραμμα περιήγησης πρέπει να ανανεώσει και να εμφανίσει τόσο τον τίτλο της εφαρμογής όσο και το όνομα του ήρωα.
 
 ## Δημιουργήστε ένα interface Hero
@@ -85,8 +85,8 @@
 
 Επιστρέψτε στο class `HeroesComponent` και κάντε import το interface `Hero`.
 
-Αναδιαμορφώστε  την ιδιότητα `hero` του component ώστε να είναι τύπου `Hero`.
-Αρχικοποιήστε το με ένα `id` του `1` και το όνομα `Windstorm`.
+Αλλάξτε την ιδιότητα `hero` του component ώστε να είναι τύπου `Hero`.
+Αρχικοποιήστε το με ένα `id` `1` και όνομα `Windstorm`.
 
 Το αναθεωρημένο αρχείο class του `HeroesComponent` θα πρέπει να μοιάζει με αυτό:
 
@@ -94,9 +94,9 @@
 
 Η σελίδα δεν εμφανίζεται πλέον σωστά επειδή αλλάξατε τον ήρωα από κείμενο σε αντικείμενο.
 
-## Εμφανίστε το αντικείμενο hero
+## Εμφανίστε το αντικείμενο ήρωα
 
-Ενημερώστε το binding στο template για να ανακοινώσετε το όνομα του ήρωα
+Ενημερώστε το binding στο template για να προβάλλετε το όνομα του ήρωα
 και εμφανίστε τόσο το `id` και το `name` σε μια διάταξη λεπτομερειών όπως αυτή:
 
 <code-example path="toh-pt1/src/app/heroes/heroes.component.1.html" region="show-hero-2" header="heroes.component.html (HeroesComponent's template)"></code-example>
@@ -116,7 +116,7 @@
 ενεργοποιεί το ενσωματωμένο `UppercasePipe`.
 
 Τα [pipes](guide/pipes) είναι ένας καλός τρόπος για να μορφοποιήσετε κείμενο, ποσά νομισμάτων, ημερομηνίες και άλλα δεδομένα εμφάνισης.
-Το Angular περιέχει διάφορα ενσωματωμένα pipes και μπορείτε να δημιουργήσετε τα δικούς σας.
+Το Angular περιέχει διάφορα ενσωματωμένα pipes και μπορείτε να δημιουργήσετε τα δικά σας.
 
 ## Επεξεργαστείτε τον ήρωα
 
@@ -124,18 +124,18 @@
 
 Το πλαίσιο κειμένου θα πρέπει να _εμφανίζει_ την ιδιότητα `name` του ήρωα
 και να _ενημερώνει_ αυτή την ιδιότητα καθώς πληκτρολογεί ο χρήστης.
-Αυτό σημαίνει ότι τα δεδομένα ρέουν από το component class _στην οθόνη_ και
+Αυτό σημαίνει ότι τα δεδομένα θα ρέουν από το class του component _στην οθόνη_ και
 από την οθόνη _πίσω στο class_.
 
-Για να αυτοματοποιήσετε αυτή τη ροή δεδομένων, ρυθμίστε ένα two-way data binding μεταξύ του στοιχείου φόρμας `<input>` και της ιδιότητας `hero.name`.
+Για να αυτοματοποιήσετε αυτή τη ροή δεδομένων, ρυθμίστε ένα αμφίδρομο data binding μεταξύ του στοιχείου φόρμας `<input>` και της ιδιότητας `hero.name`.
 
-### Two-way binding
+### Αμφίδρομο binding
 
 Τροποποιήστε την περιοχή λεπτομερειών στο template `HeroesComponent` ώστε να μοιάζει με αυτό:
 
 <code-example path="toh-pt1/src/app/heroes/heroes.component.1.html" region="name-input" header="src/app/heroes/heroes.component.html (HeroesComponent's template)"></code-example>
 
-**To [(ngModel)]** είναι η σύνταξη two-way data binding του Angular.
+**To [(ngModel)]** είναι η σύνταξη αμφίδρομου data binding του Angular.
 
 Εδώ συνδέει την ιδιότητα `hero.name` στο πλαίσιο κειμένου HTML έτσι ώστε τα δεδομένα να μπορούν να ρέουν _και προς τις δύο κατευθύνσεις:_ από την ιδιότητα `hero.name` στο πλαίσιο κειμένου και από το πλαίσιο κειμένου πίσω στο `hero.name`.
 
@@ -161,10 +161,10 @@ Can't bind to 'ngModel' since it isn't a known property of 'input'.
 και ποια άλλα αρχεία και βιβλιοθήκες απαιτεί η εφαρμογή.
 Αυτές οι πληροφορίες ονομάζονται _μεταδεδομένα_.
 
-Ορισμένα από τα μεταδεδομένα βρίσκονται στους decorators `@Component` που προσθέσατε στα component classes.
+Ορισμένα από τα μεταδεδομένα βρίσκονται στα decorators `@Component` που προσθέσατε στα classes των components.
 Άλλα κρίσιμα μεταδεδομένα βρίσκονται σε decorators [`@NgModule`](guide/ngmodules).
 
-Ο πιο σημαντικός decorator `@NgModule` ορίζεται στο class **AppModule** που βρίσκεται στο ανώτερο επίπεδο.
+Το πιο σημαντικό decorator `@NgModule` ορίζεται στο class **AppModule** που βρίσκεται στο ανώτερο επίπεδο.
 
 Το Angular CLI δημιούργησε ένα class `AppModule` στο `src/app/app.module.ts` όταν δημιούργησε το project.
 Εκεί μπορείτε να _δηλώσετε ρητά_ το `FormsModule`.
@@ -198,7 +198,7 @@ region="ng-imports">
 <code-example path="toh-pt1/src/app/app.module.ts" header="src/app/app.module.ts" region="heroes-import" >
 </code-example>
 
-Το `HeroesComponent` δηλώνεται στον πίνακα `@NgModule.declarations`.
+Το `HeroesComponent` δηλώνεται στην λίστα `@NgModule.declarations`.
 <code-example path="toh-pt1/src/app/app.module.ts" header="src/app/app.module.ts" region="declarations">
 </code-example>
 
@@ -238,7 +238,7 @@ region="ng-imports">
 * Χρησιμοποιήσατε το CLI για να δημιουργήσετε ένα δεύτερο  `HeroesComponent`.
 * Εμφανίσατε το `HeroesComponent` προσθέτοντάς το στο κέλυφος `AppComponent`.
 * Εφαρμόσατε το `UppercasePipe` για να μορφοποιήσετε το όνομα.
-* Χρησιμοποιήσατε two-way data binding με το directive `ngModel`.
+* Χρησιμοποιήσατε αμφίδρομο data binding με το directive `ngModel`.
 * Μάθατε για το `AppModule`.
 * Εισαγάγατε το `FormsModule` στο `AppModule` έτσι ώστε το Angular να αναγνωρίζει και να εφαρμόζει το directive `ngModel`.
 * Μάθατε τη σημασία της δήλωσης components στο `AppModule`

@@ -4,23 +4,23 @@
 
 Αυτό το σεμινάριο σας εισάγει στα βασικά του Angular καθοδηγώντας σας στη δημιουργία μιας εφαρμογής ηλεκτρονικού εμπορίου με έναν κατάλογο, καλάθι αγορών και φόρμα ολοκλήρωσης αγοράς.
 
-Για να σας βοηθήσουμε να ξεκινήσετε αμέσως, αυτό το σεμινάριο χρησιμοποιεί μια έτοιμη εφαρμογή που μπορείτε να δείτε και να τροποποιήσετε διαδραστικά στο [StackBlitz](https://stackblitz.com/)&mdash;χωρίς να χρειάζεται να [ρυθμίσετε ένα τοπικό περιβάλλον εργασίας](guide/setup-local "Setup guide").
+Για να σας βοηθήσουμε να ξεκινήσετε αμέσως, αυτό το σεμινάριο χρησιμοποιεί μια έτοιμη εφαρμογή που μπορείτε να δείτε και να τροποποιήσετε διαδραστικά στο [StackBlitz](https://stackblitz.com/)&mdash;χωρίς να χρειάζεται να [ρυθμίσετε ένα τοπικό περιβάλλον εργασίας](guide/setup-local "Οδηγός εγκατάστασης").
 Το StackBlitz είναι ένα περιβάλλον ανάπτυξης στον browser στο οποίο μπορείτε να δημιουργήσετε, να αποθηκεύσετε και να μοιραστείτε projects χρησιμοποιώντας μια ποικιλία τεχνολογιών.
 
 ## Προαπαιτούμενα
 
 Για να αξιοποιήσετε στο έπακρο αυτό το σεμινάριο, θα πρέπει να έχετε ήδη μια βασική κατανόηση των παρακάτω.
 
-* [HTML](https://developer.mozilla.org/en-US/docs/Learn/HTML "Learning HTML: Guides and tutorials")
+* [HTML](https://developer.mozilla.org/en-US/docs/Learn/HTML "Εκμάθηση HTML: Οδηγοί και σεμινάρια")
 * [JavaScript](https://developer.mozilla.org/en-US/docs/Web/JavaScript "JavaScript")
-* [TypeScript](https://www.typescriptlang.org/ "The TypeScript language")
+* [TypeScript](https://www.typescriptlang.org/ "Η γλώσσα TypeScript")
 
 
 {@a components}
 ## Κάντε μια περιήγηση στο παράδειγμα εφαρμογής
 
 Δημιουργείτε εφαρμογές Angular με components.
-Τα components ορίζουν τομείς ευθύνης στο UI που σας επιτρέπουν να επαναχρησιμοποιήσετε σετ από λειτουργίες του UI.
+Τα components ορίζουν τομείς ευθύνης στο UI που σας επιτρέπουν να επαναχρησιμοποιήσετε λειτουργίες του UI.
 
 Ένα component αποτελείται από τρία πράγματα:
 
@@ -36,10 +36,10 @@
 * `<app-product-alerts>`&mdash;το component που περιέχει τις ειδοποιήσεις της εφαρμογής.
 
 <div class="lightbox">
-  <img src="generated/images/guide/start/app-components.png" alt="Online store with three components">
+  <img src="generated/images/guide/start/app-components.png" alt="Ηλεκτρονικό κατάστημα με τρία components">
 </div>
 
-Για περισσότερες πληροφορίες σχετικά με τα components, ανατρέξτε στην ενότητα [Εισαγωγή στα Components](guide/architecture-components "Introduction to Components and Templates").
+Για περισσότερες πληροφορίες σχετικά με τα components, ανατρέξτε στην ενότητα [Εισαγωγή στα Components](guide/architecture-components "Εισαγωγή στα components και στα templates").
 
 
 {@a new-project}
@@ -54,7 +54,7 @@
 1. Αποθηκεύστε περιοδικά.
 
 <div class="lightbox">
-  <img src="generated/images/guide/start/fork-the-project.png" alt="Fork the project">
+  <img src="generated/images/guide/start/fork-the-project.png" alt="Κάντε fork το project">
 </div>
 
 Στο StackBlitz, το παράθυρο προεπισκόπησης στα δεξιά δείχνει την αρχική κατάσταση του παραδείγματος εφαρμογής.
@@ -64,7 +64,7 @@
 * μια κεφαλίδα για λίστα προϊόντων, *Products*
 
 <div class="lightbox">
-  <img src="generated/images/guide/start/new-app-all.gif" alt="Starter online store application">
+  <img src="generated/images/guide/start/new-app-all.gif" alt="Εφαρμογή εκκίνησης ηλεκτρονικού καταστήματος">
 </div>
 
 Το τμήμα του project στα αριστερά δείχνει τα αρχεία του κώδικα που απαρτίζουν την εφαρμογή, συμπεριλαμβανομένων των αρχείων υποδομής και παραμετροποίησης.
@@ -81,7 +81,7 @@
 Θα χρησιμοποιήσετε προκαθορισμένα δεδομένα για τα προϊόντα από το αρχείο `products.ts` και μεθόδους από το αρχείο `product-list.component.ts`.
 Αυτή η ενότητα σάς καθοδηγεί στην επεξεργασία του HTML, γνωστό και ως template.
 
-1. Στον φάκελο `product-list`, ανοίξτε το template αρχείο `product-list.component.html`.
+1. Στον φάκελο `product-list`, ανοίξτε το αρχείο template `product-list.component.html`.
 
 1. Προσθέστε ένα structural directive `*ngFor` σε ένα `<div>`, όπως φαίνεται παρακάτω.
 
@@ -93,8 +93,8 @@
   Τα structural directives διαμορφώνουν ή αναδιαμορφώνουν τη δομή του DOM, προσθέτοντας, αφαιρώντας και επεξεργάζοντας στοιχεία.
   Για περισσότερες πληροφορίες σχετικά με τα structural directives, δείτε [Structural directives](guide/structural-directives).
 
-1. Μέσα στο `<div>`, προσθέστε ένα `<h3>` και `{{ product.name }}`.
-  Η πρόταση `{{ product.name }}` είναι ένα παράδειγμα της σύνταξης του Angular interpolation.
+1. Μέσα στο `<div>`, προσθέστε ένα `<h3>` και το `{{ product.name }}`.
+  Το `{{ product.name }}` είναι ένα παράδειγμα της σύνταξης του interpolation του Angular.
   Το interpolation `{{ }}` σας επιτρέπει να εμφανίσετε την τιμή της ιδιότητας ως κείμενο.
 
   <code-example path="getting-started/src/app/product-list/product-list.component.2.html" header="src/app/product-list/product-list.component.html" region="interpolation">
@@ -103,7 +103,7 @@
   Το παράθυρο προεπισκόπησης ενημερώνεται για να εμφανίσει το όνομα κάθε προϊόντος στη λίστα.
 
   <div class="lightbox">
-    <img src="generated/images/guide/start/template-syntax-product-names.png" alt="Product names added to list">
+    <img src="generated/images/guide/start/template-syntax-product-names.png" alt="Τα ονόματα προϊόντων προστέθηκαν στη λίστα">
   </div>
 
 1. Για να κάνετε κάθε όνομα προϊόντος έναν σύνδεσμο προς τις λεπτομέρειες του προϊόντος, προσθέστε το στοιχείο `<a>` γύρω από το `{{ product.name }}`.
@@ -117,7 +117,7 @@
     Το property binding `[ ]` σας επιτρέπει να χρησιμοποιήσετε την τιμή μιας ιδιότητας σε μια έκφραση του template.
 
     <div class="lightbox">
-      <img src="generated/images/guide/start/template-syntax-product-anchor.png" alt="Product name anchor text is product name property">
+      <img src="generated/images/guide/start/template-syntax-product-anchor.png" alt="Το κείμενο του anchor στο όνομα του προϊόντος είναι η ιδιότητα του ονόματος προϊόντος">
     </div>
 
 1. Προσθέστε τις περιγραφές προϊόντων. Σε ένα στοιχείο `<p>`, χρησιμοποιήστε ένα directive `*ngIf` έτσι ώστε το Angular να δημιουργεί το στοιχείο `<p>` μόνο εάν το τρέχον προϊόν έχει περιγραφή.
@@ -130,7 +130,7 @@
     Το Angular δεν δημιουργεί το στοιχείο `<p>` επειδή η περιγραφή του προϊόντος είναι κενή.
 
     <div class="lightbox">
-      <img src="generated/images/guide/start/template-syntax-product-description.png" alt="Product descriptions added to list">
+      <img src="generated/images/guide/start/template-syntax-product-description.png" alt="Οι περιγραφές προϊόντων προστέθηκαν στη λίστα">
     </div>
 
 1. Προσθέστε ένα κουμπί ώστε οι χρήστες να μπορούν να μοιράζονται ένα προϊόν.
@@ -142,17 +142,17 @@
     Το κάθε προϊόν έχει τώρα ένα κουμπί **Share**.
 
     <div class="lightbox">
-      <img src="generated/images/guide/start/template-syntax-product-share-button.png" alt="Share button added for each product">
+      <img src="generated/images/guide/start/template-syntax-product-share-button.png" alt="Προστέθηκε κουμπί κοινής χρήσης για κάθε προϊόν">
     </div>
 
     Πατώντας το κουμπί **Share** εμφανίζεται μια ειδοποίηση που αναφέρει, "The product has been shared!".
 
     <div class="lightbox">
-      <img src="generated/images/guide/start/template-syntax-product-share-alert.png" alt="Alert box indicating product has been shared">
+      <img src="generated/images/guide/start/template-syntax-product-share-alert.png" alt="Πλαίσιο ειδοποίησης που υποδεικνύει ότι το προϊόν έχει κοινοποιηθεί">
     </div>
 
-Κατά την επεξεργασία του template, έχετε εξερευνήσει μερικές από τις πιο δημοφιλείς δυνατότητες των Angular templates.
-Για περισσότερες πληροφορίες, ανατρέξτε στην ενότητα [Εισαγωγή στα components και στα templates](guide/architecture-components#template-syntax "Template Syntax").
+Κατά την επεξεργασία του template, έχετε εξερευνήσει μερικές από τις πιο δημοφιλείς δυνατότητες των templates του Angular.
+Για περισσότερες πληροφορίες, ανατρέξτε στην ενότητα [Εισαγωγή στα components και στα templates](guide/architecture-components#template-syntax "Σύνταξη του template").
 
 {@a passing-data-in}
 
@@ -169,7 +169,7 @@
 1. Κάντε κλικ στο σύμβολο συν πάνω από το τρέχον terminal για να δημιουργήσετε ένα νέο terminal και να εκτελέσετε την εντολή για τη δημιουργία του component.
 
   <div class="lightbox">
-    <img src="generated/images/guide/start/create-new-terminal.png" alt="StackBlitz command to generate component">
+    <img src="generated/images/guide/start/create-new-terminal.png" alt="Εντολή StackBlitz για τη δημιουργία component">
   </div>
 
 1. Στο νέο terminal, δημιουργήστε ένα νέο component με το όνομα `product-alerts` εκτελώντας την παρακάτω εντολή.
@@ -185,24 +185,24 @@
     * `product-alerts.component.css`
 
 1. Ανοίξτε το `product-alerts.component.ts`.
-  Ο decorator `@Component()` υποδεικνύει ότι το ακόλουθο class είναι ένα component.
+  Το decorator `@Component()` υποδεικνύει ότι το ακόλουθο class είναι ένα component.
   Το `@Component()`παρέχει επίσης μεταδεδομένα σχετικά με το component, συμπεριλαμβανομένου του selector, των templates, και των στυλ του.
 
   <code-example header="src/app/product-alerts/product-alerts.component.ts" path="getting-started/src/app/product-alerts/product-alerts.component.1.ts" region="as-generated"></code-example>
 
   Τα βασικά χαρακτηριστικά στο `@Component()` είναι τα εξής:
 
-    * Ο `selector`, `app-product-alerts`, αναγνωρίζει το component.
-      Βάση σύμβασης, οι selectors των Angular component ξεκινούν με το πρόθεμα `app-`, ακολουθούμενο από το όνομα του component.
-    * Τα ονόματα αρχείων του template και style αντιστοιχούν στο HTML και CSS του component.
+    * Το `selector`, `app-product-alerts`, αναγνωρίζει το component.
+      Βάση σύμβασης, τα selectors των component του Angular ξεκινούν με το πρόθεμα `app-`, ακολουθούμενο από το όνομα του component.
+    * Τα ονόματα αρχείων του template και των στυλ αντιστοιχούν στο HTML και CSS του component.
     * Ο ορισμός του `@Component()` επίσης κάνει export το class, `ProductAlertsComponent`, που χειρίζεται τη λειτουργικότητα για το component.
 
 1. Για να ρυθμίσετε το `ProductAlertsComponent` να λαμβάνει δεδομένα προϊόντος, πρώτα κάντε import το `Input` από το `@angular/core`.
 
   <code-example path="getting-started/src/app/product-alerts/product-alerts.component.1.ts" region="imports" header="src/app/product-alerts/product-alerts.component.ts"></code-example>
 
-1. Στο class `ProductAlertsComponent`, ορίστε μια ιδιότητα με το όνομα `product` χρησιμοποιώντας τον decorator `@Input()`.
-  Ο decorator `@Input()` υποδηλώνει ότι η τιμή της ιδιότητας προέρχεται από το parent component, `ProductListComponent`.
+1. Στο class `ProductAlertsComponent`, ορίστε μια ιδιότητα με το όνομα `product` χρησιμοποιώντας το decorator `@Input()`.
+  Το decorator `@Input()` υποδηλώνει ότι η τιμή της ιδιότητας προέρχεται από το parent component, `ProductListComponent`.
 
   <code-example path="getting-started/src/app/product-alerts/product-alerts.component.1.ts" region="input-decorator" header="src/app/product-alerts/product-alerts.component.ts"></code-example>
 
@@ -224,19 +224,19 @@
 Η τιμή του Phone XL είναι πάνω από 700 $, επομένως το κουμπί **Notify Me** εμφανίζεται σε αυτό το προϊόν.
 
 <div class="lightbox">
-  <img src="generated/images/guide/start/product-alert-button.png" alt="Product alert button added to products over $700">
+  <img src="generated/images/guide/start/product-alert-button.png" alt="Το κουμπί ειδοποίησης προϊόντος προστέθηκε σε προϊόντα άνω των 700 $">
 </div>
 
 {@a output}
 
 ## Μεταφορά δεδομένων σε ένα parent component
 
-Για να λειτουργήσει το κουμπί **Notify Me**, το child component πρέπει να ειδοποιήσει και να διαβιβάσει τα δεδομένα στο parent component.
-To `ProductAlertsComponent` πρέπει πρέπει να εκπέμψει ένα event όταν ο χρήστης κάνει κλικ στο **Notify Me** και το `ProductListComponent` πρέπει να ανταποκριθεί στο event.
+Για να λειτουργήσει το κουμπί **Notify Me**, το child component πρέπει να ειδοποιήσει και να στείλει τα δεδομένα στο parent component.
+To `ProductAlertsComponent` πρέπει να καλέσει ένα event όταν ο χρήστης πατήσει το **Notify Me** και το `ProductListComponent` πρέπει να ανταποκριθεί στο event.
 
   <div class="alert is-helpful">
 
-  Σε νέα components, ο Angular Generator περιλαμβάνει έναν κενό `constructor()`, το interface `OnInit`, και την μέθοδο `ngOnInit()`.
+  Σε νέα components, το Angular Generator περιλαμβάνει ένα κενό `constructor()`, το interface `OnInit`, και την μέθοδο `ngOnInit()`.
   Επειδή αυτά τα βήματα δεν τα χρησιμοποιούν, τα ακόλουθα παραδείγματα κώδικα τα παραλείπουν για συντομία.
 
   </div>
@@ -245,8 +245,8 @@ To `ProductAlertsComponent` πρέπει πρέπει να εκπέμψει έν
 
   <code-example header="src/app/product-alerts/product-alerts.component.ts" path="getting-started/src/app/product-alerts/product-alerts.component.ts" region="imports"></code-example>
 
-1. Στο component class, ορίστε μια ιδιότητα με το όνομα `notify` χρησιμοποιώντας τον decorator `@Output()` και μια οντότητα `EventEmitter()`.
-  Ο ορισμός του `ProductAlertsComponent` με ένα `@Output()` επιτρέπει στο `ProductAlertsComponent` να εκπέμπει ένα event όταν η τιμή της ιδιότητας `notify` αλλάζει.
+1. Στο class του component, ορίστε μια ιδιότητα με το όνομα `notify` χρησιμοποιώντας το decorator `@Output()` και μια οντότητα `EventEmitter()`.
+  Ο ορισμός του `ProductAlertsComponent` με ένα `@Output()` επιτρέπει στο `ProductAlertsComponent` να εκτελέσει ένα event όταν η τιμή της ιδιότητας `notify` αλλάζει.
 
   <code-example path="getting-started/src/app/product-alerts/product-alerts.component.ts" header="src/app/product-alerts/product-alerts.component.ts" region="input-output"></code-example>
 
@@ -270,10 +270,10 @@ To `ProductAlertsComponent` πρέπει πρέπει να εκπέμψει έν
 1. Πατήστε το κουμπί **Notify Me** για να ενεργοποιήσετε μια ειδοποίηση που λέει, "You will be notified when the product goes on sale".
 
   <div class="lightbox">
-    <img src="generated/images/guide/start/product-alert-notification.png" alt="Product alert notification confirmation dialog">
+    <img src="generated/images/guide/start/product-alert-notification.png" alt="Διάλογος επιβεβαίωσης ειδοποίησης προϊόντος">
   </div>
 
-Για περισσότερες πληροφορίες σχετικά με την επικοινωνία μεταξύ των components, ανατρέξτε στην ενότητα [Αλληλεπίδραση μεταξύ components](guide/component-interaction "Component interaction").
+Για περισσότερες πληροφορίες σχετικά με την επικοινωνία μεταξύ των components, ανατρέξτε στην ενότητα [Αλληλεπίδραση μεταξύ components](guide/component-interaction "Αλληλεπίδραση component").
 
 {@a whats-next}
 
@@ -283,7 +283,7 @@ To `ProductAlertsComponent` πρέπει πρέπει να εκπέμψει έν
 
 Για να συνεχίσετε την εξερεύνηση του Angular και την ανάπτυξη αυτής της εφαρμογής:
 
-* Συνεχίστε στο [Πλοήγηση εντός της εφαρμογής](start/start-routing "Getting started: In-app navigation") για να δημιουργήσετε μια σελίδα λεπτομερειών προϊόντος.
-* Συνεχίστε στο [Deployment](start/start-deployment "Getting started: Deployment") για να μεταβείτε σε τοπική ανάπτυξη, ή να ανεβάσετε την εφαρμογή σας στο Firebase ή σε έναν δικό σας διακομιστή.
+* Συνεχίστε στο [Πλοήγηση εντός της εφαρμογής](start/start-routing "Ξεκινώντας: Πλοήγηση εντός εφαρμογής") για να δημιουργήσετε μια σελίδα λεπτομερειών προϊόντος.
+* Συνεχίστε στο [Deployment](start/start-deployment "Ξεκινώντας: Deployment") για να μεταβείτε σε τοπική ανάπτυξη, ή να ανεβάσετε την εφαρμογή σας στο Firebase ή σε έναν δικό σας διακομιστή.
 
 @reviewed 2021-09-15

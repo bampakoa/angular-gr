@@ -1,37 +1,37 @@
 # Χρήση φορμών για εισαγωγή δεδομένων
 
-Αυτός ο οδηγός βασίζεται στο βήμα [Διαχείριση δεδομένων](start/start-data "Try it: Managing Data") του σεμιναρίου Πως να ξεκινήσετε, [Ξεκινήστε με μια βασική εφαρμογή Angular](start "Get started with a basic Angular app").
+Αυτός ο οδηγός βασίζεται στο βήμα [Διαχείριση δεδομένων](start/start-data "Δοκιμάστε το: Διαχείριση δεδομένων") του σεμιναρίου Πως να ξεκινήσετε, [Ξεκινήστε με μια βασική εφαρμογή Angular](start "Ξεκινήστε με μια βασική εφαρμογή Angular").
 
 Αυτή η ενότητα σάς καθοδηγεί στην προσθήκη μιας λειτουργίας ολοκλήρωσης αγοράς χρησιμοποιώντας μια φόρμα για τη συλλογή πληροφοριών από τον χρήστη ως μέρος της ολοκλήρωσης αγοράς.
 
 ## Καθορίστε το μοντέλο της φόρμας ολοκλήρωσης αγοράς
 
-Αυτό το βήμα σάς δείχνει πώς να ρυθμίσετε το μοντέλο φόρμας της ολοκλήρωσης αγοράς στο component class.
+Αυτό το βήμα σάς δείχνει πώς να ρυθμίσετε το μοντέλο της φόρμας της ολοκλήρωσης αγοράς στο class του component.
 Το μοντέλο της φόρμας καθορίζει την κατάσταση της φόρμας.
 
-1. Ανοίχτε το `cart.component.ts`.
+1. Ανοίξτε το `cart.component.ts`.
 
 1. Κάντε import το service `FormBuilder` από το πακέτο `@angular/forms`.
-  Αυτό το service παρέχει βολικές μεθόδους για τη δημιουργία controls.
+  Αυτό το service παρέχει βολικές μεθόδους για τη δημιουργία controls της φόρμας.
 
   <code-example header="src/app/cart/cart.component.ts" path="getting-started/src/app/cart/cart.component.ts" region="imports">
   </code-example>
 
-1. Εισάγετε το service `FormBuilder` στον `constructor()` του `CartComponent`.
+1. Εισάγετε το service `FormBuilder` στο `constructor()` του `CartComponent`.
   Αυτό το service είναι μέρος του module `ReactiveFormsModule`, που έχετε κάνει ήδη import.
 
   <code-example header="src/app/cart/cart.component.ts" path="getting-started/src/app/cart/cart.component.ts" region="inject-form-builder">
   </code-example>
 
-1. Για να συλλέξετε το όνομα και τη διεύθυνση του χρήστη, χρησιμοποιήστε τη μέθοδο `group()` του `FormBuilder` για να ορίσετε την ιδιότητα `checkoutForm` σε ένα μοντέλο της φόρμας που περιέχει τα πεδία `name` και `address`.
+1. Για να συλλέξετε το όνομα και τη διεύθυνση του χρήστη, χρησιμοποιήστε τη μέθοδο `group()` του `FormBuilder` για να ορίσετε την ιδιότητα `checkoutForm` στο μοντέλο της φόρμας που περιέχει τα πεδία `name` και `address`.
 
   <code-example header="src/app/cart/cart.component.ts" path="getting-started/src/app/cart/cart.component.ts" region="checkout-form-group"></code-example>
 
 1. Καθορίστε μια μέθοδο `onSubmit()` για την επεξεργασία της φόρμας.
-  Αυτή η μέθοδος επιτρέπει στους χρήστες να υποβάλουν το όνομα και τη διεύθυνσή τους.
+  Αυτή η μέθοδος επιτρέπει στους χρήστες να καταχωρήσουν το όνομα και τη διεύθυνσή τους.
   Επιπλέον, αυτή η μέθοδος χρησιμοποιεί τη μέθοδο `clearCart()` του `CartService` για να επαναφέρει τη φόρμα στην αρχική της μορφή και να καθαρίσει το καλάθι.
 
-  Το component class του καλαθιού που προκύπτει έχει ως εξής:
+  Το class του component του καλαθιού που προκύπτει έχει ως εξής:
 
   <code-example header="src/app/cart/cart.component.ts" path="getting-started/src/app/cart/cart.component.ts">
   </code-example>
@@ -61,7 +61,7 @@
 Αφού βάλουν μερικά προϊόντα στο καλάθι, οι χρήστες μπορούν να ελέγξουν τα προϊόντα τους, να εισαγάγουν το όνομα και τη διεύθυνσή τους και να υποβάλουν την αγορά τους.
 
 <div class="lightbox">
-  <img src='generated/images/guide/start/cart-with-items-and-form.png' alt="Cart view with checkout form">
+  <img src='generated/images/guide/start/cart-with-items-and-form.png' alt="Προβολή καλαθιού με φόρμα ολοκλήρωσης αγοράς">
 </div>
 
 Για να επιβεβαιώσετε την υποβολή, ανοίξτε την κονσόλα και θα δείτε ένα αντικείμενο που περιέχει το όνομα και τη διεύθυνση που υποβάλατε.
@@ -70,6 +70,6 @@
 
 Έχετε μια πλήρη εφαρμογή ηλεκτρονικού καταστήματος με έναν κατάλογο προϊόντων, ένα καλάθι αγορών και μια λειτουργία ολοκλήρωσης αγοράς.
 
-[Συνεχίστε στην ενότητα "Deployment"](start/start-deployment "Try it: Deployment") για να μεταβείτε σε τοπική ανάπτυξη, ή να ανεβάσετε την εφαρμογή σας στο Firebase ή στον δικό σας διακομιστή.
+[Συνεχίστε στην ενότητα "Deployment"](start/start-deployment "Δοκιμάστε το: Deployment") για να μεταβείτε σε τοπική ανάπτυξη, ή να ανεβάσετε την εφαρμογή σας στο Firebase ή στον δικό σας διακομιστή.
 
 @reviewed 2021-09-15

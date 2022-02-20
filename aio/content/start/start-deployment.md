@@ -2,7 +2,7 @@
 
 Το deployment της εφαρμογής σας είναι η διαδικασία μεταγλώττισης ή δημιουργίας του κώδικα και η μεταφορά του JavaScript, του CSS και του HTML σε έναν διακομιστή του διαδικτύου.
 
-Αυτή η ενότητα βασίζεται στα προηγούμενα βήματα του σεμιναρίου [Πως να ξεκινήσετε](start "Try it: A basic application") και σας δείχνει πώς να κάνετε deploy την εφαρμογή σας.
+Αυτή η ενότητα βασίζεται στα προηγούμενα βήματα του σεμιναρίου [Πως να ξεκινήσετε](start "Δοκιμάστε το: Μια βασική εφαρμογή") και σας δείχνει πώς να κάνετε deploy την εφαρμογή σας.
 
 ## Προαπαιτούμενα
 
@@ -20,10 +20,10 @@
 
 ## Εκτέλεση της εφαρμογής σας τοπικά
 
-1. Κατεβάστε τον πηγαίο κώδικα από το project του StackBlitz πατώντας στο εικονίδιο `Download Project` στο αριστερό μενού, απέναντι από το `Project`, για να κάνετε λήψη του project σας ως αρχείο zip.
+1. Κατεβάστε τον πηγαίο κώδικα από το project του StackBlitz πατώντας στο εικονίδιο `Download Project` στο αριστερό μενού, απέναντι από το `Project`, για να κάνετε λήψη του project σας ως συμπιεσμένο αρχείο.
 
     <div class="lightbox">
-      <img src="generated/images/guide/start/download-project.png" alt="Download the stackblitz project">
+      <img src="generated/images/guide/start/download-project.png" alt="Κατεβάστε το project του stackblitz">
     </div>
 
 1. Αποσυμπιέστε το αρχείο και μεταβείτε στον φάκελο του project που δημιουργήθηκε. Για παράδειγμα:
@@ -57,7 +57,7 @@
 {@a building}
 ## Δημιουργία και μεταφοράς της εφαρμογής σας
 
- 1. Για να δημιουργήσετε την εφαρμογή σας για παραγωγή, χρησιμοποιήστε την εντολή `build`. Από προεπιλογή, αυτή η εντολή χρησιμοποιεί την παραμετροποίηση `production` του build.
+ 1. Για να προετοιμάσετε την εφαρμογή σας σε περιβάλλον παραγωγής, χρησιμοποιήστε την εντολή `build`. Από προεπιλογή, αυτή η εντολή χρησιμοποιεί την παραμετροποίηση `production` του build.
 
     ```sh
     ng build
@@ -73,30 +73,30 @@
 
 1. Αντιγράψτε τα περιεχόμενα του φακέλου `dist/my-project-name` στον διακομιστή σας.
     Επειδή αυτά τα αρχεία είναι στατικά, μπορείτε να τα μεταφέρετε σε οποιονδήποτε διακομιστή που μπορεί να αναγνωρίσει αρχεία όπως `Node.js`, Java, .NET, ή οποιοδήποτε backend όπως το [Firebase](https://firebase.google.com/docs/hosting), το [Google Cloud](https://cloud.google.com/solutions/web-hosting), ή το [App Engine](https://cloud.google.com/appengine/docs/standard/python/getting-started/hosting-a-static-website).
-    Για περισσότερες πληροφορίες, ανατρέξτε στο θέμα [Δημιουργία & εκτέλεση](guide/build "Building and Serving Angular Apps") και [Deployment](guide/deployment "Deployment guide").
+    Για περισσότερες πληροφορίες, ανατρέξτε στο θέμα [Δημιουργία & εκτέλεση](guide/build "Δημιουργία & εκτέλεσ εφαρμογών Angular") και [Deployment](guide/deployment "Οδηγός deployment").
 
 ## Στην συνέχεια
 
-Σε αυτό το σεμινάριο, έχετε θέσει τα θεμέλια για να εξερευνήσετε τον κόσμο του Angular σε τομείς όπως η ανάπτυξη mobile εφαρμογών, η ανάπτυξη UX/UI, και η φόρτωση web εφαρμογών server-side.
+Σε αυτό το σεμινάριο, έχετε θέσει τα θεμέλια για να εξερευνήσετε τον κόσμο του Angular σε τομείς όπως η ανάπτυξη mobile εφαρμογών, η ανάπτυξη UX/UI, και η φόρτωση web εφαρμογών από την μεριά του server.
 Μπορείτε να εμβαθύνετε μελετώντας περισσότερα από τα χαρακτηριστικά του Angular, αλληλεπιδρώντας με τη ζωντανή κοινότητα και εξερευνώντας το οικοσύστημα.
 
 ### Μάθετε περισσότερο Angular
 
 Για ένα πιο αναλυτικό σεμινάριο που θα σας βοηθήσει στη δημιουργία μιας εφαρμογής τοπικά και στην εξερεύνηση πολλών από τις πιο δημοφιλείς λειτουργίες του Angular, ανατρέξτε στο [Tour of Heroes](tutorial).
 
-Για να εξερευνήσετε τις θεμελιώδεις έννοιες του Angular, ανατρέξτε στους οδηγούς στην ενότητα Κατανόηση του Angular όπως [επισκόπηση των Angular Components](guide/component-overview) ή [Σύνταξη του template](guide/template-syntax).
+Για να εξερευνήσετε τις θεμελιώδεις έννοιες του Angular, ανατρέξτε στους οδηγούς στην ενότητα Κατανόηση του Angular όπως [επισκόπηση των components του Angular](guide/component-overview) ή [Σύνταξη του template](guide/template-syntax).
 
 ### Συμμετοχή στην κοινότητα
 
 
-[Πείτε στο Twitter ότι ολοκληρώσατε αυτό το σεμινάριο](https://twitter.com/intent/tweet?url=https://angular.io/start&text=I%20just%20finished%20the%20Angular%20Getting%20Started%20Tutorial "Angular on Twitter"), πείτε μας τη γνώμη σας ή υποβάλετε [Προτάσεις για μελλοντικές εκδόσεις](https://github.com/angular/angular/issues/new/choose "Angular GitHub repository new issue form").
+[Πείτε στο Twitter ότι ολοκληρώσατε αυτό το σεμινάριο](https://twitter.com/intent/tweet?url=https://angular.io/start&text=I%20just%20finished%20the%20Angular%20Getting%20Started%20Tutorial "Το Angular στο Twitter"), πείτε μας τη γνώμη σας ή υποβάλλετε [Προτάσεις για μελλοντικές εκδόσεις](https://github.com/angular/angular/issues/new/choose "Φόρμα καταχώρησης νέου issue στο GitHub αποθετήριο του Angular").
 
-Μείνετε ενημερωμένοι ακολουθώντας το [ιστολόγιο του Angular](https://blog.angular.io/ "Angular blog").
+Μείνετε ενημερωμένοι ακολουθώντας το [ιστολόγιο του Angular](https://blog.angular.io/ "Το ιστολόγιο του Angular").
 
 ### Εξερευνώντας το οικοσύστημα του Angular
 
-Για να υποστηρίξετε την ανάπτυξη σας UX/UI, ανατρέξτε στο [Angular Material](https://material.angular.io/ "Angular Material web site").
+Για να υποστηρίξετε την ανάπτυξη σας UX/UI, ανατρέξτε στο [Angular Material](https://material.angular.io/ "Ο ιστότοπος του Angular Material").
 
-Η κοινότητα Angular διαθέτει επίσης ένα εκτεταμένο [δίκτυο εργαλείων και βιβλιοθηκών τρίτων](resources "Angular resources list").
+Η κοινότητα Angular διαθέτει επίσης ένα εκτεταμένο [δίκτυο εργαλείων και βιβλιοθηκών τρίτων](resources "Λίστα πόρων του Angular").
 
 @reviewed 2021-09-15

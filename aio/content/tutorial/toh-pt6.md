@@ -22,7 +22,7 @@
 <code-example path="toh-pt6/src/app/app.module.ts" region="import-http-client" header="src/app/app.module.ts (HttpClientModule import)">
 </code-example>
 
-Στη συνέχεια, ακόμα στο `AppModule`, προσθέστε το `HttpClientModule` στον πίνακα `imports`:
+Στη συνέχεια, ακόμα στο `AppModule`, προσθέστε το `HttpClientModule` στην λίστα `imports`:
 
 <code-example path="toh-pt6/src/app/app.module.ts" region="import-httpclientmodule" header="src/app/app.module.ts (imports array excerpt)">
 </code-example>
@@ -34,7 +34,7 @@
 module [In-memory Web API](https://github.com/angular/angular/tree/master/packages/misc/angular-in-memory-web-api "In-memory Web API").
 
 Μετά την εγκατάσταση του module, η εφαρμογή θα κάνει αιτήματα και θα λαμβάνει απαντήσεις από το `HttpClient`
-χωρίς να γνωρίζει ότι το *In-memory Web API* παρεμποδίζει αυτά τα αιτήματα,
+χωρίς να γνωρίζει ότι το *In-memory Web API* παρακάμπτεται σε αυτά τα αιτήματα,
 τα εφαρμόζει σε ένα αποθηκευτικό χώρο δεδομένων στην μνήμη, και επιστρέφει προσομοιωμένες απαντήσεις.
 
 Χρησιμοποιώντας το In-memory Web API, δεν θα χρειαστεί να ρυθμίσετε έναν διακομιστή για να μάθετε για το `HttpClient`.
@@ -61,7 +61,7 @@ module [In-memory Web API](https://github.com/angular/angular/tree/master/packag
 </code-example>
 
 Μετά το `HttpClientModule`, προσθέστε το `HttpClientInMemoryWebApiModule`
-στον πίνακα `imports` του `AppModule` και ρυθμίστε τον με το `InMemoryDataService`.
+στην λίστα `imports` του `AppModule` και ρυθμίστε το με το `InMemoryDataService`.
 
 <code-example path="toh-pt6/src/app/app.module.ts" header="src/app/app.module.ts (imports array excerpt)" region="in-mem-web-api-imports">
 </code-example>
@@ -227,11 +227,11 @@ module [In-memory Web API](https://github.com/angular/angular/tree/master/packag
 
 <code-example path="toh-pt6/src/app/hero.service.ts" region="getHero" header="src/app/hero.service.ts"></code-example>
 
-Υπάρχουν τρεις σημαντικές διαφορές από την `getHeroes()`:
+Υπάρχουν τρεις σημαντικές διαφορές από το `getHeroes()`:
 
-* Η `getHero()` κατασκευάζει μια διεύθυνση URL για το αίτημα με το επιθυμητό id του ήρωα.
+* Το `getHero()` κατασκευάζει μια διεύθυνση URL για το αίτημα με το επιθυμητό id του ήρωα.
 * Ο διακομιστής θα πρέπει να ανταποκριθεί με έναν μόνο ήρωα αντί για μια σειρά ηρώων.
-* Η `getHero()` επιστρέφει ένα `Observable<Hero>` ("_ένα observable από αντικείμενα Hero_")
+* Το `getHero()` επιστρέφει ένα `Observable<Hero>` ("_ένα observable από αντικείμενα Hero_")
  παρά ένα observable από _λίστες_ hero.
 
 ## Ενημέρωση ηρώων
@@ -248,7 +248,7 @@ module [In-memory Web API](https://github.com/angular/angular/tree/master/packag
 
 <code-example path="toh-pt6/src/app/hero-detail/hero-detail.component.html" region="save" header="src/app/hero-detail/hero-detail.component.html (save)"></code-example>
 
-Στο class του component `HeroDetail`, προσθέστε την ακόλουθη μέθοδο `save()`, η οποία διατηρεί τις αλλαγές στο όνομα του ήρωα χρησιμοποιώντας την μέθοδο
+Στο class του component `HeroDetail`, προσθέστε την ακόλουθη μέθοδο `save()`, η οποία αποθηκεύει τις αλλαγές στο όνομα του ήρωα χρησιμοποιώντας την μέθοδο
 `updateHero()` του service και, στη συνέχεια, πλοηγείται πίσω στην προηγούμενη προβολή.
 
 <code-example path="toh-pt6/src/app/hero-detail/hero-detail.component.ts" region="save" header="src/app/hero-detail/hero-detail.component.ts (save)"></code-example>
@@ -265,7 +265,7 @@ module [In-memory Web API](https://github.com/angular/angular/tree/master/packag
 Η μέθοδος `HttpClient.put()` παίρνει τρεις παραμέτρους:
 * το URL
 * τα δεδομένα προς ενημέρωση (ο τροποποιημένος ήρωας σε αυτήν την περίπτωση)
-* επιλογές
+* πρόσθετες επιλογές
 
 Η διεύθυνση URL παραμένει αμετάβλητη. Το web API των ηρώων γνωρίζει ποιον ήρωα να ενημερώσει κοιτάζοντας το `id` του ήρωα.
 
@@ -291,7 +291,7 @@ module [In-memory Web API](https://github.com/angular/angular/tree/master/packag
 <code-example path="toh-pt6/src/app/heroes/heroes.component.html" region="add" header="src/app/heroes/heroes.component.html (add)"></code-example>
 
 Ως απάντηση σε ένα event click, καλέστε την μέθοδο του component, `add()`, και μετά
-διαγράψτε το πεδίο εισαγωγής ώστε να είναι έτοιμο για άλλο όνομα. Προσθέστε τα παρακάτω στο
+καθαρίστε το πεδίο εισαγωγής ώστε να είναι έτοιμο για άλλο όνομα. Προσθέστε τα παρακάτω στο
 class `HeroesComponent`:
 
 <code-example path="toh-pt6/src/app/heroes/heroes.component.ts" region="add" header="src/app/heroes/heroes.component.ts (add)"></code-example>
@@ -299,16 +299,16 @@ class `HeroesComponent`:
 Όταν το όνομα δεν είναι κενό, η μέθοδος δημιουργεί ένα αντικείμενο που μοιάζει με `Hero`
 από το όνομα (λείπει μόνο το `id`) και το μεταβιβάζει στη μέθοδο `addHero()` του service.
 
-Όταν η `addHero()` αποθηκεύει με επιτυχία,, η επιστροφή της κλήσης του `subscribe()`
+Όταν το `addHero()` αποθηκεύει με επιτυχία,, η επιστροφή της κλήσης του `subscribe()`
 λαμβάνει τον νέο ήρωα και τον προσθέτει στη λίστα `heroes` για εμφάνιση.
 
 Προσθέστε την ακόλουθη μέθοδο `addHero()` στο class `HeroService`.
 
 <code-example path="toh-pt6/src/app/hero.service.ts" region="addHero" header="src/app/hero.service.ts (addHero)"></code-example>
 
-Η `addHero()` διαφέρει από την `updateHero()` με δύο τρόπους:
+Το `addHero()` διαφέρει από το `updateHero()` με δύο τρόπους:
 
-* Καλεί την `HttpClient.post()` αντί για την `put()`.
+* Καλεί το `HttpClient.post()` αντί για το `put()`.
 * Αναμένει από τον διακομιστή να δημιουργήσει ένα id για τον νέο ήρωα,
 το οποίο επιστρέφει στο `Observable<Hero>` σε αυτόν που το κάλεσε.
 
@@ -318,7 +318,7 @@ class `HeroesComponent`:
 
 Κάθε ήρωας στη λίστα ηρώων θα πρέπει να έχει ένα κουμπί διαγραφής.
 
-Προσθέστε το ακόλουθο στοιχείο button στο template του `HeroesComponent`, μετά το όνομα του ήρωα
+Προσθέστε το ακόλουθο στοιχείο πλήκτρου στο template του `HeroesComponent`, μετά το όνομα του ήρωα
 στο επαναλαμβανόμενο στοιχείο `<li>`.
 
 <code-example path="toh-pt6/src/app/heroes/heroes.component.html" header="src/app/heroes/heroes.component.html" region="delete"></code-example>
@@ -335,13 +335,13 @@ class `HeroesComponent`:
 
 <code-example path="toh-pt6/src/app/heroes/heroes.component.ts" region="delete" header="src/app/heroes/heroes.component.ts (delete)"></code-example>
 
-Παρόλο που το component εκχωρεί τη διαγραφή ήρωα στο `HeroService`,
+Παρόλο που το component έχει ορίσει το `HeroService` να διαγράφει έναν ήρωα,
 παραμένει υπεύθυνο για την ενημέρωση της δικής του λίστας ηρώων.
 Η μέθοδος`delete()` του component αφαιρεί αμέσως τον _ήρωα-προς-διαγραφή_ από αυτήν τη λίστα,
 προβλέποντας ότι το `HeroService` θα πετύχει στον διακομιστή.
 
 Πραγματικά δεν υπάρχει τίποτα που να κάνει το component με το `Observable` που επιστράφηκε από
-την `heroService.delete()` **αλλά πρέπει να κάνει subscribe ούτως ή άλλως**.
+το `heroService.delete()` **αλλά πρέπει να κάνει subscribe ούτως ή άλλως**.
 
 <div class="alert is-important">
 
@@ -360,9 +360,9 @@ class `HeroesComponent`:
 
 Σημειώστε τα ακόλουθα βασικά σημεία:
 
-* Η `deleteHero()` καλεί την `HttpClient.delete()`.
+* Το `deleteHero()` καλεί το `HttpClient.delete()`.
 * Η διεύθυνση URL είναι η διεύθυνση URL του πόρου των ηρώων συν το `id` του ήρωα προς διαγραφή.
-* Δεν στέλνετε δεδομένα όπως κάνατε με την `put()` και την `post()`.
+* Δεν στέλνετε δεδομένα όπως κάνατε με το `put()` και το `post()`.
 * Εξακολουθείτε να στέλνετε το `httpOptions`.
 
 Ανανεώστε το πρόγραμμα περιήγησης και δοκιμάστε τη νέα λειτουργία διαγραφής.
@@ -386,7 +386,7 @@ class `HeroesComponent`:
 </code-example>
 
 Η μέθοδος επιστρέφει αμέσως με μια κενή λίστα εάν δεν υπάρχει όρος αναζήτησης.
-Το υπόλοιπο μοιάζει πολύ με τη `getHeroes()`, με τη μόνη σημαντική διαφορά
+Το υπόλοιπο μοιάζει πολύ με το `getHeroes()`, με τη μόνη σημαντική διαφορά
 να είναι η διεύθυνση URL, η οποία περιλαμβάνει ένα query string με τον όρο αναζήτησης.
 
 ### Προσθήκη αναζήτησης στο Dashboard
@@ -398,7 +398,7 @@ class `HeroesComponent`:
 
 Αυτό το template μοιάζει πολύ με το `*ngFor` στο template του `HeroesComponent`.
 
-Για να λειτουργήσει αυτό, το επόμενο βήμα είναι να προσθέσετε ένα component με έναν selector που ταιριάζει με το `<app-hero-search>`.
+Για να λειτουργήσει αυτό, το επόμενο βήμα είναι να προσθέσετε ένα component με ένα selector που ταιριάζει με το `<app-hero-search>`.
 
 
 ### Δημιουργήστε το `HeroSearchComponent`
@@ -415,11 +415,11 @@ class `HeroesComponent`:
 
 <code-example path="toh-pt6/src/app/hero-search/hero-search.component.html" header="src/app/hero-search/hero-search.component.html"></code-example>
 
-Προσθέστε CSS styles στο `hero-search.component.css`
+Προσθέστε στυλ CSS στο `hero-search.component.css`
 όπως αναφέρεται στην [τελική επισκόπηση κώδικα](#herosearchcomponent) παρακάτω.
 
-Καθώς ο χρήστης πληκτρολογεί στο πλαίσιο αναζήτησης, ένα event binding στο input καλεί την
-μέθοδο `search()` του component με τη νέα τιμή του πλαισίου αναζήτησης.
+Καθώς ο χρήστης πληκτρολογεί στο πεδίο αναζήτησης, ένα event binding στο input καλεί την
+μέθοδο `search()` του component με τη νέα τιμή του πεδίου αναζήτησης.
 
 {@a asyncpipe}
 
@@ -444,7 +444,7 @@ pipe (`|`) ακολουθούμενο από το `async`. Αυτό προσδι
 <code-example path="toh-pt6/src/app/hero-search/hero-search.component.ts" header="src/app/hero-search/hero-search.component.ts" region="heroes-stream">
 </code-example>
 
-Θα το ορίσετε στην [`ngOnInit()`](#search-pipe).
+Θα το ορίσετε στο [`ngOnInit()`](#search-pipe).
 Προτού το κάνετε, εστιάστε στον ορισμό του `searchTerms`.
 
 ### Το `searchTerms` είναι ένα subject του RxJS
@@ -459,21 +459,21 @@ pipe (`|`) ακολουθούμενο από το `async`. Αυτό προσδι
 Μπορείτε επίσης να προσθέσετε τιμές σε αυτό το `Observable` καλώντας τη μέθοδό του `next(value)`
 όπως κάνει η μέθοδος `search()`.
 
-Το event binding στο event `input` του πλαισίου κειμένου καλεί τη μέθοδο `search()`.
+Το event binding στο event `input` του πεδίου κειμένου καλεί τη μέθοδο `search()`.
 
 <code-example path="toh-pt6/src/app/hero-search/hero-search.component.html" header="src/app/hero-search/hero-search.component.html" region="input"></code-example>
 
-Κάθε φορά που ο χρήστης πληκτρολογεί στο πλαίσιο κειμένου, το binding καλεί την `search()` με την τιμή του πλαισίου κειμένου, έναν "όρο αναζήτησης".
+Κάθε φορά που ο χρήστης πληκτρολογεί στο πεδίο κειμένου, το binding καλεί το `search()` με την τιμή του πεδίου κειμένου, έναν "όρο αναζήτησης".
 Το `searchTerms` γίνεται ένα `Observable` που επιστρέφει μια σταθερή ροή όρων αναζήτησης.
 
 {@a search-pipe}
 
 ### Εκτελώντας τελεστές του RxJS μαζί
 
-Η μεταβίβαση ενός νέου όρου αναζήτησης απευθείας στην `searchHeroes()` μετά από κάθε πάτημα πλήκτρων χρήστη θα δημιουργούσε υπερβολικό αριθμό αιτημάτων HTTP,
-χρεώνοντας τους πόρους του διακομιστή και εξαντλώντας τα πακέτα δεδομένων.
+Η μεταβίβαση ενός νέου όρου αναζήτησης απευθείας στο `searchHeroes()` μετά από κάθε πάτημα πλήκτρων χρήστη θα δημιουργούσε υπερβολικό αριθμό αιτημάτων HTTP,
+φορτώνοντας τους πόρους του διακομιστή και εξαντλώντας τα πακέτα δεδομένων.
 
-Αντίθετα, η μέθοδος `ngOnInit()` διοχετεύει το observable `searchTerms` μέσω μιας ακολουθίας τελεστών RxJS που μειώνουν τον αριθμό των κλήσεων στην `searchHeroes()`,
+Αντίθετα, η μέθοδος `ngOnInit()` διοχετεύει το observable `searchTerms` μέσω μιας ακολουθίας τελεστών RxJS που μειώνουν τον αριθμό των κλήσεων στο `searchHeroes()`,
 επιστρέφοντας τελικά ένα observable  από έγκαιρα αποτελέσματα αναζήτησης ηρώων (το κάθε ένα `Hero[]`).
 
 Εδώ είναι μια πιο προσεκτική ματιά στον κώδικα.
@@ -483,10 +483,10 @@ pipe (`|`) ακολουθούμενο από το `async`. Αυτό προσδι
 
 Κάθε τελεστής λειτουργεί ως εξής:
 
-* `debounceTime(300)` περιμένει έως ότου η ροή των νέων events κειμένου σταματήσει για 300 χιλιοστά του δευτερολέπτου
-πριν περάσει το τελευταίο κείμενο. Δεν θα κάνετε ποτέ αιτήματα συχνότερα από 300 ms.
+* `debounceTime(300)` περιμένει έως ότου η ροή των νέων events τιμών σταματήσει για 300 χιλιοστά του δευτερολέπτου
+πριν περάσει η τελευταία τιμή. Δεν θα κάνετε ποτέ αιτήματα συχνότερα από 300 ms.
 
-* `distinctUntilChanged()` διασφαλίζει ότι ένα αίτημα αποστέλλεται μόνο εάν το κείμενο του φίλτρου έχει αλλάξει.
+* `distinctUntilChanged()` διασφαλίζει ότι ένα αίτημα αποστέλλεται μόνο εάν η τιμή του φίλτρου έχει αλλάξει.
 
 * `switchMap()` καλεί το service αναζήτησης για κάθε όρο αναζήτησης που έρχεται από το `debounce()` και το `distinctUntilChanged()`.
 Ακυρώνει και απορρίπτει προηγούμενα observables αναζήτησης, επιστρέφοντας μόνο το πιο πρόσφατο observable αναζήτησης του service.
@@ -499,11 +499,11 @@ pipe (`|`) ακολουθούμενο από το `async`. Αυτό προσδι
   Ακόμη και με μια παύση 300 ms μεταξύ των αιτημάτων, θα μπορούσατε να έχετε πολλαπλά ενεργά αιτήματα HTTP
   και μπορεί να μην επιστρέψουν με την σειρά που τα στείλατε.
 
-  Το `switchMap()` διατηρεί την αρχική σειρά αιτήματος ενώ επιστρέφει μόνο το observable πό την πιο πρόσφατη κλήση μεθόδου HTTP.
+  Το `switchMap()` διατηρεί την αρχική σειρά αιτήματος ενώ επιστρέφει μόνο το observable από την πιο πρόσφατη κλήση μεθόδου του HTTP.
   Τα αποτελέσματα από προηγούμενες κλήσεις ακυρώνονται και απορρίπτονται.
 
   Σημειώστε ότι η ακύρωση ενός προηγούμενου Observable `searchHeroes()`
-  δεν ακυρώνει στην πραγματικότητα ένα εκκρεμές αίτημα HTTP.
+  δεν ακυρώνει στην πραγματικότητα ένα εκκρεμές αίτημα του HTTP.
   Τα ανεπιθύμητα αποτελέσματα απορρίπτονται πριν φτάσουν στον κώδικα της εφαρμογής σας.
 
 </div>
@@ -513,11 +513,11 @@ pipe (`|`) ακολουθούμενο από το `async`. Αυτό προσδι
 
 #### Δοκιμάστε το
 
-Εκτελέστε ξανά την εφαρμογή. Στο *Dashboard*, πληκτρολογήστε κάποιο κείμενο στο πλαίσιο αναζήτησης.
+Εκτελέστε ξανά την εφαρμογή. Στο *Dashboard*, πληκτρολογήστε κάποιο κείμενο στο πεδίο αναζήτησης.
 Εάν εισαγάγετε χαρακτήρες που ταιριάζουν με τυχόν υπάρχοντα ονόματα ηρώων, θα δείτε κάτι σαν αυτό.
 
 <div class="lightbox">
-  <img src='generated/images/guide/toh/toh-hero-search.gif' alt="Hero Search field with the letters 'm' and 'a' along with four search results that match the query displayed in a list beneath the search input">
+  <img src='generated/images/guide/toh/toh-hero-search.gif' alt="Πεδίο αναζήτησης ήρωα με τα γράμματα 'm' και 'a' μαζί με τέσσερα αποτελέσματα αναζήτησης που ταιριάζουν με το ερώτημα που εμφανίζεται σε μια λίστα κάτω από την είσοδο αναζήτησης">
 </div>
 
 ## Τελική επισκόπηση κώδικα
@@ -608,7 +608,7 @@ pipe (`|`) ακολουθούμενο από το `async`. Αυτό προσδι
 
 Βρίσκεστε στο τέλος του ταξιδιού σας και έχετε καταφέρει πολλά.
 * Προσθέσατε τις απαραίτητες εξαρτήσεις για να χρησιμοποιήσετε το HTTP στην εφαρμογή.
-* Ανακατασκευάσατε το `HeroService` για να φορτώσετε ήρωες από ένα web API.
+* Τροποποιήσατε το `HeroService` για να φορτώσετε ήρωες από ένα web API.
 * Επεκτείνατε το `HeroService` για να υποστηρίζει τις μεθόδους `post()`, `put()` και `delete()`.
 * Ενημερώσατε τα components για να επιτρέπεται η προσθήκη, η επεξεργασία και η διαγραφή ηρώων.
 * Διαμορφώσατε ένα web API στην΄μνήμη.

@@ -18,7 +18,7 @@
 Προς το παρόν, θα δημιουργήσετε μερικούς _εικονικούς ήρωες_ και θα προσποιηθείτε ότι προέρχονται από τον διακομιστή.
 
 Δημιουργήστε ένα αρχείο με το όνομα `mock-heroes.ts` στον φάκελο `src/app/`.
-Καθορίστε μια σταθερή ιδιότητα `HEROES` ως μια λίστα δέκα ηρώων και κάντε την export.
+Καθορίστε μια σταθερά `HEROES` ως μια λίστα δέκα ηρώων και κάντε την export.
 Το αρχείο πρέπει να μοιάζει με αυτό.
 
 <code-example path="toh-pt2/src/app/mock-heroes.ts" header="src/app/mock-heroes.ts"></code-example>
@@ -42,7 +42,7 @@
 * Προσθέστε ένα `<h2>` στην κορυφή,
 * Κάτω από αυτό προσθέστε μια μη-ταξινομημένη λίστα HTML (`<ul>`)
 * Εισαγάγετε ένα `<li>` μέσα στο `<ul>` που εμφανίζει τις ιδιότητες του `hero`.
-* Ενσωματώστε μερικές CSS classes για στυλ (θα προσθέσετε τα CSS styles σύντομα).
+* Ενσωματώστε μερικά CSS classes για στυλ (θα προσθέσετε τα στυλ CSS σύντομα).
 
 Κάντε το να μοιάζει με αυτό:
 
@@ -88,8 +88,8 @@
 Αυτή η προσέγγιση διευκολύνει την εκ νέου χρήση του component κάπου αλλού
 και προσφέρει την επιδιωκόμενη εμφάνιση του component ακόμα κι αν τα καθολικά στυλ είναι διαφορετικά.
 
-Ορίζετε στυλ για συγκεκριμένο component είτε ενσωματωμένα στον πίνακα `@Component.styles` είτε
-ως αρχείο(α) στυλ στον πίνακα `@Component.styleUrls`.
+Ορίζετε στυλ για συγκεκριμένο component είτε ενσωματωμένα στην λίστα `@Component.styles` είτε
+ως αρχείο(α) στυλ στην λίστα `@Component.styleUrls`.
 
 Όταν το CLI δημιούργησε το `HeroesComponent`, δημιούργησε ένα κενό αρχείο στυλ `heroes.component.css` για το `HeroesComponent`
 και το πρόσθεσε στο `@Component.styleUrls` ώς εξής.
@@ -98,7 +98,7 @@
  header="src/app/heroes/heroes.component.ts (@Component)">
 </code-example>
 
-Ανοίξτε το αρχείο `heroes.component.css` και επικολλήστε τα CSS styles για το `HeroesComponent`.
+Ανοίξτε το αρχείο `heroes.component.css` και επικολλήστε τα στυλ CSS για το `HeroesComponent`.
 Θα τα βρείτε στην [τελική επισκόπηση του κώδικα](#final-code-review) στο κάτω μέρος αυτού του οδηγού.
 
 <div class="alert is-important">
@@ -112,7 +112,7 @@
 
 Όταν ο χρήστης κάνει κλικ σε έναν ήρωα στη λίστα, το component πρέπει να εμφανίζει τα στοιχεία του επιλεγμένου ήρωα στο κάτω μέρος της σελίδας.
 
-Σε αυτήν την ενότητα, θα αναγνωρίσετε το event click του ήρωα και θα ενημερώσετε τις λεπτομέρειές του ήρωα.
+Σε αυτήν την ενότητα, θα ενημερώσετε τις λεπτομέρειές του ήρωα όταν καλεστεί το event click του ήρωα.
 
 ### Προσθήκη ενός binding για το event click
 
@@ -122,7 +122,7 @@
 
 Αυτό είναι ένα παράδειγμα της σύνταξης [event binding](guide/event-binding) του Angular.
 
-Οι παρενθέσεις γύρω από το `click` δίνουν εντολή στο Angular να αναγνωρίσει το event `click` του στοιχείου  `<li>`.
+Οι παρενθέσεις γύρω από το `click` δίνουν εντολή στο Angular να παρακολουθεί το event `click` του στοιχείου `<li>`.
 Όταν ο χρήστης κάνει κλικ στο `<li>`, το Angular εκτελεί την έκφραση `onSelect(hero)`.
 
 
@@ -130,7 +130,7 @@
 να εμφανίστε τον ήρωα που ορίστηκε στην έκφραση `*ngFor`.
 
 
-### Προσθέστε έναν handler στο click event
+### Προσθέστε μια μέθοδο στο click event
 
 Μετονομάστε την ιδιότητα `hero` του component σε `selectedHero` αλλά μην της δώσετε τιμή.
 Δεν υπάρχει _επιλεγμένος ήρωας_ όταν ξεκινά η εφαρμογή.
@@ -143,7 +143,7 @@
 ### Προσθέστε μια ενότητα λεπτομερειών
 
 Προς το παρόν, έχετε μια λίστα στο template του component. Για να κάνετε κλικ σε έναν ήρωα στη λίστα
-και na αποκαλύψετε λεπτομέρειες για αυτόν τον ήρωα, χρειάζεστε μια ενότητα για να εμφανίσετε τις λεπτομέρειες στο
+και να αποκαλύψετε λεπτομέρειες για αυτόν τον ήρωα, χρειάζεστε μια ενότητα για να εμφανίσετε τις λεπτομέρειες στο
 template. Προσθέστε τα ακόλουθα στο `heroes.component.html` κάτω από την ενότητα της λίστας:
 
 <code-example path="toh-pt2/src/app/heroes/heroes.component.html" region="selectedHero-details" header="heroes.component.html (selected hero details)"></code-example>
@@ -160,7 +160,7 @@ template. Προσθέστε τα ακόλουθα στο `heroes.component.html
 
 Όταν ξεκινά η εφαρμογή, το `selectedHero` είναι `undefined` _λόγω σχεδιασμού_.
 
-Εκφράσεις binding στο template που αναφέρονται σε ιδιότητες του `selectedHero`&mdash;εκφράσεις όπως `{{selectedHero.name}}`&mdash;_πρέπει έχουν σφάλμα_ επειδή δεν υπάρχει επιλεγμένος ήρωας.
+Εκφράσεις binding στο template που αναφέρονται σε ιδιότητες του `selectedHero`&mdash;εκφράσεις όπως `{{selectedHero.name}}`&mdash;_πρέπει να περιέχουν σφάλμα_ επειδή δεν υπάρχει επιλεγμένος ήρωας.
 
 
 #### Η διόρθωση - απόκρυψη των κενών λεπτομερειών με _*ngIf_
@@ -200,7 +200,7 @@ template. Προσθέστε τα ακόλουθα στο `heroes.component.html
 Για να εφαρμόσετε το class `.selected` στο `<li>` όταν ο χρήστης κάνει κλικ σε αυτό, χρησιμοποιήστε class binding.
 
 <div class="lightbox">
-  <img src='generated/images/guide/toh/heroes-list-selected.png' alt="Selected hero with dark background and light text that differentiates it from unselected list items">
+  <img src='generated/images/guide/toh/heroes-list-selected.png' alt="Επιλεγμένος ήρωας με σκούρο φόντο και ανοιχτό κείμενο που τον διαφοροποιεί από μη επιλεγμένα στοιχεία λίστας">
 </div>
 
 Το [class binding](guide/attribute-binding#class-binding) του Angular μπορεί να προσθέσει και να αφαιρέσει ένα CSS class υπό συνθήκες.

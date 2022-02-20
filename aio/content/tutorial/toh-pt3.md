@@ -31,11 +31,11 @@
 Μέσα σε αυτόν τον φάκελο δημιουργούνται τέσσερα αρχεία:
 
 * Ένα αρχείο CSS για τα στυλ του component.
-* Ένα αρχείο HTML για το component template.
-* Ένα αρχείο TypeScript με ένα component class που ονομάζεται `HeroDetailComponent`.
+* Ένα αρχείο HTML για το template του component.
+* Ένα αρχείο TypeScript με ένα class του component που ονομάζεται `HeroDetailComponent`.
 * Ένα αρχείο test για το class `HeroDetailComponent`.
 
-Η εντολή προσθέτει επίσης το `HeroDetailComponent` σαν ένα declaration στον decorator `@NgModule` του αρχείου `src/app/app.module.ts`.
+Η εντολή προσθέτει επίσης το `HeroDetailComponent` σαν ένα declaration στο decorator `@NgModule` του αρχείου `src/app/app.module.ts`.
 
 
 ### Δημιουργήστε το template
@@ -62,8 +62,8 @@ region="import-hero" header="src/app/hero-detail/hero-detail.component.ts (impor
 </code-example>
 
 Η ιδιότητα `hero`
-[πρέπει να είναι μια ιδιότητα _Input_](guide/inputs-outputs "Input and Output properties"),
-που ορίζεται με τον decorator `@Input()`,
+[πρέπει να είναι μια ιδιότητα _Input_](guide/inputs-outputs "Ιδιότητες Input και Output"),
+που ορίζεται με το decorator `@Input()`,
 επειδή το _εξωτερικό_ `HeroesComponent` [θα δεθεί με αυτήν](#heroes-component-template) ως εξής.
 
 <code-example path="toh-pt3/src/app/heroes/heroes.component.html" region="hero-detail-binding">
@@ -73,7 +73,7 @@ region="import-hero" header="src/app/hero-detail/hero-detail.component.ts (impor
 
 <code-example path="toh-pt3/src/app/hero-detail/hero-detail.component.ts" region="import-input" header="src/app/hero-detail/hero-detail.component.ts (import Input)"></code-example>
 
-Προσθέστε μια ιδιότητα `hero`, που ακολουθεί τον decorator `@Input()`.
+Προσθέστε μια ιδιότητα `hero`, χρησιμοποιώντας το decorator `@Input()`.
 
 <code-example path="toh-pt3/src/app/hero-detail/hero-detail.component.ts" header="src/app/hero-detail/hero-detail.component.ts" region="input-hero"></code-example>
 
@@ -97,7 +97,7 @@ region="import-hero" header="src/app/hero-detail/hero-detail.component.ts (impor
 
 ### Ενημερώστε το template του `HeroesComponent`
 
-Ο selector του `HeroDetailComponent` είναι το `'app-hero-detail'`.
+Το selector του `HeroDetailComponent` είναι το `'app-hero-detail'`.
 Προσθέστε ένα στοιχείο `<app-hero-detail>` κοντά στο κάτω μέρος του template του `HeroesComponent`, όπου ήταν η προβολή λεπτομερειών ήρωα.
 
 Συνδέστε το `HeroesComponent.selectedHero` στην ιδιότητα `hero` του στοιχείου ως εξής.
@@ -108,7 +108,7 @@ region="import-hero" header="src/app/hero-detail/hero-detail.component.ts (impor
 
 Το `[hero]="selectedHero"` είναι ένα [property binding](guide/property-binding) του Angular.
 
-Είναι ένα data binding _one way_ από
+Είναι ένα _μονόδρομο_ data binding από
 την ιδιότητα `selectedHero` του `HeroesComponent` στην ιδιότητα `hero` του στοιχείου προορισμού, η οποία αντιστοιχίζεται στην ιδιότητα `hero` του `HeroDetailComponent`.
 
 Τώρα, όταν ο χρήστης κάνει κλικ σε έναν ήρωα στη λίστα, αλλάζει το `selectedHero`.
@@ -128,7 +128,7 @@ region="import-hero" header="src/app/hero-detail/hero-detail.component.ts (impor
 η λεπτομέρεια του ήρωα εμφανίζεται κάτω από τη λίστα των ηρώων.
 Τώρα το `HeroDetailComponent` παρουσιάζει αυτές τις λεπτομέρειες αντί για το `HeroesComponent`.
 
-Η ανακατασκευή του αρχικού `HeroesComponent` σε δύο components αποφέρει οφέλη, τόσο τώρα όσο και στο μέλλον:
+Η τροποποίηση του αρχικού `HeroesComponent` σε δύο components αποφέρει οφέλη, τόσο τώρα όσο και στο μέλλον:
 
 1. Μειώσατε τις ευθύνες του `HeroesComponent`.
 

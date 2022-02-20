@@ -48,11 +48,11 @@
     {
       "url": "docs",
       "title": "Εισαγωγή",
-      "tooltip": "Καλώς ορίσατε στον οδηγό χρήσης του Angular.",
+      "tooltip": "Καλώς ορίσατε στα Angular Docs.",
       "hidden": false
     },
     {
-      "title": "Πως να ξεκινήσετε",
+      "title": "Ξεκινώντας",
       "tooltip": "Ρυθμίστε το περιβάλλον σας και μάθετε βασικές έννοιες",
       "children": [
         {
@@ -66,8 +66,8 @@
           "children": [
             {
               "url": "start",
-              "title": "Πως να ξεκινήσετε",
-              "tooltip": "Ρίξτε μια ματιά στο component μοντέλο, την σύνταξη template, και την επικοινωνία component του Angular."
+              "title": "Ξεκινώντας",
+              "tooltip": "Ρίξτε μια ματιά στο μοντέλο των components, την σύνταξη του template, και την επικοινωνία component του Angular."
             },
             {
               "url": "start/start-routing",
