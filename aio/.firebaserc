@@ -1,14 +1,14 @@
 {
   "targets": {
-    "aio-greece": {
+    "angular-gr": {
       "hosting": {
         "site": [
-          "aio-greece"
+          "angular-gr"
         ]
       }
     }
   },
   "projects": {
-    "default": "aio-greece"
+    "default": "angular-gr"
   }
 }

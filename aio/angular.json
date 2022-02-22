@@ -228,8 +228,8 @@
             "prerender": false,
             "ssr": false,
             "browserTarget": "site:build:stable",
-            "firebaseProject": "aio-greece",
-            "firebaseHostingSite": "aio-greece"
+            "firebaseProject": "angular-gr",
+            "firebaseHostingSite": "angular-gr"
           }
         }
       }
