@@ -84,3 +84,5 @@
 <div class="lightbox">
   <img src='generated/images/guide/toh/toh-anim.gif' alt="Το Tour of Heroes σε δράση">
 </div>
+
+@reviewed 2022-03-09

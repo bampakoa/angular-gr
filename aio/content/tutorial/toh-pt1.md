@@ -243,3 +243,5 @@ region="ng-imports">
 * Εισαγάγατε το `FormsModule` στο `AppModule` έτσι ώστε το Angular να αναγνωρίζει και να εφαρμόζει το directive `ngModel`.
 * Μάθατε τη σημασία της δήλωσης components στο `AppModule`
 και εκτιμήσατε ότι το CLI το δήλωσε για εσάς.
+
+@reviewed 2022-03-09

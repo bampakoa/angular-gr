@@ -170,3 +170,5 @@ region="import-hero" header="src/app/hero-detail/hero-detail.component.ts (impor
 * Χρησιμοποιήσατε το [decorator `@Input`](guide/inputs-outputs)
 για να καταστήσετε την ιδιότητα `hero` διαθέσιμη για binding
 από το εξωτερικό `HeroesComponent`.
+
+@reviewed 2022-03-09

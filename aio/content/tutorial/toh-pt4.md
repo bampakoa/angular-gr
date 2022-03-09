@@ -442,3 +442,5 @@ path="toh-pt4/src/app/heroes/heroes.component.ts">
 * Δημιουργήσατε ένα `MessageService` για loosely-coupled επικοινωνία μεταξύ των classes.
 * Το `HeroService` που εισάγεται σε ένα component δημιουργείται με ένα άλλο service που εισάγεται,
  το `MessageService`.
+
+@reviewed 2022-03-09
