@@ -1,6 +1,5 @@
-# Localized documentation
-
-This topic lists localized versions of the Angular documentation.
+# Τοπικό θέμα
+Αυτό το θέμα παραθέτει σε άλλες γλώσσες εκδόσεις του εγχειρίδιου της Angular.
 
 * [Español](http://docs.angular.lat/)
 * [简体中文版](https://angular.cn/)
@@ -9,4 +8,4 @@ This topic lists localized versions of the Angular documentation.
 * [한국어](https://angular.kr/)
 * [Ελληνικά](https://angular-gr.web.app/)
 
-For information on localizing Angular documentation, see [Angular localization guidelines](guide/localizing-angular).
+Για πληροφορίες σχετικά με τις μεταφράσεις του εγχειρίδιου της Angular , δείτε (guide/localizing-angular).
