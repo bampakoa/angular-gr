@@ -1113,8 +1113,8 @@
             },
             {
               "url": "guide/updating-content-github-ui",
-              "title": "Updating content using GitHub UI",
-              "tooltip": "Update topics in the browser through the GitHub user interface."
+              "title": "Ενημέρωση θεμάτων μέσω του GitHub",
+              "tooltip": "Ενημερώστε θέματα στο πρόγραμμα περιήγησης μέσω του GitHub."
             },
             {
               "url": "guide/docs-style-guide",

@@ -10,3 +10,5 @@
 * [Ελληνικά](https://angular-gr.web.app/)
 
 Για πληροφορίες σχετικά με τις μεταφράσεις του εγχειρίδιου του Angular, ανατρέξτε στις [Οδηγίες μετάφρασης του Angular](guide/localizing-angular).
+
+@reviewed 2022-03-22
