@@ -25,7 +25,7 @@ describe('TopMenuComponent', () => {
 
     component.nodes = [
       {url: 'api', title: 'API', tooltip: 'API docs'},
-      {url: 'features', title: 'Features', tooltip: 'Angular features overview'},
+      {url: 'features', title: 'Χαρακτηριστικα', tooltip: 'Σύνοψη χαρακτηριστηκών της Angular'},
     ];
     fixture.detectChanges();
   });
@@ -38,7 +38,7 @@ describe('TopMenuComponent', () => {
     expect(links.length).toBe(2);
     expect(links.map(link => link.pathname)).toEqual(['/api', '/features']);
     expect(links.map(link => link.textContent)).toEqual(['API', 'Features']);
-    expect(links.map(link => link.title)).toEqual(['API docs', 'Angular features overview']);
+    expect(links.map(link => link.title)).toEqual(['API docs', 'Σύνοψη χαρακτηριστηκών της Angular']);
   });
 
   it('should mark the currently selected node with `.selected`', () => {
@@ -61,7 +61,7 @@ describe('TopMenuComponent', () => {
   it('should not mark any node with `.selected` if the current URL is undefined', () => {
     component.nodes = [
       {url: '', title: 'API', tooltip: 'API docs'},
-      {url: undefined, title: 'Features', tooltip: 'Angular features overview'},
+      {url: undefined, title: 'Χαρακτηριστικα', tooltip: 'Σύνοψη χαρακτηριστηκών της Angular'},
     ];
     fixture.detectChanges();
     const items = getListItems();
@@ -74,7 +74,7 @@ describe('TopMenuComponent', () => {
   it('should correctly mark a node with `.selected` even if its URL is empty', () => {
     component.nodes = [
       {url: '', title: 'API', tooltip: 'API docs'},
-      {url: undefined, title: 'Features', tooltip: 'Angular features overview'},
+      {url: undefined, title: 'Χαρακτηριστικα', tooltip: 'Σύνοψη χαρακτηριστηκών της Angular'},
     ];
     fixture.detectChanges();
     const items = getListItems();
