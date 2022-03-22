@@ -304,7 +304,7 @@ In the following example, an async validator ensures that heroes pick an alter e
 New heroes are constantly enlisting and old heroes are leaving the service, so the list of available alter egos cannot be retrieved ahead of time.
 To validate the potential alter ego entry, the validator must initiate an asynchronous operation to consult a central database of all currently enlisted heroes.
 
-The following code create the validator class, `UniqueAlterEgoValidator`, which implements the `AsyncValidator` interface.
+The following code creates the validator class, `UniqueAlterEgoValidator`, which implements the `AsyncValidator` interface.
 
 <code-example path="form-validation/src/app/shared/alter-ego.directive.ts" region="async-validator"></code-example>
 
@@ -332,6 +332,30 @@ You could handle the error differently and return the `ValidationError` object i
 
 After some time passes, the observable chain completes and the asynchronous validation is done.
 The `pending` flag is set to `false`, and the form validity is updated.
+
+### Adding async validators to reactive forms
+
+To use an async validator in reactive forms, begin by injecting the validator into the constructor of the component class.
+
+<code-example path="form-validation/src/app/reactive/hero-form-reactive.component.2.ts" region="async-validator-inject"></code-example>
+
+Then, pass the validator function directly to the `FormControl` to apply it. 
+
+In the following example, the `validate` function of `UniqueAlterEgoValidator` is applied to `alterEgoControl` by passing it to the control's `asyncValidators` option and binding it to the instance of `UniqueAlterEgoValidator` that was injected into `HeroFormReactiveComponent`. The value of `asyncValidators` can be either a single async validator function, or an array of functions. To learn more about `FormControl` options, see the [AbstractControlOptions](/api/forms/AbstractControlOptions) API reference.
+
+<code-example path="form-validation/src/app/reactive/hero-form-reactive.component.2.ts" region="async-validator-usage"></code-example>
+
+### Adding async validators to template-driven forms
+
+To use an async validator in template-driven forms, create a new directive and register the `NG_ASYNC_VALIDATORS` provider on it.
+
+In the example below, the directive injects the `UniqueAlterEgoValidator` class that contains the actual validation logic and invokes it in the `validate` function, triggered by Angular when validation should happen.
+
+<code-example path="form-validation/src/app/shared/alter-ego.directive.ts" region="async-validator-directive"></code-example>
+
+Then, as with synchronous validators, add the directive's selector to an input to activate it.
+
+<code-example path="form-validation/src/app/template/hero-form-template.component.html" region="alterEgo-input" header="template/hero-form-template.component.html (unique-alter-ego-input)"></code-example>
 
 ### Optimizing performance of async validators
 

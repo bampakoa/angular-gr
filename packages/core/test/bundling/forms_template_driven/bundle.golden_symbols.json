@@ -3,16 +3,10 @@
     "name": "ALLOW_MULTIPLE_PLATFORMS"
   },
   {
-    "name": "APPLICATION_MODULE_PROVIDERS"
-  },
-  {
     "name": "APP_BOOTSTRAP_LISTENER"
   },
   {
     "name": "APP_ID"
-  },
-  {
-    "name": "APP_ID_RANDOM_PROVIDER"
   },
   {
     "name": "APP_INITIALIZER"
@@ -28,6 +22,9 @@
   },
   {
     "name": "AbstractFormGroupDirective"
+  },
+  {
+    "name": "AbstractValidatorDirective"
   },
   {
     "name": "AnonymousSubject"
@@ -78,19 +75,16 @@
     "name": "COMPOSITION_BUFFER_MODE"
   },
   {
-    "name": "ChainedInjector"
+    "name": "ChangeDetectionStrategy"
   },
   {
-    "name": "ChangeDetectionStrategy"
+    "name": "ChangeDetectorRef"
   },
   {
     "name": "CheckboxControlValueAccessor"
   },
   {
     "name": "CommonModule"
-  },
-  {
-    "name": "Compiler"
   },
   {
     "name": "ComponentFactory"
@@ -120,9 +114,6 @@
     "name": "ControlContainer"
   },
   {
-    "name": "DEFAULT_CURRENCY_CODE"
-  },
-  {
     "name": "DEFAULT_VALUE_ACCESSOR"
   },
   {
@@ -139,12 +130,6 @@
   },
   {
     "name": "DefaultIterableDifferFactory"
-  },
-  {
-    "name": "DefaultKeyValueDiffer"
-  },
-  {
-    "name": "DefaultKeyValueDifferFactory"
   },
   {
     "name": "DefaultValueAccessor"
@@ -210,9 +195,6 @@
     "name": "INJECTOR_SCOPE"
   },
   {
-    "name": "Inject"
-  },
-  {
     "name": "InjectFlags"
   },
   {
@@ -231,22 +213,10 @@
     "name": "KeyEventsPlugin"
   },
   {
-    "name": "KeyValueChangeRecord_"
-  },
-  {
-    "name": "KeyValueDiffers"
-  },
-  {
-    "name": "LOCALE_DATA"
-  },
-  {
     "name": "LOCALE_ID2"
   },
   {
     "name": "LifecycleHooksFeature"
-  },
-  {
-    "name": "LocaleDataIndex"
   },
   {
     "name": "MODIFIER_KEYS"
@@ -342,12 +312,6 @@
     "name": "NgForm"
   },
   {
-    "name": "NgLocaleLocalization"
-  },
-  {
-    "name": "NgLocalization"
-  },
-  {
     "name": "NgModel"
   },
   {
@@ -396,9 +360,6 @@
     "name": "PlatformRef"
   },
   {
-    "name": "Plural"
-  },
-  {
     "name": "R3Injector"
   },
   {
@@ -439,9 +400,6 @@
   },
   {
     "name": "RuntimeError"
-  },
-  {
-    "name": "SCHEDULER"
   },
   {
     "name": "SERVER_TRANSITION_PROVIDERS"
@@ -744,16 +702,7 @@
     "name": "defaultErrorLogger"
   },
   {
-    "name": "defaultIterableDiffers"
-  },
-  {
     "name": "defaultIterableDiffersFactory"
-  },
-  {
-    "name": "defaultKeyValueDiffers"
-  },
-  {
-    "name": "defaultKeyValueDiffersFactory"
   },
   {
     "name": "defaultScheduler"
@@ -909,9 +858,6 @@
     "name": "getLViewParent"
   },
   {
-    "name": "getLocaleData"
-  },
-  {
     "name": "getNativeByTNode"
   },
   {
@@ -1053,7 +999,13 @@
     "name": "initTNodeFlags"
   },
   {
+    "name": "inject"
+  },
+  {
     "name": "injectArgs"
+  },
+  {
+    "name": "injectChangeDetectorRef"
   },
   {
     "name": "injectElementRef"
@@ -1128,9 +1080,6 @@
     "name": "isInlineTemplate"
   },
   {
-    "name": "isJsObject"
-  },
-  {
     "name": "isLContainer"
   },
   {
@@ -1185,9 +1134,6 @@
     "name": "iterator"
   },
   {
-    "name": "keyValDiff"
-  },
-  {
     "name": "keyValueArrayGet"
   },
   {
@@ -1204,9 +1150,6 @@
   },
   {
     "name": "leaveViewLight"
-  },
-  {
-    "name": "locale_en_default"
   },
   {
     "name": "lookupTokenUsingModuleInjector"
@@ -1311,6 +1254,9 @@
     "name": "notFoundValueOrThrow"
   },
   {
+    "name": "nullValidator"
+  },
+  {
     "name": "observable"
   },
   {
@@ -1399,6 +1345,9 @@
   },
   {
     "name": "renderView"
+  },
+  {
+    "name": "requiredValidator"
   },
   {
     "name": "resetPreOrderHookFlags"
@@ -1528,9 +1477,6 @@
   },
   {
     "name": "trackByIdentity"
-  },
-  {
-    "name": "u"
   },
   {
     "name": "unwrapRNode"

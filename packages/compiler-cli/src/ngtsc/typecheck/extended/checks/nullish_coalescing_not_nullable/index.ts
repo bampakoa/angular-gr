@@ -35,6 +35,12 @@ class NullishCoalescingNotNullableCheck extends
       return [];
     }
     const typeLeft = symbolLeft.tsType;
+    if (typeLeft.flags & (ts.TypeFlags.Any | ts.TypeFlags.Unknown)) {
+      // We should not make assumptions about the any and unknown types; using a nullish coalescing
+      // operator is acceptable for those.
+      return [];
+    }
+
     // If the left operand's type is different from its non-nullable self, then it must
     // contain a null or undefined so this nullish coalescing operator is useful. No diagnostic to
     // report.
@@ -60,7 +66,9 @@ export const factory: TemplateCheckFactory<
   name: ExtendedTemplateDiagnosticName.NULLISH_COALESCING_NOT_NULLABLE,
   create: (options: NgCompilerOptions) => {
     // Require `strictNullChecks` to be enabled.
-    if (options.strictNullChecks === false) {
+    const strictNullChecks =
+        options.strictNullChecks === undefined ? !!options.strict : !!options.strictNullChecks;
+    if (!strictNullChecks) {
       return null;
     }
 

@@ -116,15 +116,25 @@
 
 ### Προσθήκη ενός binding για το event click
 
-Προσθέστε ένα binding για το event click στο `<li>` ως εξής:
+Προσθέστε ένα `<button>` με ένα binding για το event click στο `<li>` ως εξής:
 
 <code-example path="toh-pt2/src/app/heroes/heroes.component.1.html" region="selectedHero-click" header="heroes.component.html (template excerpt)"></code-example>
 
 Αυτό είναι ένα παράδειγμα της σύνταξης [event binding](guide/event-binding) του Angular.
 
-Οι παρενθέσεις γύρω από το `click` δίνουν εντολή στο Angular να παρακολουθεί το event `click` του στοιχείου `<li>`.
-Όταν ο χρήστης κάνει κλικ στο `<li>`, το Angular εκτελεί την έκφραση `onSelect(hero)`.
+Οι παρενθέσεις γύρω από το `click` δίνουν εντολή στο Angular να παρακολουθεί το event `click` του στοιχείου `<button>`.
+Όταν ο χρήστης κάνει κλικ στο `<button>`, το Angular εκτελεί την μέθοδο `onSelect(hero)`.
 
+<div class="callout is-helpful">
+
+  <header>Στοιχεια με δυνατοτητα κλικ</header>
+
+  Σημειώστε ότι προσθέσαμε το binding στο event click ενός νέου στοιχείου `<button>`. Αν και θα μπορούσαμε να προσθέσουμε το binding του event απευθείας στο στοιχείο `<li>`, είναι καλύτερο για λόγους προσβασιμότητας να χρησιμοποιούμε
+  το εγγενές στοιχείο `<button>` για τον χειρισμό των κλικ.
+
+  Για περισσότερες λεπτομέρειες σχετικά με την προσβασιμότητα, ανατρέξτε στην ενότητα [Προσβασιμότητα στο Angular](guide/accessibility).
+
+</div>
 
 Στην επόμενη ενότητα, ορίστε μια μέθοδο `onSelect()` στο `HeroesComponent` για
 να εμφανίστε τον ήρωα που ορίστηκε στην έκφραση `*ngFor`.
@@ -246,4 +256,4 @@ template. Προσθέστε τα ακόλουθα στο `heroes.component.html
 * Χρησιμοποιήσατε το `*ngIf` για να συμπεριλάβετε ή να εξαιρέσετε υπό συνθήκες ένα κομμάτι HTML.
 * Μπορείτε να αλλάξετε ένα class με στυλ CSS χρησιμοποιώντας ένα binding `class`.
 
-@reviewed 2022-03-09
+@reviewed 2022-03-22

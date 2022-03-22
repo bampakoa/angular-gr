@@ -244,7 +244,7 @@ groups:
           'aio/content/guide/angular-compiler-options.md',
           'aio/content/guide/aot-compiler.md',
           'aio/content/guide/aot-metadata-errors.md',
-          'aio/content/guide/template-typecheck.md '
+          'aio/content/guide/template-typecheck.md'
           ])
     reviewers:
       users:
@@ -1271,6 +1271,7 @@ groups:
           'docs/NAMING.md',
           'aio/content/guide/angular-package-format.md',
           'aio/content/errors/*.md',
+          'aio/content/extended-diagnostics/*.md',
           'aio/content/guide/glossary.md',
           'aio/content/guide/styleguide.md',
           'aio/content/examples/errors/**',

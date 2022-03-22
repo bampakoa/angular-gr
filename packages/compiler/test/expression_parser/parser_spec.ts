@@ -1012,7 +1012,8 @@ describe('parser', () => {
 
     it('should support custom interpolation', () => {
       const parser = new Parser(new Lexer());
-      const ast = parser.parseInterpolation('{% a %}', '', 0, {start: '{%', end: '%}'})!.ast as any;
+      const ast =
+          parser.parseInterpolation('{% a %}', '', 0, null, {start: '{%', end: '%}'})!.ast as any;
       expect(ast.strings).toEqual(['', '']);
       expect(ast.expressions.length).toEqual(1);
       expect(ast.expressions[0].name).toEqual('a');
@@ -1180,7 +1181,7 @@ function createParser() {
 }
 
 function parseAction(text: string, location: any = null, offset: number = 0): ASTWithSource {
-  return createParser().parseAction(text, location, offset);
+  return createParser().parseAction(text, /* isAssignmentEvent */ false, location, offset);
 }
 
 function parseBinding(text: string, location: any = null, offset: number = 0): ASTWithSource {
@@ -1211,11 +1212,11 @@ function _parseTemplateBindings(attribute: string, templateUrl: string) {
 
 function parseInterpolation(text: string, location: any = null, offset: number = 0): ASTWithSource|
     null {
-  return createParser().parseInterpolation(text, location, offset);
+  return createParser().parseInterpolation(text, location, offset, null);
 }
 
 function splitInterpolation(text: string, location: any = null): SplitInterpolation|null {
-  return createParser().splitInterpolation(text, location);
+  return createParser().splitInterpolation(text, location, null);
 }
 
 function parseSimpleBinding(text: string, location: any = null, offset: number = 0): ASTWithSource {

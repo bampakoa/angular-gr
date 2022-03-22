@@ -633,7 +633,7 @@ describe('TransitionAnimationEngine', () => {
       try {
         engine.flush();
       } catch (e) {
-        errorMessage = e.toString();
+        errorMessage = (e as Error).toString();
       }
 
       expect(errorMessage).toMatch(/Unable to animate due to the following errors:/);
@@ -693,13 +693,13 @@ class SuffixNormalizer extends AnimationStyleNormalizer {
     super();
   }
 
-  override normalizePropertyName(propertyName: string, errors: string[]): string {
+  override normalizePropertyName(propertyName: string, errors: Error[]): string {
     return propertyName + this._suffix;
   }
 
   override normalizeStyleValue(
       userProvidedProperty: string, normalizedProperty: string, value: string|number,
-      errors: string[]): string {
+      errors: Error[]): string {
     return value + this._suffix;
   }
 }
@@ -709,19 +709,20 @@ class ExactCssValueNormalizer extends AnimationStyleNormalizer {
     super();
   }
 
-  override normalizePropertyName(propertyName: string, errors: string[]): string {
+  override normalizePropertyName(propertyName: string, errors: Error[]): string {
     if (!this._allowedValues[propertyName]) {
-      errors.push(`The CSS property \`${propertyName}\` is not allowed`);
+      errors.push(new Error(`The CSS property \`${propertyName}\` is not allowed`));
     }
     return propertyName;
   }
 
   override normalizeStyleValue(
       userProvidedProperty: string, normalizedProperty: string, value: string|number,
-      errors: string[]): string {
+      errors: Error[]): string {
     const expectedValue = this._allowedValues[userProvidedProperty];
     if (expectedValue != value) {
-      errors.push(`The CSS property \`${userProvidedProperty}\` is not allowed to be \`${value}\``);
+      errors.push(new Error(
+          `The CSS property \`${userProvidedProperty}\` is not allowed to be \`${value}\``));
     }
     return expectedValue;
   }
@@ -730,10 +731,12 @@ class ExactCssValueNormalizer extends AnimationStyleNormalizer {
 function registerTrigger(
     element: any, engine: TransitionAnimationEngine, metadata: AnimationTriggerMetadata,
     id: string = DEFAULT_NAMESPACE_ID) {
-  const errors: string[] = [];
+  const errors: Error[] = [];
+  const warnings: string[] = [];
   const driver = new MockAnimationDriver();
   const name = metadata.name;
-  const ast = buildAnimationAst(driver, metadata as AnimationMetadata, errors) as TriggerAst;
+  const ast =
+      buildAnimationAst(driver, metadata as AnimationMetadata, errors, warnings) as TriggerAst;
   if (errors.length) {
   }
   const trigger = buildTrigger(name, ast, new NoopAnimationStyleNormalizer());

@@ -13,6 +13,7 @@ import {AnimationTransitionInstruction} from '../dsl/animation_transition_instru
 import {AnimationTrigger} from '../dsl/animation_trigger';
 import {ElementInstructionMap} from '../dsl/element_instruction_map';
 import {AnimationStyleNormalizer} from '../dsl/style_normalization/animation_style_normalizer';
+import {missingEvent, missingTrigger, transitionFailed, triggerTransitionsFailed, unregisteredTrigger, unsupportedTriggerEvent} from '../error_helpers';
 import {copyObj, ENTER_CLASSNAME, eraseStyles, iteratorToArray, LEAVE_CLASSNAME, NG_ANIMATING_CLASSNAME, NG_ANIMATING_SELECTOR, NG_TRIGGER_CLASSNAME, NG_TRIGGER_SELECTOR, setStyles} from '../util';
 
 import {AnimationDriver} from './animation_driver';
@@ -126,18 +127,15 @@ export class AnimationTransitionNamespace {
 
   listen(element: any, name: string, phase: string, callback: (event: any) => boolean): () => any {
     if (!this._triggers.hasOwnProperty(name)) {
-      throw new Error(`Unable to listen on the animation trigger event "${
-          phase}" because the animation trigger "${name}" doesn\'t exist!`);
+      throw missingTrigger(phase, name);
     }
 
     if (phase == null || phase.length == 0) {
-      throw new Error(`Unable to listen on the animation trigger "${
-          name}" because the provided event is undefined!`);
+      throw missingEvent(name);
     }
 
     if (!isTriggerEventValid(phase)) {
-      throw new Error(`The provided animation trigger event "${phase}" for the animation trigger "${
-          name}" is not supported!`);
+      throw unsupportedTriggerEvent(phase, name);
     }
 
     const listeners = getOrSetAsInMap(this._elementListeners, element, []);
@@ -181,7 +179,7 @@ export class AnimationTransitionNamespace {
   private _getTrigger(name: string) {
     const trigger = this._triggers[name];
     if (!trigger) {
-      throw new Error(`The provided animation trigger "${name}" has not been registered!`);
+      throw unregisteredTrigger(name);
     }
     return trigger;
   }
@@ -224,7 +222,7 @@ export class AnimationTransitionNamespace {
       // this means that despite the value not changing, some inner params
       // have changed which means that the animation final styles need to be applied
       if (!objEquals(fromState.params, toState.params)) {
-        const errors: string[] = [];
+        const errors: Error[] = [];
         const fromStyles = trigger.matchStyles(fromState.value, fromState.params, errors);
         const toStyles = trigger.matchStyles(toState.value, toState.params, errors);
         if (errors.length) {
@@ -593,25 +591,51 @@ export class TransitionAnimationEngine {
   }
 
   private _balanceNamespaceList(ns: AnimationTransitionNamespace, hostElement: any) {
-    const limit = this._namespaceList.length - 1;
+    const namespaceList = this._namespaceList;
+    const namespacesByHostElement = this.namespacesByHostElement;
+    const limit = namespaceList.length - 1;
     if (limit >= 0) {
       let found = false;
-      for (let i = limit; i >= 0; i--) {
-        const nextNamespace = this._namespaceList[i];
-        if (this.driver.containsElement(nextNamespace.hostElement, hostElement)) {
-          this._namespaceList.splice(i + 1, 0, ns);
-          found = true;
-          break;
+      if (this.driver.getParentElement !== undefined) {
+        // Fast path for when the driver implements `getParentElement`, which allows us to find the
+        // closest ancestor with an existing namespace that we can then insert `ns` after, without
+        // having to inspect all existing namespaces.
+        let ancestor = this.driver.getParentElement(hostElement);
+        while (ancestor) {
+          const ancestorNs = namespacesByHostElement.get(ancestor);
+          if (ancestorNs) {
+            // An animation namespace has been registered for this ancestor, so we insert `ns`
+            // right after it to establish top-down ordering of animation namespaces.
+            const index = namespaceList.indexOf(ancestorNs);
+            namespaceList.splice(index + 1, 0, ns);
+            found = true;
+            break;
+          }
+          ancestor = this.driver.getParentElement(ancestor);
+        }
+      } else {
+        // Slow path for backwards compatibility if the driver does not implement
+        // `getParentElement`, to be removed once `getParentElement` is a required method.
+        for (let i = limit; i >= 0; i--) {
+          const nextNamespace = namespaceList[i];
+          if (this.driver.containsElement(nextNamespace.hostElement, hostElement)) {
+            namespaceList.splice(i + 1, 0, ns);
+            found = true;
+            break;
+          }
         }
       }
       if (!found) {
-        this._namespaceList.splice(0, 0, ns);
+        // No namespace exists that is an ancestor of `ns`, so `ns` is inserted at the front to
+        // ensure that any existing descendants are ordered after `ns`, retaining the desired
+        // top-down ordering.
+        namespaceList.unshift(ns);
       }
     } else {
-      this._namespaceList.push(ns);
+      namespaceList.push(ns);
     }
 
-    this.namespacesByHostElement.set(hostElement, ns);
+    namespacesByHostElement.set(hostElement, ns);
     return ns;
   }
 
@@ -909,10 +933,8 @@ export class TransitionAnimationEngine {
     }
   }
 
-  reportError(errors: string[]) {
-    throw new Error(
-        `Unable to process animations due to the following failed trigger transitions\n ${
-            errors.join('\n')}`);
+  reportError(errors: Error[]) {
+    throw triggerTransitionsFailed(errors);
   }
 
   private _flushAnimations(cleanupFns: Function[], microtaskId: number):
@@ -1098,10 +1120,9 @@ export class TransitionAnimationEngine {
     }
 
     if (erroneousTransitions.length) {
-      const errors: string[] = [];
+      const errors: Error[] = [];
       erroneousTransitions.forEach(instruction => {
-        errors.push(`@${instruction.triggerName} has failed due to:\n`);
-        instruction.errors!.forEach(error => errors.push(`- ${error}\n`));
+        errors.push(transitionFailed(instruction.triggerName, instruction.errors!));
       });
 
       allPlayers.forEach(player => player.destroy());

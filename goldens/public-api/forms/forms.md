@@ -5,6 +5,7 @@
 ```ts
 
 import { AfterViewInit } from '@angular/core';
+import { ChangeDetectorRef } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import * as i0 from '@angular/core';
@@ -167,7 +168,6 @@ export class CheckboxControlValueAccessor extends BuiltInControlValueAccessor im
 
 // @public
 export class CheckboxRequiredValidator extends RequiredValidator {
-    validate(control: AbstractControl): ValidationErrors | null;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<CheckboxRequiredValidator, "input[type=checkbox][required][formControlName],input[type=checkbox][required][formControl],input[type=checkbox][required][ngModel]", never, {}, {}, never>;
     // (undocumented)
@@ -205,10 +205,8 @@ export class DefaultValueAccessor extends BaseControlValueAccessor implements Co
 // @public
 export class EmailValidator extends AbstractValidatorDirective {
     email: boolean | string;
-
     // (undocumented)
     enabled(input: boolean): boolean;
-    
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<EmailValidator, "[email][formControlName],[email][formControl],[email][ngModel]", never, { "email": "email"; }, {}, never>;
     // (undocumented)
@@ -575,7 +573,7 @@ export class NgForm extends ControlContainer implements Form, AfterViewInit {
 
 // @public
 export class NgModel extends NgControl implements OnChanges, OnDestroy {
-    constructor(parent: ControlContainer, validators: (Validator | ValidatorFn)[], asyncValidators: (AsyncValidator | AsyncValidatorFn)[], valueAccessors: ControlValueAccessor[]);
+    constructor(parent: ControlContainer, validators: (Validator | ValidatorFn)[], asyncValidators: (AsyncValidator | AsyncValidatorFn)[], valueAccessors: ControlValueAccessor[], _changeDetectorRef?: ChangeDetectorRef | null | undefined);
     // (undocumented)
     readonly control: FormControl;
     get formDirective(): any;
@@ -600,7 +598,7 @@ export class NgModel extends NgControl implements OnChanges, OnDestroy {
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<NgModel, "[ngModel]:not([formControlName]):not([formControl])", ["ngModel"], { "name": "name"; "isDisabled": "disabled"; "model": "ngModel"; "options": "ngModelOptions"; }, { "update": "ngModelChange"; }, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<NgModel, [{ optional: true; host: true; }, { optional: true; self: true; }, { optional: true; self: true; }, { optional: true; self: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<NgModel, [{ optional: true; host: true; }, { optional: true; self: true; }, { optional: true; self: true; }, { optional: true; self: true; }, { optional: true; }]>;
 }
 
 // @public
@@ -638,12 +636,8 @@ export class NumberValueAccessor extends BuiltInControlValueAccessor implements 
 }
 
 // @public
-export class PatternValidator implements Validator, OnChanges {
-    // (undocumented)
-    ngOnChanges(changes: SimpleChanges): void;
+export class PatternValidator extends AbstractValidatorDirective {
     pattern: string | RegExp;
-    registerOnValidatorChange(fn: () => void): void;
-    validate(control: AbstractControl): ValidationErrors | null;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<PatternValidator, "[pattern][formControlName],[pattern][formControl],[pattern][ngModel]", never, { "pattern": "pattern"; }, {}, never>;
     // (undocumented)
@@ -694,11 +688,10 @@ export class ReactiveFormsModule {
 }
 
 // @public
-export class RequiredValidator implements Validator {
-    registerOnValidatorChange(fn: () => void): void;
-    get required(): boolean | string;
-    set required(value: boolean | string);
-    validate(control: AbstractControl): ValidationErrors | null;
+export class RequiredValidator extends AbstractValidatorDirective {
+    // (undocumented)
+    enabled(input: boolean): boolean;
+    required: boolean | string;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<RequiredValidator, ":not([type=checkbox])[required][formControlName],:not([type=checkbox])[required][formControl],:not([type=checkbox])[required][ngModel]", never, { "required": "required"; }, {}, never>;
     // (undocumented)

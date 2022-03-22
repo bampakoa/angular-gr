@@ -7,8 +7,10 @@
  */
 import {AnimationMetadata, AnimationMetadataType, AnimationOptions, ɵStyleData} from '@angular/animations';
 
+import {buildingFailed, validationFailed} from '../error_helpers';
 import {AnimationDriver} from '../render/animation_driver';
 import {ENTER_CLASSNAME, LEAVE_CLASSNAME, normalizeStyles} from '../util';
+import {warnValidation} from '../warning_helpers';
 
 import {Ast} from './animation_ast';
 import {buildAnimationAst} from './animation_ast_builder';
@@ -19,11 +21,14 @@ import {ElementInstructionMap} from './element_instruction_map';
 export class Animation {
   private _animationAst: Ast<AnimationMetadataType>;
   constructor(private _driver: AnimationDriver, input: AnimationMetadata|AnimationMetadata[]) {
-    const errors: string[] = [];
-    const ast = buildAnimationAst(_driver, input, errors);
+    const errors: Error[] = [];
+    const warnings: string[] = [];
+    const ast = buildAnimationAst(_driver, input, errors, warnings);
     if (errors.length) {
-      const errorMessage = `animation validation failed:\n${errors.join('\n')}`;
-      throw new Error(errorMessage);
+      throw validationFailed(errors);
+    }
+    if (warnings.length) {
+      warnValidation(warnings);
     }
     this._animationAst = ast;
   }
@@ -42,8 +47,7 @@ export class Animation {
         this._driver, element, this._animationAst, ENTER_CLASSNAME, LEAVE_CLASSNAME, start, dest,
         options, subInstructions, errors);
     if (errors.length) {
-      const errorMessage = `animation building failed:\n${errors.join('\n')}`;
-      throw new Error(errorMessage);
+      throw buildingFailed(errors);
     }
     return result;
   }

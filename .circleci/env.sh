@@ -3,7 +3,6 @@
 # Variables
 readonly projectDir=$(realpath "$(dirname ${BASH_SOURCE[0]})/..")
 readonly envHelpersPath="$projectDir/.circleci/env-helpers.inc.sh";
-readonly bashEnvCachePath="$projectDir/.circleci/bash_env_cache";
 
 # Load helpers and make them available everywhere (through `$BASH_ENV`).
 source $envHelpersPath;
@@ -74,7 +73,7 @@ setPublicVar COMPONENTS_REPO_TMP_DIR "/tmp/angular-components-repo"
 setPublicVar COMPONENTS_REPO_URL "https://github.com/angular/components.git"
 setPublicVar COMPONENTS_REPO_BRANCH "master"
 # **NOTE**: When updating the commit SHA, also update the cache key in the CircleCI `config.yml`.
-setPublicVar COMPONENTS_REPO_COMMIT "a931de54a786597b34259e461c2cf3ab6edc590a"
+setPublicVar COMPONENTS_REPO_COMMIT "e0b76ed029939a7bb8246410b0170cfdbf35da25"
 
 
 ####################################################################################################

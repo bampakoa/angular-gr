@@ -9,6 +9,7 @@ import {AnimationEvent, AnimationPlayer, AUTO_STYLE, NoopAnimationPlayer, ɵAnim
 
 import {AnimationStyleNormalizer} from '../../src/dsl/style_normalization/animation_style_normalizer';
 import {AnimationDriver} from '../../src/render/animation_driver';
+import {animationFailed} from '../error_helpers';
 
 // We don't include ambient node types here since @angular/animations/browser
 // is meant to target the browser so technically it should not depend on node
@@ -43,7 +44,7 @@ export function normalizeKeyframes(
     driver: AnimationDriver, normalizer: AnimationStyleNormalizer, element: any,
     keyframes: ɵStyleData[], preStyles: ɵStyleData = {},
     postStyles: ɵStyleData = {}): ɵStyleData[] {
-  const errors: string[] = [];
+  const errors: Error[] = [];
   const normalizedKeyframes: ɵStyleData[] = [];
   let previousOffset = -1;
   let previousKeyframe: ɵStyleData|null = null;
@@ -80,9 +81,7 @@ export function normalizeKeyframes(
     previousOffset = offset;
   });
   if (errors.length) {
-    const LINE_START = '\n - ';
-    throw new Error(
-        `Unable to animate due to the following errors:${LINE_START}${errors.join(LINE_START)}`);
+    throw animationFailed(errors);
   }
 
   return normalizedKeyframes;
@@ -153,6 +152,15 @@ let _query: (element: any, selector: string, multi: boolean) => any[] =
     (element: any, selector: string, multi: boolean) => {
       return [];
     };
+let _documentElement: unknown|null = null;
+
+export function getParentElement(element: any): unknown|null {
+  const parent = element.parentNode || element.host;  // consider host to support shadow DOM
+  if (parent === _documentElement) {
+    return null;
+  }
+  return parent;
+}
 
 // Define utility methods for browsers and platform-server(domino) where Element
 // and utility methods exist.
@@ -161,12 +169,15 @@ if (_isNode || typeof Element !== 'undefined') {
   if (!isBrowser()) {
     _contains = (elm1, elm2) => elm1.contains(elm2);
   } else {
+    // Read the document element in an IIFE that's been marked pure to avoid a top-level property
+    // read that may prevent tree-shaking.
+    _documentElement = /* @__PURE__ */ (() => document.documentElement)();
     _contains = (elm1, elm2) => {
-      while (elm2 && elm2 !== document.documentElement) {
+      while (elm2) {
         if (elm2 === elm1) {
           return true;
         }
-        elm2 = elm2.parentNode || elm2.host;  // consider host to support shadow DOM
+        elm2 = getParentElement(elm2);
       }
       return false;
     };

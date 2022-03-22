@@ -7,7 +7,6 @@ ts_library(
     srcs = [
         "api.ts",
         "index.ts",
-        "override_rename_ts_plugin.ts",
     ],
     prodmode_module = "commonjs",
     deps = [

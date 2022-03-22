@@ -96,24 +96,6 @@ export abstract class ViewContainerRef {
    * @param templateRef The HTML template that defines the view.
    * @param context The data-binding context of the embedded view, as declared
    * in the `<ng-template>` usage.
-   * @param options Extra configuration for the created view. Includes:
-   *  * index: The 0-based index at which to insert the new view into this container.
-   *           If not specified, appends the new view as the last entry.
-   *  * injector: Injector to be used within the embedded view.
-   *
-   * @returns The `ViewRef` instance for the newly created view.
-   */
-  abstract createEmbeddedView<C>(templateRef: TemplateRef<C>, context?: C, options?: {
-    index?: number,
-    injector?: Injector
-  }): EmbeddedViewRef<C>;
-
-  /**
-   * Instantiates an embedded view and inserts it
-   * into this container.
-   * @param templateRef The HTML template that defines the view.
-   * @param context The data-binding context of the embedded view, as declared
-   * in the `<ng-template>` usage.
    * @param index The 0-based index at which to insert the new view into this container.
    * If not specified, appends the new view as the last entry.
    *
@@ -276,27 +258,9 @@ const R3ViewContainerRef = class ViewContainerRef extends VE_ViewContainerRef {
     return this._lContainer.length - CONTAINER_HEADER_OFFSET;
   }
 
-  override createEmbeddedView<C>(templateRef: TemplateRef<C>, context?: C, options?: {
-    index?: number,
-    injector?: Injector
-  }): EmbeddedViewRef<C>;
   override createEmbeddedView<C>(templateRef: TemplateRef<C>, context?: C, index?: number):
-      EmbeddedViewRef<C>;
-  override createEmbeddedView<C>(templateRef: TemplateRef<C>, context?: C, indexOrOptions?: number|{
-    index?: number,
-    injector?: Injector
-  }): EmbeddedViewRef<C> {
-    let index: number|undefined;
-    let injector: Injector|undefined;
-
-    if (typeof indexOrOptions === 'number') {
-      index = indexOrOptions;
-    } else if (indexOrOptions != null) {
-      index = indexOrOptions.index;
-      injector = indexOrOptions.injector;
-    }
-
-    const viewRef = templateRef.createEmbeddedView(context || <any>{}, injector);
+      EmbeddedViewRef<C> {
+    const viewRef = templateRef.createEmbeddedView(context || <any>{});
     this.insert(viewRef, index);
     return viewRef;
   }
@@ -373,11 +337,31 @@ const R3ViewContainerRef = class ViewContainerRef extends VE_ViewContainerRef {
         componentFactoryOrType as ComponentFactory<C>:
         new R3ComponentFactory(getComponentDef(componentFactoryOrType)!);
     const contextInjector = injector || this.parentInjector;
-    if (!ngModuleRef && (componentFactory as any).ngModule == null && contextInjector) {
-      // DO NOT REFACTOR. The code here used to have a `value || undefined` expression
-      // which seems to cause internal google apps to fail. This is documented in the
-      // following internal bug issue: go/b/142967802
-      const result = contextInjector.get(NgModuleRef, null);
+
+    // If an `NgModuleRef` is not provided explicitly, try retrieving it from the DI tree.
+    if (!ngModuleRef && (componentFactory as any).ngModule == null) {
+      // For the `ComponentFactory` case, entering this logic is very unlikely, since we expect that
+      // an instance of a `ComponentFactory`, resolved via `ComponentFactoryResolver` would have an
+      // `ngModule` field. This is possible in some test scenarios and potentially in some JIT-based
+      // use-cases. For the `ComponentFactory` case we preserve backwards-compatibility and try
+      // using a provided injector first, then fall back to the parent injector of this
+      // `ViewContainerRef` instance.
+      //
+      // For the factory-less case, it's critical to establish a connection with the module
+      // injector tree (by retrieving an instance of an `NgModuleRef` and accessing its injector),
+      // so that a component can use DI tokens provided in MgModules. For this reason, we can not
+      // rely on the provided injector, since it might be detached from the DI tree (for example, if
+      // it was created via `Injector.create` without specifying a parent injector, or if an
+      // injector is retrieved from an `NgModuleRef` created via `createNgModuleRef` using an
+      // NgModule outside of a module tree). Instead, we always use `ViewContainerRef`'s parent
+      // injector, which is normally connected to the DI tree, which includes module injector
+      // subtree.
+      const _injector = isComponentFactory ? contextInjector : this.parentInjector;
+
+      // DO NOT REFACTOR. The code here used to have a `injector.get(NgModuleRef, null) ||
+      // undefined` expression which seems to cause internal google apps to fail. This is documented
+      // in the following internal bug issue: go/b/142967802
+      const result = _injector.get(NgModuleRef, null);
       if (result) {
         ngModuleRef = result;
       }

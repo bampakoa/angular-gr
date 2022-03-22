@@ -20,11 +20,34 @@ The functions that control complex animation sequences are:
 
 {@a complex-sequence}
 
+## The query() function
+
+Most complex animations rely on the `query()` function to find child elements and apply animations to them, basic examples of such are:
+ - `query()` followed by `animate()`
+  used to query simple HTML elements and directly apply animations to them.
+ - `query()` followed by `animateChild()`
+  used to query child elements which themselves have animations metadata applied to them and trigger such animation (which would be otherwise be blocked by the current/parent element's animation)
+
+The first argument of `query()` is a [css selector](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Selectors) string which can also contain the following angular-specific tokens:
+ - `:enter`/`:leave` for entering/leaving elements
+ - `:animating` for elements currently animating
+ - `@*`/`@triggerName` for elements with any or a specific trigger
+ - `:self` the animating element itself
+
+<div class="callout is-helpful">
+
+  <header>Entering and Leaving Elements</header>
+
+  Not all child elements are actually considered as entering/leaving, this can at times be counterintuitive and confusing, please see the [query api docs](/api/animations/query#entering-and-leaving-elements) for more information.
+
+
+  You can also see an illustration of this in the animations live example (introduced in the animations [introduction section](/guide/animations#about-this-guide)) under the Querying tab.
+
+</div>
+
 ## Animate multiple elements using query() and stagger() functions
 
-The `query()` function lets you find inner elements within the element that is being animated. This function targets specific HTML elements within a parent component and applies animations to each element individually. Angular intelligently handles setup, teardown, and cleanup as it coordinates the elements across the page.
-
-The `stagger()` function lets you define a timing gap between each queried item that is animated and thus animates elements with a delay between them.
+After having queried child elements via `query()`, the `stagger()` function lets you define a timing gap between each queried item that is animated and thus animates elements with a delay between them.
 
 The following example demonstrates how to use the `query()` and `stagger()` functions to animate a list (of heroes) adding each in sequence, with a slight delay, from top to bottom.
 
@@ -88,9 +111,19 @@ For each change:
 
 * If there are multiple elements entering or leaving the DOM, staggers each animation starting at the top of the page, with a 50-millisecond delay between each element.
 
+## Animating the items of a reordering list
+
+Although Angular animates correctly `*ngFor` list items out of the box, it will not be able to do so if their ordering changes. This is because it will lose track of which element is which, resulting in broken animations. The only way to help Angular keep track of such elements is by assigning a `TrackByFunction` to the `NgForOf` directive. This makes sure that Angular always knows which element is which, thus allowing it to apply the correct animations to the correct elements all the time.
+
+<div class="alert is-important">
+
+**Rule of Thumb:** If you need to animate the items of an `*ngFor` list and there is a possibility that the order of such items will change during runtime, always use a `TrackByFunction`.
+
+</div>
+
 ## Animation sequence summary
 
-Angular functions for animating multiple elements start with `query()` to find inner elements, for example gathering all images within a `<div>`. The remaining functions, `stagger()`, <code>[group](api/animations/group)()</code>, and `sequence()`, apply cascades or lets you control how multiple animation steps are applied.
+Angular functions for animating multiple elements start with `query()` to find inner elements; for example, gathering all images within a `<div>`. The remaining functions, `stagger()`, <code>[group](api/animations/group)()</code>, and `sequence()`, apply cascades or lets you control how multiple animation steps are applied.
 
 ## More on Angular animations
 

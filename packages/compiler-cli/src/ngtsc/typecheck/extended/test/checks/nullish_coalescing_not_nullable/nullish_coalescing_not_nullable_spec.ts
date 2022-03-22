@@ -28,12 +28,23 @@ runInEachFileSystem(() => {
 
     it('should return a check if `strictNullChecks` is enabled', () => {
       expect(nullishCoalescingNotNullableFactory.create({strictNullChecks: true})).toBeDefined();
-      expect(nullishCoalescingNotNullableFactory.create({})).not.toBeNull();  // Defaults enabled.
     });
+
+    it('should return a check if `strictNullChecks` is not configured but `strict` is enabled',
+       () => {
+         expect(nullishCoalescingNotNullableFactory.create({strict: true})).toBeDefined();
+       });
 
     it('should not return a check if `strictNullChecks` is disabled', () => {
       expect(nullishCoalescingNotNullableFactory.create({strictNullChecks: false})).toBeNull();
+      expect(nullishCoalescingNotNullableFactory.create({})).toBeNull();  // Defaults disabled.
     });
+
+    it('should not return a check if `strict` is enabled but `strictNullChecks` is disabled',
+       () => {
+         expect(nullishCoalescingNotNullableFactory.create({strict: true, strictNullChecks: false}))
+             .toBeNull();
+       });
 
     it('should produce nullish coalescing warning', () => {
       const fileName = absoluteFrom('/main.ts');
@@ -48,7 +59,7 @@ runInEachFileSystem(() => {
       const component = getClass(sf, 'TestCmp');
       const extendedTemplateChecker = new ExtendedTemplateCheckerImpl(
           templateTypeChecker, program.getTypeChecker(), [nullishCoalescingNotNullableFactory],
-          {} /* options */);
+          {strictNullChecks: true} /* options */);
       const diags = extendedTemplateChecker.getDiagnosticsForComponent(component);
       expect(diags.length).toBe(1);
       expect(diags[0].category).toBe(ts.DiagnosticCategory.Warning);
@@ -69,7 +80,43 @@ runInEachFileSystem(() => {
       const component = getClass(sf, 'TestCmp');
       const extendedTemplateChecker = new ExtendedTemplateCheckerImpl(
           templateTypeChecker, program.getTypeChecker(), [nullishCoalescingNotNullableFactory],
-          {} /* options */);
+          {strictNullChecks: true} /* options */);
+      const diags = extendedTemplateChecker.getDiagnosticsForComponent(component);
+      expect(diags.length).toBe(0);
+    });
+
+    it('should not produce nullish coalescing warning for the any type', () => {
+      const fileName = absoluteFrom('/main.ts');
+      const {program, templateTypeChecker} = setup([{
+        fileName,
+        templates: {
+          'TestCmp': `{{ var1 ?? 'foo' }}`,
+        },
+        source: 'export class TestCmp { var1: any; }'
+      }]);
+      const sf = getSourceFileOrError(program, fileName);
+      const component = getClass(sf, 'TestCmp');
+      const extendedTemplateChecker = new ExtendedTemplateCheckerImpl(
+          templateTypeChecker, program.getTypeChecker(), [nullishCoalescingNotNullableFactory],
+          {strictNullChecks: true} /* options */);
+      const diags = extendedTemplateChecker.getDiagnosticsForComponent(component);
+      expect(diags.length).toBe(0);
+    });
+
+    it('should not produce nullish coalescing warning for the unknown type', () => {
+      const fileName = absoluteFrom('/main.ts');
+      const {program, templateTypeChecker} = setup([{
+        fileName,
+        templates: {
+          'TestCmp': `{{ var1 ?? 'foo' }}`,
+        },
+        source: 'export class TestCmp { var1: unknown; }'
+      }]);
+      const sf = getSourceFileOrError(program, fileName);
+      const component = getClass(sf, 'TestCmp');
+      const extendedTemplateChecker = new ExtendedTemplateCheckerImpl(
+          templateTypeChecker, program.getTypeChecker(), [nullishCoalescingNotNullableFactory],
+          {strictNullChecks: true} /* options */);
       const diags = extendedTemplateChecker.getDiagnosticsForComponent(component);
       expect(diags.length).toBe(0);
     });
@@ -87,7 +134,7 @@ runInEachFileSystem(() => {
       const component = getClass(sf, 'TestCmp');
       const extendedTemplateChecker = new ExtendedTemplateCheckerImpl(
           templateTypeChecker, program.getTypeChecker(), [nullishCoalescingNotNullableFactory],
-          {} /* options */);
+          {strictNullChecks: true} /* options */);
       const diags = extendedTemplateChecker.getDiagnosticsForComponent(component);
       expect(diags.length).toBe(0);
     });
@@ -116,7 +163,7 @@ runInEachFileSystem(() => {
          const component = getClass(sf, 'TestCmp');
          const extendedTemplateChecker = new ExtendedTemplateCheckerImpl(
              templateTypeChecker, program.getTypeChecker(), [nullishCoalescingNotNullableFactory],
-             {} /* options */);
+             {strictNullChecks: true} /* options */);
          const diags = extendedTemplateChecker.getDiagnosticsForComponent(component);
          expect(diags.length).toBe(1);
          expect(diags[0].category).toBe(ts.DiagnosticCategory.Warning);
@@ -149,7 +196,7 @@ runInEachFileSystem(() => {
       const component = getClass(sf, 'TestCmp');
       const extendedTemplateChecker = new ExtendedTemplateCheckerImpl(
           templateTypeChecker, program.getTypeChecker(), [nullishCoalescingNotNullableFactory],
-          {} /* options */);
+          {strictNullChecks: true} /* options */);
       const diags = extendedTemplateChecker.getDiagnosticsForComponent(component);
       expect(diags.length).toBe(0);
     });
@@ -165,7 +212,7 @@ runInEachFileSystem(() => {
              },
              source: `
                export class TestCmp {
-                 func: (): string | null => null;
+                 func = (): string | null => null;
                }
              `,
            },
@@ -174,7 +221,7 @@ runInEachFileSystem(() => {
          const component = getClass(sf, 'TestCmp');
          const extendedTemplateChecker = new ExtendedTemplateCheckerImpl(
              templateTypeChecker, program.getTypeChecker(), [nullishCoalescingNotNullableFactory],
-             {} /* options */);
+             {strictNullChecks: true} /* options */);
          const diags = extendedTemplateChecker.getDiagnosticsForComponent(component);
          expect(diags.length).toBe(0);
        });
@@ -196,6 +243,7 @@ runInEachFileSystem(() => {
           program.getTypeChecker(),
           [nullishCoalescingNotNullableFactory],
           {
+            strictNullChecks: true,
             extendedDiagnostics: {
               checks: {
                 nullishCoalescingNotNullable: DiagnosticCategoryLabel.Error,

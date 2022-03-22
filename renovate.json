@@ -4,6 +4,7 @@
   "semanticPrefix": "build",
   "separateMajorMinor": false,
   "prHourlyLimit": 2,
+  "stopUpdatingLabel": "action: merge",
   "labels": ["target: patch", "comp: build & ci", "action: review"],
   "timezone": "America/Tijuana",
   "lockFileMaintenance": {
@@ -20,17 +21,6 @@
     "@angular/platform-browser-dynamic-12",
     "@angular/platform-server-12",
     "@angular/router-12",
-    "@babel/core",
-    "@babel/generator",
-    "@babel/parser",
-    "@babel/preset-env",
-    "@babel/template",
-    "@babel/traverse",
-    "@babel/types",
-    "@types/babel__core",
-    "@types/babel__generator",
-    "@types/babel__template",
-    "@types/babel__traverse",
     "@types/node",
     "@types/selenium-webdriver",
     "angular-1.5",
@@ -57,7 +47,12 @@
   ],
   "packageRules": [
     {
-      "packagePatterns": ["^@angular/.*", "^@angular-devkit/.*", "^@schematics/.*", "angular/dev-infra"],
+      "packagePatterns": [
+        "^@angular/.*",
+        "^@angular-devkit/.*",
+        "^@schematics/.*",
+        "angular/dev-infra"
+      ],
       "groupName": "angular",
       "pinVersions": false
     },
@@ -85,13 +80,24 @@
       "enabled": false
     },
     {
-      "excludePackagePatterns": ["^@angular/.*", "^@angular-devkit/.*", "^@schematics/.*", "angular/dev-infra"],
+      "excludePackagePatterns": [
+        "^@angular/.*",
+        "^@angular-devkit/.*",
+        "^@schematics/.*",
+        "angular/dev-infra"
+      ],
       "matchPackagePatterns": ["*"],
       "matchUpdateTypes": ["minor", "patch"],
       "matchCurrentVersion": ">=1",
       "groupName": "all non-major dependencies",
       "groupSlug": "all-minor-patch",
       "schedule": ["after 1am on Thursday"]
+    },
+    {
+      "matchPaths": [".github/workflows/scorecard.yml"],
+      "matchPackagePatterns": ["*"],
+      "groupName": "scorecard action dependencies",
+      "groupSlug": "scorecard-action"
     }
   ]
 }
