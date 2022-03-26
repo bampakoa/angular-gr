@@ -1,13 +1,13 @@
-# Understanding Angular
+# Κατανοώντας την Angular
 
-To understand the capabilities of the Angular framework, you need to learn about the following:
+Για να κατανοήσουμε τις δυνατότητες της Angular , χρειάζεται να διαβάσουμε σχετικά για τα εξής:
 
 * Components
 * Templates
 * Directives
 * Dependency injection
 
-The topics in this section explain these features and concepts, and how you can use them.
+Τα θέματα σε αυτήν την ενότητα εξηγούν αυτά τα χαρακτηριστικά και τα concept ,και πώς μπορούμε να τα χρησιμοποιήσουμε. 
 
 ## Prerequisites
 
