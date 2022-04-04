@@ -19,7 +19,7 @@ import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
   <input #searchBox
     type="search"
     aria-label="search"
-    placeholder="Search"
+    placeholder="Αναζήτηση"
     (input)="doSearch()"
     (keyup)="doSearch()"
     (focus)="doFocus()"
