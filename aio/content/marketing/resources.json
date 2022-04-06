@@ -642,6 +642,11 @@
             "title": "Angular Projects - Second Edition",
             "desc": "Build modern web apps by exploring Angular with 10 different projects and cutting-edge technologies",
             "url": "https://www.packtpub.com/product/angular-projects-second-edition/9781800205260"
+          },
+          "rangle-angular-training-book": {
+            "title": "Rangle’s Angular Training Book",
+            "desc": "It's a free book, drawn from years of collective experience and aligned with the best practices of modern software development. The book covers the most important Angular topics, from getting started with the Angular toolchain to writing Angular applications in a scalable and maintainable manner.",
+            "url": "https://angular-training-guide.rangle.io/"
           }
         }
       },
@@ -785,6 +790,11 @@
             "desc": "YouTube Channel about Angular & Web Development",
             "title": "Decoded Frontend",
             "url": "https://www.youtube.com/DecodedFrontend"
+          },
+          "angular-university": {
+            "desc": "A website to learn and keep up with the Angular ecosystem",
+            "title": "Angular University",
+            "url": "https://angular-university.io/"
           },
           "-acceleb": {
             "desc": "Customized, Instructor-Led Angular Training",

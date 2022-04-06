@@ -484,6 +484,10 @@
             {
               "key": "Content-Security-Policy-Report-Only",
               "value": "require-trusted-types-for 'script'; trusted-types angular angular#bundler angular#unsafe-bypass aio#analytics google#safe; report-uri https://csp.withgoogle.com/csp/angular.io"
+            },
+            {
+              "key": "X-Frame-Options",
+              "value": "DENY"
             }
           ]
         },
