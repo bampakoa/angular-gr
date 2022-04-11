@@ -18,7 +18,7 @@ import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
   template: `
   <input #searchBox
     type="search"
-    aria-label="search"
+    aria-label="αναζήτηση"
     placeholder="Αναζήτηση"
     (input)="doSearch()"
     (keyup)="doSearch()"
