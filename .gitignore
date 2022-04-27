@@ -58,7 +58,6 @@ baseline.json
 .husky/_
 
 # angular-gr
-.github
 .circleci
 .devcontainer
 .husky
