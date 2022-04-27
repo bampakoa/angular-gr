@@ -180,4 +180,4 @@ The `styles` property takes an array of strings that contain the CSS rule declar
 * For more information on styling components, see [Component styles](guide/component-styles).
 * For more information on templates, see [Template syntax](guide/template-syntax).
 
-@reviewed 2021-03-18
+@reviewed 2022-04-27

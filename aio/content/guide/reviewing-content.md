@@ -2,11 +2,11 @@
 
 Οι προγραμματιστές Angular λειτουργούν καλύτερα όταν έχουν πρόσβαση σε ακριβή και πλήρη οδηγούς. Η διατήρηση ενός ενημερωμένου περιεχομένου αποτελεί ουσιαστικό μέρος της διασφάλισης ότι όλοι οι προγραμματιστές έχουν μια εξαιρετική εμπειρία με τις οδηγίες.
 
-Αυτό το θέμα περιγράφει πώς μπορείτε να βοηθήσετε στην διατήρηση ενός ενημερωμένου περιεχομένου του Angular ελέγχοντας το περιεχόμενο.
+Αυτό το θέμα περιγράφει πώς μπορείτε να βοηθήσετε στην διατήρηση ενός ενημερωμένου περιεχομένου της Angular ελέγχοντας το περιεχόμενο.
 
 ## Πριν ξεκινήσετε
 
-Μπορείτε να ελέγξετε περιεχόμενο ακόμα κι αν δεν έχετε συνεισφέρει ποτέ στο Angular στο παρελθόν. Ωστόσο, μπορεί να σας φανεί χρήσιμο να έχετε διαθέσιμο τον οδηγό [Συνεισφέροντας στο Angular](https://github.com/angular/angular/blob/master/CONTRIBUTING.md) εάν υποβάλλετε το πρώτο σας pull request στο αποθετήριο.
+Μπορείτε να ελέγξετε περιεχόμενο ακόμα κι αν δεν έχετε συνεισφέρει ποτέ στην Angular στο παρελθόν. Ωστόσο, μπορεί να σας φανεί χρήσιμο να έχετε διαθέσιμο τον οδηγό [Συνεισφέροντας στην Angular](https://github.com/angular/angular/blob/master/CONTRIBUTING.md) εάν υποβάλλετε το πρώτο σας pull request στο αποθετήριο.
 
 ## Έλεγχος περιεχομένου (`@reviewed`)
 
@@ -33,9 +33,11 @@
 
 1. Εάν το θέμα απαιτεί ενημέρωση, είτε [υποβάλετε ένα issue](https://github.com/angular/angular/blob/master/CONTRIBUTING.md#submit-issue) που περιγράφει την απαιτούμενη ενημέρωση, είτε [καταχωρήστε ένα pull request](https://github.com/angular/angular/blob/master/CONTRIBUTING.md#submit-pr) με την ενημέρωση.
 
-1. Ενημερώστε την ετικέτα `@reviewed`, είτε μέσω του [περιβάλλοντος του GitHub](guide/updating-content-github-ui) είτε μέσω της [τυπικής διαδικασίας pull request του Angular](https://github.com/angular/angular/blob/master/CONTRIBUTING.md#submit-pr).
+1. Ενημερώστε την ετικέτα `@reviewed`, είτε μέσω του [περιβάλλοντος του GitHub](guide/updating-content-github-ui) είτε μέσω της [τυπικής διαδικασίας pull request της Angular](https://github.com/angular/angular/blob/master/CONTRIBUTING.md#submit-pr).
 
 {@a review-criteria}
 ### Κριτήρια αξιολόγησης
 
 Γενικά, τα θέματα πρέπει να ελέγχονται είτε κάθε έξι μήνες, είτε περίπου κάθε major release.
+
+@reviewed 2022-04-27
