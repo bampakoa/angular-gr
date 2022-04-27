@@ -1108,8 +1108,8 @@
             },
             {
               "url": "guide/updating-search-keywords",
-              "title": "Updating search keywords",
-              "tooltip": "Help users find the content they need by adding additional search keywords."
+              "title": "Ενημέρωση λέξεων-κλειδιών αναζήτησης",
+              "tooltip": "Βοηθήστε τους χρήστες να βρουν το περιεχόμενο που χρειάζονται προσθέτοντας επιπλέον λέξεις-κλειδιά αναζήτησης."
             },
             {
               "url": "guide/updating-content-github-ui",
