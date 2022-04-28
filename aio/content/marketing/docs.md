@@ -1,14 +1,14 @@
 <h1 class="no-toc">Εισαγωγή στο Angular Docs</h1>
 
-Το Angular είναι ένα framework σχεδιασμού εφαρμογών και μια πλατφόρμα ανάπτυξης για την δημιουργία αποτελεσματικών και εξελιγμένων single-page εφαρμογών.
+Η Angular είναι ένα framework σχεδιασμού εφαρμογών και μια πλατφόρμα ανάπτυξης για την δημιουργία αποτελεσματικών και εξελιγμένων single-page εφαρμογών.
 
 Το Angular Docs σας βοηθά να μάθετε και να χρησιμοποιείτε το Angular framework και την πλατφόρμα ανάπτυξης, από την πρώτη σας εφαρμογή έως την βελτιστοποίηση πολύπλοκων single-page εφαρμογών για επιχειρήσεις.
-Τα σεμινάρια και οι οδηγοί περιλαμβάνουν υλικό με δυνατότητα λήψης για να επιταχύνετε τα project σας. 
+Τα σεμινάρια και οι οδηγοί περιλαμβάνουν υλικό με δυνατότητα λήψης για να επιταχύνετε τα project σας.
 
 
 <div class="card-container">
   <a href="guide/what-is-angular" class="docs-card" title="Επισκόπηση της πλατφόρμας">
-    <section>Τι είναι το Angular</section>
+    <section>Τι είναι η Angular</section>
     <p>Γενική επισκόπηση της πλατφόρμας Angular.</p>
     <p class="card-footer">Επισκόπηση της πλατφόρμας</p>
   </a>
@@ -53,10 +53,10 @@
 Συνεισφέρετε στα Angular Docs καταχωρώντας
 [pull requests](https://github.com/angular/angular/pulls "Github pull requests του Angular")
 στο GitHub αποθετήριο του Angular.
-Ανατρέξτε στην ενότητα [Συνεισφορά στο Angular](https://github.com/angular/angular/blob/master/CONTRIBUTING.md "Οδηγός συνεισφοράς")
+Ανατρέξτε στην ενότητα [Συνεισφορά στην Angular](https://github.com/angular/angular/blob/master/CONTRIBUTING.md "Οδηγός συνεισφοράς")
 για πληροφορίες σχετικά με τις οδηγίες υποβολής.
 
 Η κοινότητά μας εκτιμά την επικοινωνία με σεβασμό και υποστήριξη.
 Παρακαλούμε συμβουλευτείτε και τηρήστε τον [Κώδικα δεοντολογίας](https://github.com/angular/code-of-conduct/blob/master/CODE_OF_CONDUCT.md "Κώδικας συμπεριφοράς συντελεστών").
 
-@reviewed 2022-03-09
+@reviewed 2022-04-21

@@ -23,7 +23,7 @@
   ],
   "TopBarNarrow": [
     {
-      "title": "Σχετικά με το Angular",
+      "title": "Σχετικά με την Angular",
       "children": [
         {
           "url": "features",
@@ -57,7 +57,7 @@
       "children": [
         {
           "url": "guide/what-is-angular",
-          "title": "Τι είναι το Angular",
+          "title": "Τι είναι η Angular",
           "tooltip": "Μια σύντομη περιγραφή της πλατφόρμας Angular."
         },
         {
@@ -1144,12 +1144,12 @@
         {
           "url": "about",
           "title": "Σχετικά",
-          "tooltip": "Συμμετέχοντες στο Angular."
+          "tooltip": "Συμμετέχοντες στην Angular."
         },
         {
           "url": "resources",
           "title": "Λίστα πηγών",
-          "tooltip": "Εργαλεία για το Angular, εκπαίδευση, και άρθρα από το διαδίκτυο."
+          "tooltip": "Εργαλεία για την Angular, εκπαίδευση, και άρθρα από το διαδίκτυο."
         },
         {
           "url": "presskit",
@@ -1159,12 +1159,12 @@
         {
           "url": "https://blog.angular.io/",
           "title": "Άρθρα",
-          "tooltip": "Αρθογραφία για το Angular"
+          "tooltip": "Αρθογραφία για την Angular"
         },
         {
           "url": "analytics",
           "title": "Ανάλυση χρήσης",
-          "tooltip": "Στατιστικά για το Angular"
+          "tooltip": "Στατιστικά για την Angular"
         }
       ]
     },
@@ -1174,7 +1174,7 @@
         {
           "url": "https://stackoverflow.com/questions/tagged/angular",
           "title": "Stack Overflow",
-          "tooltip": "Stack Overflow: εκεί όπου η κοινότητα απαντά στις τεχνικές ερωτήσεις σου σχετικά με το Angular."
+          "tooltip": "Stack Overflow: εκεί όπου η κοινότητα απαντά στις τεχνικές ερωτήσεις σου σχετικά με την Angular."
         },
         {
           "url": "https://discord.gg/angular",
@@ -1184,7 +1184,7 @@
         {
           "url": "https://gitter.im/angular/angular",
           "title": "Gitter",
-          "tooltip": "Συνομίλησε σχετικά με το Angular με άλλους προγραμματιστές."
+          "tooltip": "Συνομίλησε σχετικά με την Angular με άλλους προγραμματιστές."
         },
         {
           "url": "https://github.com/angular/angular/issues",

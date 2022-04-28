@@ -41,7 +41,7 @@ module [In-memory Web API](https://github.com/angular/angular/tree/master/packag
 
 <div class="alert is-important">
 
-**Σημαντικό:** το module In-memory Web API δεν έχει καμία σχέση με το HTTP στο Angular.
+**Σημαντικό:** το module In-memory Web API δεν έχει καμία σχέση με το HTTP στην Angular.
 
 Εάν διαβάζετε αυτόν τον οδηγό για να μάθετε για το `HttpClient`, μπορείτε να [παρακάμψετε](#import-heroes) αυτό το βήμα.
 Εάν γράφετε κώδικα μαζί με αυτό το σεμινάριο, μείνετε εδώ και προσθέστε το In-memory Web API τώρα.
@@ -618,4 +618,4 @@ pipe (`|`) ακολουθούμενο από το `async`. Αυτό προσδι
 Είστε έτοιμοι να μάθετε περισσότερα σχετικά με την ανάπτυξη Angular στην ενότητα βασικών στοιχείων,
 ξεκινώντας με τον οδηγό [Αρχιτεκτονική](guide/architecture "Architecture").
 
-@reviewed 2022-03-09
+@reviewed 2022-04-21

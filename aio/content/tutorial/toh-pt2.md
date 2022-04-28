@@ -122,8 +122,8 @@
 
 Αυτό είναι ένα παράδειγμα της σύνταξης [event binding](guide/event-binding) του Angular.
 
-Οι παρενθέσεις γύρω από το `click` δίνουν εντολή στο Angular να παρακολουθεί το event `click` του στοιχείου `<button>`.
-Όταν ο χρήστης κάνει κλικ στο `<button>`, το Angular εκτελεί την μέθοδο `onSelect(hero)`.
+Οι παρενθέσεις γύρω από το `click` δίνουν εντολή στην Angular να παρακολουθεί το event `click` του στοιχείου `<button>`.
+Όταν ο χρήστης κάνει κλικ στο `<button>`, η Angular εκτελεί την μέθοδο `onSelect(hero)`.
 
 <div class="callout is-helpful">
 
@@ -132,7 +132,7 @@
   Σημειώστε ότι προσθέσαμε το binding στο event click ενός νέου στοιχείου `<button>`. Αν και θα μπορούσαμε να προσθέσουμε το binding του event απευθείας στο στοιχείο `<li>`, είναι καλύτερο για λόγους προσβασιμότητας να χρησιμοποιούμε
   το εγγενές στοιχείο `<button>` για τον χειρισμό των κλικ.
 
-  Για περισσότερες λεπτομέρειες σχετικά με την προσβασιμότητα, ανατρέξτε στην ενότητα [Προσβασιμότητα στο Angular](guide/accessibility).
+  Για περισσότερες λεπτομέρειες σχετικά με την προσβασιμότητα, ανατρέξτε στην ενότητα [Προσβασιμότητα στην Angular](guide/accessibility).
 
 </div>
 
@@ -220,7 +220,7 @@ template. Προσθέστε τα ακόλουθα στο `heroes.component.html
 
 <code-example path="toh-pt2/src/app/heroes/heroes.component.1.html" region="class-selected" header="heroes.component.html (toggle the 'selected' CSS class)"></code-example>
 
-Όταν η τρέχουσα γραμμή ήρωα είναι η ίδια με το `selectedHero`, το Angular προσθέτει το CSS class `selected`. Όταν οι δύο ήρωες είναι διαφορετικοί, το Angular αφαιρεί το class.
+Όταν η τρέχουσα γραμμή ήρωα είναι η ίδια με το `selectedHero`, η Angular προσθέτει το CSS class `selected`. Όταν οι δύο ήρωες είναι διαφορετικοί, η Angular αφαιρεί το class.
 
 Το τελικό `<li>` μοιάζει με αυτό:
 
@@ -256,4 +256,4 @@ template. Προσθέστε τα ακόλουθα στο `heroes.component.html
 * Χρησιμοποιήσατε το `*ngIf` για να συμπεριλάβετε ή να εξαιρέσετε υπό συνθήκες ένα κομμάτι HTML.
 * Μπορείτε να αλλάξετε ένα class με στυλ CSS χρησιμοποιώντας ένα binding `class`.
 
-@reviewed 2022-03-22
+@reviewed 2022-04-21

@@ -89,7 +89,7 @@
 ### Συμμετοχή στην κοινότητα
 
 
-[Πείτε στο Twitter ότι ολοκληρώσατε αυτό το σεμινάριο](https://twitter.com/intent/tweet?url=https://angular.io/start&text=I%20just%20finished%20the%20Angular%20Getting%20Started%20Tutorial "Το Angular στο Twitter"), πείτε μας τη γνώμη σας ή υποβάλλετε [Προτάσεις για μελλοντικές εκδόσεις](https://github.com/angular/angular/issues/new/choose "Φόρμα καταχώρησης νέου issue στο GitHub αποθετήριο του Angular").
+[Πείτε στο Twitter ότι ολοκληρώσατε αυτό το σεμινάριο](https://twitter.com/intent/tweet?url=https://angular.io/start&text=I%20just%20finished%20the%20Angular%20Getting%20Started%20Tutorial "Η Angular στο Twitter"), πείτε μας τη γνώμη σας ή υποβάλλετε [Προτάσεις για μελλοντικές εκδόσεις](https://github.com/angular/angular/issues/new/choose "Φόρμα καταχώρησης νέου issue στο GitHub αποθετήριο του Angular").
 
 Μείνετε ενημερωμένοι ακολουθώντας το [ιστολόγιο του Angular](https://blog.angular.io/ "Το ιστολόγιο του Angular").
 
@@ -99,4 +99,4 @@
 
 Η κοινότητα Angular διαθέτει επίσης ένα εκτεταμένο [δίκτυο εργαλείων και βιβλιοθηκών τρίτων](resources "Λίστα πόρων του Angular").
 
-@reviewed 2022-03-09
+@reviewed 2022-04-21

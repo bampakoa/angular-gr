@@ -14,7 +14,7 @@
 
 ## Δημιουργήστε το service καλαθιού αγορών
 
-Στο Angular, ένα service είναι μια οντότητα ενός class που μπορείτε να διαθέσετε σε οποιοδήποτε μέρος της εφαρμογής σας χρησιμοποιώντας το σύστημα του [dependency injection](guide/glossary#dependency-injection-di "Ορισμός dependency injection") του Angular.
+Στην Angular, ένα service είναι μια οντότητα ενός class που μπορείτε να διαθέσετε σε οποιοδήποτε μέρος της εφαρμογής σας χρησιμοποιώντας το σύστημα του [dependency injection](guide/glossary#dependency-injection-di "Ορισμός dependency injection") του Angular.
 
 Προς το παρόν, οι χρήστες μπορούν να δουν πληροφορίες για ένα προϊόν, και η εφαρμογή μπορεί να προσομοιώνει την κοινή χρήση και τις ειδοποιήσεις σχετικά με αλλαγές προϊόντων.
 
@@ -277,7 +277,7 @@
     <code-example header="src/app/shipping/shipping.component.html" path="getting-started/src/app/shipping/shipping.component.html"></code-example>
 
     Το pipe `async` επιστρέφει την πιο πρόσφατη τιμή από μια ροή δεδομένων και συνεχίζει να το κάνει για τη διάρκεια ζωής ενός συγκεκριμένου component.
-    Όταν το Angular καταστρέφει αυτό το component, το pipe `async` αυτόματα σταματάει.
+    Όταν η Angular καταστρέφει αυτό το component, το pipe `async` αυτόματα σταματάει.
     Για λεπτομερείς πληροφορίες σχετικά με το pipe `async`, ανατρέξτε στις [οδηγίες χρήσης API του AsyncPipe](/api/common/AsyncPipe).
 
 1. Προσθέστε έναν σύνδεσμο από την προβολή του `CartComponent` στην προβολή του `ShippingComponent`.
@@ -306,4 +306,4 @@
 * Συνεχίστε στο [Φόρμες για εισαγωγή δεδομένων](start/start-forms "Φόρμες για εισαγωγή δεδομένων") για να ολοκληρώσετε την εφαρμογή προσθέτοντας την προβολή καλαθιού αγορών και μια φόρμα ολοκλήρωσης αγοράς.
 * Συνεχίστε στο [Deployment](start/start-deployment "Deployment") για να μεταβείτε σε τοπική ανάπτυξη, ή να ανεβάσετε την εφαρμογή σας στο Firebase ή σε έναν δικό σας διακομιστή.
 
-@reviewed 2022-03-09
+@reviewed 2022-04-21
