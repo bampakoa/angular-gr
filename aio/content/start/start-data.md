@@ -205,7 +205,7 @@
     <code-example header="src/app/app.module.ts" path="getting-started/src/app/app.module.ts" region="http-client-module-import">
     </code-example>
 
-1. Για να καταχωρήσετε τους providers της Angular `HttpClient` σε όλη την εφαρμογή, προσθέστε το `HttpClientModule` στα `imports` του `@NgModule()` του `AppModule` .
+1. Για να καταχωρήσετε τους providers του Angular `HttpClient` σε όλη την εφαρμογή, προσθέστε το `HttpClientModule` στα `imports` του `@NgModule()` του `AppModule` .
 
     <code-example path="getting-started/src/app/app.module.ts" header="src/app/app.module.ts" region="http-client-module">
     </code-example>

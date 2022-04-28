@@ -236,7 +236,7 @@ To `ProductAlertsComponent` πρέπει να καλέσει ένα event ότα
 
   <div class="alert is-helpful">
 
-  Σε νέα components, η Angular Generator περιλαμβάνει ένα κενό `constructor()`, το interface `OnInit`, και την μέθοδο `ngOnInit()`.
+  Τα νέα components περιλαμβάνουν ένα κενό `constructor()`, το interface `OnInit`, και την μέθοδο `ngOnInit()`.
   Επειδή αυτά τα βήματα δεν τα χρησιμοποιούν, τα ακόλουθα παραδείγματα κώδικα τα παραλείπουν για συντομία.
 
   </div>
@@ -286,4 +286,4 @@ To `ProductAlertsComponent` πρέπει να καλέσει ένα event ότα
 * Συνεχίστε στο [Πλοήγηση εντός της εφαρμογής](start/start-routing "Ξεκινώντας: Πλοήγηση εντός εφαρμογής") για να δημιουργήσετε μια σελίδα λεπτομερειών προϊόντος.
 * Συνεχίστε στο [Deployment](start/start-deployment "Ξεκινώντας: Deployment") για να μεταβείτε σε τοπική ανάπτυξη, ή να ανεβάσετε την εφαρμογή σας στο Firebase ή σε έναν δικό σας διακομιστή.
 
-@reviewed 2022-04-21
+@reviewed 2022-04-28
