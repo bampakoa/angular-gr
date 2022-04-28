@@ -65,7 +65,7 @@
   region="heroes-route">
 </code-example>
 
-Ένα τυπικό `Route` του Angular έχει δύο ιδιότητες:
+Ένα τυπικό `Route` της Angular έχει δύο ιδιότητες:
 
 * `path`: ένα κείμενο που ταιριάζει με τη διεύθυνση URL στη γραμμή διευθύνσεων του προγράμματος περιήγησης.
 * `component`: το component που πρέπει να δημιουργήσει το router κατά την πλοήγηση σε αυτήν τη διαδρομή.
@@ -320,7 +320,7 @@
   header="src/app/dashboard/dashboard.component.html (hero links)">
 </code-example>
 
-Χρησιμοποιείτε το [interpolation binding](guide/interpolation) του Angular μέσα στο `*ngFor`
+Χρησιμοποιείτε το [interpolation binding](guide/interpolation) της Angular μέσα στο `*ngFor`
 για να εισάγετε το `hero.id` της τρέχουσας επανάληψης σε καθε
 [`routerLink`](#routerlink).
 
@@ -391,7 +391,7 @@
 Το [`HeroService`](tutorial/toh-pt4) λαμβάνει δεδομένα ηρώων από τον απομακρυσμένο διακομιστή
 και αυτό το component θα τα χρησιμοποιήσει για να πάρει τον ήρωα-προς-εμφάνιση.
 
-Το [`location`](api/common/Location) είναι ένα service του Angular για αλληλεπίδραση με το πρόγραμμα περιήγησης.
+Το [`location`](api/common/Location) είναι ένα service της Angular για αλληλεπίδραση με το πρόγραμμα περιήγησης.
 Θα το χρησιμοποιήσετε [αργότερα](#goback) για να επιστρέψετε στην προβολή που πλοηγήθηκε εδώ.
 
 ### Εξαγάγετε την παράμετρο διαδρομής `id`
@@ -568,7 +568,7 @@ To `paramMap` είναι ένα dictionary από τιμές παραμέτρω�
 
 ## Περίληψη
 
-* Προσθέσατε το router του Angular για πλοήγηση μεταξύ διαφορετικών components.
+* Προσθέσατε το router της Angular για πλοήγηση μεταξύ διαφορετικών components.
 * Μετατρέψατε το `AppComponent` σε κέλυφος πλοήγησης με συνδέσμους`<a>` και ένα `<router-outlet>`.
 * Διαμορφώσατε το router σε ένα `AppRoutingModule`
 * Ορίσατε διαδρομές, μια διαδρομή ανακατεύθυνσης και μια παραμετροποιημένη διαδρομή.

@@ -106,7 +106,7 @@ region="import-hero" header="src/app/hero-detail/hero-detail.component.ts (impor
 
 </code-example>
 
-Το `[hero]="selectedHero"` είναι ένα [property binding](guide/property-binding) του Angular.
+Το `[hero]="selectedHero"` είναι ένα [property binding](guide/property-binding) της Angular.
 
 Είναι ένα _μονόδρομο_ data binding από
 την ιδιότητα `selectedHero` του `HeroesComponent` στην ιδιότητα `hero` του στοιχείου προορισμού, η οποία αντιστοιχίζεται στην ιδιότητα `hero` του `HeroDetailComponent`.
@@ -171,4 +171,4 @@ region="import-hero" header="src/app/hero-detail/hero-detail.component.ts (impor
 για να καταστήσετε την ιδιότητα `hero` διαθέσιμη για binding
 από το εξωτερικό `HeroesComponent`.
 
-@reviewed 2022-03-09
+@reviewed 2022-04-21

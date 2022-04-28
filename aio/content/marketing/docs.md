@@ -17,12 +17,12 @@
     <p>Δουλέψτε με μια μικρή έτοιμη εφαρμογή Angular, χωρίς καμία ρύθμιση.</p>
     <p class="card-footer">Δοκιμάστε το τώρα</p>
   </a>
-  <a href="guide/architecture" class="docs-card" title="Έννοιες του Angular">
+  <a href="guide/architecture" class="docs-card" title="Έννοιες της Angular">
     <section>Μάθετε και εξερευνήστε</section>
     <p>Μάθετε για τις θεμελιώδεις έννοιες σχεδιασμού και αρχιτεκτονικής των εφαρμογών Angular.</p>
-    <p class="card-footer">Εισαγωγή στις έννοιες του Angular</p>
+    <p class="card-footer">Εισαγωγή στις έννοιες της Angular</p>
   </a>
-  <a href="guide/setup-local" class="docs-card" title="Ρύθμιση τοπικού περιβάλλοντος του Angular">
+  <a href="guide/setup-local" class="docs-card" title="Ρύθμιση τοπικού περιβάλλοντος της Angular">
     <section>Ρυθμίστε το περιβάλλον σας</section>
     <p>Ρυθμίστε το τοπικό σας περιβάλλον για ανάπτυξη με το Angular CLI.</p>
     <p class="card-footer">Τοπική ρύθμιση</p>
@@ -48,11 +48,11 @@
 
 <h3>You can sit with us!</h3>
 
-Θέλουμε να μας πείτε την γνώμη σας. [Αναφορά προβλημάτων ή υποβoλή προτάσεων για βελτιώσεις](https://github.com/angular/angular/issues/new/choose "Φόρμα καταχώρησης νέου issue στο GitHub αποθετήριο του Angular").
+Θέλουμε να μας πείτε την γνώμη σας. [Αναφορά προβλημάτων ή υποβoλή προτάσεων για βελτιώσεις](https://github.com/angular/angular/issues/new/choose "Φόρμα καταχώρησης νέου issue στο GitHub αποθετήριο της Angular").
 
 Συνεισφέρετε στα Angular Docs καταχωρώντας
-[pull requests](https://github.com/angular/angular/pulls "Github pull requests του Angular")
-στο GitHub αποθετήριο του Angular.
+[pull requests](https://github.com/angular/angular/pulls "Github pull requests της Angular")
+στο GitHub αποθετήριο της Angular.
 Ανατρέξτε στην ενότητα [Συνεισφορά στην Angular](https://github.com/angular/angular/blob/master/CONTRIBUTING.md "Οδηγός συνεισφοράς")
 για πληροφορίες σχετικά με τις οδηγίες υποβολής.
 

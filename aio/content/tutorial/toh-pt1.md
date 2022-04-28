@@ -25,7 +25,7 @@
 
 <code-example path="toh-pt1/src/app/heroes/heroes.component.ts" region="v1" header="app/heroes/heroes.component.ts (initial version)"></code-example>
 
-Κάντε πάντα import το σύμβολο `Component` από την κεντρική βιβλιοθήκη του Angular
+Κάντε πάντα import το σύμβολο `Component` από την κεντρική βιβλιοθήκη της Angular
 και προσθέστε το `@Component` στο class του component.
 
 Το `@Component` είναι μια συνάρτηση decorator που καθορίζει τα μεταδεδομένα Angular για το component.
@@ -135,7 +135,7 @@
 
 <code-example path="toh-pt1/src/app/heroes/heroes.component.1.html" region="name-input" header="src/app/heroes/heroes.component.html (HeroesComponent's template)"></code-example>
 
-**To [(ngModel)]** είναι η σύνταξη αμφίδρομου data binding του Angular.
+**To [(ngModel)]** είναι η σύνταξη αμφίδρομου data binding της Angular.
 
 Εδώ συνδέει την ιδιότητα `hero.name` στο πλαίσιο κειμένου HTML έτσι ώστε τα δεδομένα να μπορούν να ρέουν _και προς τις δύο κατευθύνσεις:_ από την ιδιότητα `hero.name` στο πλαίσιο κειμένου και από το πλαίσιο κειμένου πίσω στο `hero.name`.
 
@@ -151,7 +151,7 @@ Template parse errors:
 Can't bind to 'ngModel' since it isn't a known property of 'input'.
 </code-example>
 
-Αν και το `ngModel` είναι ένα έγκυρο directive του Angular, δεν είναι διαθέσιμο εξ αρχής.
+Αν και το `ngModel` είναι ένα έγκυρο directive της Angular, δεν είναι διαθέσιμο εξ αρχής.
 
 Ανήκει στο προαιρετικό `FormsModule` και πρέπει να _το δηλώσετε ρητά_ για να το χρησιμοποιήσετε.
 

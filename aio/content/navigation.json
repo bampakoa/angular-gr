@@ -67,7 +67,7 @@
             {
               "url": "start",
               "title": "Ξεκινώντας",
-              "tooltip": "Ρίξτε μια ματιά στο μοντέλο των components, την σύνταξη του template, και την επικοινωνία component του Angular."
+              "tooltip": "Ρίξτε μια ματιά στο μοντέλο των components, την σύνταξη του template, και την επικοινωνία component της Angular."
             },
             {
               "url": "start/start-routing",
@@ -1104,7 +1104,7 @@
             {
               "url": "guide/reviewing-content",
               "title": "'Έλεγχος περιεχομένου",
-              "tooltip": "Διατηρήστε το περιεχόμενο του Angular ενημερωμένο ελέγχοντας τα θέματα για ακρίβεια."
+              "tooltip": "Διατηρήστε το περιεχόμενο της Angular ενημερωμένο ελέγχοντας τα θέματα για ακρίβεια."
             },
             {
               "url": "guide/updating-search-keywords",
@@ -1179,7 +1179,7 @@
         {
           "url": "https://discord.gg/angular",
           "title": "Πάρε μέρος στο Discord",
-          "tooltip": "Πάρε μέρος στις συζητήσεις στον διακομιστή Discord της κοινότητας του Angular."
+          "tooltip": "Πάρε μέρος στις συζητήσεις στον διακομιστή Discord της κοινότητας της Angular."
         },
         {
           "url": "https://gitter.im/angular/angular",
@@ -1204,7 +1204,7 @@
         {
           "url": "events",
           "title": "Εκδηλώσεις",
-          "tooltip": "Εκδηλώσεις του Angular παγκοσμίως"
+          "tooltip": "Εκδηλώσεις της Angular παγκοσμίως"
         },
         {
           "url": "https://www.meetup.com/topics/angularjs/",
@@ -1224,7 +1224,7 @@
         {
           "url": "contribute",
           "title": "Συνεισφορά",
-          "tooltip": "Βοήθησε στην ανάπτυξη του Angular"
+          "tooltip": "Βοήθησε στην ανάπτυξη της Angular"
         }
       ]
     },

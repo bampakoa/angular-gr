@@ -14,7 +14,7 @@
 
 ## Δημιουργήστε το service καλαθιού αγορών
 
-Στην Angular, ένα service είναι μια οντότητα ενός class που μπορείτε να διαθέσετε σε οποιοδήποτε μέρος της εφαρμογής σας χρησιμοποιώντας το σύστημα του [dependency injection](guide/glossary#dependency-injection-di "Ορισμός dependency injection") του Angular.
+Στην Angular, ένα service είναι μια οντότητα ενός class που μπορείτε να διαθέσετε σε οποιοδήποτε μέρος της εφαρμογής σας χρησιμοποιώντας το σύστημα του [dependency injection](guide/glossary#dependency-injection-di "Ορισμός dependency injection") της Angular.
 
 Προς το παρόν, οι χρήστες μπορούν να δουν πληροφορίες για ένα προϊόν, και η εφαρμογή μπορεί να προσομοιώνει την κοινή χρήση και τις ειδοποιήσεις σχετικά με αλλαγές προϊόντων.
 
@@ -194,9 +194,9 @@
 
 ### Ρυθμίστε το `AppModule` να χρησιμοποιεί το `HttpClient`
 
-Για να χρησιμοποιήσετε το `HttpClient` του Angular, πρέπει να ρυθμίσετε την εφαρμογή σας ώστε να χρησιμοποιεί το `HttpClientModule`.
+Για να χρησιμοποιήσετε το `HttpClient` της Angular, πρέπει να ρυθμίσετε την εφαρμογή σας ώστε να χρησιμοποιεί το `HttpClientModule`.
 
-Το `HttpClientModule` του Angular καταχωρεί τους providers που χρειάζεται η εφαρμογή σας για να χρησιμοποιεί το service `HttpClient` σε όλη την εφαρμογή σας.
+Το `HttpClientModule` της Angular καταχωρεί τους providers που χρειάζεται η εφαρμογή σας για να χρησιμοποιεί το service `HttpClient` σε όλη την εφαρμογή σας.
 
 1. Στο `app.module.ts`, κάντε import το `HttpClientModule` από το πακέτο `@angular/common/http` στην κορυφή του αρχείου μαζί με τα υπόλοιπα imports.
     Καθώς υπάρχουν πολλά άλλα imports, αυτό το απόσπασμα κώδικα τα παραλείπει για συντομία.
@@ -205,7 +205,7 @@
     <code-example header="src/app/app.module.ts" path="getting-started/src/app/app.module.ts" region="http-client-module-import">
     </code-example>
 
-1. Για να καταχωρήσετε τους providers του Angular `HttpClient` σε όλη την εφαρμογή, προσθέστε το `HttpClientModule` στα `imports` του `@NgModule()` του `AppModule` .
+1. Για να καταχωρήσετε τους providers της Angular `HttpClient` σε όλη την εφαρμογή, προσθέστε το `HttpClientModule` στα `imports` του `@NgModule()` του `AppModule` .
 
     <code-example path="getting-started/src/app/app.module.ts" header="src/app/app.module.ts" region="http-client-module">
     </code-example>
@@ -232,7 +232,7 @@
 
     <code-example header="src/app/cart.service.ts" path="getting-started/src/app/cart.service.ts" region="get-shipping"></code-example>
 
-Για περισσότερες πληροφορίες σχετικά με το `HttpClient` του Angular, ανατρέξτε στον οδηγό [Αλληλεπίδραση πελάτη-διακομιστή](guide/http "Αλληλεπίδραση διακομιστή μέσω HTTP").
+Για περισσότερες πληροφορίες σχετικά με το `HttpClient` της Angular, ανατρέξτε στον οδηγό [Αλληλεπίδραση πελάτη-διακομιστή](guide/http "Αλληλεπίδραση διακομιστή μέσω HTTP").
 
 ## Δημιουργήστε το component αποστολής
 
@@ -301,7 +301,7 @@
 
 Τώρα έχετε μια εφαρμογή καταστήματος με κατάλογο προϊόντων, καλάθι αγορών και μπορείτε να αναζητήσετε τιμές αποστολής.
 
-Για να συνεχίσετε την εξερεύνηση του Angular:
+Για να συνεχίσετε την εξερεύνηση της Angular:
 
 * Συνεχίστε στο [Φόρμες για εισαγωγή δεδομένων](start/start-forms "Φόρμες για εισαγωγή δεδομένων") για να ολοκληρώσετε την εφαρμογή προσθέτοντας την προβολή καλαθιού αγορών και μια φόρμα ολοκλήρωσης αγοράς.
 * Συνεχίστε στο [Deployment](start/start-deployment "Deployment") για να μεταβείτε σε τοπική ανάπτυξη, ή να ανεβάσετε την εφαρμογή σας στο Firebase ή σε έναν δικό σας διακομιστή.

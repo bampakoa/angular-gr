@@ -1,7 +1,7 @@
 # Λήψη δεδομένων από διακομιστή
 
 Σε αυτό το σεμινάριο, θα προσθέσετε τις ακόλουθες λειτουργίες διατήρησης δεδομένων με τη βοήθεια του
-`HttpClient` του Angular.
+`HttpClient` της Angular.
 
 * Το `HeroService` λαμβάνει δεδομένα ηρώων με αιτήματα HTTP.
 * Οι χρήστες μπορούν να προσθέσουν, να επεξεργαστούν και να διαγράψουν ήρωες και να αποθηκεύσουν αυτές τις αλλαγές μέσω HTTP.
@@ -15,7 +15,7 @@
 
 ## Ενεργοποίηση υπηρεσιών HTTP
 
-Το `HttpClient` είναι ο μηχανισμός του Angular για την επικοινωνία με έναν απομακρυσμένο διακομιστή μέσω HTTP.
+Το `HttpClient` είναι ο μηχανισμός της Angular για την επικοινωνία με έναν απομακρυσμένο διακομιστή μέσω HTTP.
 
 Κάντε το `HttpClient` διαθέσιμο παντού στην εφαρμογή σε δύο βήματα. Πρώτα, προσθέστε το στο κεντρικό `AppModule` κάνοντάς το import:
 
@@ -431,7 +431,7 @@ class `HeroesComponent`:
 <code-example path="toh-pt6/src/app/hero-search/hero-search.component.html" header="src/app/hero-search/hero-search.component.html" region="async"></code-example>
 
 Εφόσον το `*ngFor` δεν μπορεί να κάνει τίποτα με ένα `Observable`, χρησιμοποιήστε τον χαρακτήρα
-pipe (`|`) ακολουθούμενο από το `async`. Αυτό προσδιορίζει το `AsyncPipe` του Angular και κάνει subscribe σε ένα `Observable` οπότε δεν θα χρειαστεί να το κάνετε στο class του component.
+pipe (`|`) ακολουθούμενο από το `async`. Αυτό προσδιορίζει το `AsyncPipe` της Angular και κάνει subscribe σε ένα `Observable` οπότε δεν θα χρειαστεί να το κάνετε στο class του component.
 
 ### Επεξεργαστείτε το class `HeroSearchComponent`
 
