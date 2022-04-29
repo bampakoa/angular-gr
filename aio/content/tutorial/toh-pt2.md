@@ -53,7 +53,7 @@
 <code-example path="toh-pt2/src/app/heroes/heroes.component.1.html" region="li">
 </code-example>
 
-Το [`*ngFor`](guide/built-in-directives#ngFor) είναι ένα  _επαναλαμβανόμενο_ directive του Angular.
+Το [`*ngFor`](guide/built-in-directives#ngFor) είναι ένα  _επαναλαμβανόμενο_ directive της Angular.
 Επαναλαμβάνει το στοιχείο στο οποίο αναφέρεται για κάθε στοιχείο στην λίστα.
 
 Η σύνταξη σε αυτό το παράδειγμα είναι η εξής:
@@ -120,10 +120,10 @@
 
 <code-example path="toh-pt2/src/app/heroes/heroes.component.1.html" region="selectedHero-click" header="heroes.component.html (template excerpt)"></code-example>
 
-Αυτό είναι ένα παράδειγμα της σύνταξης [event binding](guide/event-binding) του Angular.
+Αυτό είναι ένα παράδειγμα της σύνταξης [event binding](guide/event-binding) της Angular.
 
-Οι παρενθέσεις γύρω από το `click` δίνουν εντολή στο Angular να παρακολουθεί το event `click` του στοιχείου `<button>`.
-Όταν ο χρήστης κάνει κλικ στο `<button>`, το Angular εκτελεί την μέθοδο `onSelect(hero)`.
+Οι παρενθέσεις γύρω από το `click` δίνουν εντολή στην Angular να παρακολουθεί το event `click` του στοιχείου `<button>`.
+Όταν ο χρήστης κάνει κλικ στο `<button>`, η Angular εκτελεί την μέθοδο `onSelect(hero)`.
 
 <div class="callout is-helpful">
 
@@ -132,7 +132,7 @@
   Σημειώστε ότι προσθέσαμε το binding στο event click ενός νέου στοιχείου `<button>`. Αν και θα μπορούσαμε να προσθέσουμε το binding του event απευθείας στο στοιχείο `<li>`, είναι καλύτερο για λόγους προσβασιμότητας να χρησιμοποιούμε
   το εγγενές στοιχείο `<button>` για τον χειρισμό των κλικ.
 
-  Για περισσότερες λεπτομέρειες σχετικά με την προσβασιμότητα, ανατρέξτε στην ενότητα [Προσβασιμότητα στο Angular](guide/accessibility).
+  Για περισσότερες λεπτομέρειες σχετικά με την προσβασιμότητα, ανατρέξτε στην ενότητα [Προσβασιμότητα στην Angular](guide/accessibility).
 
 </div>
 
@@ -179,7 +179,7 @@ template. Προσθέστε τα ακόλουθα στο `heroes.component.html
 Το component θα πρέπει να εμφανίζει τα επιλεγμένα στοιχεία ήρωα μόνο εάν υπάρχει το `selectedHero`.
 
 Προσθέστε ένα `<div>` γύρω από το HTML των λεπτομερειών του ήρωα.
-Προσθέστε το directive `*ngIf` του Angular στο `<div>` και ορίστε το στο `selectedHero`.
+Προσθέστε το directive `*ngIf` της Angular στο `<div>` και ορίστε το στο `selectedHero`.
 
 
 <div class="alert is-important">
@@ -213,14 +213,14 @@ template. Προσθέστε τα ακόλουθα στο `heroes.component.html
   <img src='generated/images/guide/toh/heroes-list-selected.png' alt="Επιλεγμένος ήρωας με σκούρο φόντο και ανοιχτό κείμενο που τον διαφοροποιεί από μη επιλεγμένα στοιχεία λίστας">
 </div>
 
-Το [class binding](guide/attribute-binding#class-binding) του Angular μπορεί να προσθέσει και να αφαιρέσει ένα CSS class υπό συνθήκες.
+Το [class binding](guide/attribute-binding#class-binding) της Angular μπορεί να προσθέσει και να αφαιρέσει ένα CSS class υπό συνθήκες.
 Προσθέστε το `[class.some-css-class]="some-condition"` στο στοιχείο που θέλετε να αποκτήσει στυλ.
 
 Προσθέστε το ακόλουθο binding `[class.selected]` στο `<li>` που βρίσκεται στο template του `HeroesComponent`:
 
 <code-example path="toh-pt2/src/app/heroes/heroes.component.1.html" region="class-selected" header="heroes.component.html (toggle the 'selected' CSS class)"></code-example>
 
-Όταν η τρέχουσα γραμμή ήρωα είναι η ίδια με το `selectedHero`, το Angular προσθέτει το CSS class `selected`. Όταν οι δύο ήρωες είναι διαφορετικοί, το Angular αφαιρεί το class.
+Όταν η τρέχουσα γραμμή ήρωα είναι η ίδια με το `selectedHero`, η Angular προσθέτει το CSS class `selected`. Όταν οι δύο ήρωες είναι διαφορετικοί, η Angular αφαιρεί το class.
 
 Το τελικό `<li>` μοιάζει με αυτό:
 
@@ -256,4 +256,4 @@ template. Προσθέστε τα ακόλουθα στο `heroes.component.html
 * Χρησιμοποιήσατε το `*ngIf` για να συμπεριλάβετε ή να εξαιρέσετε υπό συνθήκες ένα κομμάτι HTML.
 * Μπορείτε να αλλάξετε ένα class με στυλ CSS χρησιμοποιώντας ένα binding `class`.
 
-@reviewed 2022-03-22
+@reviewed 2022-04-21

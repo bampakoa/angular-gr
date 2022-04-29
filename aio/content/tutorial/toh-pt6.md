@@ -1,7 +1,7 @@
 # Λήψη δεδομένων από διακομιστή
 
 Σε αυτό το σεμινάριο, θα προσθέσετε τις ακόλουθες λειτουργίες διατήρησης δεδομένων με τη βοήθεια του
-`HttpClient` του Angular.
+`HttpClient` της Angular.
 
 * Το `HeroService` λαμβάνει δεδομένα ηρώων με αιτήματα HTTP.
 * Οι χρήστες μπορούν να προσθέσουν, να επεξεργαστούν και να διαγράψουν ήρωες και να αποθηκεύσουν αυτές τις αλλαγές μέσω HTTP.
@@ -15,7 +15,7 @@
 
 ## Ενεργοποίηση υπηρεσιών HTTP
 
-Το `HttpClient` είναι ο μηχανισμός του Angular για την επικοινωνία με έναν απομακρυσμένο διακομιστή μέσω HTTP.
+Το `HttpClient` είναι ο μηχανισμός της Angular για την επικοινωνία με έναν απομακρυσμένο διακομιστή μέσω HTTP.
 
 Κάντε το `HttpClient` διαθέσιμο παντού στην εφαρμογή σε δύο βήματα. Πρώτα, προσθέστε το στο κεντρικό `AppModule` κάνοντάς το import:
 
@@ -41,7 +41,7 @@ module [In-memory Web API](https://github.com/angular/angular/tree/master/packag
 
 <div class="alert is-important">
 
-**Σημαντικό:** το module In-memory Web API δεν έχει καμία σχέση με το HTTP στο Angular.
+**Σημαντικό:** το module In-memory Web API δεν έχει καμία σχέση με το HTTP στην Angular.
 
 Εάν διαβάζετε αυτόν τον οδηγό για να μάθετε για το `HttpClient`, μπορείτε να [παρακάμψετε](#import-heroes) αυτό το βήμα.
 Εάν γράφετε κώδικα μαζί με αυτό το σεμινάριο, μείνετε εδώ και προσθέστε το In-memory Web API τώρα.
@@ -431,7 +431,7 @@ class `HeroesComponent`:
 <code-example path="toh-pt6/src/app/hero-search/hero-search.component.html" header="src/app/hero-search/hero-search.component.html" region="async"></code-example>
 
 Εφόσον το `*ngFor` δεν μπορεί να κάνει τίποτα με ένα `Observable`, χρησιμοποιήστε τον χαρακτήρα
-pipe (`|`) ακολουθούμενο από το `async`. Αυτό προσδιορίζει το `AsyncPipe` του Angular και κάνει subscribe σε ένα `Observable` οπότε δεν θα χρειαστεί να το κάνετε στο class του component.
+pipe (`|`) ακολουθούμενο από το `async`. Αυτό προσδιορίζει το `AsyncPipe` της Angular και κάνει subscribe σε ένα `Observable` οπότε δεν θα χρειαστεί να το κάνετε στο class του component.
 
 ### Επεξεργαστείτε το class `HeroSearchComponent`
 
@@ -618,4 +618,4 @@ pipe (`|`) ακολουθούμενο από το `async`. Αυτό προσδι
 Είστε έτοιμοι να μάθετε περισσότερα σχετικά με την ανάπτυξη Angular στην ενότητα βασικών στοιχείων,
 ξεκινώντας με τον οδηγό [Αρχιτεκτονική](guide/architecture "Architecture").
 
-@reviewed 2022-03-09
+@reviewed 2022-04-21

@@ -19,7 +19,7 @@
 
 Σε αυτό το σεμινάριο, θα δημιουργήσετε ένα `HeroService` που μπορούν να χρησιμοποιήσουν όλα τα classes της εφαρμογής για να αποκτήσουν ήρωες.
 Αντί να δημιουργήσετε αυτό το service με την [λέξη-κλειδί `new`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/new),
-θα βασιστείτε στο [*dependency injection*](guide/dependency-injection) του Angular 
+θα βασιστείτε στο [*dependency injection*](guide/dependency-injection) της Angular
 για να το εισάγετε στο constructor του `HeroesComponent`.
 
 Τα services είναι ένας πολύ καλός τρόπος για να μοιράζεστε πληροφορίες μεταξύ classes που  _δεν γνωρίζονται μεταξύ τους_.
@@ -46,7 +46,7 @@
 
 ### `@Injectable()` services
 
-Παρατηρήστε ότι το νέο service κάνει import το σύμβολο `Injectable` του Angular και χαρακτηρίζει
+Παρατηρήστε ότι το νέο service κάνει import το σύμβολο `Injectable` της Angular και χαρακτηρίζει
 το class με το decorator `@Injectable()`. Αυτό επισημαίνει το class ως ένα που συμμετέχει στο _σύστημα dependency injection_. Το class `HeroService` πρόκειται να παρέχει ένα injectable service, και μπορεί επίσης να έχει τις δικές του εξαρτήσεις που γίνονται εισαγωγή στο class.
 Δεν έχει ακόμη εξαρτήσεις, αλλά [θα έχει σύντομα](#inject-message-service).
 
@@ -75,7 +75,7 @@
 ## Παρέχετε το `HeroService`
 
 Πρέπει να διαθέσετε το `HeroService` στο σύστημα dependency injection
-προτού το Angular μπορέσει να το _εισάγει_ στο `HeroesComponent` καταχωρώντας ένα _provider_. Ένα provider είναι κάτι που μπορεί να δημιουργήσει ή να παραδώσει ένα service. Σε αυτήν την περίπτωση, δημιουργεί το class `HeroService` για να παρέχει το service.
+προτού η Angular μπορέσει να το _εισάγει_ στο `HeroesComponent` καταχωρώντας ένα _provider_. Ένα provider είναι κάτι που μπορεί να δημιουργήσει ή να παραδώσει ένα service. Σε αυτήν την περίπτωση, δημιουργεί το class `HeroService` για να παρέχει το service.
 
 Για να βεβαιωθείτε ότι το `HeroService` μπορεί να παρέχει αυτό to service, καταχωρήστε το
 με το _injector_, που είναι το αντικείμενο που είναι υπεύθυνο για την επιλογή
@@ -89,8 +89,8 @@
 })
 ```
 
-Όταν παρέχετε το service στο επίπεδο root, το Angular δημιουργεί μια ενιαία, κοινόχρηστη οντότητα του `HeroService` και το εισάγει σε οποιοδήποτε class το ζητήσει.
-Η καταχώρηση του provider στα μεταδεδομένα του `@Injectable` επιτρέπει επίσης στο Angular να βελτιστοποιήσει μια εφαρμογή καταργώντας το service εάν τελικά αποδειχθεί ότι δεν χρησιμοποιείται.
+Όταν παρέχετε το service στο επίπεδο root, η Angular δημιουργεί μια ενιαία, κοινόχρηστη οντότητα του `HeroService` και το εισάγει σε οποιοδήποτε class το ζητήσει.
+Η καταχώρηση του provider στα μεταδεδομένα του `@Injectable` επιτρέπει επίσης στην Angular να βελτιστοποιήσει μια εφαρμογή καταργώντας το service εάν τελικά αποδειχθεί ότι δεν χρησιμοποιείται.
 
 <div class="alert is-helpful">
 
@@ -134,7 +134,7 @@
 
 Η παράμετρος ορίζει ταυτόχρονα μια private ιδιότητα `heroService` και την προσδιορίζει ως ένα μέρος εισαγωγής του `HeroService`.
 
-Όταν το Angular δημιουργεί ένα `HeroesComponent`, το σύστημα [Dependency Injection](guide/dependency-injection)
+Όταν η Angular δημιουργεί ένα `HeroesComponent`, το σύστημα [Dependency Injection](guide/dependency-injection)
 ορίζει την παράμετρο `heroService` στην οντότητα singleton του `HeroService`.
 
 ### Προσθήκη `getHeroes()`
@@ -155,7 +155,7 @@
 Σίγουρα δεν θα έπρεπε να καλεί μια συνάρτηση που κάνει αιτήματα HTTP όπως θα έκανε μια _πραγματική_ υπηρεσία δεδομένων.
 
 Αντίθετα, καλέστε το `getHeroes()` μέσα στο [*lifecycle hook ngOnInit*](guide/lifecycle-hooks) και
-αφήστε το Angular να καλέσει το `ngOnInit()` την κατάλληλη στιγμή _αφου_ δημιουργήσει μια οντότητα ενός `HeroesComponent`.
+αφήστε την Angular να καλέσει το `ngOnInit()` την κατάλληλη στιγμή _αφου_ δημιουργήσει μια οντότητα ενός `HeroesComponent`.
 
 <code-example path="toh-pt4/src/app/heroes/heroes.component.ts" header="src/app/heroes/heroes.component.ts" region="ng-on-init">
 </code-example>
@@ -187,14 +187,14 @@ To `HeroesComponent` καταναλώνει το αποτέλεσμα του `ge
 Το `HeroService.getHeroes()` πρέπει να έχει μια _ασύγχρονη μορφή_ κάποιου είδους.
 
 Σε αυτό το σεμινάριο, το `HeroService.getHeroes()` θα επιστρέψει ένα `Observable`
-γιατί τελικά θα χρησιμοποιήσει τη μέθοδο `HttpClient.get` του Angular για να φέρει τους ήρωες
+γιατί τελικά θα χρησιμοποιήσει τη μέθοδο `HttpClient.get` της Angular για να φέρει τους ήρωες
 και η [`HttpClient.get()` επιστρέφει ένα `Observable`](guide/http).
 
 ### Observable `HeroService`
 
 Το `Observable` είναι ένα από τα βασικά classes στην [βιβλιοθήκη RxJS](https://rxjs.dev/).
 
-Σε ένα [μετέπειτα σεμινάριο για το HTTP](tutorial/toh-pt6), θα μάθετε ότι οι μέθοδοι `HttpClient` του Angular επιστρέφουν `Observable` του RxJS. Σε αυτό το σεμινάριο, θα προσομοιώσετε τη λήψη δεδομένων από τον διακομιστή με τη συνάρτηση `of()` του RxJS.
+Σε ένα [μετέπειτα σεμινάριο για το HTTP](tutorial/toh-pt6), θα μάθετε ότι οι μέθοδοι `HttpClient` της Angular επιστρέφουν `Observable` του RxJS. Σε αυτό το σεμινάριο, θα προσομοιώσετε τη λήψη δεδομένων από τον διακομιστή με τη συνάρτηση `of()` του RxJS.
 
 Ανοίξτε το αρχείο `HeroService` και κάντε import τα σύμβολα `Observable` και `of` από το RxJS.
 
@@ -305,7 +305,7 @@ To `HeroesComponent` καταναλώνει το αποτέλεσμα του `ge
 </code-example>
 
 Τροποποιήστε το constructor με μια παράμετρο που δηλώνει μια private ιδιότητα `messageService`.
-Το Angular θα εισάγει το singleton `MessageService` σε αυτήν την ιδιότητα
+Η Angular θα εισάγει το singleton `MessageService` σε αυτήν την ιδιότητα
 όταν δημιουργεί το `HeroService`.
 
 <code-example
@@ -337,7 +337,7 @@ To `HeroesComponent` καταναλώνει το αποτέλεσμα του `ge
 </code-example>
 
 Τροποποιήστε το constructor με μια παράμετρο που δηλώνει μια ιδιότητα **public** `messageService`.
-Το Angular θα εισάγει το singleton `MessageService` σε αυτήν την ιδιότητα
+Η Angular θα εισάγει το singleton `MessageService` σε αυτήν την ιδιότητα
 όταν δημιουργεί το `MessagesComponent`.
 
 <code-example path="toh-pt4/src/app/messages/messages.component.ts" header="src/app/messages/messages.component.ts" region="ctor">
@@ -347,7 +347,7 @@ To `HeroesComponent` καταναλώνει το αποτέλεσμα του `ge
 
 <div class="alert is-important">
 
-Το Angular χρησιμοποιεί μόνο τις _public_ ιδιότητες του component στο template.
+Η Angular χρησιμοποιεί μόνο τις _public_ ιδιότητες του component στο template.
 
 </div>
 
@@ -368,7 +368,7 @@ To `HeroesComponent` καταναλώνει το αποτέλεσμα του `ge
 * Ένα `*ngFor` παρουσιάζει τη λίστα των μηνυμάτων σε επαναλαμβανόμενα στοιχεία `<div>`.
 
 
-* Ένα [event binding](guide/event-binding) του Angular συνδέει το event click του κουμπιού
+* Ένα [event binding](guide/event-binding) της Angular συνδέει το event click του κουμπιού
 στο `MessageService.clear()`.
 
 Τα μηνύματα θα φαίνονται καλύτερα όταν προσθέσετε τα στυλ CSS στο `messages.component.css`
@@ -434,7 +434,7 @@ path="toh-pt4/src/app/heroes/heroes.component.ts">
 
 * Τροποποιήσατε την πρόσβαση δεδομένων στο class `HeroService`.
 * Καταχωρίσατε το `HeroService` ως _provider_ του service του στο επίπεδο root ώστε να μπορεί να εισαχθεί οπουδήποτε στην εφαρμογή.
-* Χρησιμοποιήσατε το [Dependency Injection του Angular](guide/dependency-injection) για να το εισάγετε σε ένα component.
+* Χρησιμοποιήσατε το [Dependency Injection της Angular](guide/dependency-injection) για να το εισάγετε σε ένα component.
 * Δώσατε στη μέθοδο `HeroService` _get data_ μια ασύγχρονη μορφή.
 * Ανακαλύψατε το `Observable` και τη βιβλιοθήκη RxJS.
 * Χρησιμοποιήσατε το `of()` του RxJS για να επιστρέψετε ένα observable από εικονικούς ήρωες (`Observable<Hero[]>`).
@@ -443,4 +443,4 @@ path="toh-pt4/src/app/heroes/heroes.component.ts">
 * Το `HeroService` που εισάγεται σε ένα component δημιουργείται με ένα άλλο service που εισάγεται,
  το `MessageService`.
 
-@reviewed 2022-03-09
+@reviewed 2022-04-21

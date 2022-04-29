@@ -10,7 +10,7 @@
 
 </div>
 
-## Δημιουργήστε το component των ηρώων 
+## Δημιουργήστε το component των ηρώων
 
 Χρησιμοποιώντας το Angular CLI, δημιουργήστε ένα νέο component με το όνομα `heroes`.
 
@@ -25,7 +25,7 @@
 
 <code-example path="toh-pt1/src/app/heroes/heroes.component.ts" region="v1" header="app/heroes/heroes.component.ts (initial version)"></code-example>
 
-Κάντε πάντα import το σύμβολο `Component` από την κεντρική βιβλιοθήκη του Angular
+Κάντε πάντα import το σύμβολο `Component` από την κεντρική βιβλιοθήκη της Angular
 και προσθέστε το `@Component` στο class του component.
 
 Το `@Component` είναι μια συνάρτηση decorator που καθορίζει τα μεταδεδομένα Angular για το component.
@@ -42,7 +42,7 @@
 `'app-heroes'`, αντιστοιχεί με το όνομα του στοιχείου HTML που προσδιορίζει αυτό το component μέσα στο template ενός άλλου component.
 
 Το `ngOnInit()` είναι ένα [lifecycle hook](guide/lifecycle-hooks#oninit).
-Το Angular καλεί το `ngOnInit()` λίγο μετά τη δημιουργία ενός component.
+Η Angular καλεί το `ngOnInit()` λίγο μετά τη δημιουργία ενός component.
 Είναι ένα καλό μέρος για να βάλετε τη λογική αρχικοποίησης.
 
 Πάντα να κάνετε `export` το class του component για να μπορείτε να το κάνετε `import` αλλού ... όπως στο `AppModule`.
@@ -116,7 +116,7 @@
 ενεργοποιεί το ενσωματωμένο `UppercasePipe`.
 
 Τα [pipes](guide/pipes) είναι ένας καλός τρόπος για να μορφοποιήσετε κείμενο, ποσά νομισμάτων, ημερομηνίες και άλλα δεδομένα εμφάνισης.
-Το Angular περιέχει διάφορα ενσωματωμένα pipes και μπορείτε να δημιουργήσετε τα δικά σας.
+Η Angular περιέχει διάφορα ενσωματωμένα pipes και μπορείτε να δημιουργήσετε τα δικά σας.
 
 ## Επεξεργαστείτε τον ήρωα
 
@@ -135,7 +135,7 @@
 
 <code-example path="toh-pt1/src/app/heroes/heroes.component.1.html" region="name-input" header="src/app/heroes/heroes.component.html (HeroesComponent's template)"></code-example>
 
-**To [(ngModel)]** είναι η σύνταξη αμφίδρομου data binding του Angular.
+**To [(ngModel)]** είναι η σύνταξη αμφίδρομου data binding της Angular.
 
 Εδώ συνδέει την ιδιότητα `hero.name` στο πλαίσιο κειμένου HTML έτσι ώστε τα δεδομένα να μπορούν να ρέουν _και προς τις δύο κατευθύνσεις:_ από την ιδιότητα `hero.name` στο πλαίσιο κειμένου και από το πλαίσιο κειμένου πίσω στο `hero.name`.
 
@@ -151,13 +151,13 @@ Template parse errors:
 Can't bind to 'ngModel' since it isn't a known property of 'input'.
 </code-example>
 
-Αν και το `ngModel` είναι ένα έγκυρο directive του Angular, δεν είναι διαθέσιμο εξ αρχής.
+Αν και το `ngModel` είναι ένα έγκυρο directive της Angular, δεν είναι διαθέσιμο εξ αρχής.
 
 Ανήκει στο προαιρετικό `FormsModule` και πρέπει να _το δηλώσετε ρητά_ για να το χρησιμοποιήσετε.
 
 ## _AppModule_
 
-Το Angular πρέπει να γνωρίζει πώς ταιριάζουν τα κομμάτια της εφαρμογής σας
+Η Angular πρέπει να γνωρίζει πώς ταιριάζουν τα κομμάτια της εφαρμογής σας
 και ποια άλλα αρχεία και βιβλιοθήκες απαιτεί η εφαρμογή.
 Αυτές οι πληροφορίες ονομάζονται _μεταδεδομένα_.
 
@@ -240,8 +240,8 @@ region="ng-imports">
 * Εφαρμόσατε το `UppercasePipe` για να μορφοποιήσετε το όνομα.
 * Χρησιμοποιήσατε αμφίδρομο data binding με το directive `ngModel`.
 * Μάθατε για το `AppModule`.
-* Εισαγάγατε το `FormsModule` στο `AppModule` έτσι ώστε το Angular να αναγνωρίζει και να εφαρμόζει το directive `ngModel`.
+* Εισαγάγατε το `FormsModule` στο `AppModule` έτσι ώστε η Angular να αναγνωρίζει και να εφαρμόζει το directive `ngModel`.
 * Μάθατε τη σημασία της δήλωσης components στο `AppModule`
 και εκτιμήσατε ότι το CLI το δήλωσε για εσάς.
 
-@reviewed 2022-03-09
+@reviewed 2022-04-21
