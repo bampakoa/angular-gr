@@ -420,6 +420,9 @@
     "name": "PLATFORM_INITIALIZER"
   },
   {
+    "name": "PLATFORM_ON_DESTROY"
+  },
+  {
     "name": "PathLocationStrategy"
   },
   {
@@ -747,7 +750,7 @@
     "name": "_keyMap"
   },
   {
-    "name": "_platform"
+    "name": "_platformInjector"
   },
   {
     "name": "_randomChar"
@@ -988,12 +991,6 @@
   },
   {
     "name": "detachView"
-  },
-  {
-    "name": "detectChangesInRootView"
-  },
-  {
-    "name": "detectChangesInternal"
   },
   {
     "name": "diPublicInInjector"
@@ -1413,9 +1410,6 @@
     "name": "isImmediateMatch"
   },
   {
-    "name": "isInCheckNoChangesMode"
-  },
-  {
     "name": "isInlineTemplate"
   },
   {
@@ -1756,9 +1750,6 @@
   },
   {
     "name": "setInputsFromAttrs"
-  },
-  {
-    "name": "setIsInCheckNoChangesMode"
   },
   {
     "name": "setRouterState"

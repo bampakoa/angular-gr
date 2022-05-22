@@ -38,7 +38,7 @@
         {
           "type": 301,
           "source": "/guide/bazel",
-          "destination": "https://github.com/angular/angular/blob/master/packages/bazel/docs/BAZEL_SCHEMATICS.md"
+          "destination": "https://github.com/angular/angular/blob/main/packages/bazel/docs/BAZEL_SCHEMATICS.md"
         },
         {
           "type": 301,
@@ -88,7 +88,7 @@
         {
           "type": 301,
           "source": "/guide/change-log",
-          "destination": "https://github.com/angular/angular/blob/master/CHANGELOG.md"
+          "destination": "https://github.com/angular/angular/blob/main/CHANGELOG.md"
         },
         {
           "type": 301,

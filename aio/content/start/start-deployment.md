@@ -8,60 +8,79 @@
 
 Μια καλή πρακτική είναι να τρέξετε το project σας τοπικά πριν το κάνετε deploy. Για να τρέξετε το project σας τοπικά, χρειάζεστε τα ακόλουθα εγκατεστημένα στον υπολογιστή σας:
 
-* [Node.js](https://nodejs.org/en/).
-* Το [Angular CLI](https://cli.angular.io/).
+*   [Node.js](https://nodejs.org/en/).
+*   Το [Angular CLI](https://cli.angular.io/).
     Από το terminal, εγκαταστήστε το Angular CLI στον υπολογιστή σας με την εντολή:
 
-    ```sh
-    npm install -g @angular/cli
-    ```
+    <code-example format="shell" language="shell">
+
+    npm install -g &commat;angular/cli
+
+    </code-example>
 
     Με το Angular CLI, μπορείτε να χρησιμοποιήσετε την εντολή `ng` για να δημιουργήσετε νέους χώρους εργασίας, νέα projects, να τρέξετε την εφαρμογή σας κατά την ανάπτυξη, ή να δημιουργήσετε εκδόσεις για κοινή χρήση ή διανομή.
 
 ## Εκτέλεση της εφαρμογής σας τοπικά
 
-1. Κατεβάστε τον πηγαίο κώδικα από το project του StackBlitz πατώντας στο εικονίδιο `Download Project` στο αριστερό μενού, απέναντι από το `Project`, για να κάνετε λήψη του project σας ως συμπιεσμένο αρχείο.
+1.  Κατεβάστε τον πηγαίο κώδικα από το project του StackBlitz πατώντας στο εικονίδιο `Download Project` στο αριστερό μενού, απέναντι από το `Project`, για να κάνετε λήψη του project σας ως συμπιεσμένο αρχείο.
 
     <div class="lightbox">
-      <img src="generated/images/guide/start/download-project.png" alt="Κατεβάστε το project του stackblitz">
+
+    <div class="lightbox">
+
+    <img src="generated/images/guide/start/download-project.png" alt="Κατεβάστε το project του stackblitz">
+    
     </div>
 
-1. Αποσυμπιέστε το αρχείο και μεταβείτε στον φάκελο του project που δημιουργήθηκε. Για παράδειγμα:
+    </div>
 
-    ```sh
+1.  Αποσυμπιέστε το αρχείο και μεταβείτε στον φάκελο του project που δημιουργήθηκε. Για παράδειγμα:
+
+    <code-example format="shell" language="shell">
+
     cd angular-ynqttp
-    ```
 
-1. Για λήψη και εγκατάσταση πακέτων npm, χρησιμοποιήστε την ακόλουθη εντολή του npm CLI:
+    </code-example>
 
-    ```sh
+1.  Για λήψη και εγκατάσταση πακέτων npm, χρησιμοποιήστε την ακόλουθη εντολή του npm CLI:
+
+    <code-example format="shell" language="shell">
+
     npm install
-    ```
 
-1. Χρησιμοποιήστε την ακόλουθη εντολή CLI για να εκτελέσετε την εφαρμογή σας τοπικά:
+    </code-example>
 
-    ```sh
+1.  Χρησιμοποιήστε την ακόλουθη εντολή CLI για να εκτελέσετε την εφαρμογή σας τοπικά:
+
+    <code-example format="shell" language="shell">
+
     ng serve
-    ```
 
-1. Για να δείτε την εφαρμογή σας στο πρόγραμμα περιήγησης, μεταβείτε στο http://localhost:4200/.
+    </code-example>
+
+1.  Για να δείτε την εφαρμογή σας στο πρόγραμμα περιήγησης, μεταβείτε στο http://localhost:4200/.
     Εάν η προεπιλεγμένη θύρα 4200 δεν είναι διαθέσιμη, μπορείτε να καθορίσετε μια άλλη θύρα με την επιλογή port όπως στο ακόλουθο παράδειγμα:
 
-     ```sh
+    <code-example format="shell" language="shell">
+
     ng serve --port 4201
-    ```
+
+    </code-example>
 
     Κατά την προβολή της εφαρμογής σας, μπορείτε να επεξεργαστείτε τον κώδικά σας και να δείτε τις αλλαγές να ενημερώνονται αυτόματα στο πρόγραμμα περιήγησης.
     Για να διακόψετε την εντολή `ng serve`, πατήστε `Ctrl`+`c`.
 
-{@a building}
-## Δημιουργία και μεταφοράς της εφαρμογής σας
+<a id="building"></a>
+
+## Building και hosting της εφαρμογής σας
 
  1. Για να προετοιμάσετε την εφαρμογή σας σε περιβάλλον παραγωγής, χρησιμοποιήστε την εντολή `build`. Από προεπιλογή, αυτή η εντολή χρησιμοποιεί την παραμετροποίηση `production` του build.
 
-    ```sh
+    <code-example format="shell" language="shell">
+
     ng build
-    ```
+
+    </code-example>
 
     Αυτή η εντολή δημιουργεί έναν φάκελο `dist` στον κεντρικό φάκελο της εφαρμογής με όλα τα αρχεία που χρειάζεται μια υπηρεσία hosting για να τρέξει την εφαρμογή σας.
 
@@ -71,7 +90,7 @@
 
     </div>
 
-1. Αντιγράψτε τα περιεχόμενα του φακέλου `dist/my-project-name` στον διακομιστή σας.
+1.  Αντιγράψτε τα περιεχόμενα του φακέλου `dist/my-project-name` στον διακομιστή σας.
     Επειδή αυτά τα αρχεία είναι στατικά, μπορείτε να τα μεταφέρετε σε οποιονδήποτε διακομιστή που μπορεί να αναγνωρίσει αρχεία όπως `Node.js`, Java, .NET, ή οποιοδήποτε backend όπως το [Firebase](https://firebase.google.com/docs/hosting), το [Google Cloud](https://cloud.google.com/solutions/web-hosting), ή το [App Engine](https://cloud.google.com/appengine/docs/standard/python/getting-started/hosting-a-static-website).
     Για περισσότερες πληροφορίες, ανατρέξτε στο θέμα [Δημιουργία & εκτέλεση](guide/build "Δημιουργία & εκτέλεσ εφαρμογών Angular") και [Deployment](guide/deployment "Οδηγός deployment").
 
@@ -88,7 +107,6 @@
 
 ### Συμμετοχή στην κοινότητα
 
-
 [Πείτε στο Twitter ότι ολοκληρώσατε αυτό το σεμινάριο](https://twitter.com/intent/tweet?url=https://angular.io/start&text=I%20just%20finished%20the%20Angular%20Getting%20Started%20Tutorial "Η Angular στο Twitter"), πείτε μας τη γνώμη σας ή υποβάλλετε [Προτάσεις για μελλοντικές εκδόσεις](https://github.com/angular/angular/issues/new/choose "Φόρμα καταχώρησης νέου issue στο GitHub αποθετήριο της Angular").
 
 Μείνετε ενημερωμένοι ακολουθώντας το [ιστολόγιο της Angular](https://blog.angular.io/ "Το ιστολόγιο της Angular").
@@ -99,4 +117,4 @@
 
 Η κοινότητα Angular διαθέτει επίσης ένα εκτεταμένο [δίκτυο εργαλείων και βιβλιοθηκών τρίτων](resources "Λίστα πόρων της Angular").
 
-@reviewed 2022-04-21
+@reviewed 2022-05-21

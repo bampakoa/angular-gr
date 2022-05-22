@@ -138,9 +138,6 @@
     "name": "ConnectableSubscriber"
   },
   {
-    "name": "Console"
-  },
-  {
     "name": "DASH_CASE_REGEXP"
   },
   {
@@ -360,6 +357,9 @@
     "name": "PLATFORM_INITIALIZER"
   },
   {
+    "name": "PLATFORM_ON_DESTROY"
+  },
+  {
     "name": "PlatformRef"
   },
   {
@@ -534,7 +534,7 @@
     "name": "_keyMap"
   },
   {
-    "name": "_platform"
+    "name": "_platformInjector"
   },
   {
     "name": "_query"
@@ -715,12 +715,6 @@
   },
   {
     "name": "detachMovedView"
-  },
-  {
-    "name": "detectChangesInRootView"
-  },
-  {
-    "name": "detectChangesInternal"
   },
   {
     "name": "diPublicInInjector"
@@ -997,9 +991,6 @@
   },
   {
     "name": "isFunction"
-  },
-  {
-    "name": "isInCheckNoChangesMode"
   },
   {
     "name": "isInlineTemplate"
@@ -1285,9 +1276,6 @@
   },
   {
     "name": "setInputsFromAttrs"
-  },
-  {
-    "name": "setIsInCheckNoChangesMode"
   },
   {
     "name": "setSelectedIndex"

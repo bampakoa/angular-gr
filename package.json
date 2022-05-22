@@ -1,6 +1,6 @@
 {
   "name": "angular-srcs",
-  "version": "13.3.1",
+  "version": "13.3.9",
   "private": true,
   "description": "Angular - a web framework for modern web apps",
   "homepage": "https://github.com/angular/angular",
@@ -18,7 +18,7 @@
   },
   "scripts": {
     "/": "",
-    "// 1": "Many developer of our checks/scripts/tools have moved to our ng-dev tool",
+    "// 1": "Many of our checks/scripts/tools have moved to our ng-dev tool",
     "// 2": "Find the usage you are looking for with:",
     "// 3": "yarn ng-dev --help",
     "/ ": "",
@@ -114,7 +114,7 @@
     "dependency-graph": "^0.11.0",
     "diff": "^5.0.0",
     "domino": "~2.1.6",
-    "google-closure-compiler": "20220301.0.0",
+    "google-closure-compiler": "20220405.0.0",
     "graceful-fs": "4.2.9",
     "hammerjs": "~2.0.8",
     "http-server": "^14.0.0",

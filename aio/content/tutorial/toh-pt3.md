@@ -20,8 +20,10 @@
 
 Χρησιμοποιήστε το Angular CLI για να δημιουργήσετε ένα νέο component με το όνομα `hero-detail`.
 
-<code-example language="sh">
-  ng generate component hero-detail
+<code-example format="shell" language="shell">
+
+ng generate component hero-detail
+
 </code-example>
 
 Η εντολή δημιουργεί τα παρακάτω:
@@ -30,25 +32,24 @@
 
 Μέσα σε αυτόν τον φάκελο δημιουργούνται τέσσερα αρχεία:
 
-* Ένα αρχείο CSS για τα στυλ του component.
-* Ένα αρχείο HTML για το template του component.
-* Ένα αρχείο TypeScript με ένα class του component που ονομάζεται `HeroDetailComponent`.
-* Ένα αρχείο test για το class `HeroDetailComponent`.
+*   Ένα αρχείο CSS για τα στυλ του component.
+*   Ένα αρχείο HTML για το template του component.
+*   Ένα αρχείο TypeScript με ένα class του component που ονομάζεται `HeroDetailComponent`.
+*   Ένα αρχείο test για το class `HeroDetailComponent`.
 
 Η εντολή προσθέτει επίσης το `HeroDetailComponent` σαν ένα declaration στο decorator `@NgModule` του αρχείου `src/app/app.module.ts`.
-
 
 ### Δημιουργήστε το template
 
 Αφαιρέστε το HTML για τη λεπτομέρεια του ήρωα από το κάτω μέρος του template του `HeroesComponent` και επικολλήστε το πάνω από το ήδη υπάρχων template του `HeroDetailComponent`.
 
 Το επικολλημένο HTML αναφέρεται σε ένα `selectedHero`.
-Το νέο `HeroDetailComponent` μπορεί να εμφανίσει _οποιονδήποτε_ ήρωα, όχι απλώς έναν επιλεγμένο ήρωα.
+Το νέο `HeroDetailComponent` μπορεί να εμφανίσει *οποιονδήποτε* ήρωα, όχι απλώς έναν επιλεγμένο ήρωα.
 Αντικαταστήστε λοιπόν το "selectedHero" με το "hero" παντού στο template.
 
 Όταν τελειώσετε, το template του `HeroDetailComponent` θα πρέπει να μοιάζει με αυτό:
 
-<code-example path="toh-pt3/src/app/hero-detail/hero-detail.component.html" header="src/app/hero-detail/hero-detail.component.html"></code-example>
+<code-example header="src/app/hero-detail/hero-detail.component.html" path="toh-pt3/src/app/hero-detail/hero-detail.component.html"></code-example>
 
 ### Προσθέστε την ιδιότητα hero `@Input()`
 
@@ -58,20 +59,18 @@
 Ανοίξτε το αρχείο class του `HeroDetailComponent` και κάντε import το σύμβολο `Hero`.
 
 <code-example path="toh-pt3/src/app/hero-detail/hero-detail.component.ts"
-region="import-hero" header="src/app/hero-detail/hero-detail.component.ts (import Hero)">
-</code-example>
+region="import-hero" header="src/app/hero-detail/hero-detail.component.ts (import Hero)"></code-example>
 
 Η ιδιότητα `hero`
-[πρέπει να είναι μια ιδιότητα _Input_](guide/inputs-outputs "Ιδιότητες Input και Output"),
+[πρέπει να είναι μια ιδιότητα `Input`](guide/inputs-outputs "Ιδιότητες Input και Output"),
 που ορίζεται με το decorator `@Input()`,
-επειδή το _εξωτερικό_ `HeroesComponent` [θα δεθεί με αυτήν](#heroes-component-template) ως εξής.
+επειδή το *εξωτερικό* `HeroesComponent` [θα δεθεί με αυτήν](#heroes-component-template) ως εξής.
 
-<code-example path="toh-pt3/src/app/heroes/heroes.component.html" region="hero-detail-binding">
-</code-example>
+<code-example path="toh-pt3/src/app/heroes/heroes.component.html" region="hero-detail-binding"></code-example>
 
 Τροποποιήστε την γραμμή import του `@angular/core` ώστε να συμπεριλαμβάνει το σύμβολο `Input`.
 
-<code-example path="toh-pt3/src/app/hero-detail/hero-detail.component.ts" region="import-input" header="src/app/hero-detail/hero-detail.component.ts (import Input)"></code-example>
+<code-example header="src/app/hero-detail/hero-detail.component.ts (import Input)" path="toh-pt3/src/app/hero-detail/hero-detail.component.ts" region="import-input"></code-example>
 
 Προσθέστε μια ιδιότητα `hero`, χρησιμοποιώντας το decorator `@Input()`.
 
@@ -91,9 +90,9 @@ region="import-hero" header="src/app/hero-detail/hero-detail.component.ts (impor
 στέλνοντάς του έναν νέο ήρωα για εμφάνιση όποτε
 ο χρήστης επιλέγει έναν ήρωα από τη λίστα.
 
-Δεν θα αλλάξετε το _class_ του `HeroesComponent` αλλά θα αλλάξετε το _template_ του.
+Δεν θα αλλάξετε το *class* του `HeroesComponent` αλλά θα αλλάξετε το *template* του.
 
-{@a heroes-component-template}
+<a id="heroes-component-template"></a>
 
 ### Ενημερώστε το template του `HeroesComponent`
 
@@ -102,17 +101,15 @@ region="import-hero" header="src/app/hero-detail/hero-detail.component.ts (impor
 
 Συνδέστε το `HeroesComponent.selectedHero` στην ιδιότητα `hero` του στοιχείου ως εξής.
 
-<code-example path="toh-pt3/src/app/heroes/heroes.component.html" region="hero-detail-binding" header="heroes.component.html (HeroDetail binding)">
-
-</code-example>
+<code-example header="heroes.component.html (HeroDetail binding)" path="toh-pt3/src/app/heroes/heroes.component.html" region="hero-detail-binding"></code-example>
 
 Το `[hero]="selectedHero"` είναι ένα [property binding](guide/property-binding) της Angular.
 
-Είναι ένα _μονόδρομο_ data binding από
+Είναι ένα *μονόδρομο* data binding από
 την ιδιότητα `selectedHero` του `HeroesComponent` στην ιδιότητα `hero` του στοιχείου προορισμού, η οποία αντιστοιχίζεται στην ιδιότητα `hero` του `HeroDetailComponent`.
 
 Τώρα, όταν ο χρήστης κάνει κλικ σε έναν ήρωα στη λίστα, αλλάζει το `selectedHero`.
-Όταν το `selectedHero` αλλάζει, το _property binding_ ενημερώνει το `hero`
+Όταν το `selectedHero` αλλάζει, το *property binding* ενημερώνει το `hero`
 και το `HeroDetailComponent` εμφανίζει τον νέο ήρωα.
 
 Το αναθεωρημένο template του `HeroesComponent` θα πρέπει να μοιάζει με αυτό:
@@ -145,30 +142,24 @@ region="import-hero" header="src/app/hero-detail/hero-detail.component.ts (impor
 
 <code-tabs>
 
-  <code-pane header="src/app/hero-detail/hero-detail.component.ts" path="toh-pt3/src/app/hero-detail/hero-detail.component.ts">
-  </code-pane>
+  <code-pane header="src/app/hero-detail/hero-detail.component.ts" path="toh-pt3/src/app/hero-detail/hero-detail.component.ts"></code-pane>
 
-  <code-pane header="src/app/hero-detail/hero-detail.component.html" path="toh-pt3/src/app/hero-detail/hero-detail.component.html">
-  </code-pane>
+  <code-pane header="src/app/hero-detail/hero-detail.component.html" path="toh-pt3/src/app/hero-detail/hero-detail.component.html"></code-pane>
 
-  <code-pane header="src/app/heroes/heroes.component.html" path="toh-pt3/src/app/heroes/heroes.component.html">
-  </code-pane>
+  <code-pane header="src/app/heroes/heroes.component.html" path="toh-pt3/src/app/heroes/heroes.component.html"></code-pane>
 
-  <code-pane header="src/app/app.module.ts" path="toh-pt3/src/app/app.module.ts">
-  </code-pane>
+  <code-pane header="src/app/app.module.ts" path="toh-pt3/src/app/app.module.ts"></code-pane>
 
 </code-tabs>
 
 ## Περίληψη
 
-* Δημιουργήσατε ένα ξεχωριστό, επαναχρησιμοποιήσιμο `HeroDetailComponent`.
+*   Δημιουργήσατε ένα ξεχωριστό, επαναχρησιμοποιήσιμο `HeroDetailComponent`.
 
+*   Χρησιμοποιήσατε ένα [property binding](guide/property-binding) για να δώσετε στο `HeroesComponent` τον έλεγχο του child `HeroDetailComponent`.
 
-* Χρησιμοποιήσατε ένα [property binding](guide/property-binding) για να δώσετε στο `HeroesComponent` τον έλεγχο του child `HeroDetailComponent`.
-
-
-* Χρησιμοποιήσατε το [decorator `@Input`](guide/inputs-outputs)
+*   Χρησιμοποιήσατε το [decorator `@Input`](guide/inputs-outputs)
 για να καταστήσετε την ιδιότητα `hero` διαθέσιμη για binding
 από το εξωτερικό `HeroesComponent`.
 
-@reviewed 2022-04-21
+@reviewed 2022-05-21

@@ -360,7 +360,7 @@ export function refreshView<T>(
   enterView(lView);
   // Check no changes mode is a dev only mode used to verify that bindings have not changed
   // since they were assigned. We do not want to execute lifecycle hooks in that mode.
-  const isInCheckNoChangesPass = isInCheckNoChangesMode();
+  const isInCheckNoChangesPass = ngDevMode && isInCheckNoChangesMode();
   try {
     resetPreOrderHookFlags(lView);
 
@@ -481,10 +481,14 @@ export function refreshView<T>(
 export function renderComponentOrTemplate<T>(
     tView: TView, lView: LView, templateFn: ComponentTemplate<{}>|null, context: T) {
   const rendererFactory = lView[RENDERER_FACTORY];
-  const normalExecutionPath = !isInCheckNoChangesMode();
+
+  // Check no changes mode is a dev only mode used to verify that bindings have not changed
+  // since they were assigned. We do not want to invoke renderer factory functions in that mode
+  // to avoid any possible side-effects.
+  const checkNoChangesMode = !!ngDevMode && isInCheckNoChangesMode();
   const creationModeIsActive = isCreationMode(lView);
   try {
-    if (normalExecutionPath && !creationModeIsActive && rendererFactory.begin) {
+    if (!checkNoChangesMode && !creationModeIsActive && rendererFactory.begin) {
       rendererFactory.begin();
     }
     if (creationModeIsActive) {
@@ -492,7 +496,7 @@ export function renderComponentOrTemplate<T>(
     }
     refreshView(tView, lView, templateFn, context);
   } finally {
-    if (normalExecutionPath && !creationModeIsActive && rendererFactory.end) {
+    if (!checkNoChangesMode && !creationModeIsActive && rendererFactory.end) {
       rendererFactory.end();
     }
   }
@@ -507,7 +511,7 @@ function executeTemplate<T>(
     if (isUpdatePhase && lView.length > HEADER_OFFSET) {
       // When we're updating, inherently select 0 so we don't
       // have to generate that instruction for most update blocks.
-      selectIndexInternal(tView, lView, HEADER_OFFSET, isInCheckNoChangesMode());
+      selectIndexInternal(tView, lView, HEADER_OFFSET, !!ngDevMode && isInCheckNoChangesMode());
     }
 
     const preHookType =
@@ -1003,9 +1007,9 @@ export function elementPropertyInternal<T>(
 
     if (ngDevMode) {
       validateAgainstEventProperties(propName);
-      if (!validateProperty(tView, element, propName, tNode)) {
+      if (!validateProperty(element, tNode.value, propName, tView.schemas)) {
         // Return here since we only log warnings for unknown properties.
-        logUnknownPropertyError(propName, tNode);
+        logUnknownPropertyError(propName, tNode.value);
         return;
       }
       ngDevMode.rendererSetProperty++;
@@ -1023,8 +1027,8 @@ export function elementPropertyInternal<T>(
   } else if (tNode.type & TNodeType.AnyContainer) {
     // If the node is a container and the property didn't
     // match any of the inputs or schemas we should throw.
-    if (ngDevMode && !matchingSchemas(tView, tNode.value)) {
-      logUnknownPropertyError(propName, tNode);
+    if (ngDevMode && !matchingSchemas(tView.schemas, tNode.value)) {
+      logUnknownPropertyError(propName, tNode.value);
     }
   }
 }
@@ -1081,28 +1085,48 @@ export function setNgReflectProperties(
   }
 }
 
+/**
+ * Validates that the property of the element is known at runtime and returns
+ * false if it's not the case.
+ * This check is relevant for JIT-compiled components (for AOT-compiled
+ * ones this check happens at build time).
+ *
+ * The property is considered known if either:
+ * - it's a known property of the element
+ * - the element is allowed by one of the schemas
+ * - the property is used for animations
+ *
+ * @param element Element to validate
+ * @param tagName Name of the tag to check
+ * @param propName Name of the property to check
+ * @param schemas Array of schemas
+ */
 function validateProperty(
-    tView: TView, element: RElement|RComment, propName: string, tNode: TNode): boolean {
+    element: RElement|RComment, tagName: string|null, propName: string,
+    schemas: SchemaMetadata[]|null): boolean {
   // If `schemas` is set to `null`, that's an indication that this Component was compiled in AOT
   // mode where this check happens at compile time. In JIT mode, `schemas` is always present and
   // defined as an array (as an empty array in case `schemas` field is not defined) and we should
   // execute the check below.
-  if (tView.schemas === null) return true;
+  if (schemas === null) return true;
 
-  // The property is considered valid if the element matches the schema, it exists on the element
+  // The property is considered valid if the element matches the schema, it exists on the element,
   // or it is synthetic, and we are in a browser context (web worker nodes should be skipped).
-  if (matchingSchemas(tView, tNode.value) || propName in element || isAnimationProp(propName)) {
+  if (matchingSchemas(schemas, tagName) || propName in element || isAnimationProp(propName)) {
     return true;
   }
 
   // Note: `typeof Node` returns 'function' in most browsers, but on IE it is 'object' so we
-  // need to account for both here, while being careful for `typeof null` also returning 'object'.
+  // need to account for both here, while being careful with `typeof null` also returning 'object'.
   return typeof Node === 'undefined' || Node === null || !(element instanceof Node);
 }
 
-export function matchingSchemas(tView: TView, tagName: string|null): boolean {
-  const schemas = tView.schemas;
-
+/**
+ * Returns true if the tag name is allowed by specified schemas.
+ * @param schemas Array of schemas
+ * @param tagName Name of the tag
+ */
+export function matchingSchemas(schemas: SchemaMetadata[]|null, tagName: string|null): boolean {
   if (schemas !== null) {
     for (let i = 0; i < schemas.length; i++) {
       const schema = schemas[i];
@@ -1119,10 +1143,10 @@ export function matchingSchemas(tView: TView, tagName: string|null): boolean {
 /**
  * Logs an error that a property is not supported on an element.
  * @param propName Name of the invalid property.
- * @param tNode Node on which we encountered the property.
+ * @param tagName Name of the node on which we encountered the property.
  */
-function logUnknownPropertyError(propName: string, tNode: TNode): void {
-  let message = `Can't bind to '${propName}' since it isn't a known property of '${tNode.value}'.`;
+function logUnknownPropertyError(propName: string, tagName: string): void {
+  const message = `Can't bind to '${propName}' since it isn't a known property of '${tagName}'.`;
   console.error(formatRuntimeError(RuntimeErrorCode.UNKNOWN_BINDING, message));
 }
 
@@ -1377,7 +1401,11 @@ function findDirectiveDefMatches(
                 `"${tNode.value}" tags cannot be used as component hosts. ` +
                     `Please use a different tag to activate the ${stringify(def.type)} component.`);
 
-            if (tNode.flags & TNodeFlags.isComponentHost) throwMultipleComponentError(tNode);
+            if (tNode.flags & TNodeFlags.isComponentHost) {
+              // If another component has been matched previously, it's the first element in the
+              // `matches` array, see how we store components/directives in `matches` below.
+              throwMultipleComponentError(tNode, matches[0].type, def.type);
+            }
           }
           markAsComponentHost(tView, tNode);
           // The component is always stored first with directives after.

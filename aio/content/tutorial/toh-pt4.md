@@ -7,10 +7,9 @@
 
 <div class="alert is-helpful">
 
-  Για το δείγμα εφαρμογής που περιγράφει αυτή η σελίδα, ανατρέξτε στο <live-example></live-example>.
+Για το δείγμα εφαρμογής που περιγράφει αυτή η σελίδα, ανατρέξτε στο <live-example></live-example>.
 
 </div>
-
 
 ## Γιατί services
 
@@ -18,76 +17,76 @@
 Θα πρέπει να επικεντρωθούν στην παρουσίαση δεδομένων και να αναθέσουν την πρόσβαση δεδομένων σε ένα service.
 
 Σε αυτό το σεμινάριο, θα δημιουργήσετε ένα `HeroService` που μπορούν να χρησιμοποιήσουν όλα τα classes της εφαρμογής για να αποκτήσουν ήρωες.
-Αντί να δημιουργήσετε αυτό το service με την [λέξη-κλειδί `new`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/new),
+Αντί να δημιουργήσετε αυτό το service με την [λέξη-κλειδί `new`](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Operators/new),
 θα βασιστείτε στο [*dependency injection*](guide/dependency-injection) της Angular
 για να το εισάγετε στο constructor του `HeroesComponent`.
 
-Τα services είναι ένας πολύ καλός τρόπος για να μοιράζεστε πληροφορίες μεταξύ classes που  _δεν γνωρίζονται μεταξύ τους_.
+Τα services είναι ένας πολύ καλός τρόπος για να μοιράζεστε πληροφορίες μεταξύ classes που *δεν γνωρίζονται μεταξύ τους*.
 Θα δημιουργήσετε ένα `MessageService` και θα το εισάγετε σε δύο σημεία.
 
-1. Εισάγετέ το στο HeroService, το οποίο χρησιμοποιεί το service για να στείλει ένα μήνυμα.
-2. Εισάγετέ το στο MessagesComponent, που εμφανίζει αυτό το μήνυμα και επίσης εμφανίζει το ID
-όταν ο χρήστης κάνει κλικ σε έναν ήρωα.
-
+*.   Εισάγετέ το στο `HeroService`, το οποίο χρησιμοποιεί το service για να στείλει ένα μήνυμα
+*.   Εισάγετέ το στο `MessagesComponent`, που εμφανίζει αυτό το μήνυμα και επίσης εμφανίζει το ID
+όταν ο χρήστης κάνει κλικ σε έναν ήρωα
 
 ## Δημιουργήστε το `HeroService`
 
 Χρησιμοποιώντας το Angular CLI, δημιουργήστε ένα service με το όνομα `hero`.
 
-<code-example language="sh">
-  ng generate service hero
+<code-example format="shell" language="shell">
+
+ng generate service hero
+
 </code-example>
 
 Η εντολή δημιουργεί ένα αρχικό class `HeroService` στο `src/app/hero.service.ts` ως εξής:
 
-<code-example path="toh-pt4/src/app/hero.service.1.ts" region="new"
- header="src/app/hero.service.ts (new service)"></code-example>
-
+<code-example header="src/app/hero.service.ts (νέο service)" path="toh-pt4/src/app/hero.service.1.ts" region="new"></code-example>
 
 ### `@Injectable()` services
 
 Παρατηρήστε ότι το νέο service κάνει import το σύμβολο `Injectable` της Angular και χαρακτηρίζει
-το class με το decorator `@Injectable()`. Αυτό επισημαίνει το class ως ένα που συμμετέχει στο _σύστημα dependency injection_. Το class `HeroService` πρόκειται να παρέχει ένα injectable service, και μπορεί επίσης να έχει τις δικές του εξαρτήσεις που γίνονται εισαγωγή στο class.
+το class με το decorator `@Injectable()`. Αυτό επισημαίνει το class ως ένα που συμμετέχει στο *σύστημα dependency injection*. Το class `HeroService` πρόκειται να παρέχει ένα injectable service, και μπορεί επίσης να έχει τις δικές του εξαρτήσεις που γίνονται εισαγωγή στο class.
 Δεν έχει ακόμη εξαρτήσεις, αλλά [θα έχει σύντομα](#inject-message-service).
 
 Το decorator `@Injectable()` δέχεται ένα αντικείμενο μεταδεδομένων για το service, με τον ίδιο τρόπο που έκανε το decorator `@Component()` για τα classes των components.
 
 ### Λήψη δεδομένων ήρωα
 
-Το `HeroService` θα μπορούσε να λάβει δεδομένα ηρώων από οπουδήποτε&mdash;ένα web service, το local storage, ή μια εικονική πηγή δεδομένων.
+Το `HeroService` θα μπορούσε να λάβει δεδομένα ηρώων από οπουδήποτε &mdash;ένα web service, το local storage, ή μια εικονική πηγή δεδομένων.
 
 Η κατάργηση της πρόσβασης δεδομένων από τα components σημαίνει ότι μπορείτε να αλλάξετε γνώμη σχετικά με την υλοποίηση ανά πάσα στιγμή, χωρίς να αγγίξετε κανένα component.
 Δεν ξέρουν πώς λειτουργεί το service.
 
-Η υλοποίηση σε _αυτό_ το σεμινάριο θα συνεχίσει να παρέχει _εικονικούς ήρωες_.
+Η υλοποίηση σε *αυτό* το σεμινάριο θα συνεχίσει να παρέχει *εικονικούς ήρωες*.
 
 Κάντε import το `Hero` και το `HEROES`.
 
-<code-example path="toh-pt4/src/app/hero.service.ts" header="src/app/hero.service.ts" region="import-heroes">
-</code-example>
+<code-example header="src/app/hero.service.ts" path="toh-pt4/src/app/hero.service.ts" region="import-heroes"></code-example>
 
-Προσθέστε μια μέθοδο `getHeroes` για να επιστρέψετε τους _εικονικούς ήρωες_.
+Προσθέστε μια μέθοδο `getHeroes` για να επιστρέψετε τους *εικονικούς ήρωες*.
 
-<code-example path="toh-pt4/src/app/hero.service.1.ts" header="src/app/hero.service.ts" region="getHeroes">
-</code-example>
+<code-example header="src/app/hero.service.ts" path="toh-pt4/src/app/hero.service.1.ts" region="getHeroes"></code-example>
 
-{@a provide}
+<a id="provide"></a>
+
 ## Παρέχετε το `HeroService`
 
 Πρέπει να διαθέσετε το `HeroService` στο σύστημα dependency injection
-προτού η Angular μπορέσει να το _εισάγει_ στο `HeroesComponent` καταχωρώντας ένα _provider_. Ένα provider είναι κάτι που μπορεί να δημιουργήσει ή να παραδώσει ένα service. Σε αυτήν την περίπτωση, δημιουργεί το class `HeroService` για να παρέχει το service.
+προτού η Angular μπορέσει να το *εισάγει* στο `HeroesComponent` καταχωρώντας έναν *provider*. Ένας provider είναι κάτι που μπορεί να δημιουργήσει ή να παραδώσει ένα service. Σε αυτήν την περίπτωση, δημιουργεί το class `HeroService` για να παρέχει το service.
 
 Για να βεβαιωθείτε ότι το `HeroService` μπορεί να παρέχει αυτό to service, καταχωρήστε το
-με το _injector_, που είναι το αντικείμενο που είναι υπεύθυνο για την επιλογή
+με τον *injector*, που είναι το αντικείμενο που είναι υπεύθυνο για την επιλογή
 και την εισαγωγή του provider όπου το απαιτεί η εφαρμογή.
 
-Από προεπιλογή, η εντολή `ng generate service` του Angular CLI καταχωρεί ένα provider με το _root injector_ για το service σας συμπεριλαμβάνοντας μεταδεδομένα του provider, τα οποία είναι `providedIn: 'root'` στο decorator `@Injectable()`.
+Από προεπιλογή, η εντολή `ng generate service` του Angular CLI καταχωρεί ένα provider με τον *root injector* για το service σας συμπεριλαμβάνοντας μεταδεδομένα του provider, τα οποία είναι `providedIn: 'root'` στο decorator `@Injectable()`.
 
-```
-@Injectable({
+<code-example format="typescript" language="typescript">
+
+&commat;Injectable({
   providedIn: 'root',
 })
-```
+
+</code-example>
 
 Όταν παρέχετε το service στο επίπεδο root, η Angular δημιουργεί μια ενιαία, κοινόχρηστη οντότητα του `HeroService` και το εισάγει σε οποιοδήποτε class το ζητήσει.
 Η καταχώρηση του provider στα μεταδεδομένα του `@Injectable` επιτρέπει επίσης στην Angular να βελτιστοποιήσει μια εφαρμογή καταργώντας το service εάν τελικά αποδειχθεί ότι δεν χρησιμοποιείται.
@@ -107,7 +106,6 @@
 
 </div>
 
-
 ## Ενημερώστε το `HeroesComponent`
 
 Ανοίξτε το αρχείο class του `HeroesComponent`.
@@ -115,22 +113,19 @@
 Διαγράψτε το import του `HEROES`, γιατί δεν θα το χρειάζεστε πια.
 Αντ' αυτού, κάντε import το `HeroService`.
 
-<code-example path="toh-pt4/src/app/heroes/heroes.component.ts" header="src/app/heroes/heroes.component.ts (import HeroService)" region="hero-service-import">
-</code-example>
+<code-example header="src/app/heroes/heroes.component.ts (import HeroService)" path="toh-pt4/src/app/heroes/heroes.component.ts" region="hero-service-import"></code-example>
 
 Αντικαταστήστε τον ορισμό της ιδιότητας `heroes` με μια δήλωση.
 
-<code-example path="toh-pt4/src/app/heroes/heroes.component.ts" header="src/app/heroes/heroes.component.ts" region="heroes">
-</code-example>
+<code-example header="src/app/heroes/heroes.component.ts" path="toh-pt4/src/app/heroes/heroes.component.ts" region="heroes"></code-example>
 
-{@a inject}
+<a id="inject"></a>
 
 ### Εισαγάγετε το `HeroService`
 
 Προσθέστε μια private παράμετρο `heroService` τύπου `HeroService` στο constructor.
 
-<code-example path="toh-pt4/src/app/heroes/heroes.component.1.ts" header="src/app/heroes/heroes.component.ts" region="ctor">
-</code-example>
+<code-example header="src/app/heroes/heroes.component.ts" path="toh-pt4/src/app/heroes/heroes.component.1.ts" region="ctor"></code-example>
 
 Η παράμετρος ορίζει ταυτόχρονα μια private ιδιότητα `heroService` και την προσδιορίζει ως ένα μέρος εισαγωγής του `HeroService`.
 
@@ -141,24 +136,22 @@
 
 Δημιουργήστε μια μέθοδο για να ανακτήσετε τους ήρωες από το service.
 
-<code-example path="toh-pt4/src/app/heroes/heroes.component.1.ts" header="src/app/heroes/heroes.component.ts" region="getHeroes">
-</code-example>
+<code-example header="src/app/heroes/heroes.component.ts" path="toh-pt4/src/app/heroes/heroes.component.1.ts" region="getHeroes"></code-example>
 
-{@a oninit}
+<a id="oninit"></a>
 
 ### Καλέστε το στο `ngOnInit()`
 
 Αν και θα μπορούσατε να καλέσετε το `getHeroes()` στο constructor, αυτή δεν είναι η καλύτερη πρακτική.
 
 Κρατήστε το constructor για την ελάχιστη αρχικοποίηση όπως η σύνδεση παραμέτρων του constructor σε ιδιότητες.
-Το constructor δεν πρέπει να _κάνει τίποτα_.
-Σίγουρα δεν θα έπρεπε να καλεί μια συνάρτηση που κάνει αιτήματα HTTP όπως θα έκανε μια _πραγματική_ υπηρεσία δεδομένων.
+Το constructor δεν πρέπει να *κάνει τίποτα*.
+Σίγουρα δεν θα έπρεπε να καλεί μια συνάρτηση που κάνει αιτήματα HTTP όπως θα έκανε μια *πραγματική* υπηρεσία δεδομένων.
 
 Αντίθετα, καλέστε το `getHeroes()` μέσα στο [*lifecycle hook ngOnInit*](guide/lifecycle-hooks) και
-αφήστε την Angular να καλέσει το `ngOnInit()` την κατάλληλη στιγμή _αφου_ δημιουργήσει μια οντότητα ενός `HeroesComponent`.
+αφήστε την Angular να καλέσει το `ngOnInit()` την κατάλληλη στιγμή *αφού* δημιουργήσει μια οντότητα ενός `HeroesComponent`.
 
-<code-example path="toh-pt4/src/app/heroes/heroes.component.ts" header="src/app/heroes/heroes.component.ts" region="ng-on-init">
-</code-example>
+<code-example header="src/app/heroes/heroes.component.ts" path="toh-pt4/src/app/heroes/heroes.component.ts" region="ng-on-init"></code-example>
 
 ### Δείτε το να τρέχει
 
@@ -167,24 +160,23 @@
 
 ## Δεδομένα Observable
 
-Η μέθοδος `HeroService.getHeroes()` έχει μια _σύγχρονη μορφή_,
+Η μέθοδος `HeroService.getHeroes()` έχει μια *σύγχρονη μορφή*,
 πράγμα που σημαίνει ότι το `HeroService` μπορεί να ανακτήσει ήρωες σύγχρονα.
 To `HeroesComponent` καταναλώνει το αποτέλεσμα του `getHeroes()`
 σαν να μπορούσαν να οι ήρωες να ανακτηθούν σύγχρονα.
 
-<code-example path="toh-pt4/src/app/heroes/heroes.component.1.ts" header="src/app/heroes/heroes.component.ts" region="get-heroes">
-</code-example>
+<code-example header="src/app/heroes/heroes.component.ts" path="toh-pt4/src/app/heroes/heroes.component.1.ts" region="get-heroes"></code-example>
 
 Αυτό δεν θα λειτουργήσει σε μια πραγματική εφαρμογή.
-Λειτουργεί τώρα επειδή το service επιστρέφει αυτήν τη στιγμή _εικονικούς ήρωες_.
+Λειτουργεί τώρα επειδή το service επιστρέφει αυτήν τη στιγμή *εικονικούς ήρωες*.
 Αλλά σύντομα η εφαρμογή θα φέρει ήρωες από έναν απομακρυσμένο διακομιστή,
-η οποία είναι μια εγγενώς _ασύγχρονη_ λειτουργία.
+η οποία είναι μια εγγενώς *ασύγχρονη* λειτουργία.
 
 Το `HeroService` πρέπει να περιμένει να απαντήσει ο διακομιστής,
 το `getHeroes()` δεν μπορεί να επιστρέψει αμέσως με δεδομένα ήρωα,
 και το πρόγραμμα περιήγησης δεν θα μπλοκάρει όσο περιμένει το service.
 
-Το `HeroService.getHeroes()` πρέπει να έχει μια _ασύγχρονη μορφή_ κάποιου είδους.
+Το `HeroService.getHeroes()` πρέπει να έχει μια *ασύγχρονη μορφή* κάποιου είδους.
 
 Σε αυτό το σεμινάριο, το `HeroService.getHeroes()` θα επιστρέψει ένα `Observable`
 γιατί τελικά θα χρησιμοποιήσει τη μέθοδο `HttpClient.get` της Angular για να φέρει τους ήρωες
@@ -192,24 +184,23 @@ To `HeroesComponent` καταναλώνει το αποτέλεσμα του `ge
 
 ### Observable `HeroService`
 
-Το `Observable` είναι ένα από τα βασικά classes στην [βιβλιοθήκη RxJS](https://rxjs.dev/).
+Το `Observable` είναι ένα από τα βασικά classes στην [βιβλιοθήκη RxJS](https://rxjs.dev).
 
 Σε ένα [μετέπειτα σεμινάριο για το HTTP](tutorial/toh-pt6), θα μάθετε ότι οι μέθοδοι `HttpClient` της Angular επιστρέφουν `Observable` του RxJS. Σε αυτό το σεμινάριο, θα προσομοιώσετε τη λήψη δεδομένων από τον διακομιστή με τη συνάρτηση `of()` του RxJS.
 
 Ανοίξτε το αρχείο `HeroService` και κάντε import τα σύμβολα `Observable` και `of` από το RxJS.
 
-<code-example path="toh-pt4/src/app/hero.service.ts" header="src/app/hero.service.ts (Observable imports)" region="import-observable">
-</code-example>
+<code-example header="src/app/hero.service.ts (Observable imports)" path="toh-pt4/src/app/hero.service.ts" region="import-observable"></code-example>
 
 Αντικαταστήστε τη μέθοδο `getHeroes()` με την εξής:
 
-<code-example path="toh-pt4/src/app/hero.service.ts" header="src/app/hero.service.ts" region="getHeroes-1"></code-example>
+<code-example header="src/app/hero.service.ts" path="toh-pt4/src/app/hero.service.ts" region="getHeroes-1"></code-example>
 
-Το `of(HEROES)` επιστρέφει ένα `Observable<Hero[]>` που επιστρέφει  _μια ενιαία τιμή_, την λίστα με τους εικονικούς ήρωες.
+Το `of(HEROES)` επιστρέφει ένα `Observable<Hero[]>` που επιστρέφει *μια ενιαία τιμή*, την λίστα με τους εικονικούς ήρωες.
 
 <div class="alert is-helpful">
 
-Στο [σεμινάριο HTTP](tutorial/toh-pt6), θα καλέσετε το `HttpClient.get<Hero[]>()`το οποίο επίσης επιστρέφει ένα `Observable<Hero[]>` που επιστρέφει  _μια ενιαία τιμή_, μια λίστα από ήρωες από το περιεχόμενο της απάντησης του HTTP.
+Στο [σεμινάριο HTTP](tutorial/toh-pt6), θα καλέσετε το `HttpClient.get<Hero[]>()`το οποίο επίσης επιστρέφει ένα `Observable<Hero[]>` που επιστρέφει  *μια ενιαία τιμή*, μια λίστα από ήρωες από το περιεχόμενο της απάντησης του HTTP.
 
 </div>
 
@@ -221,61 +212,53 @@ To `HeroesComponent` καταναλώνει το αποτέλεσμα του `ge
 Θα πρέπει να προσαρμοστείτε σε αυτή τη αλλαγή στο `HeroesComponent`.
 
 Βρείτε τη μέθοδο `getHeroes` και αντικαταστήστε την με τον παρακάτω κώδικα
-(εμφανίζεται δίπλα-δίπλα με την προηγούμενη έκδοση για σύγκριση)
+\(εμφανίζεται δίπλα-δίπλα με την προηγούμενη έκδοση για σύγκριση\)
 
 <code-tabs>
-
-  <code-pane header="heroes.component.ts (Observable)"
-    path="toh-pt4/src/app/heroes/heroes.component.ts" region="getHeroes">
-  </code-pane>
-
-  <code-pane header="heroes.component.ts (Original)"
-    path="toh-pt4/src/app/heroes/heroes.component.1.ts" region="getHeroes">
-  </code-pane>
-
+    <code-pane header="heroes.component.ts (Observable)" path="toh-pt4/src/app/heroes/heroes.component.ts" region="getHeroes"></code-pane>
+    <code-pane header="heroes.component.ts (Original)" path="toh-pt4/src/app/heroes/heroes.component.1.ts" region="getHeroes"></code-pane>
 </code-tabs>
 
 Το `Observable.subscribe()`είναι η σημαντική διαφορά.
 
 Η προηγούμενη έκδοση αναθέτει μια λίστα ηρώων στην ιδιότητα `heroes` του component.
-Η ανάθεση πραγματοποιείται _σύγχρονα_, σαν να μπορούσε ο διακομιστής να επιστρέψει ήρωες αμέσως
+Η ανάθεση πραγματοποιείται *σύγχρονα*, σαν να μπορούσε ο διακομιστής να επιστρέψει ήρωες αμέσως
 ή το πρόγραμμα περιήγησης να μπορούσε να παγώσει το UI όσο περίμενε την απάντηση του διακομιστή.
 
-Αυτό _δεν θα λειτουργήσει_ όταν το `HeroService` κάνει πραγματικά αιτήματα από έναν απομακρυσμένο διακομιστή.
+Αυτό *δεν θα λειτουργήσει* όταν το `HeroService` κάνει πραγματικά αιτήματα από έναν απομακρυσμένο διακομιστή.
 
-Η νέα έκδοση περιμένει το `Observable` να επιστρέψει την λίστα των ηρώων&mdash;που
+Η νέα έκδοση περιμένει το `Observable` να επιστρέψει την λίστα των ηρώων &mdash;που
 μπορεί να συμβεί τώρα ή σε μερικά λεπτά από τώρα.
 Η μέθοδος `subscribe()` περνά την λίστα που επιστρέφεται στο callback,
 το οποίο θέτει την ιδιότητα `heroes` του component.
 
-Αυτή η ασύγχρονη προσέγγιση _θα λειτουργήσει_ όταν
+Αυτή η ασύγχρονη προσέγγιση *θα λειτουργήσει* όταν
 το `HeroService` ζητά ήρωες από τον διακομιστή.
 
 ## Εμφάνιση μηνυμάτων
 
 Αυτή η ενότητα σας καθοδηγεί στα ακόλουθα:
 
-* προσθήκη ενός `MessagesComponent` που εμφανίζει μηνύματα εφαρμογής στο κάτω μέρος της οθόνης
-* δημιουργία ενός injectable `MessageService` σε όλη την εφαρμογή για την αποστολή μηνυμάτων προς εμφάνιση
-* εισαγωγή του `MessageService` στο `HeroService`
-* εμφάνιση μηνύματος όταν το `HeroService` ανακτά τους ήρωες με επιτυχία
+*   Προσθήκη ενός `MessagesComponent` που εμφανίζει μηνύματα εφαρμογής στο κάτω μέρος της οθόνης
+*   Δημιουργία ενός injectable `MessageService` σε όλη την εφαρμογή για την αποστολή μηνυμάτων προς εμφάνιση
+*   Εισαγωγή του `MessageService` στο `HeroService`
+*   Εμφάνιση μηνύματος όταν το `HeroService` ανακτά τους ήρωες με επιτυχία
 
 ### Δημιουργήστε το `MessagesComponent`
 
 Χρησιμοποιήστε το CLI για να δημιουργήσετε το `MessagesComponent`.
 
-<code-example language="sh">
-  ng generate component messages
+<code-example format="shell" language="shell">
+
+ng generate component messages
+
 </code-example>
 
 Το CLI δημιουργεί τα αρχεία του component στο φάκελο `src/app/messages` και δηλώνει το `MessagesComponent` στο `AppModule`.
 
 Τροποποιήστε το template του `AppComponent` για να εμφανίσετε το `MessagesComponent` που δημιουργήθηκε.
 
-<code-example
-  header = "src/app/app.component.html"
-  path="toh-pt4/src/app/app.component.html">
-</code-example>
+<code-example header="src/app/app.component.html" path="toh-pt4/src/app/app.component.html"></code-example>
 
 Θα πρέπει να δείτε την προεπιλεγμένη παράγραφο από το `MessagesComponent` στο κάτω μέρος της σελίδας.
 
@@ -283,34 +266,31 @@ To `HeroesComponent` καταναλώνει το αποτέλεσμα του `ge
 
 Χρησιμοποιήστε το CLI για να δημιουργήσετε το `MessageService` στο `src/app`.
 
-<code-example language="sh">
-  ng generate service message
+<code-example format="shell" language="shell">
+
+ng generate service message
+
 </code-example>
 
 Ανοίξτε το `MessageService` και αντικαταστήστε το περιεχόμενό του με το ακόλουθο.
 
-<code-example header = "src/app/message.service.ts" path="toh-pt4/src/app/message.service.ts">
-</code-example>
+<code-example header="src/app/message.service.ts" path="toh-pt4/src/app/message.service.ts"></code-example>
 
 Το service διαθέτει προς τα έξω την κρυφή μνήμη των `messages` και δύο μεθόδους: μια για να κάνει `add()` ένα μήνυμα στην κρυφή μνήμη και μια άλλη για να κάνει `clear()` την κρυφή μνήμη.
 
-{@a inject-message-service}
+<a id="inject-message-service"></a>
+
 ### Εισαγάγετε το στο `HeroService`
 
 Στο `HeroService`, κάντε import το `MessageService`.
 
-<code-example
-  header = "src/app/hero.service.ts (import MessageService)"
-  path="toh-pt4/src/app/hero.service.ts" region="import-message-service">
-</code-example>
+<code-example header="src/app/hero.service.ts (import MessageService)" path="toh-pt4/src/app/hero.service.ts" region="import-message-service"></code-example>
 
 Τροποποιήστε το constructor με μια παράμετρο που δηλώνει μια private ιδιότητα `messageService`.
 Η Angular θα εισάγει το singleton `MessageService` σε αυτήν την ιδιότητα
 όταν δημιουργεί το `HeroService`.
 
-<code-example
-  path="toh-pt4/src/app/hero.service.ts" header="src/app/hero.service.ts" region="ctor">
-</code-example>
+<code-example header="src/app/hero.service.ts" path="toh-pt4/src/app/hero.service.ts" region="ctor"></code-example>
 
 <div class="alert is-helpful">
 
@@ -323,8 +303,7 @@ To `HeroesComponent` καταναλώνει το αποτέλεσμα του `ge
 
 Τροποποιήστε τη μέθοδο `getHeroes()` για να στείλετε ένα μήνυμα κατά την ανάκτηση των ηρώων.
 
-<code-example path="toh-pt4/src/app/hero.service.ts" header="src/app/hero.service.ts" region="getHeroes">
-</code-example>
+<code-example header="src/app/hero.service.ts" path="toh-pt4/src/app/hero.service.ts" region="getHeroes"></code-example>
 
 ### Εμφανίστε το μήνυμα από το `HeroService`
 
@@ -333,21 +312,19 @@ To `HeroesComponent` καταναλώνει το αποτέλεσμα του `ge
 
 Ανοίξτε το `MessagesComponent` και κάντε import το `MessageService`.
 
-<code-example header="src/app/messages/messages.component.ts (import MessageService)" path="toh-pt4/src/app/messages/messages.component.ts" region="import-message-service">
-</code-example>
+<code-example header="src/app/messages/messages.component.ts (import MessageService)" path="toh-pt4/src/app/messages/messages.component.ts" region="import-message-service"></code-example>
 
 Τροποποιήστε το constructor με μια παράμετρο που δηλώνει μια ιδιότητα **public** `messageService`.
 Η Angular θα εισάγει το singleton `MessageService` σε αυτήν την ιδιότητα
 όταν δημιουργεί το `MessagesComponent`.
 
-<code-example path="toh-pt4/src/app/messages/messages.component.ts" header="src/app/messages/messages.component.ts" region="ctor">
-</code-example>
+<code-example header="src/app/messages/messages.component.ts" path="toh-pt4/src/app/messages/messages.component.ts" region="ctor"></code-example>
 
 Η ιδιότητα `messageService` **πρέπει να είναι public** επειδή πρόκειται να τη χρησιμοποιήσετε στο template.
 
 <div class="alert is-important">
 
-Η Angular χρησιμοποιεί μόνο τις _public_ ιδιότητες του component στο template.
+Η Angular χρησιμοποιεί μόνο τις *public* ιδιότητες του component στο template.
 
 </div>
 
@@ -355,21 +332,15 @@ To `HeroesComponent` καταναλώνει το αποτέλεσμα του `ge
 
 Αντικαταστήστε το template του `MessagesComponent` που δημιουργήθηκε από το CLI με το ακόλουθο.
 
-<code-example
-  header = "src/app/messages/messages.component.html"
-  path="toh-pt4/src/app/messages/messages.component.html">
-</code-example>
+<code-example header="src/app/messages/messages.component.html" path="toh-pt4/src/app/messages/messages.component.html"></code-example>
 
 Αυτό το template συνδέεται απευθείας με το `messageService` του component.
 
-* Το `*ngIf` εμφανίζει μόνο την περιοχή μηνυμάτων εάν υπάρχουν μηνύματα προς εμφάνιση.
-
-
-* Ένα `*ngFor` παρουσιάζει τη λίστα των μηνυμάτων σε επαναλαμβανόμενα στοιχεία `<div>`.
-
-
-* Ένα [event binding](guide/event-binding) της Angular συνδέει το event click του κουμπιού
-στο `MessageService.clear()`.
+|                                              | Λεπτομερειες |
+|:---                                          |:---     |
+| `*ngIf`                                      | Εμφανίζει μόνο την περιοχή μηνυμάτων εάν υπάρχουν μηνύματα προς εμφάνιση. |
+| `*ngFor`                                     | Παρουσιάζει τη λίστα των μηνυμάτων σε επαναλαμβανόμενα στοιχεία `<div>`    |
+| Angular [event binding](guide/event-binding) | Συνδέει το event click του κουμπιού στο `MessageService.clear()`.    |
 
 Τα μηνύματα θα φαίνονται καλύτερα όταν προσθέσετε τα στυλ CSS στο `messages.component.css`
 όπως αναφέρεται σε μία από τις καρτέλες της ["τελικής προεπισκόπησης του κώδικα"](#final-code-review) παρακάτω.
@@ -380,67 +351,41 @@ To `HeroesComponent` καταναλώνει το αποτέλεσμα του `ge
 έναν ήρωα, εμφανίζοντας ένα ιστορικό των επιλογών του χρήστη. Αυτό θα είναι χρήσιμο όταν φτάσετε στην
 επόμενη ενότητα για την [Δρομολόγηση](tutorial/toh-pt5).
 
-<code-example header="src/app/heroes/heroes.component.ts"
-path="toh-pt4/src/app/heroes/heroes.component.ts">
-</code-example>
+<code-example header="src/app/heroes/heroes.component.ts" path="toh-pt4/src/app/heroes/heroes.component.ts"></code-example>
 
 Ανανεώστε το πρόγραμμα περιήγησης για να δείτε τη λίστα των ηρώων και κάντε κύλιση προς τα κάτω για να δείτε τα
 μηνύματα από το HeroService. Κάθε φορά που κάνετε κλικ σε έναν ήρωα, εμφανίζεται ένα νέο μήνυμα που καταγράφει
 την επιλογή. Χρησιμοποιήστε το κουμπί **Clear messages** για να διαγράψετε το ιστορικό μηνυμάτων.
 
-{@a final-code-review}
+<a id="final-code-review"></a>
 
 ## Τελική επισκόπηση του κώδικα
 
 Αυτά είναι τα αρχεία κώδικα που συζητήθηκαν σε αυτήν τη σελίδα.
 
 <code-tabs>
-
-  <code-pane header="src/app/hero.service.ts"
-  path="toh-pt4/src/app/hero.service.ts">
-  </code-pane>
-
-  <code-pane header="src/app/message.service.ts"
-  path="toh-pt4/src/app/message.service.ts">
-  </code-pane>
-
-  <code-pane header="src/app/heroes/heroes.component.ts"
-  path="toh-pt4/src/app/heroes/heroes.component.ts">
-  </code-pane>
-
-  <code-pane header="src/app/messages/messages.component.ts"
-  path="toh-pt4/src/app/messages/messages.component.ts">
-  </code-pane>
-
-  <code-pane header="src/app/messages/messages.component.html"
-  path="toh-pt4/src/app/messages/messages.component.html">
-  </code-pane>
-
-  <code-pane header="src/app/messages/messages.component.css"
-  path="toh-pt4/src/app/messages/messages.component.css">
-  </code-pane>
-
-  <code-pane header="src/app/app.module.ts"
-  path="toh-pt4/src/app/app.module.ts">
-  </code-pane>
-
-  <code-pane header="src/app/app.component.html"
-  path="toh-pt4/src/app/app.component.html">
-  </code-pane>
-
+    <code-pane header="src/app/hero.service.ts" path="toh-pt4/src/app/hero.service.ts"></code-pane>
+    <code-pane header="src/app/message.service.ts" path="toh-pt4/src/app/message.service.ts"></code-pane>
+    <code-pane header="src/app/heroes/heroes.component.ts" path="toh-pt4/src/app/heroes/heroes.component.ts"></code-pane>
+    <code-pane header="src/app/messages/messages.component.ts" path="toh-pt4/src/app/messages/messages.component.ts"></code-pane>
+    <code-pane header="src/app/messages/messages.component.html" path="toh-pt4/src/app/messages/messages.component.html"></code-pane>
+    <code-pane header="src/app/messages/messages.component.css" path="toh-pt4/src/app/messages/messages.component.css"></code-pane>
+    <code-pane header="src/app/app.module.ts" path="toh-pt4/src/app/app.module.ts"></code-pane>
+    <code-pane header="src/app/app.component.html" path="toh-pt4/src/app/app.component.html"></code-pane>
 </code-tabs>
+
 
 ## Περίληψη
 
-* Τροποποιήσατε την πρόσβαση δεδομένων στο class `HeroService`.
-* Καταχωρίσατε το `HeroService` ως _provider_ του service του στο επίπεδο root ώστε να μπορεί να εισαχθεί οπουδήποτε στην εφαρμογή.
-* Χρησιμοποιήσατε το [Dependency Injection της Angular](guide/dependency-injection) για να το εισάγετε σε ένα component.
-* Δώσατε στη μέθοδο `HeroService` _get data_ μια ασύγχρονη μορφή.
-* Ανακαλύψατε το `Observable` και τη βιβλιοθήκη RxJS.
-* Χρησιμοποιήσατε το `of()` του RxJS για να επιστρέψετε ένα observable από εικονικούς ήρωες (`Observable<Hero[]>`).
-* Το lifecycle hook `ngOnInit` του component καλεί τη μέθοδο `HeroService`, και όχι το constructor.
-* Δημιουργήσατε ένα `MessageService` για loosely-coupled επικοινωνία μεταξύ των classes.
-* Το `HeroService` που εισάγεται σε ένα component δημιουργείται με ένα άλλο service που εισάγεται,
- το `MessageService`.
+*   Τροποποιήσατε την πρόσβαση δεδομένων στο class `HeroService`
+*   Καταχωρίσατε το `HeroService` ως *provider* του service του στο επίπεδο root ώστε να μπορεί να εισαχθεί οπουδήποτε στην εφαρμογή
+*   Χρησιμοποιήσατε το [Dependency Injection της Angular](guide/dependency-injection) για να το εισάγετε σε ένα component
+*   Δώσατε στη μέθοδο `HeroService` `get data` μια ασύγχρονη μορφή
+*   Ανακαλύψατε το `Observable` και τη βιβλιοθήκη `RxJS`
+*   Χρησιμοποιήσατε το `of()` του RxJS για να επιστρέψετε ένα observable από εικονικούς ήρωες \(`Observable<Hero[]>`\)
+*   Το lifecycle hook `ngOnInit` του component καλεί τη μέθοδο `HeroService`, και όχι το constructor
+*   Δημιουργήσατε ένα `MessageService` για loosely-coupled επικοινωνία μεταξύ των classes
+*   Το `HeroService` που εισάγεται σε ένα component δημιουργείται με ένα άλλο service που εισάγεται,
+ το `MessageService`
 
-@reviewed 2022-04-21
+@reviewed 2022-05-21

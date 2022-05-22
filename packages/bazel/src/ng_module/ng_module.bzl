@@ -54,7 +54,7 @@ def _basename_of(ctx, file):
 # Return true if run with bazel (the open-sourced version of blaze), false if
 # run with blaze.
 def _is_bazel():
-    return not hasattr(native, "genmpm")
+    return not hasattr(native, "genmpm")  # this_is_bazel
 
 def _flat_module_out_file(ctx):
     """Provide a default for the flat_module_out_file attribute.
@@ -689,7 +689,7 @@ NG_MODULE_RULE_ATTRS = dict(dict(COMMON_ATTRIBUTES, **NG_MODULE_ATTRIBUTES), **{
     # Later packaging rules will point to these generated files as the entry point
     # into the package.
     # See the flatModuleOutFile documentation in
-    # https://github.com/angular/angular/blob/master/packages/compiler-cli/src/transformers/api.ts
+    # https://github.com/angular/angular/blob/main/packages/compiler-cli/src/transformers/api.ts
     "flat_module_out_file": attr.string(),
     "bundle_dts": attr.bool(default = False),
     "api_extractor": attr.label(
