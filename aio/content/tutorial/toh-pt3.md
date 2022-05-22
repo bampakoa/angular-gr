@@ -58,8 +58,7 @@ ng generate component hero-detail
 
 Ανοίξτε το αρχείο class του `HeroDetailComponent` και κάντε import το σύμβολο `Hero`.
 
-<code-example path="toh-pt3/src/app/hero-detail/hero-detail.component.ts"
-region="import-hero" header="src/app/hero-detail/hero-detail.component.ts (import Hero)"></code-example>
+<code-example header="src/app/hero-detail/hero-detail.component.ts (import Hero)" path="toh-pt3/src/app/hero-detail/hero-detail.component.ts" region="import-hero"></code-example>
 
 Η ιδιότητα `hero`
 [πρέπει να είναι μια ιδιότητα `Input`](guide/inputs-outputs "Ιδιότητες Input και Output"),
@@ -74,7 +73,7 @@ region="import-hero" header="src/app/hero-detail/hero-detail.component.ts (impor
 
 Προσθέστε μια ιδιότητα `hero`, χρησιμοποιώντας το decorator `@Input()`.
 
-<code-example path="toh-pt3/src/app/hero-detail/hero-detail.component.ts" header="src/app/hero-detail/hero-detail.component.ts" region="input-hero"></code-example>
+<code-example header="src/app/hero-detail/hero-detail.component.ts" path="toh-pt3/src/app/hero-detail/hero-detail.component.ts" region="input-hero"></code-example>
 
 Αυτή είναι η μόνη αλλαγή που πρέπει να κάνετε στo class του `HeroDetailComponent`.
 Δεν υπάρχουν άλλες ιδιότητες. Δεν υπάρχει λογική παρουσίασης.
@@ -114,8 +113,7 @@ region="import-hero" header="src/app/hero-detail/hero-detail.component.ts (impor
 
 Το αναθεωρημένο template του `HeroesComponent` θα πρέπει να μοιάζει με αυτό:
 
-<code-example path="toh-pt3/src/app/heroes/heroes.component.html"
-  header="heroes.component.html"></code-example>
+<code-example header="heroes.component.html" path="toh-pt3/src/app/heroes/heroes.component.html"></code-example>
 
 Το πρόγραμμα περιήγησης ανανεώνεται και η εφαρμογή αρχίζει να λειτουργεί ξανά όπως πριν.
 

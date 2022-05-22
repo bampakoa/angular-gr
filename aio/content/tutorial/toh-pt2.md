@@ -153,7 +153,7 @@
 και να αποκαλύψετε λεπτομέρειες για αυτόν τον ήρωα, χρειάζεστε μια ενότητα για να εμφανίσετε τις λεπτομέρειες στο
 template. Προσθέστε τα ακόλουθα στο `heroes.component.html` κάτω από την ενότητα της λίστας:
 
-<code-example header="heroes.component.html (selected hero details)" path="toh-pt2/src/app/heroes/heroes.component.html" region="selectedHero-details"></code-example>
+<code-example header="heroes.component.html (στοιχεία επιλεγμένου ήρωα)" path="toh-pt2/src/app/heroes/heroes.component.html" region="selectedHero-details"></code-example>
 
 Οι λεπτομέρειες του ήρωα θα πρέπει να εμφανίζονται μόνο όταν είναι επιλεγμένος ένας ήρωας. Όταν το component δημιουργείται αρχικά, δεν υπάρχει επιλεγμένος ήρωας, οπότε προσθέτουμε το directive `*ngIf` στο `<div>` που περιέχει τις λεπτομέρειες του ήρωα για να δώσουμε εντολή στην Angular να εμφανίσει το τμήμα μόνο όταν το `selectedHero` είναι πραγματικά ορισμένο (αφού έχει επιλεχθεί κάνοντας κλικ σε έναν ήρωα).
 
@@ -179,13 +179,13 @@ template. Προσθέστε τα ακόλουθα στο `heroes.component.html
 
 Προσθέστε το ακόλουθο binding `[class.selected]` στο `<li>` που βρίσκεται στο template του `HeroesComponent`:
 
-<code-example header="heroes.component.html (toggle the 'selected' CSS class)" path="toh-pt2/src/app/heroes/heroes.component.1.html" region="class-selected"></code-example>
+<code-example header="heroes.component.html (αλλαγή του CSS class 'selected')" path="toh-pt2/src/app/heroes/heroes.component.1.html" region="class-selected"></code-example>
 
 Όταν η τρέχουσα γραμμή ήρωα είναι η ίδια με το `selectedHero`, η Angular προσθέτει το CSS class `selected`. Όταν οι δύο ήρωες είναι διαφορετικοί, η Angular αφαιρεί το class.
 
 Το τελικό `<li>` μοιάζει με αυτό:
 
-<code-example header="heroes.component.html (list item hero)" path="toh-pt2/src/app/heroes/heroes.component.html" region="li"></code-example>
+<code-example header="heroes.component.html (αντικείμενο λίστας hero)" path="toh-pt2/src/app/heroes/heroes.component.html" region="li"></code-example>
 
 <a id="final-code-review"></a>
 

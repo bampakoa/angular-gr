@@ -83,7 +83,7 @@ ng generate component heroes
 Δημιουργήστε ένα interface `Hero` σε ξεχωριστό αρχείο στον φάκελο `src/app`.
 Δώστε του ιδιότητες `id` και `name`.
 
-<code-example path="toh-pt1/src/app/hero.ts"  header="src/app/hero.ts"></code-example>
+<code-example header="src/app/hero.ts" path="toh-pt1/src/app/hero.ts"></code-example>
 
 Επιστρέψτε στο class `HeroesComponent` και κάντε import το interface `Hero`.
 
@@ -101,7 +101,7 @@ ng generate component heroes
 Ενημερώστε το binding στο template για να προβάλλετε το όνομα του ήρωα
 και εμφανίστε τόσο το `id` και το `name` σε μια διάταξη λεπτομερειών όπως αυτή:
 
-<code-example header="heroes.component.html (το template του HeroesComponent)" path="toh-pt1/src/app/heroes/heroes.component.1.html" region="show-hero-2"></code-example>
+<code-example header="heroes.component.html (HeroesComponent template)" path="toh-pt1/src/app/heroes/heroes.component.1.html" region="show-hero-2"></code-example>
 
 Το πρόγραμμα περιήγησης ανανεώνει και εμφανίζει τις πληροφορίες του ήρωα.
 
@@ -135,7 +135,7 @@ ng generate component heroes
 
 Τροποποιήστε την περιοχή λεπτομερειών στο template `HeroesComponent` ώστε να μοιάζει με αυτό:
 
-<code-example header="src/app/heroes/heroes.component.html (το template του HeroesComponent)" path="toh-pt1/src/app/heroes/heroes.component.1.html" region="name-input"></code-example>
+<code-example header="src/app/heroes/heroes.component.html (HeroesComponent template)" path="toh-pt1/src/app/heroes/heroes.component.1.html" region="name-input"></code-example>
 
 To `[(ngModel)]` είναι η σύνταξη αμφίδρομου data binding της Angular.
 
@@ -178,8 +178,7 @@ Can't bind to 'ngModel' since it isn't a known property of 'input'.
 
 Ανοίξτε το `AppModule` \(`app.module.ts`\) και κάντε import το σύμβολο `FormsModule` από την βιβλιοθήκη `@angular/forms`.
 
-<code-example path="toh-pt1/src/app/app.module.ts" header="app.module.ts (FormsModule symbol import)"
- region="formsmodule-js-import"></code-example>
+<code-example header="app.module.ts (Σύμβολο import του FormsModule)" path="toh-pt1/src/app/app.module.ts" region="formsmodule-js-import"></code-example>
 
 Στη συνέχεια, προσθέστε το `FormsModule` στην λίστα `imports` των μεταδεδομένων του `@NgModule`, που περιέχει μια λίστα εξωτερικών modules που χρειάζεται η εφαρμογή.
 
@@ -198,7 +197,7 @@ Can't bind to 'ngModel' since it isn't a known property of 'input'.
 
 Ανοίξτε το `src/app/app.module.ts` και βρείτε το `HeroesComponent` που γίνεται import στην κορυφή του αρχείου.
 
-<code-example path="toh-pt1/src/app/app.module.ts" header="src/app/app.module.ts" region="heroes-import" ></code-example>
+<code-example header="src/app/app.module.ts" path="toh-pt1/src/app/app.module.ts" region="heroes-import" ></code-example>
 
 Το `HeroesComponent` δηλώνεται στην λίστα `@NgModule.declarations`.
 

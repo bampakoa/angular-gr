@@ -216,7 +216,7 @@ To `HeroesComponent` καταναλώνει το αποτέλεσμα του `ge
 
 <code-tabs>
     <code-pane header="heroes.component.ts (Observable)" path="toh-pt4/src/app/heroes/heroes.component.ts" region="getHeroes"></code-pane>
-    <code-pane header="heroes.component.ts (Original)" path="toh-pt4/src/app/heroes/heroes.component.1.ts" region="getHeroes"></code-pane>
+    <code-pane header="heroes.component.ts (Αρχικό)" path="toh-pt4/src/app/heroes/heroes.component.1.ts" region="getHeroes"></code-pane>
 </code-tabs>
 
 Το `Observable.subscribe()`είναι η σημαντική διαφορά.

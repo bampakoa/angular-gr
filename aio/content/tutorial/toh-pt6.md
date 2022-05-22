@@ -23,7 +23,7 @@
 
 Στη συνέχεια, ακόμα στο `AppModule`, προσθέστε το `HttpClientModule` στην λίστα `imports`:
 
-<code-example header="src/app/app.module.ts (imports array excerpt)" path="toh-pt6/src/app/app.module.ts" region="import-httpclientmodule"></code-example>
+<code-example header="src/app/app.module.ts (απόσπασμα πίνακα imports)" path="toh-pt6/src/app/app.module.ts" region="import-httpclientmodule"></code-example>
 
 ## Προσομοίωση διακομιστή δεδομένων
 
@@ -62,7 +62,7 @@ npm install angular-in-memory-web-api --save
 Μετά το `HttpClientModule`, προσθέστε το `HttpClientInMemoryWebApiModule`
 στην λίστα `imports` του `AppModule` και ρυθμίστε το με το `InMemoryDataService`.
 
-<code-example header="src/app/app.module.ts (imports array excerpt)" path="toh-pt6/src/app/app.module.ts" region="in-mem-web-api-imports"></code-example>
+<code-example header="src/app/app.module.ts (απόσπασμα πίνακα imports)" path="toh-pt6/src/app/app.module.ts" region="in-mem-web-api-imports"></code-example>
 
 Η μέθοδος διαμόρφωσης `forRoot()` παίρνει ένα class `InMemoryDataService`
 που εκκινεί τη βάση δεδομένων στη μνήμη.
@@ -90,21 +90,21 @@ ng generate service InMemoryData
 
 Στο `HeroService`, κάντε import το `HttpClient` και το `HttpHeaders`:
 
-<code-example header="src/app/hero.service.ts (import HTTP symbols)" path="toh-pt6/src/app/hero.service.ts" region="import-httpclient"></code-example>
+<code-example header="src/app/hero.service.ts (Σύμβολα import HTTP)" path="toh-pt6/src/app/hero.service.ts" region="import-httpclient"></code-example>
 
 Ακόμα στο `HeroService`, εισάγετε το `HttpClient` στο constructor σε μια private ιδιότητα που ονομάζεται `http`.
 
-<code-example path="toh-pt6/src/app/hero.service.ts" header="src/app/hero.service.ts" region="ctor" ></code-example>
+<code-example header="src/app/hero.service.ts" path="toh-pt6/src/app/hero.service.ts" region="ctor" ></code-example>
 
 Παρατηρήστε ότι συνεχίζετε να εισάγετε το `MessageService` αλλά επειδή θα το καλείτε τόσο συχνά, βάλτε το σε μια private μέθοδο `log()`:
 
-<code-example path="toh-pt6/src/app/hero.service.ts" header="src/app/hero.service.ts" region="log" ></code-example>
+<code-example header="src/app/hero.service.ts" path="toh-pt6/src/app/hero.service.ts" region="log" ></code-example>
 
 Καθορίστε το `heroesUrl` στην μορφή `:base/:collectionName` με τη διεύθυνση του πόρου των ηρώων στον διακομιστή.
  Εδώ το `base` είναι ο πόρος στον οποίο υποβάλλονται τα αιτήματα,
  και το `collectionName` είναι το αντικείμενο δεδομένων των ηρώων στο `in-memory-data-service.ts`.
 
-<code-example path="toh-pt6/src/app/hero.service.ts" header="src/app/hero.service.ts" region="heroesUrl" ></code-example>
+<code-example header="src/app/hero.service.ts" path="toh-pt6/src/app/hero.service.ts" region="heroesUrl" ></code-example>
 
 ### Λήψη ηρώων με το `HttpClient`
 
@@ -112,7 +112,7 @@ ng generate service InMemoryData
 χρησιμοποιεί τη συνάρτηση `of()` του RxJS για να επιστρέψει μια σειρά από εικονικούς ήρωες
 ως ένα `Observable<Hero[]>`.
 
-<code-example header="src/app/hero.service.ts (getHeroes with RxJs 'of()')" path="toh-pt4/src/app/hero.service.ts" region="getHeroes-1"></code-example>
+<code-example header="src/app/hero.service.ts (getHeroes με RxJs 'of()')" path="toh-pt4/src/app/hero.service.ts" region="getHeroes-1"></code-example>
 
 Μετατρέψτε αυτήν τη μέθοδο για να χρησιμοποιεί το `HttpClient` ως εξής:
 
@@ -205,7 +205,7 @@ ng generate service InMemoryData
 
 Εδώ είναι η τελική έκδοση του `getHeroes()` με το `tap()` που καταγράφει τη λειτουργία.
 
-<code-example path="toh-pt6/src/app/hero.service.ts" header="src/app/hero.service.ts"  region="getHeroes" ></code-example>
+<code-example header="src/app/hero.service.ts" path="toh-pt6/src/app/hero.service.ts" region="getHeroes" ></code-example>
 
 ### Λήψη ήρωα βάσει id
 
@@ -312,7 +312,7 @@ class `HeroesComponent`:
 
 Το HTML για τη λίστα των ηρώων θα πρέπει να μοιάζει με αυτό:
 
-<code-example header="src/app/heroes/heroes.component.html (list of heroes)" path="toh-pt6/src/app/heroes/heroes.component.html" region="list"></code-example>
+<code-example header="src/app/heroes/heroes.component.html (λίστα ηρώων)" path="toh-pt6/src/app/heroes/heroes.component.html" region="list"></code-example>
 
 Για να τοποθετήσετε το κουμπί διαγραφής στη δεξιά πλευρά της καταχώρισης του ήρωα,
 προσθέστε λίγο CSS στο `heroes.component.css`. Θα βρείτε αυτό το CSS

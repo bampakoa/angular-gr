@@ -46,11 +46,11 @@ ng generate module app-routing --flat --module=app
 
 Το αρχείο που δημιουργείται μοιάζει με αυτό:
 
-<code-example header="src/app/app-routing.module.ts (generated)" path="toh-pt5/src/app/app-routing.module.0.ts"></code-example>
+<code-example header="src/app/app-routing.module.ts (παραγόμενο)" path="toh-pt5/src/app/app-routing.module.0.ts"></code-example>
 
 Αντικαταστήστε το με το εξής:
 
-<code-example header="src/app/app-routing.module.ts (updated)" path="toh-pt5/src/app/app-routing.module.1.ts"></code-example>
+<code-example header="src/app/app-routing.module.ts (ενημερωμένο)" path="toh-pt5/src/app/app-routing.module.1.ts"></code-example>
 
 Πρώτα, το αρχείο `app-routing.module.ts` κάνει import το `RouterModule` και το `Routes` ώστε η εφαρμογή να έχει λειτουργικότητα δρομολόγησης. Το επόμενο import, `HeroesComponent`, θα δώσει στο Router κάπου να πάει μόλις διαμορφώσετε τις διαδρομές.
 
@@ -96,7 +96,7 @@ ng generate module app-routing --flat --module=app
 
 Στη συνέχεια, το `AppRoutingModule` κάνει export το `RouterModule` ώστε να είναι διαθέσιμο σε όλη την εφαρμογή.
 
-<code-example header="src/app/app-routing.module.ts (exports array)" path="toh-pt5/src/app/app-routing.module.ts" region="export-routermodule"></code-example>
+<code-example header="src/app/app-routing.module.ts (πίνακας exports)" path="toh-pt5/src/app/app-routing.module.ts" region="export-routermodule"></code-example>
 
 ## Προσθήκη `RouterOutlet`
 
@@ -292,7 +292,7 @@ ng generate component dashboard
 
 Σε αυτό το σημείο, όλες οι διαδρομές εφαρμογής είναι στη θέση τους.
 
-<code-example header="src/app/app-routing.module.ts (all routes)" path="toh-pt5/src/app/app-routing.module.ts" region="routes"></code-example>
+<code-example header="src/app/app-routing.module.ts (όλες οι διαδρομές)" path="toh-pt5/src/app/app-routing.module.ts" region="routes"></code-example>
 
 ### Σύνδεσμοι ηρώων του `DashboardComponent`
 
@@ -301,7 +301,7 @@ ng generate component dashboard
 Τώρα που το router έχει μια διαδρομή προς το `HeroDetailComponent`,
 διορθώστε τους συνδέσμους των ηρώων του dashboard ώστε να κάνουν πλοήγηση χρησιμοποιώντας την *παραμετροποιημένη* διαδρομή του dashboard.
 
-<code-example header="src/app/dashboard/dashboard.component.html (hero links)" path="toh-pt5/src/app/dashboard/dashboard.component.html" region="click"></code-example>
+<code-example header="src/app/dashboard/dashboard.component.html (σύνδεσμοι ηρώων)" path="toh-pt5/src/app/dashboard/dashboard.component.html" region="click"></code-example>
 
 Χρησιμοποιείτε το [interpolation binding](guide/interpolation) της Angular μέσα στο `*ngFor`
 για να εισάγετε το `hero.id` της τρέχουσας επανάληψης σε καθε
@@ -314,14 +314,14 @@ ng generate component dashboard
 Οι ήρωες στο `HeroesComponent` είναι στοιχεία `<li>` των οποίων τα events click
 είναι συνδεδεμένα με την μέθοδο `onSelect()` του component.
 
-<code-example header="src/app/heroes/heroes.component.html (list with onSelect)" path="toh-pt4/src/app/heroes/heroes.component.html" region="list"></code-example>
+<code-example header="src/app/heroes/heroes.component.html (λίστα με onSelect)" path="toh-pt4/src/app/heroes/heroes.component.html" region="list"></code-example>
 
 Αφαιρέστε τα στοιχεία του `<li>` μόνο στο `*ngFor` του,
 προσθέστε ένα στοιχείο anchor \(`<a>`\) γύρω από το badge και το name,
 και προσθέστε ένα attribute `routerLink` στο anchor το οποίο
 είναι το ίδιο όπως στο template του dashboard.
 
-<code-example header="src/app/heroes/heroes.component.html (list with links)" path="toh-pt5/src/app/heroes/heroes.component.html" region="list"></code-example>
+<code-example header="src/app/heroes/heroes.component.html (λίστα με συνδέσμους)" path="toh-pt5/src/app/heroes/heroes.component.html" region="list"></code-example>
 
 Θα πρέπει να διορθώσετε το αρχείο στυλ \(`heroes.component.css`\) για να κάνετε
 την λίστα να φαίνεται όπως πριν.
@@ -335,7 +335,7 @@ ng generate component dashboard
 Είναι ωραίο να τακτοποιείτε και θα είστε ευγνώμονες στον εαυτό σας αργότερα.
 Εδώ είναι το class μετά την απομάκρυνση του αχρησιμοποίητου κώδικα.
 
-<code-example header="src/app/heroes/heroes.component.ts (cleaned up)" path="toh-pt5/src/app/heroes/heroes.component.ts" region="class"></code-example>
+<code-example header="src/app/heroes/heroes.component.ts (καθαρισμένο)" path="toh-pt5/src/app/heroes/heroes.component.ts" region="class"></code-example>
 
 ## `HeroDetailComponent` με δυνατότητα δρομολόγησης
 
@@ -434,7 +434,7 @@ To `paramMap` είναι ένα dictionary από τιμές παραμέτρω�
 Προσθέστε ένα κουμπί *επιστροφή πίσω* στο κάτω μέρος του template του component και συνδέστε το
 στη μέθοδο `goBack()` του component.
 
-<code-example header="src/app/hero-detail/hero-detail.component.html (back button)" path="toh-pt5/src/app/hero-detail/hero-detail.component.html" region="back-button"></code-example>
+<code-example header="src/app/hero-detail/hero-detail.component.html (κουμπί επιστροφής)" path="toh-pt5/src/app/hero-detail/hero-detail.component.html" region="back-button"></code-example>
 
 Προσθέστε μια *μέθοδο* `goBack()` στο class του component που πλοηγείται προς τα πίσω ένα βήμα
 στο ιστορικό του προγράμματος περιήγησης

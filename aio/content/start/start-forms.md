@@ -45,7 +45,7 @@
 
 1. Στο στοιχείο HTML `form`, χρησιμοποιήστε ένα event binding `ngSubmit` για να ειδοποιηθείτε κατά την υποβολή της φόρμας και καλέστε την μέθοδο `onSubmit()` με την τιμή `checkoutForm`.
 
-  <code-example header="src/app/cart/cart.component.html (cart component template detail)" path="getting-started/src/app/cart/cart.component.html" region="checkout-form-1"></code-example>
+  <code-example header="src/app/cart/cart.component.html (λεπτομέρεια του cart component template)" path="getting-started/src/app/cart/cart.component.html" region="checkout-form-1"></code-example>
 
 1. Προσθέστε πεδία `<input>` για το `name` και το `address`, το καθένα με ένα attribute `formControlName` που συνδέει τα controls της φόρμας `checkoutForm` με το `name` και το `address` στα πεδία `<input>`.
   Το τελικό component έχει ως εξής:
