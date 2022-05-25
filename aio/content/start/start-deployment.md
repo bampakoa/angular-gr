@@ -26,12 +26,8 @@
 
     <div class="lightbox">
 
-    <div class="lightbox">
-
     <img src="generated/images/guide/start/download-project.png" alt="Κατεβάστε το project του stackblitz">
     
-    </div>
-
     </div>
 
 1.  Αποσυμπιέστε το αρχείο και μεταβείτε στον φάκελο του project που δημιουργήθηκε. Για παράδειγμα:
