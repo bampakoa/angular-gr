@@ -57,7 +57,7 @@
       "children": [
         {
           "url": "guide/what-is-angular",
-          "title": "Τι είναι η Angular?",
+          "title": "Τι είναι η Angular",
           "tooltip": "Μια σύντομη περιγραφή της πλατφόρμας Angular."
         },
         {
