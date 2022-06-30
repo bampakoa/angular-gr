@@ -22,7 +22,8 @@ type CompilerCliModule =
 
 // Add devmode for blaze internal
 interface BazelOptions extends ExternalBazelOptions {
-  devmode?: boolean;
+  allowedInputs?: string[];
+  unusedInputsListPath?: string;
 }
 
 /**
@@ -253,37 +254,8 @@ export function compile({
         }
       };
 
-  // Patch fileExists when resolving modules, so that CompilerHost can ask TypeScript to
-  // resolve non-existing generated files that don't exist on disk, but are
-  // synthetic and added to the `programWithStubs` based on real inputs.
-  const generatedFileModuleResolverHost = Object.create(tsHost);
-  generatedFileModuleResolverHost.fileExists = (fileName: string) => {
-    const match = NGC_GEN_FILES.exec(fileName);
-    if (match) {
-      const [, file, suffix, ext] = match;
-      // Performance: skip looking for files other than .d.ts or .ts
-      if (ext !== '.ts' && ext !== '.d.ts') return false;
-      if (suffix.indexOf('ngstyle') >= 0) {
-        // Look for foo.css on disk
-        fileName = file;
-      } else {
-        // Look for foo.d.ts or foo.ts on disk
-        fileName = file + (ext || '');
-      }
-    }
-    return tsHost.fileExists(fileName);
-  };
-
-  function generatedFileModuleResolver(
-      moduleName: string, containingFile: string,
-      compilerOptions: ts.CompilerOptions): ts.ResolvedModuleWithFailedLookupLocations {
-    return ts.resolveModuleName(
-        moduleName, containingFile, compilerOptions, generatedFileModuleResolverHost);
-  }
-
   if (!bazelHost) {
-    bazelHost = new CompilerHost(
-        files, compilerOpts, bazelOpts, tsHost, fileLoader, generatedFileModuleResolver);
+    bazelHost = new CompilerHost(files, compilerOpts, bazelOpts, tsHost, fileLoader);
   }
 
   if (isInIvyMode) {
@@ -328,8 +300,24 @@ export function compile({
     bazelHost.transformTypesToClosure = true;
   }
 
+  // Patch fileExists when resolving modules, so that CompilerHost can ask TypeScript to
+  // resolve non-existing generated files that don't exist on disk, but are
+  // synthetic and added to the `programWithStubs` based on real inputs.
   const origBazelHostFileExist = bazelHost.fileExists;
   bazelHost.fileExists = (fileName: string) => {
+    const match = NGC_GEN_FILES.exec(fileName);
+    if (match) {
+      const [, file, suffix, ext] = match;
+      // Performance: skip looking for files other than .d.ts or .ts
+      if (ext !== '.ts' && ext !== '.d.ts') return false;
+      if (suffix.indexOf('ngstyle') >= 0) {
+        // Look for foo.css on disk
+        fileName = file;
+      } else {
+        // Look for foo.d.ts or foo.ts on disk
+        fileName = file + (ext || '');
+      }
+    }
     if (NGC_ASSETS.test(fileName)) {
       return tsHost.fileExists(fileName);
     }
@@ -443,7 +431,53 @@ export function compile({
     originalWriteFile(fileName, '', false);
   }
 
+  if (!compilerOpts.noEmit) {
+    maybeWriteUnusedInputsList(program.getTsProgram(), compilerOpts, bazelOpts);
+  }
+
   return {program, diagnostics};
+}
+
+/**
+ * Writes a collection of unused input files and directories which can be
+ * consumed by bazel to avoid triggering rebuilds if only unused inputs are
+ * changed.
+ *
+ * See https://bazel.build/contribute/codebase#input-discovery
+ */
+export function maybeWriteUnusedInputsList(
+    program: ts.Program, options: ts.CompilerOptions, bazelOpts: BazelOptions) {
+  if (!bazelOpts?.unusedInputsListPath) {
+    return;
+  }
+
+  // ts.Program's getSourceFiles() gets populated by the sources actually
+  // loaded while the program is being built.
+  const usedFiles = new Set();
+  for (const sourceFile of program.getSourceFiles()) {
+    // Only concern ourselves with typescript files.
+    usedFiles.add(sourceFile.fileName);
+  }
+
+  // allowedInputs are absolute paths to files which may also end with /* which
+  // implies any files in that directory can be used.
+  const unusedInputs: string[] = [];
+  for (const f of bazelOpts.allowedInputs) {
+    // A ts/x file is unused if it was not found directly in the used sources.
+    if ((f.endsWith('.ts') || f.endsWith('.tsx')) && !usedFiles.has(f)) {
+      unusedInputs.push(f);
+      continue;
+    }
+
+    // TODO: Iterate over contents of allowed directories checking for used files.
+  }
+
+  // Bazel expects the unused input list to contain paths relative to the
+  // execroot directory.
+  // See https://docs.bazel.build/versions/main/output_directories.html
+  fs.writeFileSync(
+      bazelOpts.unusedInputsListPath,
+      unusedInputs.map(f => path.relative(options.rootDir!, f)).join('\n'));
 }
 
 function isCompilationTarget(bazelOpts: BazelOptions, sf: ts.SourceFile): boolean {
@@ -593,7 +627,7 @@ export function patchNgHostWithFileNameToModuleName(
     // break `esm2015` or `esm5` output for Angular package release output
     // Omit the `node_modules` prefix if the module name of an NPM package is requested.
     if (relativeTargetPath.startsWith(NODE_MODULES)) {
-      return relativeTargetPath.substr(NODE_MODULES.length);
+      return relativeTargetPath.slice(NODE_MODULES.length);
     } else if (
         containingFilePath == null || !bazelOpts.compilationTargetSrc.includes(importedFilePath)) {
       return manifestTargetPath;

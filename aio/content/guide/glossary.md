@@ -218,7 +218,7 @@ See [Browser support][AioGuideBrowserSupport].
 
 The custom element feature extends HTML by allowing you to define a tag whose content is created and controlled by JavaScript code.
 A custom element is recognized by a browser when it is added to the [CustomElementRegistry][MdnDocsWebApiCustomelementregistry].
-A custom element is also refernced as a *web component*.
+A custom element is also referenced as a *web component*.
 
 You can use the API to transform an Angular component so that it can be registered with the browser and used in any HTML that you add directly to the DOM within an Angular application.
 The custom element tag inserts the view of the component, with change-detection and data-binding functionality, into content that would otherwise be displayed without Angular processing.
@@ -239,25 +239,25 @@ Read about the following forms of binding of the [Template Syntax][AioGuideTempl
 *   [Property binding][AioGuidePropertyBinding]
 *   [Event binding][AioGuideEventBinding]
 *   [Attribute binding][AioGuideAttributeBinding]
-*   [Class binding][AioGuideAttributeBindingBindingToTheClassAttribute]
-*   [Style binding][AioGuideAttributeBindingBindingToTheStyleAttribute]
+*   [Class and style binding][AioGuideAttributeBindingBindingToTheClassAttribute]
 *   [Two-way data binding with ngModel][AioGuideBuiltInDirectivesDisplayingAndUpdatingPropertiesWithNgmodel]
 
 ## declarable
 
-A class type that you can add to the `declarations` list of an [NgModule][AioGuideGlossaryNgmodule].
-You can declare [components][AioGuideGlossaryComponent], [directives][AioGuideGlossaryDirective], and [pipes][AioGuideGlossaryPipe].
+A class that you can add to the `declarations` list of an [NgModule][AioGuideGlossaryNgmodule].
+You can declare [components][AioGuideGlossaryComponent], [directives][AioGuideGlossaryDirective], and [pipes][AioGuideGlossaryPipe], unless they have the `standalone` flag in their decorators set to `true`, which makes them standalone. Note: standalone components/directives/pipes are **not** declarables. More info about standalone classes can be found [below][AioGuideGlossaryStandalone].
 
 Do not declare the following:
 
-*   A class that is already declared in another NgModule
+*   A class already declared as [standalone][AioGuideGlossaryStandalone].
+*   A class that is already declared in another NgModule.
 *   An array of directives imported from another package.
-    For example, do not declare `FORMS_DIRECTIVES` from `@angular/forms`
+    For example, do not declare `FORMS_DIRECTIVES` from `@angular/forms`.
+*   NgModule classes.
+*   Service classes.
+*   Non-Angular classes and objects, such as strings, numbers, functions, entity models, configurations, business logic, and helper classes.
 
-*   NgModule classes
-*   Service classes
-*   Non-Angular classes and objects, such as strings, numbers, functions, entity models, configurations, business logic, and helper classes
-
+Note that declarables can also be declared as standalone and simply be imported inside other standalone components or existing NgModules, to learn more, see the [Standalone components guide][AioGuideStandalone].
 ## decorator | decoration
 
 A function that modifies a class or property definition.
@@ -324,7 +324,7 @@ See also [custom element][AioGuideGlossaryCustomElement], which provides an easi
 
 ## eager loading
 
-NgModules or components that are loaded on launch are referenced as eager-loaded, to distinguish them from those that are loaded at run time that are refernced as lazy-loaded.
+NgModules or components that are loaded on launch are referenced as eager-loaded, to distinguish them from those that are loaded at run time that are referenced as lazy-loaded.
 See also [lazy loading][AioGuideGlossaryLazyLoading].
 
 ## ECMAScript
@@ -731,7 +731,18 @@ The `@Injectable()` metadata allows the service class to be used with the [depen
 The injectable class is instantiated by a [provider][AioGuideGlossaryProvider].
 [Injectors][AioGuideGlossaryInjector] maintain lists of providers and use them to provide service instances when they are required by components or other services.
 
-For To learn more, see [Introduction to Services and Dependency Injection][AioGuideArchitectureServices].
+To learn more, see [Introduction to Services and Dependency Injection][AioGuideArchitectureServices].
+
+## standalone
+
+A configuration of [components][AioGuideGlossaryComponent], [directives][AioGuideGlossaryDirective], and [pipes][AioGuideGlossaryPipe] to indicate that this class can be imported directly without declaring it in any [NgModule][AioGuideGlossaryNgmodule].
+
+Standalone components, directives and pipes mainly differ from non-standalone ones by:
+ - having the `standalone` field of their decorator set to `true`.
+ - allowing their direct importing without the need to pass through NgModules.
+ - specifying their dependencies directly in their decorator.
+
+To learn more, see the [Standalone components guide][AioGuideStandalone].
 
 ## structural directive
 
@@ -807,7 +818,8 @@ For an introduction and comparison of both forms approaches, see [Introduction t
 
 A TypeScript-like syntax that Angular evaluates within a [data binding][AioGuideGlossaryDataBinding].
 
-Read about how to write template expressions in the [template expressions][AioGuideInterpolationTemplateExpressions] section of the [Interpolation][AioGuideInterpolation] guide.
+<!--todo: have Alex review this -->
+<!-- Read about how to write template expressions in the [template expressions][AioGuideInterpolationTemplateExpressions] section of the [Interpolation][AioGuideInterpolation] guide. -->
 
 ## template reference variable
 
@@ -857,7 +869,7 @@ Schematic [rules][AioGuideGlossaryRule] take a tree object as input, operate on 
 
 A programming language based on JavaScript that is notable for its optional typing system.
 TypeScript provides compile-time type checking and strong tooling support
-The type checking and toooling support include code completion, refactoring, inline documentation, and intelligent search.
+The type checking and tooling support include code completion, refactoring, inline documentation, and intelligent search.
 Many code editors and IDEs support TypeScript either natively or with plug-ins.
 
 TypeScript is the preferred language for Angular development.
@@ -991,9 +1003,8 @@ Learn more about zones in this [Brian Ford video][YoutubeWatchV3iqtmusceU].
 
 [AioGuideArchitectureServices]: guide/architecture-services "Introduction to services and dependency injection | Angular"
 
-[AioGuideAttributeBinding]: guide/attribute-binding "Attribute, class, and style bindings | Angular"
-[AioGuideAttributeBindingBindingToTheClassAttribute]: guide/attribute-binding#binding-to-the-class-attribute "Binding to the class attribute - Attribute, class, and style bindings | Angular"
-[AioGuideAttributeBindingBindingToTheStyleAttribute]: guide/attribute-binding#binding-to-the-style-attribute "Binding to the style attribute - Attribute, class, and style bindings | Angular"
+[AioGuideAttributeBinding]: guide/attribute-binding "Attribute binding | Angular"
+[AioGuideAttributeBindingBindingToTheClassAttribute]: guide/class-binding "Class and style binding | Angular"
 
 [AioGuideAttributeDirectives]: guide/attribute-directives "Attribute directives | Angular"
 
@@ -1094,6 +1105,7 @@ Learn more about zones in this [Brian Ford video][YoutubeWatchV3iqtmusceU].
 [AioGuideGlossaryScopedPackage]: guide/glossary#scoped-package "scoped package - Glossary | Angular"
 [AioGuideGlossaryServerSideRendering]: guide/glossary#server-side-rendering "server-side rendering - Glossary | Angular"
 [AioGuideGlossaryService]: guide/glossary#service "service - Glossary | Angular"
+[AioGuideGlossaryStandalone]: guide/glossary#standalone "standalone - Glossary | Angular"
 [AioGuideGlossaryStructuralDirective]: guide/glossary#structural-directive "structural directive - Glossary | Angular"
 [AioGuideGlossarySubscriber]: guide/glossary#subscriber "subscriber - Glossary | Angular"
 [AioGuideGlossaryT]: guide/glossary#target "T - Glossary | Angular"
@@ -1120,7 +1132,7 @@ Learn more about zones in this [Brian Ford video][YoutubeWatchV3iqtmusceU].
 [AioGuideHierarchicalDependencyInjection]: guide/hierarchical-dependency-injection "Hierarchical injectors | Angular"
 
 [AioGuideInterpolation]: guide/interpolation "Text interpolation | Angular"
-[AioGuideInterpolationTemplateExpressions]: guide/interpolation#template-expressions "Template expressions - Text interpolation | Angular"
+<!-- [AioGuideInterpolationTemplateExpressions]: guide/interpolation#template-expressions "Template expressions - Text interpolation | Angular" -->
 
 [AioGuideNgmodules]: guide/ngmodules "NgModules | Angular"
 
@@ -1143,7 +1155,9 @@ Learn more about zones in this [Brian Ford video][YoutubeWatchV3iqtmusceU].
 
 [AioGuideSetupLocal]: guide/setup-local "Setting up the local environment and workspace | Angular"
 
-[AioGuideStructuralDirectives]: guide/structural-directives "Writing structural directives | Angular"
+[AioGuideStandalone]: guide/standalone-components "Getting started with standalone components | Angular"
+
+[AioGuideStructuralDirectives]: guide/structural-directives "Structural directives | Angular"
 
 [AioGuideStyleguide0201]: guide/styleguide#02-01 "Style 02-01 - Angular coding style guide | Angular"
 

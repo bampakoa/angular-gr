@@ -4,16 +4,19 @@
 
 ```ts
 
+import { ApplicationRef } from '@angular/core';
 import { ComponentRef } from '@angular/core';
 import { DebugElement } from '@angular/core';
 import { DebugNode } from '@angular/core';
 import * as i0 from '@angular/core';
 import * as i1 from '@angular/common';
+import { ImportedNgModuleProviders } from '@angular/core';
 import { InjectionToken } from '@angular/core';
 import { ModuleWithProviders } from '@angular/core';
 import { NgZone } from '@angular/core';
 import { PlatformRef } from '@angular/core';
 import { Predicate } from '@angular/core';
+import { Provider } from '@angular/core';
 import { Sanitizer } from '@angular/core';
 import { SecurityContext } from '@angular/core';
 import { StaticProvider } from '@angular/core';
@@ -21,8 +24,16 @@ import { Type } from '@angular/core';
 import { Version } from '@angular/core';
 
 // @public
+export interface ApplicationConfig {
+    providers: Array<Provider | ImportedNgModuleProviders>;
+}
+
+// @public
+export function bootstrapApplication(rootComponent: Type<unknown>, options?: ApplicationConfig): Promise<ApplicationRef>;
+
+// @public
 export class BrowserModule {
-    constructor(parentModule: BrowserModule | null);
+    constructor(providersAlreadyPresent: boolean | null);
     static withServerTransition(params: {
         appId: string;
     }): ModuleWithProviders<BrowserModule>;
@@ -167,6 +178,9 @@ export type MetaDefinition = {
 export const platformBrowser: (extraProviders?: StaticProvider[]) => PlatformRef;
 
 // @public
+export function provideProtractorTestingSupport(): Provider[];
+
+// @public
 export interface SafeHtml extends SafeValue {
 }
 
@@ -193,6 +207,7 @@ export interface SafeValue {
 // @public
 export type StateKey<T> = string & {
     __not_a_string: never;
+    __value_type?: T;
 };
 
 // @public

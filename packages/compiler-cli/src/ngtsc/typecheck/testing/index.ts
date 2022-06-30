@@ -13,11 +13,11 @@ import {absoluteFrom, AbsoluteFsPath, getSourceFileOrError, LogicalFileSystem} f
 import {TestFile} from '../../file_system/testing';
 import {AbsoluteModuleStrategy, LocalIdentifierStrategy, LogicalProjectStrategy, ModuleResolver, Reexport, Reference, ReferenceEmitter, RelativePathStrategy} from '../../imports';
 import {NOOP_INCREMENTAL_BUILD} from '../../incremental';
-import {ClassPropertyMapping, CompoundMetadataReader, MetaType} from '../../metadata';
+import {ClassPropertyMapping, CompoundMetadataReader, MetaKind} from '../../metadata';
 import {NOOP_PERF_RECORDER} from '../../perf';
 import {TsCreateProgramDriver} from '../../program_driver';
 import {ClassDeclaration, isNamedClassDeclaration, TypeScriptReflectionHost} from '../../reflection';
-import {ComponentScopeReader, LocalModuleScope, ScopeData, TypeCheckScopeRegistry} from '../../scope';
+import {ComponentScopeKind, ComponentScopeReader, LocalModuleScope, ScopeData, TypeCheckScopeRegistry} from '../../scope';
 import {makeProgram} from '../../testing';
 import {getRootDirs} from '../../util/src/typescript';
 import {ProgramTypeCheckAdapter, TemplateDiagnostic, TemplateTypeChecker, TypeCheckContext} from '../api';
@@ -281,7 +281,7 @@ export function tcb(
   const boundTarget = binder.bind({template: nodes});
 
   const id = 'tcb' as TemplateId;
-  const meta: TypeCheckBlockMetadata = {id, boundTarget, pipes, schemas: []};
+  const meta: TypeCheckBlockMetadata = {id, boundTarget, pipes, schemas: [], isStandalone: false};
 
   const fullConfig: TypeCheckingConfig = {
     applyTemplateContextGuards: true,
@@ -483,7 +483,8 @@ export function setup(targets: TypeCheckingTarget[], overrides: {
           node: classRef.node.name,
         };
 
-        ctx.addTemplate(classRef, binder, nodes, pipes, [], sourceMapping, templateFile, errors);
+        ctx.addTemplate(
+            classRef, binder, nodes, pipes, [], sourceMapping, templateFile, errors, false);
       }
     }
   });
@@ -508,22 +509,23 @@ export function setup(targets: TypeCheckingTarget[], overrides: {
               // This class wasn't part of the target set of components with templates, but is
               // probably a declaration used in one of them. Return an empty scope.
               const emptyScope: ScopeData = {
-                directives: [],
-                ngModules: [],
-                pipes: [],
+                dependencies: [],
                 isPoisoned: false,
               };
               return {
+                kind: ComponentScopeKind.NgModule,
                 ngModule,
                 compilation: emptyScope,
                 reexports: [],
                 schemas: [],
                 exported: emptyScope,
+
               };
             }
             const scope = scopeMap.get(clazz)!;
 
             return {
+              kind: ComponentScopeKind.NgModule,
               ngModule,
               compilation: scope,
               reexports: [],
@@ -611,9 +613,7 @@ export function getClass(sf: ts.SourceFile, name: string): ClassDeclaration<ts.C
  */
 function makeScope(program: ts.Program, sf: ts.SourceFile, decls: TestDeclaration[]): ScopeData {
   const scope: ScopeData = {
-    ngModules: [],
-    directives: [],
-    pipes: [],
+    dependencies: [],
     isPoisoned: false,
   };
 
@@ -625,8 +625,8 @@ function makeScope(program: ts.Program, sf: ts.SourceFile, decls: TestDeclaratio
     const declClass = getClass(declSf, decl.name);
 
     if (decl.type === 'directive') {
-      scope.directives.push({
-        type: MetaType.Directive,
+      scope.dependencies.push({
+        kind: MetaKind.Directive,
         ref: new Reference(declClass),
         baseClass: null,
         name: decl.name,
@@ -648,13 +648,17 @@ function makeScope(program: ts.Program, sf: ts.SourceFile, decls: TestDeclaratio
         isPoisoned: false,
         isStructural: false,
         animationTriggerNames: null,
+        isStandalone: false,
+        imports: null,
+        schemas: null,
       });
     } else if (decl.type === 'pipe') {
-      scope.pipes.push({
-        type: MetaType.Pipe,
+      scope.dependencies.push({
+        kind: MetaKind.Pipe,
         ref: new Reference(declClass),
         name: decl.pipeName,
         nameExpr: null,
+        isStandalone: false,
       });
     }
   }
@@ -666,11 +670,13 @@ class FakeEnvironment /* implements Environment */ {
   constructor(readonly config: TypeCheckingConfig) {}
 
   typeCtorFor(dir: TypeCheckableDirectiveMeta): ts.Expression {
-    return ts.createPropertyAccess(ts.createIdentifier(dir.name), 'ngTypeCtor');
+    return ts.factory.createPropertyAccessExpression(
+        ts.factory.createIdentifier(dir.name), 'ngTypeCtor');
   }
 
   pipeInst(ref: Reference<ClassDeclaration<ts.ClassDeclaration>>): ts.Expression {
-    return ts.createParen(ts.createAsExpression(ts.createNull(), this.referenceType(ref)));
+    return ts.factory.createParenthesizedExpression(
+        ts.factory.createAsExpression(ts.factory.createNull(), this.referenceType(ref)));
   }
 
   reference(ref: Reference<ClassDeclaration<ts.ClassDeclaration>>): ts.Expression {
@@ -678,20 +684,20 @@ class FakeEnvironment /* implements Environment */ {
   }
 
   referenceType(ref: Reference<ClassDeclaration<ts.ClassDeclaration>>): ts.TypeNode {
-    return ts.createTypeReferenceNode(ref.node.name, /* typeArguments */ undefined);
+    return ts.factory.createTypeReferenceNode(ref.node.name, /* typeArguments */ undefined);
   }
 
   referenceExternalType(moduleName: string, name: string, typeParams?: Type[]): ts.TypeNode {
     const typeArgs: ts.TypeNode[] = [];
     if (typeParams !== undefined) {
       for (let i = 0; i < typeParams.length; i++) {
-        typeArgs.push(ts.createKeywordTypeNode(ts.SyntaxKind.AnyKeyword));
+        typeArgs.push(ts.factory.createKeywordTypeNode(ts.SyntaxKind.AnyKeyword));
       }
     }
 
-    const ns = ts.createIdentifier(moduleName.replace('@angular/', ''));
-    const qName = ts.createQualifiedName(ns, name);
-    return ts.createTypeReferenceNode(qName, typeArgs.length > 0 ? typeArgs : undefined);
+    const ns = ts.factory.createIdentifier(moduleName.replace('@angular/', ''));
+    const qName = ts.factory.createQualifiedName(ns, name);
+    return ts.factory.createTypeReferenceNode(qName, typeArgs.length > 0 ? typeArgs : undefined);
   }
 
   getPreludeStatements(): ts.Statement[] {
@@ -708,10 +714,12 @@ export class NoopSchemaChecker implements DomSchemaChecker {
     return [];
   }
 
-  checkElement(id: string, element: TmplAstElement, schemas: SchemaMetadata[]): void {}
+  checkElement(
+      id: string, element: TmplAstElement, schemas: SchemaMetadata[],
+      hostIsStandalone: boolean): void {}
   checkProperty(
       id: string, element: TmplAstElement, name: string, span: ParseSourceSpan,
-      schemas: SchemaMetadata[]): void {}
+      schemas: SchemaMetadata[], hostIsStandalone: boolean): void {}
 }
 
 export class NoopOobRecorder implements OutOfBandDiagnosticRecorder {

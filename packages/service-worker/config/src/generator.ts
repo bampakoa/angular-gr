@@ -95,6 +95,7 @@ export class Generator {
         maxSize: group.cacheConfig.maxSize,
         maxAge: parseDurationToMs(group.cacheConfig.maxAge),
         timeoutMs: group.cacheConfig.timeout && parseDurationToMs(group.cacheConfig.timeout),
+        cacheOpaqueResponses: group.cacheConfig.cacheOpaqueResponses,
         cacheQueryOptions: buildCacheQueryOptions(group.cacheQueryOptions),
         version: group.version !== undefined ? group.version : 1,
       };
@@ -106,7 +107,7 @@ export function processNavigationUrls(
     baseHref: string, urls = DEFAULT_NAVIGATION_URLS): {positive: boolean, regex: string}[] {
   return urls.map(url => {
     const positive = !url.startsWith('!');
-    url = positive ? url : url.substr(1);
+    url = positive ? url : url.slice(1);
     return {positive, regex: `^${urlToRegex(url, baseHref)}$`};
   });
 }
@@ -130,7 +131,7 @@ function globListToMatcher(globs: string[]): (file: string) => boolean {
     if (pattern.startsWith('!')) {
       return {
         positive: false,
-        regex: new RegExp('^' + globToRegex(pattern.substr(1)) + '$'),
+        regex: new RegExp('^' + globToRegex(pattern.slice(1)) + '$'),
       };
     } else {
       return {
@@ -166,7 +167,7 @@ function urlToRegex(url: string, baseHref: string, literalQuestionMark?: boolean
 
 function joinUrls(a: string, b: string): string {
   if (a.endsWith('/') && b.startsWith('/')) {
-    return a + b.substr(1);
+    return a + b.slice(1);
   } else if (!a.endsWith('/') && !b.startsWith('/')) {
     return a + '/' + b;
   }

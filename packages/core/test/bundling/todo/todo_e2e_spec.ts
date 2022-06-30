@@ -8,8 +8,6 @@
 
 import '@angular/compiler';
 
-import {ɵwhenRendered as whenRendered} from '@angular/core';
-import {getComponent} from '@angular/core/src/render3';
 import {withBody} from '@angular/private/testing';
 import * as path from 'path';
 
@@ -19,16 +17,33 @@ const BUNDLES = ['bundle.js', 'bundle.debug.min.js', 'bundle.min.js'];
 describe('functional test for todo', () => {
   BUNDLES.forEach(bundle => {
     describe(bundle, () => {
-      it('should render todo', withBody('<todo-app></todo-app>', async () => {
-           require(path.join(PACKAGE, bundle));
-           const toDoAppComponent = getComponent(document.querySelector('todo-app')!);
-           expect(document.body.textContent).toContain('todos');
-           expect(document.body.textContent).toContain('Demonstrate Components');
-           expect(document.body.textContent).toContain('4 items left');
-           document.querySelector('button')!.click();
+      it('should place styles on the elements within the component',
+         withBody('<todo-app></todo-app>', async () => {
+           const {bootstrapApp, whenRendered} = require(path.join(PACKAGE, bundle));
+           await bootstrapApp();
+           const toDoAppComponent = (window as any).toDoAppComponent;
            await whenRendered(toDoAppComponent);
-           expect(document.body.textContent).toContain('3 items left');
+
+           const styleContent =
+               findStyleTextForSelector('.todo-list\\\[_ngcontent-[a-z]+-\\\w+\\\]');
+           expect(styleContent).toMatch(/font-weight:\s*bold;/);
+           expect(styleContent).toMatch(/color:\s*#d9d9d9;/);
          }));
     });
   });
 });
+
+function findStyleTextForSelector(selector: string): string {
+  const styles = document.querySelectorAll('head style');
+  const matchExp = new RegExp(`${selector}.+?\\\{([\\s\\S]+)\\\}`, 'm');
+  for (let i = 0; i < styles.length; i++) {
+    const styleElement = styles[i];
+    const content = styleElement.textContent || '';
+    const result = matchExp.exec(content);
+    if (result && result.length > 1) {
+      return result[1];
+    }
+  }
+
+  throw new Error(`The CSS Style Rule ${selector} was not found`);
+}

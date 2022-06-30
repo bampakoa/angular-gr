@@ -72,5 +72,4 @@ export interface FactoryInfo {
 
 export interface ModuleInfo {
   name: string;
-  hasId: boolean;
 }

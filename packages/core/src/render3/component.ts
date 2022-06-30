@@ -14,7 +14,6 @@ import {Sanitizer} from '../sanitization/sanitizer';
 import {assertDefined, assertIndexInRange} from '../util/assert';
 
 import {assertComponentType} from './assert';
-import {readPatchedLView} from './context_discovery';
 import {getComponentDef} from './definition';
 import {diPublicInInjector, getOrCreateNodeInjectorForNode} from './di';
 import {throwProviderNotFoundError} from './errors_di';
@@ -23,11 +22,11 @@ import {addToViewTree, CLEAN_PROMISE, createLView, createTView, getOrCreateTComp
 import {ComponentDef, ComponentType, RenderFlags} from './interfaces/definition';
 import {TElementNode, TNodeType} from './interfaces/node';
 import {PlayerHandler} from './interfaces/player';
-import {domRendererFactory3, Renderer3, RendererFactory3} from './interfaces/renderer';
+import {domRendererFactory3, enableRenderer3, Renderer3, RendererFactory3} from './interfaces/renderer';
 import {RElement} from './interfaces/renderer_dom';
 import {CONTEXT, HEADER_OFFSET, LView, LViewFlags, RootContext, RootContextFlags, TVIEW, TViewType} from './interfaces/view';
 import {writeDirectClass, writeDirectStyle} from './node_manipulation';
-import {enterView, getCurrentTNode, leaveView, setSelectedIndex} from './state';
+import {enterView, getCurrentTNode, getLView, leaveView, setSelectedIndex} from './state';
 import {computeStaticStyling} from './styling/static_styling';
 import {setUpAttributes} from './util/attrs_utils';
 import {publishDefaultGlobalUtils} from './util/global_utils';
@@ -116,6 +115,8 @@ export function renderComponent<T>(
   ngDevMode && publishDefaultGlobalUtils();
   ngDevMode && assertComponentType(componentType);
 
+  enableRenderer3();
+
   const rendererFactory = opts.rendererFactory || domRendererFactory3;
   const sanitizer = opts.sanitizer || null;
   const componentDef = getComponentDef<T>(componentType)!;
@@ -134,7 +135,7 @@ export function renderComponent<T>(
   const rootTView = createTView(TViewType.Root, null, null, 1, 0, null, null, null, null, null);
   const rootView: LView = createLView(
       null, rootTView, rootContext, rootFlags, null, null, rendererFactory, renderer, null,
-      opts.injector || null);
+      opts.injector || null, null);
 
   enterView(rootView);
   let component: T;
@@ -200,7 +201,7 @@ export function createRootComponentView(
   const componentView = createLView(
       rootView, getOrCreateTComponentView(def), null,
       def.onPush ? LViewFlags.Dirty : LViewFlags.CheckAlways, rootView[index], tNode,
-      rendererFactory, viewRenderer, sanitizer || null, null);
+      rendererFactory, viewRenderer, sanitizer || null, null, null);
 
   if (tView.firstCreatePass) {
     diPublicInInjector(getOrCreateNodeInjectorForNode(tNode, rootView), tView, def.type);
@@ -228,7 +229,11 @@ export function createRootComponent<T>(
   rootContext.components.push(component);
   componentView[CONTEXT] = component;
 
-  hostFeatures && hostFeatures.forEach((feature) => feature(component, componentDef));
+  if (hostFeatures !== null) {
+    for (const feature of hostFeatures) {
+      feature(component, componentDef);
+    }
+  }
 
   // We want to generate an empty QueryList for root content queries for backwards
   // compatibility with ViewEngine.
@@ -279,13 +284,10 @@ export function createRootContext(
  * renderComponent(AppComponent, {hostFeatures: [LifecycleHooksFeature]});
  * ```
  */
-export function LifecycleHooksFeature(component: any, def: ComponentDef<any>): void {
-  const lView = readPatchedLView(component)!;
-  ngDevMode && assertDefined(lView, 'LView is required');
-  const tView = lView[TVIEW];
+export function LifecycleHooksFeature(): void {
   const tNode = getCurrentTNode()!;
   ngDevMode && assertDefined(tNode, 'TNode is required');
-  registerPostOrderHooks(tView, tNode);
+  registerPostOrderHooks(getLView()[TVIEW], tNode);
 }
 
 /**

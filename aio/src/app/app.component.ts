@@ -22,6 +22,7 @@ import { TocService } from 'app/shared/toc.service';
 import { SwUpdatesService } from 'app/sw-updates/sw-updates.service';
 import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
 import { first, map } from 'rxjs/operators';
+import { SelectComponent } from './shared/select/select.component';
 
 const sideNavView = 'SideNav';
 export const showTopMenuWidth = 1150;
@@ -115,6 +116,9 @@ export class AppComponent implements OnInit {
   @ViewChild('appToolbar', { read: ElementRef }) toolbar: ElementRef;
 
   @ViewChildren('themeToggle, externalIcons', { read: ElementRef }) toolbarIcons: QueryList<ElementRef>;
+
+  @ViewChild(SelectComponent, { read: ElementRef })
+  docVersionSelectElement: ElementRef;
 
   constructor(
     public deployment: Deployment,
@@ -295,13 +299,10 @@ export class AppComponent implements OnInit {
           this.focusSearchBox();
         } else {
           // the user is focusing backward from the search input,
-          // loop it back to the last search result item
-          const anchors: HTMLAnchorElement[] = Array.from(
-            this.searchResultsView.nativeElement.querySelectorAll('a.search-result-item'),
-          );
-          if (anchors.length) {
-            anchors[anchors.length - 1].focus();
-          }
+          // loop it back to the results' close button
+          const closeBtn: HTMLButtonElement =
+            this.searchResultsView.nativeElement.querySelector('button.close-button');
+          closeBtn.focus();
         }
       }
     }
@@ -479,5 +480,13 @@ export class AppComponent implements OnInit {
         this.focusSearchBox();
       }
     }
+  }
+
+  scrollSelectIntoView() {
+    // this method is used to scroll the select component into view when it is clicked/opened
+    // the setTimeout is needed so that the scroll happens after the component has expanded
+    setTimeout(() =>
+      this.docVersionSelectElement.nativeElement?.scrollIntoView({behavior: 'smooth'})
+    );
   }
 }

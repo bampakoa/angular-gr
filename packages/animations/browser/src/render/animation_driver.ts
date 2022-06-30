@@ -41,7 +41,7 @@ export class NoopAnimationDriver implements AnimationDriver {
   }
 
   animate(
-      element: any, keyframes: {[key: string]: string|number}[], duration: number, delay: number,
+      element: any, keyframes: Array<Map<string, string|number>>, duration: number, delay: number,
       easing: string, previousPlayers: any[] = [],
       scrubberAccessRequested?: boolean): AnimationPlayer {
     return new NoopAnimationPlayer(duration, delay);
@@ -56,6 +56,8 @@ export abstract class AnimationDriver {
 
   abstract validateStyleProperty(prop: string): boolean;
 
+  abstract validateAnimatableStyleProperty?: (prop: string) => boolean;
+
   /**
    * @deprecated No longer in use. Will be removed.
    */
@@ -65,18 +67,14 @@ export abstract class AnimationDriver {
 
   /**
    * Obtains the parent element, if any. `null` is returned if the element does not have a parent.
-   *
-   * This method is optional to avoid a breaking change where implementors of this interface would
-   * be required to implement this method. This method is to become required in a major version of
-   * Angular.
    */
-  abstract getParentElement?(element: unknown): unknown;
+  abstract getParentElement(element: unknown): unknown;
 
   abstract query(element: any, selector: string, multi: boolean): any[];
 
   abstract computeStyle(element: any, prop: string, defaultValue?: string): string;
 
   abstract animate(
-      element: any, keyframes: {[key: string]: string|number}[], duration: number, delay: number,
+      element: any, keyframes: Array<Map<string, string|number>>, duration: number, delay: number,
       easing?: string|null, previousPlayers?: any[], scrubberAccessRequested?: boolean): any;
 }

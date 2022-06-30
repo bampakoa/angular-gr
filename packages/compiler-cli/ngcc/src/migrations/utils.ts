@@ -55,7 +55,7 @@ export function createDirectiveDecorator(
     if (metadata.exportAs !== null) {
       metaArgs.push(property('exportAs', metadata.exportAs.join(', ')));
     }
-    args.push(reifySourceFile(ts.createObjectLiteral(metaArgs)));
+    args.push(reifySourceFile(ts.factory.createObjectLiteralExpression(metaArgs)));
   }
   return {
     name: 'Directive',
@@ -89,7 +89,7 @@ export function createComponentDecorator(
     node: null,
     synthesizedFor: clazz.name,
     args: [
-      reifySourceFile(ts.createObjectLiteral(metaArgs)),
+      reifySourceFile(ts.factory.createObjectLiteralExpression(metaArgs)),
     ],
   };
 }
@@ -109,7 +109,7 @@ export function createInjectableDecorator(clazz: ClassDeclaration): Decorator {
 }
 
 function property(name: string, value: string): ts.PropertyAssignment {
-  return ts.createPropertyAssignment(name, ts.createStringLiteral(value));
+  return ts.factory.createPropertyAssignment(name, ts.factory.createStringLiteral(value));
 }
 
 const EMPTY_SF = ts.createSourceFile('(empty)', '', ts.ScriptTarget.Latest);

@@ -44,10 +44,10 @@ export function makeProgramFromGraph(fs: PathManipulation, graph: string): {
     const contents = (importList ? importList.split(',') : [])
                          .map(i => {
                            if (i.startsWith('*')) {
-                             const sym = i.substr(1);
+                             const sym = i.slice(1);
                              return `export {${sym}} from './${sym}';`;
                            } else if (i.endsWith('!')) {
-                             const sym = i.substr(0, i.length - 1);
+                             const sym = i.slice(0, -1);
                              return `import type {${sym}} from './${sym}';`;
                            } else {
                              return `import {${i}} from './${i}';`;

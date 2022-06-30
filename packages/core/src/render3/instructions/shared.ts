@@ -7,13 +7,13 @@
  */
 import {Injector} from '../../di';
 import {ErrorHandler} from '../../error_handler';
-import {formatRuntimeError, RuntimeError, RuntimeErrorCode} from '../../errors';
+import {RuntimeError, RuntimeErrorCode} from '../../errors';
 import {DoCheck, OnChanges, OnInit} from '../../interface/lifecycle_hooks';
-import {CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, SchemaMetadata} from '../../metadata/schema';
+import {SchemaMetadata} from '../../metadata/schema';
 import {ViewEncapsulation} from '../../metadata/view';
 import {validateAgainstEventAttributes, validateAgainstEventProperties} from '../../sanitization/sanitization';
 import {Sanitizer} from '../../sanitization/sanitizer';
-import {assertDefined, assertDomNode, assertEqual, assertGreaterThanOrEqual, assertIndexInRange, assertNotEqual, assertNotSame, assertSame, assertString} from '../../util/assert';
+import {assertDefined, assertDomNode, assertEqual, assertGreaterThanOrEqual, assertIndexInRange, assertNotEqual, assertNotSame, assertSame, assertString, throwError} from '../../util/assert';
 import {escapeCommentText} from '../../util/dom';
 import {normalizeDebugBindingName, normalizeDebugBindingValue} from '../../util/ng_reflect';
 import {stringify} from '../../util/stringify';
@@ -26,12 +26,13 @@ import {executeCheckHooks, executeInitAndCheckHooks, incrementInitPhaseFlags} fr
 import {CONTAINER_HEADER_OFFSET, HAS_TRANSPLANTED_VIEWS, LContainer, MOVED_VIEWS} from '../interfaces/container';
 import {ComponentDef, ComponentTemplate, DirectiveDef, DirectiveDefListOrFactory, HostBindingsFunction, PipeDefListOrFactory, RenderFlags, ViewQueriesFunction} from '../interfaces/definition';
 import {NodeInjectorFactory} from '../interfaces/injector';
+import {getUniqueLViewId} from '../interfaces/lview_tracking';
 import {AttributeMarker, InitialInputData, InitialInputs, LocalRefExtractor, PropertyAliases, PropertyAliasValue, TAttributes, TConstantsOrFactory, TContainerNode, TDirectiveHostNode, TElementContainerNode, TElementNode, TIcuContainerNode, TNode, TNodeFlags, TNodeType, TProjectionNode} from '../interfaces/node';
 import {isProceduralRenderer, Renderer3, RendererFactory3} from '../interfaces/renderer';
 import {RComment, RElement, RNode, RText} from '../interfaces/renderer_dom';
 import {SanitizerFn} from '../interfaces/sanitization';
 import {isComponentDef, isComponentHost, isContentQueryHost, isRootView} from '../interfaces/type_checks';
-import {CHILD_HEAD, CHILD_TAIL, CLEANUP, CONTEXT, DECLARATION_COMPONENT_VIEW, DECLARATION_VIEW, FLAGS, HEADER_OFFSET, HOST, HostBindingOpCodes, InitPhaseState, INJECTOR, LView, LViewFlags, NEXT, PARENT, RENDERER, RENDERER_FACTORY, RootContext, RootContextFlags, SANITIZER, T_HOST, TData, TRANSPLANTED_VIEWS_TO_REFRESH, TVIEW, TView, TViewType} from '../interfaces/view';
+import {CHILD_HEAD, CHILD_TAIL, CLEANUP, CONTEXT, DECLARATION_COMPONENT_VIEW, DECLARATION_VIEW, EMBEDDED_VIEW_INJECTOR, FLAGS, HEADER_OFFSET, HOST, HostBindingOpCodes, ID, InitPhaseState, INJECTOR, LView, LViewFlags, NEXT, PARENT, RENDERER, RENDERER_FACTORY, RootContext, RootContextFlags, SANITIZER, T_HOST, TData, TRANSPLANTED_VIEWS_TO_REFRESH, TVIEW, TView, TViewType} from '../interfaces/view';
 import {assertPureTNodeType, assertTNodeType} from '../node_assert';
 import {updateTextNode} from '../node_manipulation';
 import {isInlineTemplate, isNodeMatchingSelectorList} from '../node_selector_matcher';
@@ -45,9 +46,9 @@ import {getFirstLContainer, getLViewParent, getNextLContainer} from '../util/vie
 import {getComponentLViewByIndex, getNativeByIndex, getNativeByTNode, isCreationMode, resetPreOrderHookFlags, unwrapLView, updateTransplantedViewCount, viewAttachedToChangeDetector} from '../util/view_utils';
 
 import {selectIndexInternal} from './advance';
+import {ɵɵdirectiveInject} from './di';
+import {handleUnknownPropertyError, isPropertyValid, matchingSchemas} from './element_validation';
 import {attachLContainerDebug, attachLViewDebug, cloneToLViewFromTViewBlueprint, cloneToTViewData, LCleanup, LViewBlueprint, MatchesArray, TCleanup, TNodeDebug, TNodeInitialInputs, TNodeLocalNames, TViewComponents, TViewConstructor} from './lview_debug';
-
-
 
 /**
  * A permanent marker promise which signifies that the current CD tree is
@@ -125,11 +126,16 @@ function renderChildComponents(hostLView: LView, components: number[]): void {
 export function createLView<T>(
     parentLView: LView|null, tView: TView, context: T|null, flags: LViewFlags, host: RElement|null,
     tHostNode: TNode|null, rendererFactory: RendererFactory3|null, renderer: Renderer3|null,
-    sanitizer: Sanitizer|null, injector: Injector|null): LView {
+    sanitizer: Sanitizer|null, injector: Injector|null,
+    embeddedViewInjector: Injector|null): LView {
   const lView =
       ngDevMode ? cloneToLViewFromTViewBlueprint(tView) : tView.blueprint.slice() as LView;
   lView[HOST] = host;
   lView[FLAGS] = flags | LViewFlags.CreationMode | LViewFlags.Attached | LViewFlags.FirstLViewPass;
+  if (embeddedViewInjector !== null ||
+      (parentLView && (parentLView[FLAGS] & LViewFlags.HasEmbeddedViewInjector))) {
+    lView[FLAGS] |= LViewFlags.HasEmbeddedViewInjector;
+  }
   resetPreOrderHookFlags(lView);
   ngDevMode && tView.declTNode && parentLView && assertTNodeForLView(tView.declTNode, parentLView);
   lView[PARENT] = lView[DECLARATION_VIEW] = parentLView;
@@ -141,6 +147,8 @@ export function createLView<T>(
   lView[SANITIZER] = sanitizer || parentLView && parentLView[SANITIZER] || null!;
   lView[INJECTOR as any] = injector || parentLView && parentLView[INJECTOR] || null;
   lView[T_HOST] = tHostNode;
+  lView[ID] = getUniqueLViewId();
+  lView[EMBEDDED_VIEW_INJECTOR as any] = embeddedViewInjector;
   ngDevMode &&
       assertEqual(
           tView.type == TViewType.Embedded ? parentLView !== null : true, true,
@@ -241,7 +249,6 @@ export function createTNodeAtIndex(
   return tNode;
 }
 
-
 /**
  * When elements are created dynamically after a view blueprint is created (e.g. through
  * i18nApply()), we need to adjust the blueprint for future
@@ -284,20 +291,20 @@ export function allocExpando(
  * - updating static queries (if any);
  * - creating child components defined in a given view.
  */
-export function renderView<T>(tView: TView, lView: LView, context: T): void {
+export function renderView<T>(tView: TView, lView: LView<T>, context: T): void {
   ngDevMode && assertEqual(isCreationMode(lView), true, 'Should be run in creation mode');
   enterView(lView);
   try {
     const viewQuery = tView.viewQuery;
     if (viewQuery !== null) {
-      executeViewQueryFn(RenderFlags.Create, viewQuery, context);
+      executeViewQueryFn<T>(RenderFlags.Create, viewQuery, context);
     }
 
     // Execute a template associated with this view, if it exists. A template function might not be
     // defined for the root component views.
     const templateFn = tView.template;
     if (templateFn !== null) {
-      executeTemplate(tView, lView, templateFn, RenderFlags.Create, context);
+      executeTemplate<T>(tView, lView, templateFn, RenderFlags.Create, context);
     }
 
     // This needs to be set before children are processed to support recursive components.
@@ -320,7 +327,7 @@ export function renderView<T>(tView: TView, lView: LView, context: T): void {
     // in case a child component has projected a container. The LContainer needs
     // to exist so the embedded views are properly attached by the container.
     if (tView.staticViewQueries) {
-      executeViewQueryFn(RenderFlags.Update, tView.viewQuery!, context);
+      executeViewQueryFn<T>(RenderFlags.Update, tView.viewQuery!, context);
     }
 
     // Render child component views.
@@ -431,7 +438,7 @@ export function refreshView<T>(
     // refresh, the template might not yet be inserted.
     const viewQuery = tView.viewQuery;
     if (viewQuery !== null) {
-      executeViewQueryFn(RenderFlags.Update, viewQuery, context);
+      executeViewQueryFn<T>(RenderFlags.Update, viewQuery, context);
     }
 
     // execute view hooks (AfterViewInit, AfterViewChecked)
@@ -503,7 +510,7 @@ export function renderComponentOrTemplate<T>(
 }
 
 function executeTemplate<T>(
-    tView: TView, lView: LView, templateFn: ComponentTemplate<T>, rf: RenderFlags, context: T) {
+    tView: TView, lView: LView<T>, templateFn: ComponentTemplate<T>, rf: RenderFlags, context: T) {
   const prevSelectedIndex = getSelectedIndex();
   const isUpdatePhase = rf & RenderFlags.Update;
   try {
@@ -516,14 +523,14 @@ function executeTemplate<T>(
 
     const preHookType =
         isUpdatePhase ? ProfilerEvent.TemplateUpdateStart : ProfilerEvent.TemplateCreateStart;
-    profiler(preHookType, context);
+    profiler(preHookType, context as unknown as {});
     templateFn(rf, context);
   } finally {
     setSelectedIndex(prevSelectedIndex);
 
     const postHookType =
         isUpdatePhase ? ProfilerEvent.TemplateUpdateEnd : ProfilerEvent.TemplateCreateEnd;
-    profiler(postHookType, context);
+    profiler(postHookType, context as unknown as {});
   }
 }
 
@@ -1007,10 +1014,8 @@ export function elementPropertyInternal<T>(
 
     if (ngDevMode) {
       validateAgainstEventProperties(propName);
-      if (!validateProperty(element, tNode.value, propName, tView.schemas)) {
-        // Return here since we only log warnings for unknown properties.
-        logUnknownPropertyError(propName, tNode.value);
-        return;
+      if (!isPropertyValid(element, propName, tNode.value, tView.schemas)) {
+        handleUnknownPropertyError(propName, tNode.value, tNode.type, lView);
       }
       ngDevMode.rendererSetProperty++;
     }
@@ -1028,7 +1033,7 @@ export function elementPropertyInternal<T>(
     // If the node is a container and the property didn't
     // match any of the inputs or schemas we should throw.
     if (ngDevMode && !matchingSchemas(tView.schemas, tNode.value)) {
-      logUnknownPropertyError(propName, tNode.value);
+      handleUnknownPropertyError(propName, tNode.value, tNode.type, lView);
     }
   }
 }
@@ -1083,71 +1088,6 @@ export function setNgReflectProperties(
       setNgReflectProperty(lView, element, type, dataValue[i + 1] as string, value);
     }
   }
-}
-
-/**
- * Validates that the property of the element is known at runtime and returns
- * false if it's not the case.
- * This check is relevant for JIT-compiled components (for AOT-compiled
- * ones this check happens at build time).
- *
- * The property is considered known if either:
- * - it's a known property of the element
- * - the element is allowed by one of the schemas
- * - the property is used for animations
- *
- * @param element Element to validate
- * @param tagName Name of the tag to check
- * @param propName Name of the property to check
- * @param schemas Array of schemas
- */
-function validateProperty(
-    element: RElement|RComment, tagName: string|null, propName: string,
-    schemas: SchemaMetadata[]|null): boolean {
-  // If `schemas` is set to `null`, that's an indication that this Component was compiled in AOT
-  // mode where this check happens at compile time. In JIT mode, `schemas` is always present and
-  // defined as an array (as an empty array in case `schemas` field is not defined) and we should
-  // execute the check below.
-  if (schemas === null) return true;
-
-  // The property is considered valid if the element matches the schema, it exists on the element,
-  // or it is synthetic, and we are in a browser context (web worker nodes should be skipped).
-  if (matchingSchemas(schemas, tagName) || propName in element || isAnimationProp(propName)) {
-    return true;
-  }
-
-  // Note: `typeof Node` returns 'function' in most browsers, but on IE it is 'object' so we
-  // need to account for both here, while being careful with `typeof null` also returning 'object'.
-  return typeof Node === 'undefined' || Node === null || !(element instanceof Node);
-}
-
-/**
- * Returns true if the tag name is allowed by specified schemas.
- * @param schemas Array of schemas
- * @param tagName Name of the tag
- */
-export function matchingSchemas(schemas: SchemaMetadata[]|null, tagName: string|null): boolean {
-  if (schemas !== null) {
-    for (let i = 0; i < schemas.length; i++) {
-      const schema = schemas[i];
-      if (schema === NO_ERRORS_SCHEMA ||
-          schema === CUSTOM_ELEMENTS_SCHEMA && tagName && tagName.indexOf('-') > -1) {
-        return true;
-      }
-    }
-  }
-
-  return false;
-}
-
-/**
- * Logs an error that a property is not supported on an element.
- * @param propName Name of the invalid property.
- * @param tagName Name of the node on which we encountered the property.
- */
-function logUnknownPropertyError(propName: string, tagName: string): void {
-  const message = `Can't bind to '${propName}' since it isn't a known property of '${tagName}'.`;
-  console.error(formatRuntimeError(RuntimeErrorCode.UNKNOWN_BINDING, message));
 }
 
 /**
@@ -1344,7 +1284,6 @@ function instantiateAllDirectives(
 function invokeDirectivesHostBindings(tView: TView, lView: LView, tNode: TNode) {
   const start = tNode.directiveStart;
   const end = tNode.directiveEnd;
-  const firstCreatePass = tView.firstCreatePass;
   const elementIndex = tNode.index;
   const currentDirectiveIndex = getCurrentDirectiveIndex();
   try {
@@ -1505,7 +1444,11 @@ function configureViewWithDirective<T>(
   tView.data[directiveIndex] = def;
   const directiveFactory =
       def.factory || ((def as {factory: Function}).factory = getFactoryDef(def.type, true));
-  const nodeInjectorFactory = new NodeInjectorFactory(directiveFactory, isComponentDef(def), null);
+  // Even though `directiveFactory` will already be using `ɵɵdirectiveInject` in its generated code,
+  // we also want to support `inject()` directly from the directive constructor context so we set
+  // `ɵɵdirectiveInject` as the inject implementation here too.
+  const nodeInjectorFactory =
+      new NodeInjectorFactory(directiveFactory, isComponentDef(def), ɵɵdirectiveInject);
   tView.blueprint[directiveIndex] = nodeInjectorFactory;
   lView[directiveIndex] = nodeInjectorFactory;
 
@@ -1526,7 +1469,7 @@ function addComponentLogic<T>(lView: LView, hostTNode: TElementNode, def: Compon
       createLView(
           lView, tView, null, def.onPush ? LViewFlags.Dirty : LViewFlags.CheckAlways, native,
           hostTNode as TElementNode, rendererFactory, rendererFactory.createRenderer(native, def),
-          null, null));
+          null, null, null));
 
   // Component view will always be created before any injected LContainers,
   // so this is a regular element, wrap it with the component view
@@ -1933,9 +1876,12 @@ export function scheduleTick(rootContext: RootContext, flags: RootContextFlags) 
 export function tickRootContext(rootContext: RootContext) {
   for (let i = 0; i < rootContext.components.length; i++) {
     const rootComponent = rootContext.components[i];
-    const lView = readPatchedLView(rootComponent)!;
-    const tView = lView[TVIEW];
-    renderComponentOrTemplate(tView, lView, tView.template, rootComponent);
+    const lView = readPatchedLView(rootComponent);
+    // We might not have an `LView` if the component was destroyed.
+    if (lView !== null) {
+      const tView = lView[TVIEW];
+      renderComponentOrTemplate(tView, lView, tView.template, rootComponent);
+    }
   }
 }
 
@@ -1989,7 +1935,7 @@ export function checkNoChangesInRootView(lView: LView): void {
 }
 
 function executeViewQueryFn<T>(
-    flags: RenderFlags, viewQueryFn: ViewQueriesFunction<{}>, component: T): void {
+    flags: RenderFlags, viewQueryFn: ViewQueriesFunction<T>, component: T): void {
   ngDevMode && assertDefined(viewQueryFn, 'View queries function to execute must be defined.');
   setCurrentQueryIndex(0);
   viewQueryFn(flags, component);

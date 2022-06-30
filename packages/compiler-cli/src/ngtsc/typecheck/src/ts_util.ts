@@ -8,7 +8,7 @@
 
 import ts from 'typescript';
 
-import {ClassDeclaration} from '../../reflection';
+const PARSED_TS_VERSION = parseFloat(ts.versionMajorMinor);
 
 
 /**
@@ -47,12 +47,12 @@ const SAFE_TO_CAST_WITHOUT_PARENS: Set<ts.SyntaxKind> = new Set([
 export function tsCastToAny(expr: ts.Expression): ts.Expression {
   // Wrap `expr` in parentheses if needed (see `SAFE_TO_CAST_WITHOUT_PARENS` above).
   if (!SAFE_TO_CAST_WITHOUT_PARENS.has(expr.kind)) {
-    expr = ts.createParen(expr);
+    expr = ts.factory.createParenthesizedExpression(expr);
   }
 
   // The outer expression is always wrapped in parentheses.
-  return ts.createParen(
-      ts.createAsExpression(expr, ts.createKeywordTypeNode(ts.SyntaxKind.AnyKeyword)));
+  return ts.factory.createParenthesizedExpression(ts.factory.createAsExpression(
+      expr, ts.factory.createKeywordTypeNode(ts.SyntaxKind.AnyKeyword)));
 }
 
 
@@ -63,12 +63,12 @@ export function tsCastToAny(expr: ts.Expression): ts.Expression {
  * based on the tag name, including for custom elements that have appropriate .d.ts definitions.
  */
 export function tsCreateElement(tagName: string): ts.Expression {
-  const createElement = ts.createPropertyAccess(
-      /* expression */ ts.createIdentifier('document'), 'createElement');
-  return ts.createCall(
+  const createElement = ts.factory.createPropertyAccessExpression(
+      /* expression */ ts.factory.createIdentifier('document'), 'createElement');
+  return ts.factory.createCallExpression(
       /* expression */ createElement,
       /* typeArguments */ undefined,
-      /* argumentsArray */[ts.createLiteral(tagName)]);
+      /* argumentsArray */[ts.factory.createStringLiteral(tagName)]);
 }
 
 /**
@@ -79,11 +79,12 @@ export function tsCreateElement(tagName: string): ts.Expression {
  * Unlike with `tsCreateVariable`, the type of the variable is explicitly specified.
  */
 export function tsDeclareVariable(id: ts.Identifier, type: ts.TypeNode): ts.VariableStatement {
-  const decl = ts.createVariableDeclaration(
+  const decl = ts.factory.createVariableDeclaration(
       /* name */ id,
+      /* exclamationToken */ undefined,
       /* type */ type,
-      /* initializer */ ts.createNonNullExpression(ts.createNull()));
-  return ts.createVariableStatement(
+      /* initializer */ ts.factory.createNonNullExpression(ts.factory.createNull()));
+  return ts.factory.createVariableStatement(
       /* modifiers */ undefined,
       /* declarationList */[decl]);
 }
@@ -99,8 +100,8 @@ export function tsDeclareVariable(id: ts.Identifier, type: ts.TypeNode): ts.Vari
  */
 export function tsCreateTypeQueryForCoercedInput(
     typeName: ts.EntityName, coercedInputName: string): ts.TypeQueryNode {
-  return ts.createTypeQueryNode(
-      ts.createQualifiedName(typeName, `ngAcceptInputType_${coercedInputName}`));
+  return ts.factory.createTypeQueryNode(
+      ts.factory.createQualifiedName(typeName, `ngAcceptInputType_${coercedInputName}`));
 }
 
 /**
@@ -111,11 +112,12 @@ export function tsCreateTypeQueryForCoercedInput(
  */
 export function tsCreateVariable(
     id: ts.Identifier, initializer: ts.Expression): ts.VariableStatement {
-  const decl = ts.createVariableDeclaration(
+  const decl = ts.factory.createVariableDeclaration(
       /* name */ id,
+      /* exclamationToken */ undefined,
       /* type */ undefined,
       /* initializer */ initializer);
-  return ts.createVariableStatement(
+  return ts.factory.createVariableStatement(
       /* modifiers */ undefined,
       /* declarationList */[decl]);
 }
@@ -125,54 +127,26 @@ export function tsCreateVariable(
  */
 export function tsCallMethod(
     receiver: ts.Expression, methodName: string, args: ts.Expression[] = []): ts.CallExpression {
-  const methodAccess = ts.createPropertyAccess(receiver, methodName);
-  return ts.createCall(
+  const methodAccess = ts.factory.createPropertyAccessExpression(receiver, methodName);
+  return ts.factory.createCallExpression(
       /* expression */ methodAccess,
       /* typeArguments */ undefined,
       /* argumentsArray */ args);
 }
 
-export function checkIfClassIsExported(node: ClassDeclaration): boolean {
-  // A class is exported if one of two conditions is met:
-  // 1) it has the 'export' modifier.
-  // 2) it's declared at the top level, and there is an export statement for the class.
-  if (node.modifiers !== undefined &&
-      node.modifiers.some(mod => mod.kind === ts.SyntaxKind.ExportKeyword)) {
-    // Condition 1 is true, the class has an 'export' keyword attached.
-    return true;
-  } else if (
-      node.parent !== undefined && ts.isSourceFile(node.parent) &&
-      checkIfFileHasExport(node.parent, node.name.text)) {
-    // Condition 2 is true, the class is exported via an 'export {}' statement.
-    return true;
-  }
-  return false;
-}
-
-function checkIfFileHasExport(sf: ts.SourceFile, name: string): boolean {
-  for (const stmt of sf.statements) {
-    if (ts.isExportDeclaration(stmt) && stmt.exportClause !== undefined &&
-        ts.isNamedExports(stmt.exportClause)) {
-      for (const element of stmt.exportClause.elements) {
-        if (element.propertyName === undefined && element.name.text === name) {
-          // The named declaration is directly exported.
-          return true;
-        } else if (element.propertyName !== undefined && element.propertyName.text == name) {
-          // The named declaration is exported via an alias.
-          return true;
-        }
-      }
-    }
-  }
-  return false;
-}
-
-export function checkIfGenericTypesAreUnbound(node: ClassDeclaration<ts.ClassDeclaration>):
-    boolean {
-  if (node.typeParameters === undefined) {
-    return true;
-  }
-  return node.typeParameters.every(param => param.constraint === undefined);
+/**
+ * Updates a `ts.TypeParameter` declaration.
+ *
+ * TODO(crisbeto): this is a backwards-compatibility layer for versions of TypeScript less than 4.7.
+ * We should remove it once we have dropped support for the older versions.
+ */
+export function tsUpdateTypeParameterDeclaration(
+    node: ts.TypeParameterDeclaration, name: ts.Identifier, constraint: ts.TypeNode|undefined,
+    defaultType: ts.TypeNode|undefined): ts.TypeParameterDeclaration {
+  return PARSED_TS_VERSION < 4.7 ?
+      ts.factory.updateTypeParameterDeclaration(node, name, constraint, defaultType) :
+      (ts.factory.updateTypeParameterDeclaration as any)(
+          node, /* modifiers */[], name, constraint, defaultType);
 }
 
 export function isAccessExpression(node: ts.Node): node is ts.ElementAccessExpression|

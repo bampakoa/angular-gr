@@ -16,12 +16,10 @@ Currently, Angular supports the following extended diagnostics:
 Extended diagnostics are warnings by default and do not block compilation.
 Each diagnostic can be configured as either:
 
-*   `warning` \(default\) - The compiler emits the diagnostic as a warning but does not block compilation.
-    The compiler will still exit with status code 0, even if warnings are emitted.
-
+*   `warning` \(default\) - The compiler emits the diagnostic as a warning but does not block
+  compilation. The compiler will still exit with status code 0, even if warnings are emitted.
 *   `error` - The compiler emits the diagnostic as an error and fails the compilation.
     The compiler will exit with a non-zero status code if one or more errors are emitted.
-
 *   `suppress` - The compiler does *not* emit the diagnostic at all.
 
 Check severity can be configured in the project's `tsconfig.json` file:
@@ -37,7 +35,7 @@ Check severity can be configured in the project's `tsconfig.json` file:
         "invalidBananaInBox": "suppress"
       },
 
-      // The category to use for any diagnostics not listed in &grave;checks&grave; above.
+      // The category to use for any diagnostics not listed in `checks` above.
       "defaultCategory": "error"
     }
   }

@@ -115,16 +115,29 @@ captureNgDevPatches(
       ],
     ]);
 
+// Patches for angular linker
+captureNgDevPatches(
+    [
+      'node_modules/@angular/dev-infra-private/shared-scripts/angular-linker/BUILD.bazel',
+      'node_modules/@angular/dev-infra-private/shared-scripts/angular-linker/esbuild-plugin.mjs',
+    ],
+    [
+      [
+        '"@npm//@angular/compiler-cli"',
+        '"@angular//packages/compiler-cli", "@angular//packages/compiler-cli/linker/babel"'
+      ],
+      [
+        `from '@angular/compiler-cli/linker/babel'`,
+        `from '@angular/compiler-cli/linker/babel/index.js'`
+      ],
+    ]);
+
 // Apply the captured patches for the `@angular/dev-infra-private` package.
 for (const [fileName, patches] of ngDevPatches.entries()) {
   for (const patch of patches) {
     sed('-i', patch[0], patch[1], fileName);
   }
 }
-
-// Workaround until tsec is compatible with `rules_nodejs` v5.
-// TODO: Remove when https://github.com/google/tsec/pull/25 is available.
-sed('-i', '@bazel/typescript', '@bazel/concatjs', 'node_modules/tsec/index.bzl');
 
 log('\n# patch: delete d.ts files referring to rxjs-compat');
 // more info in https://github.com/angular/angular/pull/33786
@@ -157,22 +170,5 @@ rm('-rf', [
   'node_modules/rxjs/Subscriber.*',
   'node_modules/rxjs/Subscription.*',
 ]);
-
-
-log('\n# patch: dev-infra snapshotting');
-// more info in https://github.com/angular/dev-infra/pull/449
-['node_modules/@angular/dev-infra-private/ng-dev/bundles/cli.js',
- 'node_modules/@angular/dev-infra-private/ng-dev/bundles/cli.js.map',
-].forEach(filePath => {
-  const contents = readFileSync(filePath, 'utf8');
-  const newContents = contents.replace('*[0-9]*.[0-9]*.[0-9]*', '?[0-9]*.[0-9]*.[0-9]*');
-  if (contents !== newContents) {
-    writeFileSync(filePath, newContents, 'utf8');
-    log(`Release tag matcher for snapshots replaced in ${filePath}`);
-  } else {
-    log(`Release tag matcher for snapshots were already replaced in ${filePath}`);
-  }
-});
-
 
 log('===== finished running the postinstall-patches.js script =====');

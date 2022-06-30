@@ -37,7 +37,7 @@ const setClassMetadataRegExp = (expectedType: string): RegExp =>
 const testFiles = loadStandardTestFiles();
 
 function getDiagnosticSourceCode(diag: ts.Diagnostic): string {
-  return diag.file!.text.substr(diag.start!, diag.length!);
+  return diag.file!.text.slice(diag.start!, diag.start! + diag.length!);
 }
 
 runInEachFileSystem(allTests);
@@ -328,7 +328,7 @@ function allTests(os: string) {
       const dtsContents = env.getContents('test.d.ts');
       expect(dtsContents)
           .toContain(
-              'static ɵdir: i0.ɵɵDirectiveDeclaration<TestDir, "[dir]", never, {}, {}, never>');
+              'static ɵdir: i0.ɵɵDirectiveDeclaration<TestDir, "[dir]", never, {}, {}, never, never, false>');
       expect(dtsContents).toContain('static ɵfac: i0.ɵɵFactoryDeclaration<TestDir, never>');
     });
 
@@ -350,7 +350,7 @@ function allTests(os: string) {
       const dtsContents = env.getContents('test.d.ts');
       expect(dtsContents)
           .toContain(
-              'static ɵdir: i0.ɵɵDirectiveDeclaration<TestDir, never, never, {}, {}, never>');
+              'static ɵdir: i0.ɵɵDirectiveDeclaration<TestDir, never, never, {}, {}, never, never, false>');
       expect(dtsContents).toContain('static ɵfac: i0.ɵɵFactoryDeclaration<TestDir, never>');
     });
 
@@ -375,7 +375,7 @@ function allTests(os: string) {
       const dtsContents = env.getContents('test.d.ts');
       expect(dtsContents)
           .toContain(
-              'static ɵcmp: i0.ɵɵComponentDeclaration<TestCmp, "test-cmp", never, {}, {}, never, never>');
+              'static ɵcmp: i0.ɵɵComponentDeclaration<TestCmp, "test-cmp", never, {}, {}, never, never, false>');
       expect(dtsContents).toContain('static ɵfac: i0.ɵɵFactoryDeclaration<TestCmp, never>');
     });
 
@@ -402,7 +402,7 @@ function allTests(os: string) {
       expect(dtsContents)
           .toContain(
               'static ɵcmp: i0.ɵɵComponentDeclaration' +
-              '<TestCmp, "test-cmp", never, {}, {}, never, never>');
+              '<TestCmp, "test-cmp", never, {}, {}, never, never, false>');
       expect(dtsContents).toContain('static ɵfac: i0.ɵɵFactoryDeclaration<TestCmp, never>');
     });
 
@@ -430,7 +430,7 @@ function allTests(os: string) {
       const dtsContents = env.getContents('test.d.ts');
       expect(dtsContents)
           .toContain(
-              'static ɵcmp: i0.ɵɵComponentDeclaration<TestCmp, "test-cmp", never, {}, {}, never, never>');
+              'static ɵcmp: i0.ɵɵComponentDeclaration<TestCmp, "test-cmp", never, {}, {}, never, never, false>');
       expect(dtsContents).toContain('static ɵfac: i0.ɵɵFactoryDeclaration<TestCmp, never>');
     });
 
@@ -820,7 +820,7 @@ function allTests(os: string) {
       env.driveMain();
 
       const jsContents = trim(env.getContents('test.js'));
-      expect(jsContents).toContain('pipes: [PipeB]');
+      expect(jsContents).toContain('dependencies: [PipeB]');
     });
 
     it('should respect imported module order when selecting Pipe (last imported Pipe is used)',
@@ -875,7 +875,7 @@ function allTests(os: string) {
          env.driveMain();
 
          const jsContents = trim(env.getContents('test.js'));
-         expect(jsContents).toContain('pipes: [PipeB]');
+         expect(jsContents).toContain('dependencies: [PipeB]');
        });
 
     it('should add Directives and Components from `declarations` at the end of the list', () => {
@@ -930,7 +930,8 @@ function allTests(os: string) {
       env.driveMain();
 
       const jsContents = trim(env.getContents('test.js'));
-      expect(jsContents).toContain('directives: [DirectiveA, DirectiveB, ComponentA, ComponentB]');
+      expect(jsContents)
+          .toContain('dependencies: [DirectiveA, ComponentA, DirectiveB, ComponentB]');
     });
 
     it('should respect imported module order while processing Directives and Components', () => {
@@ -993,7 +994,8 @@ function allTests(os: string) {
       env.driveMain();
 
       const jsContents = trim(env.getContents('test.js'));
-      expect(jsContents).toContain('directives: [DirectiveA, DirectiveB, ComponentA, ComponentB]');
+      expect(jsContents)
+          .toContain('dependencies: [DirectiveA, ComponentA, DirectiveB, ComponentB]');
     });
 
     it('should compile Components with a templateUrl in a different rootDir', () => {
@@ -1091,7 +1093,7 @@ function allTests(os: string) {
       const dtsContents = env.getContents('test.d.ts');
       expect(dtsContents)
           .toContain(
-              `static ɵdir: i0.ɵɵDirectiveDeclaration<TestBase, never, never, { "input": "input"; }, {}, never>;`);
+              `static ɵdir: i0.ɵɵDirectiveDeclaration<TestBase, never, never, { "input": "input"; }, {}, never, never, false>;`);
     });
 
     describe('undecorated classes using Angular features', () => {
@@ -1197,7 +1199,7 @@ function allTests(os: string) {
       const dtsContents = env.getContents('test.d.ts');
       expect(dtsContents)
           .toContain(
-              'static ɵcmp: i0.ɵɵComponentDeclaration<TestCmp, "test-cmp", never, {}, {}, never, never>');
+              'static ɵcmp: i0.ɵɵComponentDeclaration<TestCmp, "test-cmp", never, {}, {}, never, never, false>');
       expect(dtsContents)
           .toContain(
               'static ɵmod: i0.ɵɵNgModuleDeclaration<TestModule, [typeof TestCmp], never, never>');
@@ -1233,7 +1235,7 @@ function allTests(os: string) {
       expect(jsContents).toContain(`i0.ɵɵdefineNgModule({ type: TestModule, id: 'test' })`);
     });
 
-    it('should emit the id when the module\'s id is defined as `module.id`', () => {
+    it('should warn when an NgModule id is defined as module.id, and not emit it', () => {
       env.write('index.d.ts', `
          declare const module = {id: string};
        `);
@@ -1244,10 +1246,30 @@ function allTests(os: string) {
          export class TestModule {}
        `);
 
+      const diags = env.driveDiagnostics();
+
+      const jsContents = env.getContents('test.js');
+      expect(jsContents).toContain('i0.ɵɵdefineNgModule({ type: TestModule })');
+      expect(jsContents).not.toContain('i0.ɵɵregisterNgModuleType');
+
+      expect(diags.length).toEqual(1);
+      expect(diags[0].category).toEqual(ts.DiagnosticCategory.Warning);
+      expect(diags[0].code).toEqual(ngErrorCode(ErrorCode.WARN_NGMODULE_ID_UNNECESSARY));
+      expect(getDiagnosticSourceCode(diags[0])).toEqual('module.id');
+    });
+
+    it('should emit a side-effectful registration call when an @NgModule has an id', () => {
+      env.write('test.ts', `
+        import {NgModule} from '@angular/core';
+
+        @NgModule({id: 'test'})
+        export class TestModule {}
+    `);
+
       env.driveMain();
 
       const jsContents = env.getContents('test.js');
-      expect(jsContents).toContain('i0.ɵɵdefineNgModule({ type: TestModule, id: module.id })');
+      expect(jsContents).toContain(`i0.ɵɵregisterNgModuleType(TestModule, 'test')`);
     });
 
     it('should filter out directives and pipes from module exports in the injector def', () => {
@@ -1307,7 +1329,7 @@ function allTests(os: string) {
               'TestModule.ɵfac = function TestModule_Factory(t) { return new (t || TestModule)(); }');
       expect(jsContents)
           .toContain(
-              'i0.ɵɵdefineInjector({ imports: [[OtherModule, RouterModule.forRoot()],' +
+              'i0.ɵɵdefineInjector({ imports: [OtherModule, RouterModule.forRoot(),' +
               ' OtherModule, RouterModule] });');
     });
 
@@ -1345,7 +1367,7 @@ function allTests(os: string) {
           .toContain(
               `TestModule.ɵinj = /*@__PURE__*/ i0.ɵɵdefineInjector({ ` +
               `providers: [{ provide: Token, useValue: 'test' }], ` +
-              `imports: [[OtherModule]] });`);
+              `imports: [OtherModule] });`);
 
       const dtsContents = env.getContents('test.d.ts');
       expect(dtsContents)
@@ -1388,7 +1410,7 @@ function allTests(os: string) {
           .toContain(
               `TestModule.ɵinj = /*@__PURE__*/ i0.ɵɵdefineInjector({ ` +
               `providers: [{ provide: Token, useFactory: () => new Token() }], ` +
-              `imports: [[OtherModule]] });`);
+              `imports: [OtherModule] });`);
 
       const dtsContents = env.getContents('test.d.ts');
       expect(dtsContents)
@@ -1435,7 +1457,7 @@ function allTests(os: string) {
           .toContain(
               `TestModule.ɵinj = /*@__PURE__*/ i0.ɵɵdefineInjector({ ` +
               `providers: [{ provide: Token, useFactory: (dep) => new Token(dep), deps: [Dep] }], ` +
-              `imports: [[OtherModule]] });`);
+              `imports: [OtherModule] });`);
 
       const dtsContents = env.getContents('test.d.ts');
       expect(dtsContents)
@@ -1662,7 +1684,8 @@ function allTests(os: string) {
       expect(jsContents)
           .toContain(
               'TestPipe.ɵfac = function TestPipe_Factory(t) { return new (t || TestPipe)(); }');
-      expect(dtsContents).toContain('static ɵpipe: i0.ɵɵPipeDeclaration<TestPipe, "test-pipe">;');
+      expect(dtsContents)
+          .toContain('static ɵpipe: i0.ɵɵPipeDeclaration<TestPipe, "test-pipe", false>;');
       expect(dtsContents).toContain('static ɵfac: i0.ɵɵFactoryDeclaration<TestPipe, never>;');
     });
 
@@ -1687,7 +1710,8 @@ function allTests(os: string) {
       expect(jsContents)
           .toContain(
               'TestPipe.ɵfac = function TestPipe_Factory(t) { return new (t || TestPipe)(); }');
-      expect(dtsContents).toContain('static ɵpipe: i0.ɵɵPipeDeclaration<TestPipe, "test-pipe">;');
+      expect(dtsContents)
+          .toContain('static ɵpipe: i0.ɵɵPipeDeclaration<TestPipe, "test-pipe", false>;');
       expect(dtsContents).toContain('static ɵfac: i0.ɵɵFactoryDeclaration<TestPipe, never>;');
     });
 
@@ -1728,7 +1752,7 @@ function allTests(os: string) {
       expect(jsContents).toContain('TestPipe.ɵpipe =');
       const dtsContents = env.getContents('test.d.ts');
       expect(dtsContents)
-          .toContain('static ɵpipe: i0.ɵɵPipeDeclaration<TestPipe<any>, "test-pipe">;');
+          .toContain('static ɵpipe: i0.ɵɵPipeDeclaration<TestPipe<any>, "test-pipe", false>;');
       expect(dtsContents).toContain('static ɵfac: i0.ɵɵFactoryDeclaration<TestPipe<any>, never>;');
     });
 
@@ -1753,7 +1777,7 @@ function allTests(os: string) {
       env.driveMain();
 
       const jsContents = env.getContents('test.js');
-      expect(jsContents).toContain('pipes: [TestPipe]');
+      expect(jsContents).toContain('dependencies: [TestPipe]');
 
       const dtsContents = env.getContents('test.d.ts');
       expect(dtsContents)
@@ -2914,7 +2938,7 @@ function allTests(os: string) {
         env.driveMain();
 
         const jsContents = env.getContents('test.js');
-        expect(jsContents).toContain('imports: [[RouterModule.forRoot()]]');
+        expect(jsContents).toContain('imports: [RouterModule.forRoot()]');
 
         const dtsContents = env.getContents('test.d.ts');
         expect(dtsContents).toContain(`import * as i1 from "router";`);
@@ -2978,7 +3002,7 @@ function allTests(os: string) {
         env.driveMain();
 
         const jsContents = env.getContents('test.js');
-        expect(jsContents).toContain('imports: [[RouterModule.forRoot()]]');
+        expect(jsContents).toContain('imports: [RouterModule.forRoot()]');
 
         const dtsContents = env.getContents('test.d.ts');
         expect(dtsContents).toContain(`import * as i1 from "router";`);
@@ -3013,7 +3037,7 @@ function allTests(os: string) {
            env.driveMain();
 
            const jsContents = env.getContents('test.js');
-           expect(jsContents).toContain('imports: [[RouterModule.forRoot()]]');
+           expect(jsContents).toContain('imports: [RouterModule.forRoot()]');
 
            const dtsContents = env.getContents('test.d.ts');
            expect(dtsContents).toContain(`import * as i1 from "router2";`);
@@ -3076,7 +3100,7 @@ function allTests(os: string) {
          env.driveMain();
 
          const jsContents = env.getContents('test.js');
-         expect(jsContents).toContain('imports: [[RouterModule.forRoot()]]');
+         expect(jsContents).toContain('imports: [RouterModule.forRoot()]');
 
          const dtsContents = env.getContents('test.d.ts');
          expect(dtsContents).toContain(`import * as i1 from "router";`);
@@ -3108,7 +3132,7 @@ function allTests(os: string) {
          env.driveMain();
 
          const jsContents = env.getContents('test.js');
-         expect(jsContents).toContain('imports: [[RouterModule.forRoot()]]');
+         expect(jsContents).toContain('imports: [RouterModule.forRoot()]');
 
          const dtsContents = env.getContents('test.d.ts');
          expect(dtsContents).toContain(`import * as i1 from "router";`);
@@ -3293,7 +3317,7 @@ function allTests(os: string) {
       const dtsContents = env.getContents('test.d.ts');
       expect(dtsContents)
           .toContain(
-              'static ɵcmp: i0.ɵɵComponentDeclaration<TestCmp, "test", never, {}, {}, never, ["*", ".foo"]>');
+              'static ɵcmp: i0.ɵɵComponentDeclaration<TestCmp, "test", never, {}, {}, never, ["*", ".foo"], false>');
     });
 
     it('should generate queries for components', () => {
@@ -4178,26 +4202,6 @@ function allTests(os: string) {
                 ' return new i0.NgModuleFactory(TestModule); });\n');
       });
 
-      it('should generate side effectful NgModuleFactory constructor when lazy loaded', () => {
-        env.tsconfig({'allowEmptyCodegenFiles': true});
-
-        env.write('test.ts', `
-          import {NgModule} from '@angular/core';
-
-          @NgModule({
-            id: 'test', // ID to use for lazy loading.
-          })
-          export class TestModule {}
-        `);
-
-        env.driveMain();
-
-        // Should **not** contain noSideEffects(), because the module is lazy loaded.
-        const factoryContents = env.getContents('test.ngfactory.js');
-        expect(factoryContents)
-            .toContain('export const TestModuleNgFactory = new i0.ɵNgModuleFactory(TestModule);');
-      });
-
       describe('file-level comments', () => {
         it('should copy a top-level comment into a factory stub', () => {
           env.tsconfig({'allowEmptyCodegenFiles': true});
@@ -4393,7 +4397,7 @@ function allTests(os: string) {
          env.driveMain();
 
          const jsContents = env.getContents('test.js');
-         expect(jsContents).toContain('directives: function () { return [CmpB]; }');
+         expect(jsContents).toContain('dependencies: function () { return [CmpB]; }');
        });
 
     it('should wrap setClassMetadata in an iife with ngDevMode guard', () => {
@@ -4415,14 +4419,11 @@ function allTests(os: string) {
     it('should not include `schemas` in component and module defs', () => {
       env.write('test.ts', `
         import {Component, NgModule, NO_ERRORS_SCHEMA} from '@angular/core';
-
         @Component({
           selector: 'comp',
           template: '<custom-el></custom-el>',
-          schemas: [NO_ERRORS_SCHEMA],
         })
         class MyComp {}
-
         @NgModule({
           declarations: [MyComp],
           schemas: [NO_ERRORS_SCHEMA],
@@ -4878,7 +4879,7 @@ function allTests(os: string) {
 
       env.driveMain();
       const jsContents = env.getContents('test.js');
-      expect(jsContents).toMatch(/directives: \[DirA,\s+DirB\]/);
+      expect(jsContents).toMatch(/dependencies: \[DirA,\s+DirB\]/);
     });
 
     describe('cycle detection', () => {
@@ -5291,7 +5292,10 @@ function allTests(os: string) {
       function verifyThrownError(errorCode: ErrorCode, errorMessage: string) {
         const errors = env.driveDiagnostics();
         expect(errors.length).toBe(1);
-        const {code, messageText} = errors[0];
+        let {code, messageText} = errors[0];
+        if (errors[0].relatedInformation !== undefined) {
+          messageText += errors[0].relatedInformation.map(info => info.messageText).join('\n');
+        }
         expect(code).toBe(ngErrorCode(errorCode));
         expect(trim(messageText as string)).toContain(errorMessage);
       }
@@ -5390,7 +5394,7 @@ function allTests(os: string) {
 
         env.driveMain();
         const jsContents = env.getContents('test.js');
-        expect(jsContents).toMatch(/directives: \[i1\.ExternalDir\]/);
+        expect(jsContents).toMatch(/dependencies: \[i1\.ExternalDir\]/);
       });
 
       it('should import directives by their external name', () => {
@@ -5428,7 +5432,7 @@ function allTests(os: string) {
 
         env.driveMain();
         const jsContents = env.getContents('test.js');
-        expect(jsContents).toMatch(/directives: \[i1\.ExternalDir\]/);
+        expect(jsContents).toMatch(/dependencies: \[i1\.ExternalDir\]/);
       });
     });
 
@@ -5985,7 +5989,7 @@ function allTests(os: string) {
         env.driveMain();
         const jsContents = env.getContents('test.js');
         expect(jsContents).toContain('import * as i1 from "external/module";');
-        expect(jsContents).toContain('directives: [i1.ɵngExportɵExternalModuleɵExternalDir]');
+        expect(jsContents).toContain('dependencies: [i1.ɵngExportɵExternalModuleɵExternalDir]');
       });
 
       it('should not generate re-exports when disabled', () => {
@@ -6381,7 +6385,7 @@ function allTests(os: string) {
 
         // Expect that ExternalDir from alpha is imported via the re-export from beta.
         expect(jsContents).toContain('import * as i1 from "root/beta";');
-        expect(jsContents).toContain('directives: [i1.\u0275ng$root$alpha$$ExternalDir]');
+        expect(jsContents).toContain('dependencies: [i1.\u0275ng$root$alpha$$ExternalDir]');
       });
 
       it('should write alias ES2015 exports for NgModule exported directives', () => {
@@ -6916,6 +6920,70 @@ function allTests(os: string) {
                 '"div[_ngcontent-%COMP%] { background: url(/b.png); }", ' +
                 // Large string should be called from function definition.
                 '_c0()]');
+      });
+    });
+
+    describe('empty resources', () => {
+      it('should not include empty inline styles in the compiled output', () => {
+        env.write('test.ts', `
+          import {Component} from '@angular/core';
+
+          const someStyle = ' ';
+
+          @Component({
+            selector: 'test-cmp',
+            styles: ['', someStyle, '      '],
+            template: '',
+          })
+          export class TestCmp {}
+      `);
+        env.driveMain();
+
+        const jsContents = env.getContents('test.js');
+        expect(jsContents).not.toContain('styles');
+        expect(jsContents).not.toContain('styleUrls');
+      });
+
+      it('should not include empty external styles in the compiled output', () => {
+        env.write('dir/a.css', '');
+        env.write('dir/b.css', '                ');
+        env.write('test.ts', `
+          import {Component} from '@angular/core';
+
+          @Component({
+            selector: 'test-cmp',
+            styleUrls: ['./dir/a.css', './dir/b.css'],
+            template: '',
+          })
+          export class TestCmp {}
+        `);
+        env.driveMain();
+
+        const jsContents = env.getContents('test.js');
+        expect(jsContents).not.toContain('styles');
+        expect(jsContents).not.toContain('styleUrls');
+      });
+
+      it('should not include empty <link> tags that resolve to empty stylesheets', () => {
+        env.write('dir/a.css', '');
+        env.write('dir/b.css', '                ');
+        env.write('test.ts', `
+        import {Component} from '@angular/core';
+
+        @Component({
+          selector: 'test',
+          template: \`
+            <link rel="stylesheet" href="./dir/a.css">
+            <link rel="stylesheet" href="./dir/b.css">
+          \`,
+        })
+        export class TestCmp {}
+      `);
+
+        env.driveMain();
+        const jsContents = env.getContents('test.js').replace(/<link [^>]*>/g, '');
+        expect(jsContents).not.toContain('styles');
+        expect(jsContents).not.toContain('styleUrls');
       });
     });
 
@@ -7518,7 +7586,7 @@ function allTests(os: string) {
                   'Cannot mark an element as translatable inside of a translatable section.' +
                   ' Please remove the nested i18n marker.');
           expect(diags[0].file?.fileName).toEqual(absoluteFrom('/test.ts'));
-          expect(diags[0].file?.text.substr(diags[0].start!, diags[0].length))
+          expect(diags[0].file?.text.slice(diags[0].start!, diags[0].start! + diags[0].length!))
               .toEqual('<div i18n>Content</div>');
         });
 
@@ -7540,7 +7608,7 @@ function allTests(os: string) {
                   'Cannot mark an element as translatable inside of a translatable section.' +
                   ' Please remove the nested i18n marker.');
           expect(diags[0].file?.fileName).toEqual(absoluteFrom('/test.ts'));
-          expect(diags[0].file?.text.substr(diags[0].start!, diags[0].length))
+          expect(diags[0].file?.text.slice(diags[0].start!, diags[0].start! + diags[0].length!))
               .toEqual('<div i18n>Content</div>');
         });
 
@@ -7562,7 +7630,7 @@ function allTests(os: string) {
                   'Cannot mark an element as translatable inside of a translatable section.' +
                   ' Please remove the nested i18n marker.');
           expect(diags[0].file?.fileName).toEqual(absoluteFrom('/test.ts'));
-          expect(diags[0].file?.text.substr(diags[0].start!, diags[0].length))
+          expect(diags[0].file?.text.slice(diags[0].start!, diags[0].start! + diags[0].length!))
               .toEqual('<ng-container i18n>Content</ng-container>');
         });
       });
@@ -7652,6 +7720,117 @@ function allTests(os: string) {
       const diagnostics = env.driveDiagnostics(0 /* expectedExitCode */);
       const codes = diagnostics.map((diag) => diag.code);
       expect(codes).toEqual([ngErrorCode(ErrorCode.INVALID_BANANA_IN_BOX)]);
+    });
+
+    it('should produce an error when standalone component is used in @NgModule.bootstrap', () => {
+      env.tsconfig();
+
+      env.write('test.ts', `
+        import {Component, NgModule} from '@angular/core';
+
+        @Component({
+          standalone: true,
+          selector: 'standalone-component',
+          template: '...',
+        })
+        class StandaloneComponent {}
+
+        @NgModule({
+          bootstrap: [StandaloneComponent]
+        })
+        class BootstrapModule {}
+      `);
+
+      const diagnostics = env.driveDiagnostics();
+      const codes = diagnostics.map((diag) => diag.code);
+      expect(codes).toEqual([ngErrorCode(ErrorCode.NGMODULE_BOOTSTRAP_IS_STANDALONE)]);
+    });
+
+    it('should produce an error when standalone component wrapped in `forwardRef` is used in @NgModule.bootstrap',
+       () => {
+         env.tsconfig();
+
+         env.write('test.ts', `
+        import {Component, NgModule, forwardRef} from '@angular/core';
+
+        @Component({
+          standalone: true,
+          selector: 'standalone-component',
+          template: '...',
+        })
+        class StandaloneComponent {}
+
+        @NgModule({
+          bootstrap: [forwardRef(() => StandaloneComponent)]
+        })
+        class BootstrapModule {}
+      `);
+
+         const diagnostics = env.driveDiagnostics();
+         const codes = diagnostics.map((diag) => diag.code);
+         expect(codes).toEqual([ngErrorCode(ErrorCode.NGMODULE_BOOTSTRAP_IS_STANDALONE)]);
+       });
+
+    describe('InjectorDef emit optimizations for standalone', () => {
+      it('should not filter components out of NgModule.imports', () => {
+        env.write('test.ts', `
+          import {Component, NgModule} from '@angular/core';
+
+          @Component({
+            standalone: true,
+            selector: 'standalone-cmp',
+            template: '',
+          })
+          export class StandaloneCmp {}
+
+          @NgModule({
+            imports: [StandaloneCmp],
+            exports: [StandaloneCmp],
+          })
+          export class Module {}
+        `);
+        env.driveMain();
+
+        const jsContents = env.getContents('test.js');
+        expect(jsContents).toContain('i0.ɵɵdefineInjector({ imports: [StandaloneCmp] })');
+      });
+
+      it('should filter directives & pipes out of NgModule.imports', () => {
+        env.write('test.ts', `
+          import {Directive, ModuleWithProviders, NgModule, Pipe} from '@angular/core';
+          @Directive({standalone: true})
+          export class StandaloneDir {}
+
+          @NgModule({})
+          export class SubModule {};
+
+          declare function SubModuleWithProviders(): ModuleWithProviders<SubModule>;
+
+          @Pipe({standalone: true, name: 'st'})
+          export class StandalonePipe {}
+
+          export const LOCAL_ARRAY = [StandaloneDir, StandalonePipe, SubModule];
+
+          export const ARRAY_WITH_MWP = [StandalonePipe, SubModuleWithProviders()];
+
+          @NgModule({
+            imports: [
+              StandaloneDir,
+              ...LOCAL_ARRAY,
+              SubModule,
+              SubModuleWithProviders(),
+              ARRAY_WITH_MWP,
+            ],
+          })
+          export class Module {}
+        `);
+        env.driveMain();
+        const jsContents = env.getContents('test.js');
+        const expectedImports = 'SubModule, SubModule, SubModuleWithProviders(), ARRAY_WITH_MWP';
+        expect(jsContents.replace(/\s/g, ''))
+            .toContain(`Module.ɵinj=/*@__PURE__*/i0.ɵɵdefineInjector({imports:[${
+                expectedImports.replace(/\s/g, '')}]});`);
+      });
     });
   });
 

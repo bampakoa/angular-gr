@@ -75,6 +75,9 @@
     "name": "BROWSER_MODULE_PROVIDERS"
   },
   {
+    "name": "BROWSER_MODULE_PROVIDERS_MARKER"
+  },
+  {
     "name": "BROWSER_NOOP_ANIMATIONS_PROVIDERS"
   },
   {
@@ -91,9 +94,6 @@
   },
   {
     "name": "BrowserDomAdapter"
-  },
-  {
-    "name": "BrowserGetTestability"
   },
   {
     "name": "BrowserModule"
@@ -147,10 +147,7 @@
     "name": "DEFAULT_STATE_VALUE"
   },
   {
-    "name": "DIMENSIONAL_PROP_MAP"
-  },
-  {
-    "name": "DOCUMENT"
+    "name": "DIMENSIONAL_PROP_SET"
   },
   {
     "name": "DOCUMENT2"
@@ -189,6 +186,9 @@
     "name": "ENTER_TOKEN_REGEX"
   },
   {
+    "name": "ENVIRONMENT_INITIALIZER"
+  },
+  {
     "name": "EVENT_MANAGER_PLUGINS"
   },
   {
@@ -199,6 +199,9 @@
   },
   {
     "name": "EmulatedEncapsulationDomRenderer2"
+  },
+  {
+    "name": "EnvironmentInjector"
   },
   {
     "name": "ErrorHandler"
@@ -219,13 +222,13 @@
     "name": "INJECTOR2"
   },
   {
+    "name": "INJECTOR_DEF_TYPES"
+  },
+  {
     "name": "INJECTOR_SCOPE"
   },
   {
     "name": "InjectFlags"
-  },
-  {
-    "name": "InjectableAnimationEngine"
   },
   {
     "name": "InjectionToken"
@@ -351,13 +354,13 @@
     "name": "PARAM_REGEX"
   },
   {
+    "name": "PLATFORM_DESTROY_LISTENERS"
+  },
+  {
     "name": "PLATFORM_ID"
   },
   {
     "name": "PLATFORM_INITIALIZER"
-  },
-  {
-    "name": "PLATFORM_ON_DESTROY"
   },
   {
     "name": "PlatformRef"
@@ -438,7 +441,19 @@
     "name": "Subscription"
   },
   {
+    "name": "TESTABILITY"
+  },
+  {
+    "name": "TESTABILITY_GETTER"
+  },
+  {
+    "name": "TESTABILITY_PROVIDERS"
+  },
+  {
     "name": "THROW_IF_NOT_FOUND"
+  },
+  {
+    "name": "TRACKED_LVIEWS"
   },
   {
     "name": "TRANSITION_ID"
@@ -492,18 +507,6 @@
     "name": "__forward_ref__"
   },
   {
-    "name": "__global"
-  },
-  {
-    "name": "__globalThis"
-  },
-  {
-    "name": "__self"
-  },
-  {
-    "name": "__window"
-  },
-  {
     "name": "_chromeNumKeyPadMap"
   },
   {
@@ -543,9 +546,6 @@
     "name": "_randomChar"
   },
   {
-    "name": "_renderCompCount"
-  },
-  {
     "name": "_testabilityGetter"
   },
   {
@@ -574,6 +574,9 @@
   },
   {
     "name": "applyNodes"
+  },
+  {
+    "name": "applyParamDefaults"
   },
   {
     "name": "applyProjectionRecursive"
@@ -633,7 +636,7 @@
     "name": "collectNativeNodes"
   },
   {
-    "name": "compileNgModuleFactory"
+    "name": "componentDefCount"
   },
   {
     "name": "computeStaticStyling"
@@ -655,6 +658,9 @@
   },
   {
     "name": "containsElement"
+  },
+  {
+    "name": "convertToMap"
   },
   {
     "name": "copyAnimationEvent"
@@ -708,9 +714,6 @@
     "name": "deepForEach"
   },
   {
-    "name": "defaultErrorLogger"
-  },
-  {
     "name": "defaultScheduler"
   },
   {
@@ -753,9 +756,6 @@
     "name": "extractDirectiveDef"
   },
   {
-    "name": "extractPipeDef"
-  },
-  {
     "name": "extractStyleParams"
   },
   {
@@ -769,6 +769,9 @@
   },
   {
     "name": "flattenUnsubscriptionErrors"
+  },
+  {
+    "name": "forEachSingleProvider"
   },
   {
     "name": "forwardRef"
@@ -807,6 +810,9 @@
     "name": "getDeclarationTNode"
   },
   {
+    "name": "getDirectiveDef"
+  },
+  {
     "name": "getFactoryDef"
   },
   {
@@ -837,13 +843,13 @@
     "name": "getNextLContainer"
   },
   {
-    "name": "getNgModuleDef"
-  },
-  {
     "name": "getNodeInjectable"
   },
   {
     "name": "getNullInjector"
+  },
+  {
+    "name": "getOrCreateInjectable"
   },
   {
     "name": "getOrCreateNodeInjectorForNode"
@@ -855,7 +861,7 @@
     "name": "getOrCreateTNode"
   },
   {
-    "name": "getOrSetAsInMap"
+    "name": "getOrSetDefaultValue"
   },
   {
     "name": "getOriginalError"
@@ -874,6 +880,9 @@
   },
   {
     "name": "getParentInjectorView"
+  },
+  {
+    "name": "getPipeDef"
   },
   {
     "name": "getPlatform"
@@ -897,6 +906,9 @@
     "name": "getTNode"
   },
   {
+    "name": "getTNodeFromLView"
+  },
+  {
     "name": "getTView"
   },
   {
@@ -912,6 +924,9 @@
     "name": "identity"
   },
   {
+    "name": "importProvidersFrom"
+  },
+  {
     "name": "includeViewProviders"
   },
   {
@@ -919,9 +934,6 @@
   },
   {
     "name": "initTNodeFlags"
-  },
-  {
-    "name": "inject"
   },
   {
     "name": "injectArgs"
@@ -943,6 +955,9 @@
   },
   {
     "name": "instructionState"
+  },
+  {
+    "name": "internalImportProvidersFrom"
   },
   {
     "name": "interpolateParams"
@@ -993,6 +1008,9 @@
     "name": "isFunction"
   },
   {
+    "name": "isImportedNgModuleProviders"
+  },
+  {
     "name": "isInlineTemplate"
   },
   {
@@ -1011,13 +1029,7 @@
     "name": "isNodeMatchingSelectorList"
   },
   {
-    "name": "isNonAnimatableStyle"
-  },
-  {
     "name": "isObject"
-  },
-  {
-    "name": "isObject2"
   },
   {
     "name": "isPositive"
@@ -1030,6 +1042,12 @@
   },
   {
     "name": "isPromise2"
+  },
+  {
+    "name": "isTemplateNode"
+  },
+  {
+    "name": "isTemplateNode2"
   },
   {
     "name": "isTypeProvider"
@@ -1062,6 +1080,9 @@
     "name": "lookupTokenUsingModuleInjector"
   },
   {
+    "name": "lookupTokenUsingNodeInjector"
+  },
+  {
     "name": "makeAnimationEvent"
   },
   {
@@ -1077,9 +1098,6 @@
     "name": "markAsComponentHost"
   },
   {
-    "name": "maybeUnwrapFn"
-  },
-  {
     "name": "maybeWrapInNotSelector"
   },
   {
@@ -1090,9 +1108,6 @@
   },
   {
     "name": "mergeMap"
-  },
-  {
-    "name": "modules"
   },
   {
     "name": "nativeAppendChild"
@@ -1111,6 +1126,9 @@
   },
   {
     "name": "noSideEffects"
+  },
+  {
+    "name": "nonNull"
   },
   {
     "name": "noop"
@@ -1153,6 +1171,9 @@
   },
   {
     "name": "platformCore"
+  },
+  {
+    "name": "processInjectorTypesWithProviders"
   },
   {
     "name": "promise"
@@ -1299,9 +1320,6 @@
     "name": "stringifyCSSSelector"
   },
   {
-    "name": "stringifyForError"
-  },
-  {
     "name": "style"
   },
   {
@@ -1320,6 +1338,9 @@
     "name": "transition"
   },
   {
+    "name": "uniqueIdCounter"
+  },
+  {
     "name": "unwrapRNode"
   },
   {
@@ -1332,13 +1353,13 @@
     "name": "urlParsingNode"
   },
   {
-    "name": "validateStyleProperty"
-  },
-  {
     "name": "viewAttachedToChangeDetector"
   },
   {
     "name": "visitDslNode"
+  },
+  {
+    "name": "walkProviderTree"
   },
   {
     "name": "writeDirectClass"
@@ -1360,6 +1381,9 @@
   },
   {
     "name": "ɵɵdefineNgModule"
+  },
+  {
+    "name": "ɵɵdirectiveInject"
   },
   {
     "name": "ɵɵelement"

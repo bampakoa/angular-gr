@@ -124,13 +124,13 @@ Define metadata objects with the following limited syntax:
 |:---                       |:---     |
 | Literal object            | `{cherry: true, apple: true, mincemeat: false}`                        |
 | Literal array             | `['cherries', 'flour', 'sugar']`                                       |
-| Spread in literal array   | `['apples', 'flour', &hellip;the_rest]`                                |
+| Spread in literal array   | `['apples', 'flour', ...]`                                             |
 | Calls                     | `bake(ingredients)`                                                    |
 | New                       | `new Oven()`                                                           |
 | Property access           | `pie.slice`                                                            |
 | Array index               | `ingredients[0]`                                                       |
 | Identity reference        | `Component`                                                            |
-| A template string         | <code-example format="javascript" hideCopy language="javascript">&grave;pie is &dollar;{multiplier} times better than cake&grave; </code-example> |
+| A template string         | <code>&grave;pie is &dollar;{multiplier} times better than cake&grave;</code> |
 | Literal string            | `'pi'`                                                                 |
 | Literal number            | `3.14153265`                                                           |
 | Literal boolean           | `true`                                                                 |

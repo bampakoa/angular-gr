@@ -174,7 +174,7 @@ template. Προσθέστε τα ακόλουθα στο `heroes.component.html
 
 </div>
 
-Το [class binding](guide/attribute-binding#class-binding) της Angular μπορεί να προσθέσει και να αφαιρέσει ένα CSS class υπό συνθήκες.
+Το [class binding](guide/class-binding) της Angular μπορεί να προσθέσει και να αφαιρέσει ένα CSS class υπό συνθήκες.
 Προσθέστε το `[class.some-css-class]="some-condition"` στο στοιχείο που θέλετε να αποκτήσει στυλ.
 
 Προσθέστε το ακόλουθο binding `[class.selected]` στο `<li>` που βρίσκεται στο template του `HeroesComponent`:

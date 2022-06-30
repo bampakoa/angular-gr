@@ -5,7 +5,7 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
-import {AnimateTimings, AnimationMetadata, AnimationMetadataType, AnimationOptions, sequence, ɵStyleData} from '@angular/animations';
+import {AnimateTimings, AnimationMetadata, AnimationMetadataType, AnimationOptions, sequence, ɵStyleData, ɵStyleDataMap} from '@angular/animations';
 
 import {Ast as AnimationAst, AstVisitor as AnimationAstVisitor} from './dsl/animation_ast';
 import {AnimationDslVisitor} from './dsl/animation_dsl_visitor';
@@ -103,27 +103,46 @@ export function copyObj(
   return destination;
 }
 
-export function normalizeStyles(styles: ɵStyleData|ɵStyleData[]): ɵStyleData {
-  const normalizedStyles: ɵStyleData = {};
+export function convertToMap(obj: ɵStyleData): ɵStyleDataMap {
+  const styleMap: ɵStyleDataMap = new Map();
+  Object.keys(obj).forEach(prop => {
+    const val = obj[prop];
+    styleMap.set(prop, val);
+  });
+  return styleMap;
+}
+
+export function normalizeKeyframes(keyframes: Array<ɵStyleData>|
+                                   Array<ɵStyleDataMap>): Array<ɵStyleDataMap> {
+  if (!keyframes.length) {
+    return [];
+  }
+  if (keyframes[0] instanceof Map) {
+    return keyframes as Array<ɵStyleDataMap>;
+  }
+  return keyframes.map(kf => convertToMap(kf as ɵStyleData));
+}
+
+export function normalizeStyles(styles: ɵStyleDataMap|Array<ɵStyleDataMap>): ɵStyleDataMap {
+  const normalizedStyles: ɵStyleDataMap = new Map();
   if (Array.isArray(styles)) {
-    styles.forEach(data => copyStyles(data, false, normalizedStyles));
+    styles.forEach(data => copyStyles(data, normalizedStyles));
   } else {
-    copyStyles(styles, false, normalizedStyles);
+    copyStyles(styles, normalizedStyles);
   }
   return normalizedStyles;
 }
 
 export function copyStyles(
-    styles: ɵStyleData, readPrototype: boolean, destination: ɵStyleData = {}): ɵStyleData {
-  if (readPrototype) {
-    // we make use of a for-in loop so that the
-    // prototypically inherited properties are
-    // revealed from the backFill map
-    for (let prop in styles) {
-      destination[prop] = styles[prop];
+    styles: ɵStyleDataMap, destination: ɵStyleDataMap = new Map(),
+    backfill?: ɵStyleDataMap): ɵStyleDataMap {
+  if (backfill) {
+    for (let [prop, val] of backfill) {
+      destination.set(prop, val);
     }
-  } else {
-    copyObj(styles, destination);
+  }
+  for (let [prop, val] of styles) {
+    destination.set(prop, val);
   }
   return destination;
 }
@@ -159,14 +178,14 @@ function writeStyleAttribute(element: any) {
   element.setAttribute('style', styleAttrValue);
 }
 
-export function setStyles(element: any, styles: ɵStyleData, formerStyles?: {[key: string]: any}) {
+export function setStyles(element: any, styles: ɵStyleDataMap, formerStyles?: ɵStyleDataMap) {
   if (element['style']) {
-    Object.keys(styles).forEach(prop => {
+    styles.forEach((val, prop) => {
       const camelProp = dashCaseToCamelCase(prop);
-      if (formerStyles && !formerStyles.hasOwnProperty(prop)) {
-        formerStyles[prop] = element.style[camelProp];
+      if (formerStyles && !formerStyles.has(prop)) {
+        formerStyles.set(prop, element.style[camelProp]);
       }
-      element.style[camelProp] = styles[prop];
+      element.style[camelProp] = val;
     });
     // On the server set the 'style' attribute since it's not automatically reflected.
     if (isNode()) {
@@ -175,9 +194,9 @@ export function setStyles(element: any, styles: ɵStyleData, formerStyles?: {[ke
   }
 }
 
-export function eraseStyles(element: any, styles: ɵStyleData) {
+export function eraseStyles(element: any, styles: ɵStyleDataMap) {
   if (element['style']) {
-    Object.keys(styles).forEach(prop => {
+    styles.forEach((_, prop) => {
       const camelProp = dashCaseToCamelCase(prop);
       element.style[camelProp] = '';
     });
@@ -198,7 +217,7 @@ export function normalizeAnimationEntry(steps: AnimationMetadata|
 }
 
 export function validateStyleParams(
-    value: string|number, options: AnimationOptions, errors: Error[]) {
+    value: string|number|null|undefined, options: AnimationOptions, errors: Error[]) {
   const params = options.params || {};
   const matches = extractStyleParams(value);
   if (matches.length) {
@@ -212,7 +231,7 @@ export function validateStyleParams(
 
 const PARAM_REGEX =
     new RegExp(`${SUBSTITUTION_EXPR_START}\\s*(.+?)\\s*${SUBSTITUTION_EXPR_END}`, 'g');
-export function extractStyleParams(value: string|number): string[] {
+export function extractStyleParams(value: string|number|null|undefined): string[] {
   let params: string[] = [];
   if (typeof value === 'string') {
     let match: any;
@@ -230,7 +249,7 @@ export function interpolateParams(
   const str = original.replace(PARAM_REGEX, (_, varName) => {
     let localVal = params[varName];
     // this means that the value was never overridden by the data passed in by the user
-    if (!params.hasOwnProperty(varName)) {
+    if (localVal == null) {
       errors.push(invalidParamValue(varName));
       localVal = '';
     }
@@ -256,7 +275,7 @@ export function dashCaseToCamelCase(input: string): string {
   return input.replace(DASH_CASE_REGEXP, (...m: any[]) => m[1].toUpperCase());
 }
 
-function camelCaseToDashCase(input: string): string {
+export function camelCaseToDashCase(input: string): string {
   return input.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
 }
 
@@ -265,25 +284,21 @@ export function allowPreviousPlayerStylesMerge(duration: number, delay: number) 
 }
 
 export function balancePreviousStylesIntoKeyframes(
-    element: any, keyframes: {[key: string]: any}[], previousStyles: {[key: string]: any}) {
-  const previousStyleProps = Object.keys(previousStyles);
-  if (previousStyleProps.length && keyframes.length) {
+    element: any, keyframes: Array<ɵStyleDataMap>, previousStyles: ɵStyleDataMap) {
+  if (previousStyles.size && keyframes.length) {
     let startingKeyframe = keyframes[0];
     let missingStyleProps: string[] = [];
-    previousStyleProps.forEach(prop => {
-      if (!startingKeyframe.hasOwnProperty(prop)) {
+    previousStyles.forEach((val, prop) => {
+      if (!startingKeyframe.has(prop)) {
         missingStyleProps.push(prop);
       }
-      startingKeyframe[prop] = previousStyles[prop];
+      startingKeyframe.set(prop, val);
     });
 
     if (missingStyleProps.length) {
-      // tslint:disable-next-line
-      for (var i = 1; i < keyframes.length; i++) {
+      for (let i = 1; i < keyframes.length; i++) {
         let kf = keyframes[i];
-        missingStyleProps.forEach(function(prop) {
-          kf[prop] = computeStyle(element, prop);
-        });
+        missingStyleProps.forEach(prop => kf.set(prop, computeStyle(element, prop)));
       }
     }
   }

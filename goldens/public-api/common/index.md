@@ -33,7 +33,7 @@ export const APP_BASE_HREF: InjectionToken<string>;
 
 // @public
 export class AsyncPipe implements OnDestroy, PipeTransform {
-    constructor(_ref: ChangeDetectorRef);
+    constructor(ref: ChangeDetectorRef);
     // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
@@ -45,7 +45,7 @@ export class AsyncPipe implements OnDestroy, PipeTransform {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<AsyncPipe, never>;
     // (undocumented)
-    static ɵpipe: i0.ɵɵPipeDeclaration<AsyncPipe, "async">;
+    static ɵpipe: i0.ɵɵPipeDeclaration<AsyncPipe, "async", false>;
 }
 
 // @public
@@ -70,7 +70,7 @@ export class CurrencyPipe implements PipeTransform {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<CurrencyPipe, never>;
     // (undocumented)
-    static ɵpipe: i0.ɵɵPipeDeclaration<CurrencyPipe, "currency">;
+    static ɵpipe: i0.ɵɵPipeDeclaration<CurrencyPipe, "currency", false>;
 }
 
 // @public
@@ -88,7 +88,7 @@ export class DatePipe implements PipeTransform {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<DatePipe, [null, { optional: true; }]>;
     // (undocumented)
-    static ɵpipe: i0.ɵɵPipeDeclaration<DatePipe, "date">;
+    static ɵpipe: i0.ɵɵPipeDeclaration<DatePipe, "date", false>;
 }
 
 // @public
@@ -103,7 +103,7 @@ export class DecimalPipe implements PipeTransform {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<DecimalPipe, never>;
     // (undocumented)
-    static ɵpipe: i0.ɵɵPipeDeclaration<DecimalPipe, "number">;
+    static ɵpipe: i0.ɵɵPipeDeclaration<DecimalPipe, "number", false>;
 }
 
 // @public
@@ -210,6 +210,8 @@ export class HashLocationStrategy extends LocationStrategy implements OnDestroy 
     // (undocumented)
     getBaseHref(): string;
     // (undocumented)
+    getState(): unknown;
+    // (undocumented)
     historyGo(relativePosition?: number): void;
     // (undocumented)
     ngOnDestroy(): void;
@@ -239,7 +241,7 @@ export class I18nPluralPipe implements PipeTransform {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<I18nPluralPipe, never>;
     // (undocumented)
-    static ɵpipe: i0.ɵɵPipeDeclaration<I18nPluralPipe, "i18nPlural">;
+    static ɵpipe: i0.ɵɵPipeDeclaration<I18nPluralPipe, "i18nPlural", false>;
 }
 
 // @public
@@ -251,7 +253,7 @@ export class I18nSelectPipe implements PipeTransform {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<I18nSelectPipe, never>;
     // (undocumented)
-    static ɵpipe: i0.ɵɵPipeDeclaration<I18nSelectPipe, "i18nSelect">;
+    static ɵpipe: i0.ɵɵPipeDeclaration<I18nSelectPipe, "i18nSelect", false>;
 }
 
 // @public
@@ -273,7 +275,7 @@ export class JsonPipe implements PipeTransform {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<JsonPipe, never>;
     // (undocumented)
-    static ɵpipe: i0.ɵɵPipeDeclaration<JsonPipe, "json">;
+    static ɵpipe: i0.ɵɵPipeDeclaration<JsonPipe, "json", false>;
 }
 
 // @public
@@ -304,12 +306,12 @@ export class KeyValuePipe implements PipeTransform {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KeyValuePipe, never>;
     // (undocumented)
-    static ɵpipe: i0.ɵɵPipeDeclaration<KeyValuePipe, "keyvalue">;
+    static ɵpipe: i0.ɵɵPipeDeclaration<KeyValuePipe, "keyvalue", false>;
 }
 
 // @public
-class Location_2 {
-    constructor(platformStrategy: LocationStrategy, platformLocation: PlatformLocation);
+class Location_2 implements OnDestroy {
+    constructor(locationStrategy: LocationStrategy);
     back(): void;
     forward(): void;
     getState(): unknown;
@@ -317,9 +319,11 @@ class Location_2 {
     historyGo(relativePosition?: number): void;
     isCurrentPathEqualTo(path: string, query?: string): boolean;
     static joinWithSlash: (start: string, end: string) => string;
+    // (undocumented)
+    ngOnDestroy(): void;
     normalize(url: string): string;
     static normalizeQueryParams: (params: string) => string;
-    onUrlChange(fn: (url: string, state: unknown) => void): void;
+    onUrlChange(fn: (url: string, state: unknown) => void): VoidFunction;
     path(includeHash?: boolean): string;
     prepareExternalUrl(url: string): string;
     replaceState(path: string, query?: string, state?: any): void;
@@ -358,6 +362,8 @@ export abstract class LocationStrategy {
     // (undocumented)
     abstract getBaseHref(): string;
     // (undocumented)
+    abstract getState(): unknown;
+    // (undocumented)
     historyGo?(relativePosition: number): void;
     // (undocumented)
     abstract onPopState(fn: LocationChangeListener): void;
@@ -386,7 +392,7 @@ export class LowerCasePipe implements PipeTransform {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<LowerCasePipe, never>;
     // (undocumented)
-    static ɵpipe: i0.ɵɵPipeDeclaration<LowerCasePipe, "lowercase">;
+    static ɵpipe: i0.ɵɵPipeDeclaration<LowerCasePipe, "lowercase", false>;
 }
 
 // @public
@@ -401,7 +407,7 @@ export class NgClass implements DoCheck {
     // (undocumented)
     ngDoCheck(): void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<NgClass, "[ngClass]", never, { "klass": "class"; "ngClass": "ngClass"; }, {}, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<NgClass, "[ngClass]", never, { "klass": "class"; "ngClass": "ngClass"; }, {}, never, never, false>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<NgClass, never>;
 }
@@ -410,19 +416,21 @@ export class NgClass implements DoCheck {
 export class NgComponentOutlet implements OnChanges, OnDestroy {
     constructor(_viewContainerRef: ViewContainerRef);
     // (undocumented)
-    ngComponentOutlet: Type<any>;
+    ngComponentOutlet: Type<any> | null;
     // (undocumented)
-    ngComponentOutletContent: any[][];
+    ngComponentOutletContent?: any[][];
     // (undocumented)
-    ngComponentOutletInjector: Injector;
+    ngComponentOutletInjector?: Injector;
     // (undocumented)
-    ngComponentOutletNgModuleFactory: NgModuleFactory<any>;
+    ngComponentOutletNgModule?: Type<any>;
+    // @deprecated (undocumented)
+    ngComponentOutletNgModuleFactory?: NgModuleFactory<any>;
     // (undocumented)
     ngOnChanges(changes: SimpleChanges): void;
     // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<NgComponentOutlet, "[ngComponentOutlet]", never, { "ngComponentOutlet": "ngComponentOutlet"; "ngComponentOutletInjector": "ngComponentOutletInjector"; "ngComponentOutletContent": "ngComponentOutletContent"; "ngComponentOutletNgModuleFactory": "ngComponentOutletNgModuleFactory"; }, {}, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<NgComponentOutlet, "[ngComponentOutlet]", never, { "ngComponentOutlet": "ngComponentOutlet"; "ngComponentOutletInjector": "ngComponentOutletInjector"; "ngComponentOutletContent": "ngComponentOutletContent"; "ngComponentOutletNgModule": "ngComponentOutletNgModule"; "ngComponentOutletNgModuleFactory": "ngComponentOutletNgModuleFactory"; }, {}, never, never, false>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<NgComponentOutlet, never>;
 }
@@ -438,7 +446,7 @@ export class NgForOf<T, U extends NgIterable<T> = NgIterable<T>> implements DoCh
     get ngForTrackBy(): TrackByFunction<T>;
     static ngTemplateContextGuard<T, U extends NgIterable<T>>(dir: NgForOf<T, U>, ctx: any): ctx is NgForOfContext<T, U>;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<NgForOf<any, any>, "[ngFor][ngForOf]", never, { "ngForOf": "ngForOf"; "ngForTrackBy": "ngForTrackBy"; "ngForTemplate": "ngForTemplate"; }, {}, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<NgForOf<any, any>, "[ngFor][ngForOf]", never, { "ngForOf": "ngForOf"; "ngForTrackBy": "ngForTrackBy"; "ngForTemplate": "ngForTemplate"; }, {}, never, never, false>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<NgForOf<any, any>, never>;
 }
@@ -473,7 +481,7 @@ export class NgIf<T = unknown> {
     static ngTemplateContextGuard<T>(dir: NgIf<T>, ctx: any): ctx is NgIfContext<Exclude<T, false | 0 | '' | null | undefined>>;
     static ngTemplateGuard_ngIf: 'binding';
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<NgIf<any>, "[ngIf]", never, { "ngIf": "ngIf"; "ngIfThen": "ngIfThen"; "ngIfElse": "ngIfElse"; }, {}, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<NgIf<any>, "[ngIf]", never, { "ngIf": "ngIf"; "ngIfThen": "ngIfThen"; "ngIfElse": "ngIfElse"; }, {}, never, never, false>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<NgIf<any>, never>;
 }
@@ -517,7 +525,7 @@ export class NgPlural {
     // (undocumented)
     set ngPlural(value: number);
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<NgPlural, "[ngPlural]", never, { "ngPlural": "ngPlural"; }, {}, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<NgPlural, "[ngPlural]", never, { "ngPlural": "ngPlural"; }, {}, never, never, false>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<NgPlural, never>;
 }
@@ -528,7 +536,7 @@ export class NgPluralCase {
     // (undocumented)
     value: string;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<NgPluralCase, "[ngPluralCase]", never, {}, {}, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<NgPluralCase, "[ngPluralCase]", never, {}, {}, never, never, false>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<NgPluralCase, [{ attribute: "ngPluralCase"; }, null, null, { host: true; }]>;
 }
@@ -543,7 +551,7 @@ export class NgStyle implements DoCheck {
         [klass: string]: any;
     } | null);
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<NgStyle, "[ngStyle]", never, { "ngStyle": "ngStyle"; }, {}, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<NgStyle, "[ngStyle]", never, { "ngStyle": "ngStyle"; }, {}, never, never, false>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<NgStyle, never>;
 }
@@ -553,7 +561,7 @@ export class NgSwitch {
     // (undocumented)
     set ngSwitch(newValue: any);
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<NgSwitch, "[ngSwitch]", never, { "ngSwitch": "ngSwitch"; }, {}, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<NgSwitch, "[ngSwitch]", never, { "ngSwitch": "ngSwitch"; }, {}, never, never, false>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<NgSwitch, never>;
 }
@@ -564,7 +572,7 @@ export class NgSwitchCase implements DoCheck {
     ngDoCheck(): void;
     ngSwitchCase: any;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<NgSwitchCase, "[ngSwitchCase]", never, { "ngSwitchCase": "ngSwitchCase"; }, {}, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<NgSwitchCase, "[ngSwitchCase]", never, { "ngSwitchCase": "ngSwitchCase"; }, {}, never, never, false>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<NgSwitchCase, [null, null, { optional: true; host: true; }]>;
 }
@@ -573,7 +581,7 @@ export class NgSwitchCase implements DoCheck {
 export class NgSwitchDefault {
     constructor(viewContainer: ViewContainerRef, templateRef: TemplateRef<Object>, ngSwitch: NgSwitch);
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<NgSwitchDefault, "[ngSwitchDefault]", never, {}, {}, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<NgSwitchDefault, "[ngSwitchDefault]", never, {}, {}, never, never, false>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<NgSwitchDefault, [null, null, { optional: true; host: true; }]>;
 }
@@ -585,8 +593,9 @@ export class NgTemplateOutlet implements OnChanges {
     ngOnChanges(changes: SimpleChanges): void;
     ngTemplateOutlet: TemplateRef<any> | null;
     ngTemplateOutletContext: Object | null;
+    ngTemplateOutletInjector: Injector | null;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<NgTemplateOutlet, "[ngTemplateOutlet]", never, { "ngTemplateOutletContext": "ngTemplateOutletContext"; "ngTemplateOutlet": "ngTemplateOutlet"; }, {}, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<NgTemplateOutlet, "[ngTemplateOutlet]", never, { "ngTemplateOutletContext": "ngTemplateOutletContext"; "ngTemplateOutlet": "ngTemplateOutlet"; "ngTemplateOutletInjector": "ngTemplateOutletInjector"; }, {}, never, never, false>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<NgTemplateOutlet, never>;
 }
@@ -631,6 +640,8 @@ export class PathLocationStrategy extends LocationStrategy implements OnDestroy 
     // (undocumented)
     getBaseHref(): string;
     // (undocumented)
+    getState(): unknown;
+    // (undocumented)
     historyGo(relativePosition?: number): void;
     // (undocumented)
     ngOnDestroy(): void;
@@ -662,7 +673,7 @@ export class PercentPipe implements PipeTransform {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<PercentPipe, never>;
     // (undocumented)
-    static ɵpipe: i0.ɵɵPipeDeclaration<PercentPipe, "percent">;
+    static ɵpipe: i0.ɵɵPipeDeclaration<PercentPipe, "percent", false>;
 }
 
 // @public
@@ -750,7 +761,7 @@ export class SlicePipe implements PipeTransform {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<SlicePipe, never>;
     // (undocumented)
-    static ɵpipe: i0.ɵɵPipeDeclaration<SlicePipe, "slice">;
+    static ɵpipe: i0.ɵɵPipeDeclaration<SlicePipe, "slice", false>;
 }
 
 // @public
@@ -770,7 +781,7 @@ export class TitleCasePipe implements PipeTransform {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<TitleCasePipe, never>;
     // (undocumented)
-    static ɵpipe: i0.ɵɵPipeDeclaration<TitleCasePipe, "titlecase">;
+    static ɵpipe: i0.ɵɵPipeDeclaration<TitleCasePipe, "titlecase", false>;
 }
 
 // @public
@@ -792,7 +803,7 @@ export class UpperCasePipe implements PipeTransform {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<UpperCasePipe, never>;
     // (undocumented)
-    static ɵpipe: i0.ɵɵPipeDeclaration<UpperCasePipe, "uppercase">;
+    static ɵpipe: i0.ɵɵPipeDeclaration<UpperCasePipe, "uppercase", false>;
 }
 
 // @public (undocumented)

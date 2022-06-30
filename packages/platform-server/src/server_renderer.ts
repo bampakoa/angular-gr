@@ -88,12 +88,14 @@ class DefaultServerRenderer2 implements Renderer2 {
   }
 
   appendChild(parent: any, newChild: any): void {
-    parent.appendChild(newChild);
+    const targetParent = isTemplateNode(parent) ? parent.content : parent;
+    targetParent.appendChild(newChild);
   }
 
   insertBefore(parent: any, newChild: any, refChild: any): void {
     if (parent) {
-      parent.insertBefore(newChild, refChild);
+      const targetParent = isTemplateNode(parent) ? parent.content : parent;
+      targetParent.insertBefore(newChild, refChild);
     }
   }
 
@@ -153,11 +155,12 @@ class DefaultServerRenderer2 implements Renderer2 {
 
   setStyle(el: any, style: string, value: any, flags: RendererStyleFlags2): void {
     style = style.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
+    value = value == null ? '' : `${value}`.trim();
     const styleMap = _readStyleAttribute(el);
     if (flags & RendererStyleFlags2.Important) {
       value += ' !important';
     }
-    styleMap[style] = value == null ? '' : value;
+    styleMap[style] = value;
     _writeStyleAttribute(el, styleMap);
   }
 
@@ -242,6 +245,10 @@ function checkNoSyntheticProp(name: string, nameKind: string) {
   }
 }
 
+function isTemplateNode(node: any): node is HTMLTemplateElement {
+  return node.tagName === 'TEMPLATE' && node.content !== undefined;
+}
+
 class EmulatedEncapsulationServerRenderer2 extends DefaultServerRenderer2 {
   private contentAttr: string;
   private hostAttr: string;
@@ -282,8 +289,8 @@ function _readStyleAttribute(element: any): {[name: string]: string} {
         if (colonIndex === -1) {
           throw new Error(`Invalid CSS style: ${style}`);
         }
-        const name = style.substr(0, colonIndex).trim();
-        styleMap[name] = style.substr(colonIndex + 1).trim();
+        const name = style.slice(0, colonIndex).trim();
+        styleMap[name] = style.slice(colonIndex + 1).trim();
       }
     }
   }
@@ -291,12 +298,19 @@ function _readStyleAttribute(element: any): {[name: string]: string} {
 }
 
 function _writeStyleAttribute(element: any, styleMap: {[name: string]: string}) {
+  // We have to construct the `style` attribute ourselves, instead of going through
+  // `element.style.setProperty` like the other renderers, because `setProperty` won't
+  // write newer CSS properties that Domino doesn't know about like `clip-path`.
   let styleAttrValue = '';
   for (const key in styleMap) {
     const newValue = styleMap[key];
-    if (newValue != null) {
-      styleAttrValue += key + ':' + styleMap[key] + ';';
+    if (newValue != null && newValue !== '') {
+      styleAttrValue += key + ':' + newValue + ';';
     }
   }
-  element.setAttribute('style', styleAttrValue);
+  if (styleAttrValue) {
+    element.setAttribute('style', styleAttrValue);
+  } else {
+    element.removeAttribute('style');
+  }
 }

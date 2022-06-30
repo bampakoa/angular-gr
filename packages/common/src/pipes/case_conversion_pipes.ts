@@ -86,7 +86,7 @@ export class TitleCasePipe implements PipeTransform {
     }
 
     return value.replace(
-        unicodeWordMatch, (txt => txt[0].toUpperCase() + txt.substr(1).toLowerCase()));
+        unicodeWordMatch, (txt => txt[0].toUpperCase() + txt.slice(1).toLowerCase()));
   }
 }
 

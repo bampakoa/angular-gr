@@ -41,7 +41,7 @@ The CLI automatically appends `Component`, so if you were to write `first-compon
 
 <div class="alert is-helpful">
 
-<header<code>&lt;base href&gt;</code></header>
+<header><code>&lt;base href&gt;</code></header>
 
 This guide works with a CLI-generated Angular application.
 If you are working manually, make sure that you have `<base href="/">` in the `<head>` of your index.html file.
@@ -219,6 +219,25 @@ A child route is like any other route, in that it needs both a `path` and a `com
 The one difference is that you place child routes in a `children` array within the parent route.
 
 <code-example header="AppRoutingModule (excerpt)" path="router/src/app/app-routing.module.9.ts" region="child-routes"></code-example>
+
+<a id="setting-the-page-title"></a>
+
+## Setting the page title
+
+Each page in your application should have a unique title so that they can be identified in the browser history.
+The `Router` sets the document's title using the `title` property from the `Route` config.
+
+<code-example header="AppRoutingModule (excerpt)" path="router/src/app/app-routing.module.10.ts" region="page-title"></code-example>
+
+<div class="alert is-helpful">
+
+**NOTE**: <br /> The `title` property follows the same rules as static route `data` and dynamic values that implement `Resolve`.
+
+</div>
+
+You can also provide a custom title strategy by extending the `TitleStrategy`.
+
+<code-example header="AppRoutingModule (excerpt)" path="router/src/app/app-routing.module.10.ts" region="custom-page-title"></code-example>
 
 <a id="using-relative-paths"></a>
 

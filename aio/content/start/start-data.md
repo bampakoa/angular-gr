@@ -269,6 +269,7 @@
     <code-example header="src/app/shipping/shipping.component.ts" path="getting-started/src/app/shipping/shipping.component.ts" region="inject-cart-service"></code-example>
 
 1.  Καθορίστε μια ιδιότητα `shippingCosts` χρησιμοποιώντας την μέθοδο `getShippingPrices()` από το `CartService`.
+    Αρχικοποιήστε την ιδιότητα `shippingCosts` μέσα στην μέθοδο `ngOnInit()`.
 
     <code-example header="src/app/shipping/shipping.component.ts" path="getting-started/src/app/shipping/shipping.component.ts" region="props"></code-example>
 

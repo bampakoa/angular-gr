@@ -6,16 +6,24 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {InjectionToken, ɵisObservable as isObservable, ɵisPromise as isPromise} from '@angular/core';
+import {InjectionToken, ɵisObservable as isObservable, ɵisPromise as isPromise, ɵRuntimeError as RuntimeError} from '@angular/core';
 import {forkJoin, from, Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 
 import {AsyncValidator, AsyncValidatorFn, ValidationErrors, Validator, ValidatorFn} from './directives/validators';
-import {AbstractControl} from './model';
+import {RuntimeErrorCode} from './errors';
+import {AbstractControl} from './model/abstract_model';
+
+const NG_DEV_MODE = typeof ngDevMode === 'undefined' || !!ngDevMode;
 
 function isEmptyInputValue(value: any): boolean {
-  // we don't check for string here so it also works with arrays
-  return value == null || value.length === 0;
+  /**
+   * Check if the object is a string or array before evaluating the length attribute.
+   * This avoids falsely rejecting objects that contain a custom length attribute.
+   * For example, the object {id: 1, length: 0, width: 0} should not be returned as empty.
+   */
+  return value == null ||
+      ((typeof value === 'string' || Array.isArray(value)) && value.length === 0);
 }
 
 function hasValidLength(value: any): boolean {
@@ -562,10 +570,16 @@ function isPresent(o: any): boolean {
   return o != null;
 }
 
-export function toObservable(r: any): Observable<any> {
-  const obs = isPromise(r) ? from(r) : r;
-  if (!(isObservable(obs)) && (typeof ngDevMode === 'undefined' || ngDevMode)) {
-    throw new Error(`Expected validator to return Promise or Observable.`);
+export function toObservable(value: any): Observable<any> {
+  const obs = isPromise(value) ? from(value) : value;
+  if (NG_DEV_MODE && !(isObservable(obs))) {
+    let errorMessage = `Expected async validator to return Promise or Observable.`;
+    // A synchronous validator will return object or null.
+    if (typeof value === 'object') {
+      errorMessage +=
+          ' Are you using a synchronous validator where an async validator is expected?';
+    }
+    throw new RuntimeError(RuntimeErrorCode.WRONG_VALIDATOR_RETURN_TYPE, errorMessage);
   }
   return obs;
 }

@@ -6,7 +6,10 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {AbstractControl, FormArray, FormControl, FormGroup} from '../model';
+import {AbstractControl} from '../model/abstract_model';
+import {FormArray} from '../model/form_array';
+import {FormControl} from '../model/form_control';
+import {FormGroup} from '../model/form_group';
 import {getControlAsyncValidators, getControlValidators, mergeValidators} from '../validators';
 
 import {AbstractControlDirective} from './abstract_control_directive';
@@ -39,6 +42,10 @@ export function setUpControl(control: FormControl, dir: NgControl): void {
   setUpValidators(control, dir);
 
   dir.valueAccessor!.writeValue(control.value);
+
+  if (control.disabled) {
+    dir.valueAccessor!.setDisabledState?.(true);
+  }
 
   setUpViewChangePipeline(control, dir);
   setUpModelChangePipeline(control, dir);

@@ -9,7 +9,7 @@
 import {AnimationBuilder} from '@angular/animations';
 import {AnimationDriver, ɵAnimationEngine as AnimationEngine, ɵAnimationStyleNormalizer as AnimationStyleNormalizer, ɵNoopAnimationDriver as NoopAnimationDriver, ɵWebAnimationsDriver as WebAnimationsDriver, ɵWebAnimationsStyleNormalizer as WebAnimationsStyleNormalizer} from '@angular/animations/browser';
 import {DOCUMENT} from '@angular/common';
-import {Inject, Injectable, InjectionToken, NgZone, OnDestroy, Provider, RendererFactory2} from '@angular/core';
+import {ANIMATION_MODULE_TYPE, ApplicationRef, Inject, Injectable, NgZone, OnDestroy, Provider, RendererFactory2} from '@angular/core';
 import {ɵDomRendererFactory2 as DomRendererFactory2} from '@angular/platform-browser';
 
 import {BrowserAnimationBuilder} from './animation_builder';
@@ -17,8 +17,12 @@ import {AnimationRendererFactory} from './animation_renderer';
 
 @Injectable()
 export class InjectableAnimationEngine extends AnimationEngine implements OnDestroy {
+  // The `ApplicationRef` is injected here explicitly to force the dependency ordering.
+  // Since the `ApplicationRef` should be created earlier before the `AnimationEngine`, they
+  // both have `ngOnDestroy` hooks and `flush()` must be called after all views are destroyed.
   constructor(
-      @Inject(DOCUMENT) doc: any, driver: AnimationDriver, normalizer: AnimationStyleNormalizer) {
+      @Inject(DOCUMENT) doc: any, driver: AnimationDriver, normalizer: AnimationStyleNormalizer,
+      appRef: ApplicationRef) {
     super(doc.body, driver, normalizer);
   }
 
@@ -35,12 +39,6 @@ export function instantiateRendererFactory(
     renderer: DomRendererFactory2, engine: AnimationEngine, zone: NgZone) {
   return new AnimationRendererFactory(renderer, engine, zone);
 }
-
-/**
- * @publicApi
- */
-export const ANIMATION_MODULE_TYPE =
-    new InjectionToken<'NoopAnimations'|'BrowserAnimations'>('AnimationModuleType');
 
 const SHARED_ANIMATION_PROVIDERS: Provider[] = [
   {provide: AnimationBuilder, useClass: BrowserAnimationBuilder},

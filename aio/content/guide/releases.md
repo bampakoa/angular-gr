@@ -119,7 +119,8 @@ The following table provides the status for Angular versions under support.
 
 | Version | Status | Released   | Active ends | LTS ends   |
 |:---     |:---    |:---        |:---         |:---        |
-| ^13.0.0 | Active | 2021-11-04 | 2022-05-04  | 2023-05-04 |
+| ^14.0.0 | Active | 2022-06-02 | 2022-12-02  | 2023-12-02 |
+| ^13.0.0 | LTS    | 2021-11-04 | 2022-06-02  | 2023-05-04 |
 | ^12.0.0 | LTS    | 2021-05-12 | 2021-11-12  | 2022-11-12 |
 
 Angular versions v2 to v11 are no longer under support.
@@ -160,15 +161,15 @@ For details, see [Supported Public API Surface of Angular](https://github.com/an
 
 Any changes to the public API surface are done using the versioning, support, and depreciation policies previously described.
 
-<a id="labs"></a>
+<a id="developer-preview"></a>
 
-## Angular Labs
+## Developer Preview
 
-Angular Labs is an initiative to cultivate new features and iterate on them quickly.
-Angular Labs provides a safe place for exploration and experimentation by the Angular team.
+Occasionally we introduce new APIs under the label of "Developer Preview". These are APIs that are fully functional and polished, but that we are not ready to stabilize under our normal deprecation policy.
 
-Angular Labs projects are not ready for production use, and no commitment is made to bring them to production.
-The policies and practices that are described in this document do not apply to Angular Labs projects.
+This may be because we want to gather feedback from real applications before stabilization, or because the associated documentation or migration tooling is not fully complete.
+
+The policies and practices that are described in this document do not apply to APIs marked as Developer Preview. Such APIs can change at any time, even in new patch versions of the framework. Teams should decide for themselves whether the benefits of using Developer Preview APIs are worth the risk of breaking changes outside of our normal use of semantic versioning.
 
 <!-- links -->
 

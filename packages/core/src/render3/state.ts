@@ -83,7 +83,7 @@ interface LFrame {
    *
    * e.g. const inner = x().$implicit; const outer = x().$implicit;
    */
-  contextLView: LView;
+  contextLView: LView|null;
 
   /**
    * Store the element depth count. This is used to identify the root elements of the template
@@ -265,8 +265,8 @@ export function ɵɵdisableBindings(): void {
 /**
  * Return the current `LView`.
  */
-export function getLView(): LView {
-  return instructionState.lFrame.lView;
+export function getLView<T>(): LView<T> {
+  return instructionState.lFrame.lView as LView<T>;
 }
 
 /**
@@ -290,7 +290,19 @@ export function getTView(): TView {
  */
 export function ɵɵrestoreView<T = any>(viewToRestore: OpaqueViewState): T {
   instructionState.lFrame.contextLView = viewToRestore as any as LView;
-  return (viewToRestore as any as LView)[CONTEXT] as T;
+  return (viewToRestore as any as LView)[CONTEXT] as unknown as T;
+}
+
+
+/**
+ * Clears the view set in `ɵɵrestoreView` from memory. Returns the passed in
+ * value so that it can be used as a return value of an instruction.
+ *
+ * @codeGenApi
+ */
+export function ɵɵresetView<T>(value?: T): T|undefined {
+  instructionState.lFrame.contextLView = null;
+  return value;
 }
 
 
@@ -331,7 +343,9 @@ export function setCurrentTNodeAsParent(): void {
 }
 
 export function getContextLView(): LView {
-  return instructionState.lFrame.contextLView;
+  const contextLView = instructionState.lFrame.contextLView;
+  ngDevMode && assertDefined(contextLView, 'contextLView must be defined.');
+  return contextLView!;
 }
 
 export function isInCheckNoChangesMode(): boolean {
@@ -554,7 +568,7 @@ export function enterView(newView: LView): void {
   newLFrame.currentTNode = tView.firstChild!;
   newLFrame.lView = newView;
   newLFrame.tView = tView;
-  newLFrame.contextLView = newView!;
+  newLFrame.contextLView = newView;
   newLFrame.bindingIndex = tView.bindingStartIndex;
   newLFrame.inI18n = false;
 }
@@ -576,7 +590,7 @@ function createLFrame(parent: LFrame|null): LFrame {
     lView: null!,
     tView: null!,
     selectedIndex: -1,
-    contextLView: null!,
+    contextLView: null,
     elementDepthCount: 0,
     currentNamespace: null,
     currentDirectiveIndex: -1,
@@ -629,7 +643,7 @@ export function leaveView() {
   oldLFrame.isParent = true;
   oldLFrame.tView = null!;
   oldLFrame.selectedIndex = -1;
-  oldLFrame.contextLView = null!;
+  oldLFrame.contextLView = null;
   oldLFrame.elementDepthCount = 0;
   oldLFrame.currentDirectiveIndex = -1;
   oldLFrame.currentNamespace = null;
@@ -641,7 +655,7 @@ export function leaveView() {
 export function nextContextImpl<T = any>(level: number): T {
   const contextLView = instructionState.lFrame.contextLView =
       walkUpViews(level, instructionState.lFrame.contextLView!);
-  return contextLView[CONTEXT] as T;
+  return contextLView[CONTEXT] as unknown as T;
 }
 
 function walkUpViews(nestingLevel: number, currentView: LView): LView {

@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Route} from '../config';
+import {Route} from '../models';
 import {defaultUrlMatcher, PRIMARY_OUTLET} from '../shared';
 import {UrlSegment, UrlSegmentGroup} from '../url_tree';
 
@@ -111,6 +111,9 @@ function addEmptyPathsToChildrenIfNeeded(
       s._sourceSegment = segmentGroup;
       if (relativeLinkResolution === 'legacy') {
         s._segmentIndexShift = segmentGroup.segments.length;
+        if (typeof ngDevMode === 'undefined' || !!ngDevMode) {
+          s._segmentIndexShiftCorrected = consumedSegments.length;
+        }
       } else {
         s._segmentIndexShift = consumedSegments.length;
       }

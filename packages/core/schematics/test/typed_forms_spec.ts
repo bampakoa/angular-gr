@@ -12,8 +12,6 @@ import {HostTree} from '@angular-devkit/schematics';
 import {SchematicTestRunner, UnitTestTree} from '@angular-devkit/schematics/testing';
 import * as shx from 'shelljs';
 
-const anySymbolName = 'AnyForUntypedForms';
-
 describe('Typed Forms migration', () => {
   let runner: SchematicTestRunner;
   let host: TempScopedNodeJsSyncHost;
@@ -40,32 +38,42 @@ describe('Typed Forms migration', () => {
 
     // We need to declare the Angular symbols we're testing for, otherwise type checking won't work.
     writeFile('/node_modules/@angular/forms/index.d.ts', `
-       export type ${anySymbolName} = any;
-       export declare class FormControl {}
-       export declare class FormGroup {}
-       export declare class FormArray {}
-       export declare class AbstractControl {}
-       export declare class FormBuilder {
-         constructor();
-         control(
-           formState: any, validatorOrOpts?: any,
-           asyncValidator?: any): FormControl;
-         group(
-           controlsConfig: {[key: string]: any},
-           options?: any,
-           ): FormGroup;
-         group(
-           controlsConfig: {[key: string]: any},
-           options: {[key: string]: any},
-           ): FormGroup;
-         group(
-           controlsConfig: {[key: string]: any},
-           options: any): FormGroup;
-         array(
-           controlsConfig: any[],
-           validatorOrOpts?: any,
-           asyncValidator?: any): FormArray;
-       }
+      export interface FormControl<T = any> {}
+      type FormControlInterface<T = any> = FormControl<T>;
+      export interface ɵFormControlCtor {
+        new<T = any>(value?: any): FormControl<T>;
+      }
+      export const FormControl: ɵFormControlCtor =
+      (class FormControl<T = any> implements FormControlInterface<T> {
+        constructor(value?: any) {}
+      });
+      export declare class FormGroup<T = any> {
+        constructor(controls?: any)
+      }
+      export declare class FormArray {
+        constructor(controls?: any)
+      }
+      export declare class AbstractControl {}
+      export declare class FormBuilder {
+        control(v: any): void;
+        group(v: any): void;
+        array(v: any): void;
+      }
+      export declare class UntypedFormControl {
+        constructor(value?: any)
+      }
+      export declare class UntypedFormGroup {
+        constructor(controls?: any)
+      }
+      export declare class UntypedFormArray {
+        constructor(controls?: any)
+      }
+      export declare class UntypedFormBuilder {
+        control(v: any): void;
+        group(v: any): void;
+        array(v: any): void;
+      }
+      export declare class Form {}
       `);
 
     previousWorkingDir = shx.pwd();
@@ -80,214 +88,106 @@ describe('Typed Forms migration', () => {
     shx.rm('-r', tmpDirPath);
   });
 
-  // These tests are disabled because the migration is removed from migration.json, and cannot be
-  // run.
+  describe('should', () => {
+    it('rename imports and constructor calls', async () => {
+      writeFile('/index.ts', `
+           import { Component } from '@angular/core';
+           import { AbstractControl, FormArray, FormBuilder, FormControl as FC, FormGroup, UntypedFormGroup } from '@angular/forms';
 
-  // describe(`should add ${anySymbolName} to constructors`, () => {
-  //   it('for FormControl', async () => {
-  //     writeFile('/index.ts', `
-  //          import { FormControl } from '@angular/forms';
-  //          @Component({template: ''})
-  //          export class MyComp {
-  //            const fc1 = new FormControl();
-  //            new FormControl(42);
-  //            constructor() {}
-  //          }
-  //        `);
-  //     await runMigration();
-  //     expect(tree.readContent('/index.ts'))
-  //         .toContain(`const fc1 = new FormControl<${anySymbolName}>();`);
-  //     expect(tree.readContent('/index.ts')).toContain(`new FormControl<${anySymbolName}>(42);`);
-  //   });
+           @Component({template: ''})
+           export class MyComponent {
+             private _control: FC = new FC(42);
+             private _group = new FormGroup({});
+             private _array: FormArray = new FormArray([]);
+             private _ungroup: UntypedFormGroup = new UntypedFormGroup({});
+             private FormC: Form = new Form();
 
-  //   it('for FormGroup', async () => {
-  //     writeFile('/index.ts', `
-  //          import { FormGroup } from '@angular/forms';
-  //          @Component({template: ''})
-  //          export class MyComp {
-  //            const fg = new FormGroup({foo: 3});
-  //            constructor() {}
-  //          }
-  //        `);
-  //     await runMigration();
-  //     expect(tree.readContent('/index.ts'))
-  //         .toContain(`const fg = new FormGroup<${anySymbolName}>({foo: 3});`);
-  //   });
+             private nested = new FormGroup({a: new FC(1)});
+             private nested2 = new FormGroup<{a: FormGroup<{b: FC<number>}>}>({a: new FormGroup<{b: FC<number>}>(new FC(1))});
 
-  //   it('for FormArray', async () => {
-  //     writeFile('/index.ts', `
-  //          import { FormArray } from '@angular/forms';
-  //          @Component({template: ''})
-  //          export class MyComp {
-  //            const fa = new FormArray([null]);
-  //            constructor() {}
-  //          }
-  //        `);
-  //     await runMigration();
-  //     expect(tree.readContent('/index.ts'))
-  //         .toContain(`const fa = new FormArray<${anySymbolName}[]>([null]);`);
-  //   });
+             private fb = new FormBuilder();
+             private fb2!: FormBuilder;
 
-  //   it('for FormControl with a qualified import', async () => {
-  //     writeFile('/index.ts', `
-  //          import { FormControl as FC } from '@angular/forms';
-  //          @Component({template: ''})
-  //          export class MyComp {
-  //            const fc = new FC({foo: 3});
-  //            constructor() {}
-  //          }
-  //        `);
-  //     await runMigration();
-  //     expect(tree.readContent('/index.ts'))
-  //         .toContain(`const fc = new FC<${anySymbolName}>({foo: 3});`);
-  //   });
+             private someSet = new Set([1]);
+             private FCSet = new Set<FC>(new FC(1));
 
-  //   it('for FormArray with a qualified import', async () => {
-  //     writeFile('/index.ts', `
-  //          import { FormArray as FA } from '@angular/forms';
-  //          @Component({template: ''})
-  //          export class MyComp {
-  //            const fa = new FA([null]);
-  //            constructor() {}
-  //          }
-  //        `);
-  //     await runMigration();
-  //     expect(tree.readContent('/index.ts'))
-  //         .toContain(`const fa = new FA<${anySymbolName}[]>([null]);`);
-  //   });
+             foo(fc: FC) {}
 
-  //   it('but not for controls that already have type arguments', async () => {
-  //     writeFile('/index.ts', `
-  //          import { FormControl } from '@angular/forms';
-  //          @Component({template: ''})
-  //          export class MyComp {
-  //            const fc1 = new FormControl<${anySymbolName}>();
-  //            constructor() {}
-  //          }
-  //        `);
-  //     await runMigration();
-  //     expect(tree.readContent('/index.ts'))
-  //         .toContain(`const fc1 = new FormControl<${anySymbolName}>();`);
-  //   });
-  // });
+             bar<T extends FormGroup>(baz: T) {}
+             baz(T: FormGroup&string) {}
 
-  // describe(`should add ${anySymbolName} to FormBuilder method`, () => {
-  //   it('control', async () => {
-  //     writeFile('/index.ts', `
-  //          import { FormBuilder } from '@angular/forms';
-  //          @Component({template: ''})
-  //          export class MyComp {
-  //            constructor() {
-  //              const fb = new FormBuilder();
-  //              const fc = fb.control(43);
-  //              const fd = new FormBuilder().control(42);
-  //            }
-  //          }
-  //        `);
-  //     await runMigration();
-  //     expect(tree.readContent('/index.ts')).toContain(`.control<${anySymbolName}>(43);`);
-  //     expect(tree.readContent('/index.ts'))
-  //         .toContain(`const fd = new FormBuilder().control<${anySymbolName}>(42)`);
-  //   });
+             build(fg: FormGroup) {
+               let tg: UntypedFormGroup;
+               const c = this.fb.control(42);
+               const g = this.fb.group({one: this.fb.control('')});
+               const a = this.fb.array([42]);
+               const fc2 = new FC(0);
+             }
+           }
 
-  //   it('group', async () => {
-  //     writeFile('/index.ts', `
-  //          import { FormBuilder } from '@angular/forms';
-  //          @Component({template: ''})
-  //          export class MyComp {
-  //            constructor() {
-  //              const fb = new FormBuilder();
-  //              const fc = fb.group({});
-  //              const fd = new FormBuilder().group({});
-  //            }
-  //          }
-  //        `);
-  //     await runMigration();
-  //     expect(tree.readContent('/index.ts')).toContain(`fb.group<${anySymbolName}>({});`);
-  //     expect(tree.readContent('/index.ts'))
-  //         .toContain(`const fd = new FormBuilder().group<${anySymbolName}>({})`);
-  //   });
+           class TypedFormGroup extends FormGroup {}
+           let a!: TypedFormGroup;
 
-  //   it('array', async () => {
-  //     writeFile('/index.ts', `
-  //          import { FormBuilder } from '@angular/forms';
-  //          @Component({template: ''})
-  //          export class MyComp {
-  //            constructor() {
-  //              const fb = new FormBuilder();
-  //              const fc = fb.array([0]);
-  //              const fd = new FormBuilder().array([0]);
-  //            }
-  //          }
-  //        `);
-  //     await runMigration();
-  //     expect(tree.readContent('/index.ts')).toContain(`fb.array<${anySymbolName}[]>([0]);`);
-  //     expect(tree.readContent('/index.ts'))
-  //         .toContain(`const fd = new FormBuilder().array<${anySymbolName}[]>([0])`);
-  //   });
-  // });
+           class ormGroup extends FormGroup {}
+         `);
+      await runMigration();
+      // There are a huge number of positions in which identifiers can show up. This tests an
+      // assortment of them, but is not exhaustive.
+      const cases = [
+        // Imports, excluding already migrated imports
+        `import { AbstractControl, UntypedFormArray, UntypedFormBuilder, UntypedFormControl, FormGroup, UntypedFormGroup } from '@angular/forms';`,
+        // Constructor calls, in various positions and qualifications
+        `private _control: UntypedFormControl = new UntypedFormControl(42);`,
+        `private _group = new UntypedFormGroup({});`,
+        `private _array: UntypedFormArray = new UntypedFormArray([]);`,
+        `private fb = new UntypedFormBuilder();`,
+        `const fc2 = new UntypedFormControl(0);`,
+        // Declarations
+        `let tg: UntypedFormGroup;`,
+        `private fb2!: UntypedFormBuilder;`,
+        // Function parameters
+        `foo(fc: UntypedFormControl) {}`,
+        `build(fg: UntypedFormGroup) {`,
+        // Generic arguments
+        `private FCSet = new Set<UntypedFormControl>(new UntypedFormControl(1));`,
+        // Generic functions
+        `bar<T extends UntypedFormGroup>(baz: T) {}`,
+        // Intersection types
+        `baz(T: UntypedFormGroup&string) {}`,
+        // Nested types
+        `private nested = new UntypedFormGroup({a: new UntypedFormControl(1)});`,
+        `private nested2 = new UntypedFormGroup<{a: UntypedFormGroup<{b: UntypedFormControl<number>}>}>({a: new UntypedFormGroup<{b: UntypedFormControl<number>}>(new UntypedFormControl(1))});`,
+        // Skip UntypedFormGroup, which is already migrated (idempotent migration)
+        `private _ungroup: UntypedFormGroup = new UntypedFormGroup({});`,
+        // Form class should not be changed.
+        `private FormC: Form = new Form();`,
+        // Unrelated constructors should not be changed.
+        `private someSet = new Set([1]);`,
+        // Unrelated classes with similar names should not be changed.
+        `private someSet = new Set([1]);`,
+        `class TypedFormGroup extends UntypedFormGroup {}`,
+        `let a!: TypedFormGroup;`,
+        `class ormGroup extends UntypedFormGroup {}`,
+      ];
+      cases.forEach(t => expect(tree.readContent('/index.ts')).toContain(t));
+    });
 
-  // describe('should add import', () => {
-  //   it('any when not already imported', async () => {
-  //     writeFile('/index.ts', `
-  //       import { FormBuilder } from '@angular/forms';
-  //       @Component({template: ''})
-  //       export class MyComp { }
-  //     `);
-  //     await runMigration();
-  //     expect(tree.readContent('/index.ts'))
-  //         .toContain(`import { ${anySymbolName}, FormBuilder } from '@angular/forms';`);
-  //   });
+    it('skip adding imports that would be unused', async () => {
+      writeFile('/index.ts', `
+        import {Component} from '@angular/core';
+        import {FormControl, FormGroup} from '@angular/forms';
 
-  //   it('exclusively when not already imported', async () => {
-  //     writeFile('/index.ts', `
-  //       import { ${anySymbolName}, FormBuilder } from '@angular/forms';
-  //       @Component({template: ''})
-  //       export class MyComp { }
-  //     `);
-  //     await runMigration();
-  //     expect(tree.readContent('/index.ts'))
-  //         .toContain(`import { ${anySymbolName}, FormBuilder } from '@angular/forms';`);
-  //   });
-  // });
-
-  // describe('should handle', () => {
-  //   it('an integrated example', async () => {
-  //     writeFile('/index.ts', `
-  //          import { Component } from '@angular/core';
-  //          import { AbstractControl, FormArray, FormBuilder, FormControl as FC, FormGroup } from
-  //          '@angular/forms';
-
-  //          @Component({template: ''})
-  //          export class MyComponent {
-  //            private _control = new FC(42);
-  //            private _group = new FormGroup({});
-  //            private _array = new FormArray([]);
-
-  //            private fb = new FormBuilder();
-
-  //            build() {
-  //              const c = this.fb.control(42);
-  //              const g = this.fb.group({one: this.fb.control('')});
-  //              const a = this.fb.array([42]);
-  //              const fc2 = new FC(0);
-  //            }
-  //          }
-  //        `);
-  //     await runMigration();
-  //     [`import { ${
-  //          anySymbolName}, AbstractControl, FormArray, FormBuilder, FormControl as FC, FormGroup
-  //          } from '@angular/forms';`,
-  //      `private _control = new FC<${anySymbolName}>(42)`,
-  //      `private _group = new FormGroup<${anySymbolName}>({})`,
-  //      `private _array = new FormArray<${anySymbolName}[]>([])`,
-  //      `const fc2 = new FC<${anySymbolName}>(0)`, `const c =
-  //      this.fb.control<${anySymbolName}>(42)`, `const g = this.fb.group<${anySymbolName}>({one:
-  //      this.fb.control<${anySymbolName}>('')})`, `const a =
-  //      this.fb.array<${anySymbolName}[]>([42])`]
-  //         .forEach(t => expect(tree.readContent('/index.ts')).toContain(t));
-  //   });
-  // });
+        @Component({template: ''}) export class MyComponent {
+          private fc: FormControl;
+        } `);
+      await runMigration();
+      const cases = [
+        // Because FormGroup is never used, the import should not be updated.
+        `import {UntypedFormControl, FormGroup} from '@angular/forms';`,
+      ];
+      cases.forEach(t => expect(tree.readContent('/index.ts')).toContain(t));
+    });
+  });
 
   function writeFile(filePath: string, contents: string) {
     host.sync.write(normalize(filePath), virtualFs.stringToFileBuffer(contents));

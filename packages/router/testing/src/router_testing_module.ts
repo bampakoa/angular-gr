@@ -9,7 +9,7 @@
 import {Location, LocationStrategy} from '@angular/common';
 import {MockLocationStrategy, SpyLocation} from '@angular/common/testing';
 import {Compiler, Injector, ModuleWithProviders, NgModule, Optional} from '@angular/core';
-import {ChildrenOutletContexts, ExtraOptions, NoPreloading, PreloadingStrategy, provideRoutes, Route, Router, ROUTER_CONFIGURATION, RouteReuseStrategy, RouterModule, ROUTES, Routes, UrlHandlingStrategy, UrlSerializer, ɵassignExtraOptionsToRouter as assignExtraOptionsToRouter, ɵflatten as flatten, ɵROUTER_PROVIDERS as ROUTER_PROVIDERS} from '@angular/router';
+import {ChildrenOutletContexts, DefaultTitleStrategy, ExtraOptions, NoPreloading, PreloadingStrategy, provideRoutes, Route, Router, ROUTER_CONFIGURATION, RouteReuseStrategy, RouterModule, ROUTES, Routes, TitleStrategy, UrlHandlingStrategy, UrlSerializer, ɵassignExtraOptionsToRouter as assignExtraOptionsToRouter, ɵflatten as flatten, ɵprovidePreloading as providePreloading, ɵROUTER_PROVIDERS as ROUTER_PROVIDERS} from '@angular/router';
 
 import {EXTRA_ROUTER_TESTING_PROVIDERS} from './extra_router_testing_providers';
 
@@ -21,6 +21,21 @@ function isUrlHandlingStrategy(opts: ExtraOptions|
 }
 
 /**
+ * Router setup factory function used for testing. Only used internally to keep the factory that's
+ * marked as publicApi cleaner (i.e. not having _both_ `TitleStrategy` and `DefaultTitleStrategy`).
+ */
+export function setupTestingRouterInternal(
+    urlSerializer: UrlSerializer, contexts: ChildrenOutletContexts, location: Location,
+    compiler: Compiler, injector: Injector, routes: Route[][],
+    opts?: ExtraOptions|UrlHandlingStrategy, urlHandlingStrategy?: UrlHandlingStrategy,
+    routeReuseStrategy?: RouteReuseStrategy, defaultTitleStrategy?: DefaultTitleStrategy,
+    titleStrategy?: TitleStrategy) {
+  return setupTestingRouter(
+      urlSerializer, contexts, location, compiler, injector, routes, opts, urlHandlingStrategy,
+      routeReuseStrategy, titleStrategy ?? defaultTitleStrategy);
+}
+
+/**
  * Router setup factory function used for testing.
  *
  * @publicApi
@@ -28,8 +43,8 @@ function isUrlHandlingStrategy(opts: ExtraOptions|
 export function setupTestingRouter(
     urlSerializer: UrlSerializer, contexts: ChildrenOutletContexts, location: Location,
     compiler: Compiler, injector: Injector, routes: Route[][],
-    opts?: ExtraOptions|UrlHandlingStrategy, urlHandlingStrategy?: UrlHandlingStrategy,
-    routeReuseStrategy?: RouteReuseStrategy) {
+    opts?: ExtraOptions|UrlHandlingStrategy|null, urlHandlingStrategy?: UrlHandlingStrategy,
+    routeReuseStrategy?: RouteReuseStrategy, titleStrategy?: TitleStrategy) {
   const router =
       new Router(null!, urlSerializer, contexts, location, injector, compiler, flatten(routes));
   if (opts) {
@@ -49,6 +64,8 @@ export function setupTestingRouter(
   if (routeReuseStrategy) {
     router.routeReuseStrategy = routeReuseStrategy;
   }
+
+  router.titleStrategy = titleStrategy;
 
   return router;
 }
@@ -87,14 +104,22 @@ export function setupTestingRouter(
     {provide: LocationStrategy, useClass: MockLocationStrategy},
     {
       provide: Router,
-      useFactory: setupTestingRouter,
+      useFactory: setupTestingRouterInternal,
       deps: [
-        UrlSerializer, ChildrenOutletContexts, Location, Compiler, Injector, ROUTES,
-        ROUTER_CONFIGURATION, [UrlHandlingStrategy, new Optional()],
-        [RouteReuseStrategy, new Optional()]
+        UrlSerializer,
+        ChildrenOutletContexts,
+        Location,
+        Compiler,
+        Injector,
+        ROUTES,
+        ROUTER_CONFIGURATION,
+        [UrlHandlingStrategy, new Optional()],
+        [RouteReuseStrategy, new Optional()],
+        [DefaultTitleStrategy, new Optional()],
+        [TitleStrategy, new Optional()],
       ]
     },
-    {provide: PreloadingStrategy, useExisting: NoPreloading},
+    providePreloading(NoPreloading),
     provideRoutes([]),
   ]
 })

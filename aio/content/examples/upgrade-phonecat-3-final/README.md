@@ -3,9 +3,10 @@ structure.
 
 The following changes from vanilla Phonecat are applied:
 
-*   E2E tests have been moved to the parent directory, where `run-e2e-tests` can discover and run them along with all the other examples.
-*   Most of the phone JSON and image data removed in the interest of keeping repo weight down.
-    Keeping enough to retain testability of the app.
+*   E2E tests have been moved to the parent directory, where `run-e2e-tests` can
+  discover and run them along with all the other examples.
+*   Most of the phone JSON and image data removed in the interest of keeping
+  repo weight down. Keeping enough to retain testability of the app.
 
 ## Running the app
 

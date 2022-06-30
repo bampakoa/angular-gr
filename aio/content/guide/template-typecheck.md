@@ -354,7 +354,7 @@ In the following example, casting `person` to the `any` type suppresses the erro
 
 &commat;Component({
   selector: 'my-component',
-  template: '{{&dollar;any(person).addresss.street}}'
+  template: '{{&dollar;any(person).address.street}}'
 })
 class MyComponent {
   person?: Person;
