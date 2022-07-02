@@ -31,7 +31,7 @@
 | Node.js <a id="nodejs"></a>          | Η Angular απαιτεί μια [ενεργή ή maintenance LTS](https://nodejs.org/about/releases) έκδοση του Node.js.  <div class="alert is-helpful"> Για πληροφορίες σχετικά με συγκεκριμένες απαιτήσεις έκδοσης, ανατρέξτε στην ιδιότητα `engines` στο αρχείο [package.json](https://unpkg.com/browse/@angular/core/package.json). </div> Για περισσότερες πληροφορίες σχετικά με την εγκατάσταση του Node.js, ανατρέξτε στο [nodejs.org](https://nodejs.org "Nodejs.org"). Εάν δεν είστε βέβαιοι ποια έκδοση του Node.js χρησιμοποιείτε στο σύστημά σας, εκτελέστε το `node -v` σε ένα παράθυρο terminal. |
 | Διαχειριστής πακέτων npm <a id="npm"></a> | Η Angular, το Angular CLI, και οι εφαρμογές Angular εξαρτώνται από [πακέτα npm](https://docs.npmjs.com/getting-started/what-is-npm) για πολλές δυνατότητες και λειτουργίες. Για λήψη και εγκατάσταση πακέτων npm, χρειάζεστε έναν διαχειριστή πακέτων npm. Αυτός ο οδηγός χρησιμοποιεί το [πρόγραμμα-πελάτη npm](https://docs.npmjs.com/cli/install) της γραμμής εντολών, το οποίο είναι προ-εγκατεστημένο με το `Node.js`. Για να ελέγξετε ότι έχετε εγκαταστήσει το πρόγραμμα-πελάτη npm, εκτελέστε το `npm -v` σε ένα παράθυρο terminal.
 
-<a id="install-cli"></a>
+<a id="install-the-angular-cli"></a>
 
 ## Εγκαταστήστε το Angular CLI
 
@@ -53,7 +53,7 @@ npm install -g &commat;angular/cli<aio-angular-dist-tag class="pln"></aio-angula
   <p>Διαβάστε προσεκτικά το μήνυμα που εμφανίζεται μετά την εκτέλεση της εντολής και ακολουθήστε τις οδηγίες. Βεβαιωθείτε ότι κατανοείτε τις συνέπειες του καθορισμού μιας πολιτικής εκτέλεσης.</p>
 </div>
 
-<a id="create-proj"></a>
+<a id="create-a-workspace-and-initial-application"></a>
 
 ## Δημιουργήστε έναν χώρο εργασίας και μια αρχική εφαρμογή
 
