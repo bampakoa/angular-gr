@@ -56,11 +56,3 @@ baseline.json
 
 # Husky
 .husky/_
-
-# angular-gr
-.circleci
-.devcontainer
-.husky
-.ng-dev
-.pullapprove.yml
-.gitmessage
