@@ -19,7 +19,7 @@ fs.readdir(angularGrPath, (_, entries) => {
 });
 
 process.chdir(angularPath);
-exec(`git checkout ${angularVersion}`);
+exec(`git fetch --all && git checkout ${angularVersion}`);
 
 fs.readdir(angularPath, (_, entries) => {
   for(entry of entries) {
