@@ -510,9 +510,6 @@
     "name": "diPublicInInjector"
   },
   {
-    "name": "domRendererFactory3"
-  },
-  {
     "name": "empty"
   },
   {
@@ -777,9 +774,6 @@
     "name": "isPositive"
   },
   {
-    "name": "isProceduralRenderer"
-  },
-  {
     "name": "isPromise"
   },
   {
@@ -787,9 +781,6 @@
   },
   {
     "name": "isTemplateNode"
-  },
-  {
-    "name": "isTemplateNode2"
   },
   {
     "name": "isTypeProvider"

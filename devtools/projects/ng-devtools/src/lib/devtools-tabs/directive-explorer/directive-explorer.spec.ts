@@ -10,9 +10,9 @@ import {PropertyQueryTypes} from 'protocol';
 
 import {DirectiveExplorerComponent} from './directive-explorer.component';
 import {IndexedNode} from './directive-forest/index-forest';
-import {ElementPropertyResolver} from './property-resolver/element-property-resolver';
 
 import SpyObj = jasmine.SpyObj;
+import {ElementPropertyResolver} from './property-resolver/element-property-resolver';
 
 describe('DirectiveExplorerComponent', () => {
   let messageBusMock: any;

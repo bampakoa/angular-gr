@@ -366,9 +366,6 @@
     "name": "detachMovedView"
   },
   {
-    "name": "domRendererFactory3"
-  },
-  {
     "name": "empty"
   },
   {
@@ -564,16 +561,10 @@
     "name": "isPositive"
   },
   {
-    "name": "isProceduralRenderer"
-  },
-  {
     "name": "isPromise"
   },
   {
     "name": "isPromise2"
-  },
-  {
-    "name": "isTemplateNode"
   },
   {
     "name": "isTypeProvider"
