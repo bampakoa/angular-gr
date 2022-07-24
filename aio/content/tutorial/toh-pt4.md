@@ -1,9 +1,8 @@
 # Προσθήκη services
 
-Το `HeroesComponent` του Tour of Heroes προς το παρόν λαμβάνει και εμφανίζει ψεύτικα δεδομένα.
+Το `HeroesComponent` του Tour of Heroes λαμβάνει και εμφανίζει ψεύτικα δεδομένα.
 
-Μετά την τροποποίηση σε αυτό το σεμινάριο, το `HeroesComponent` θα είναι λιτό και θα επικεντρώνεται στην υποστήριξη της προβολής.
-Θα είναι επίσης ευκολότερο να κάνετε unit-test με ένα εικονικό service.
+Η τροποποίηση του `HeroesComponent` επικεντρώνεται στην υποστήριξη της προβολής και διευκολύνει τα unit test με ένα εικονικό service.
 
 <div class="alert is-helpful">
 
@@ -16,21 +15,21 @@
 Τα components δεν πρέπει να ανακτούν ή να αποθηκεύουν δεδομένα απευθείας και σίγουρα δεν πρέπει να παρουσιάζουν εν γνώσει τους ψεύτικα δεδομένα.
 Θα πρέπει να επικεντρωθούν στην παρουσίαση δεδομένων και να αναθέσουν την πρόσβαση δεδομένων σε ένα service.
 
-Σε αυτό το σεμινάριο, θα δημιουργήσετε ένα `HeroService` που μπορούν να χρησιμοποιήσουν όλα τα classes της εφαρμογής για να αποκτήσουν ήρωες.
+Αυτό το σεμινάριο δημιουργεί ένα `HeroService` που μπορούν να χρησιμοποιήσουν όλα τα classes της εφαρμογής για να αποκτήσουν ήρωες.
 Αντί να δημιουργήσετε αυτό το service με την [λέξη-κλειδί `new`](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Operators/new),
-θα βασιστείτε στο [*dependency injection*](guide/dependency-injection) της Angular
-για να το εισάγετε στο constructor του `HeroesComponent`.
+χρησιμοποιήστε το [*dependency injection*](guide/dependency-injection) που υποστηρίζει η Angular
+για να το εισάγετε στον constructor του `HeroesComponent`.
 
 Τα services είναι ένας πολύ καλός τρόπος για να μοιράζεστε πληροφορίες μεταξύ classes που *δεν γνωρίζονται μεταξύ τους*.
-Θα δημιουργήσετε ένα `MessageService` και θα το εισάγετε σε δύο σημεία.
+Έπειτα δημιουργήστε ένα `MessageService` και εισάγετέ το σε αυτά τα δύο σημεία.
 
-*.   Εισάγετέ το στο `HeroService`, το οποίο χρησιμοποιεί το service για να στείλει ένα μήνυμα
-*.   Εισάγετέ το στο `MessagesComponent`, που εμφανίζει αυτό το μήνυμα και επίσης εμφανίζει το ID
+*   Εισάγετέ το στο `HeroService`, το οποίο χρησιμοποιεί το service για να στείλει ένα μήνυμα
+*   Εισάγετέ το στο `MessagesComponent`, που εμφανίζει αυτό το μήνυμα και επίσης εμφανίζει το ID
 όταν ο χρήστης κάνει κλικ σε έναν ήρωα
 
 ## Δημιουργήστε το `HeroService`
 
-Χρησιμοποιώντας το Angular CLI, δημιουργήστε ένα service με το όνομα `hero`.
+Εκτελέστε το `ng generate` για να δημιουργήσετε ένα service με το όνομα `hero`.
 
 <code-example format="shell" language="shell">
 
@@ -46,18 +45,18 @@ ng generate service hero
 
 Παρατηρήστε ότι το νέο service κάνει import το σύμβολο `Injectable` της Angular και χαρακτηρίζει
 το class με το decorator `@Injectable()`. Αυτό επισημαίνει το class ως ένα που συμμετέχει στο *σύστημα dependency injection*. Το class `HeroService` πρόκειται να παρέχει ένα injectable service, και μπορεί επίσης να έχει τις δικές του εξαρτήσεις που γίνονται εισαγωγή στο class.
-Δεν έχει ακόμη εξαρτήσεις, αλλά [θα έχει σύντομα](#inject-message-service).
+Δεν έχει ακόμη εξαρτήσεις.
 
 Το decorator `@Injectable()` δέχεται ένα αντικείμενο μεταδεδομένων για το service, με τον ίδιο τρόπο που έκανε το decorator `@Component()` για τα classes των components.
 
 ### Λήψη δεδομένων ήρωα
 
-Το `HeroService` θα μπορούσε να λάβει δεδομένα ηρώων από οπουδήποτε &mdash;ένα web service, το local storage, ή μια εικονική πηγή δεδομένων.
+Το `HeroService` θα μπορούσε να λάβει δεδομένα ηρώων από οπουδήποτε όπως ένα web service, το local storage, ή μια εικονική πηγή δεδομένων.
 
 Η κατάργηση της πρόσβασης δεδομένων από τα components σημαίνει ότι μπορείτε να αλλάξετε γνώμη σχετικά με την υλοποίηση ανά πάσα στιγμή, χωρίς να αγγίξετε κανένα component.
 Δεν ξέρουν πώς λειτουργεί το service.
 
-Η υλοποίηση σε *αυτό* το σεμινάριο θα συνεχίσει να παρέχει *εικονικούς ήρωες*.
+Η υλοποίηση σε *αυτό* το σεμινάριο συνεχίζει να παρέχει *εικονικούς ήρωες*.
 
 Κάντε import το `Hero` και το `HEROES`.
 
@@ -75,21 +74,20 @@ ng generate service hero
 προτού η Angular μπορέσει να το *εισάγει* στο `HeroesComponent` καταχωρώντας έναν *provider*. Ένας provider είναι κάτι που μπορεί να δημιουργήσει ή να παραδώσει ένα service. Σε αυτήν την περίπτωση, δημιουργεί το class `HeroService` για να παρέχει το service.
 
 Για να βεβαιωθείτε ότι το `HeroService` μπορεί να παρέχει αυτό to service, καταχωρήστε το
-με τον *injector*, που είναι το αντικείμενο που είναι υπεύθυνο για την επιλογή
-και την εισαγωγή του provider όπου το απαιτεί η εφαρμογή.
+με τον *injector*. Ο *injector* είναι το αντικείμενο που επιλέγει και εισάγει τον provider όπου το απαιτεί η εφαρμογή.
 
-Από προεπιλογή, η εντολή `ng generate service` του Angular CLI καταχωρεί ένα provider με τον *root injector* για το service σας συμπεριλαμβάνοντας μεταδεδομένα του provider, τα οποία είναι `providedIn: 'root'` στο decorator `@Injectable()`.
+Από προεπιλογή, το `ng generate service` καταχωρεί ένα provider με τον *root injector* για το service σας συμπεριλαμβάνοντας μεταδεδομένα του provider, τα οποία είναι `providedIn: 'root'` στο decorator `@Injectable()`.
 
 <code-example format="typescript" language="typescript">
 
-&commat;Injectable({
+@Injectable({
   providedIn: 'root',
 })
 
 </code-example>
 
 Όταν παρέχετε το service στο επίπεδο root, η Angular δημιουργεί μια ενιαία, κοινόχρηστη οντότητα του `HeroService` και το εισάγει σε οποιοδήποτε class το ζητήσει.
-Η καταχώρηση του provider στα μεταδεδομένα του `@Injectable` επιτρέπει επίσης στην Angular να βελτιστοποιήσει μια εφαρμογή καταργώντας το service εάν τελικά αποδειχθεί ότι δεν χρησιμοποιείται.
+Η καταχώρηση του provider στα μεταδεδομένα του `@Injectable` επιτρέπει επίσης στην Angular να βελτιστοποιήσει μια εφαρμογή καταργώντας το service εάν δεν χρησιμοποιείται.
 
 <div class="alert is-helpful">
 
@@ -102,7 +100,7 @@ ng generate service hero
 
 <div class="alert is-important">
 
-Αυτό είναι ένα ενδιάμεσο δείγμα κώδικα που θα σας επιτρέψει να παρέχετε και να χρησιμοποιήσετε το `HeroService`. Σε αυτό το σημείο, ο κώδικας θα διαφέρει από το `HeroService` στην ["τελική επισκόπηση του κώδικα"](#final-code-review).
+Αυτό είναι ένα ενδιάμεσο δείγμα κώδικα που σας επιτρέπει να παρέχετε και να χρησιμοποιήσετε το `HeroService`. Σε αυτό το σημείο, ο κώδικας διαφέρει από το `HeroService` στην ["τελική επισκόπηση του κώδικα"](#final-code-review).
 
 </div>
 
@@ -167,26 +165,23 @@ To `HeroesComponent` καταναλώνει το αποτέλεσμα του `ge
 
 <code-example header="src/app/heroes/heroes.component.ts" path="toh-pt4/src/app/heroes/heroes.component.1.ts" region="get-heroes"></code-example>
 
-Αυτό δεν θα λειτουργήσει σε μια πραγματική εφαρμογή.
+Αυτή η προσέγγιση δεν θα λειτουργήσει σε μια πραγματική εφαρμογή που χρησιμοποιεί ασύγχρονες κλήσεις.
 Λειτουργεί τώρα επειδή το service επιστρέφει αυτήν τη στιγμή *εικονικούς ήρωες*.
-Αλλά σύντομα η εφαρμογή θα φέρει ήρωες από έναν απομακρυσμένο διακομιστή,
-η οποία είναι μια εγγενώς *ασύγχρονη* λειτουργία.
 
-Το `HeroService` πρέπει να περιμένει να απαντήσει ο διακομιστής,
-το `getHeroes()` δεν μπορεί να επιστρέψει αμέσως με δεδομένα ήρωα,
-και το πρόγραμμα περιήγησης δεν θα μπλοκάρει όσο περιμένει το service.
+Εάν η `getHeroes()` δεν μπορεί να επιστρέψει αμέσως με δεδομένα ήρωα,
+δεν θα έπρεπε να ήταν σύγχρονη, γιατί αυτό θα μπλοκάρει το πρόγραμμα περιήγησης καθώς περιμένει να επιστρέψει δεδομένα.
 
 Το `HeroService.getHeroes()` πρέπει να έχει μια *ασύγχρονη μορφή* κάποιου είδους.
 
-Σε αυτό το σεμινάριο, το `HeroService.getHeroes()` θα επιστρέψει ένα `Observable`
-γιατί τελικά θα χρησιμοποιήσει τη μέθοδο `HttpClient.get` της Angular για να φέρει τους ήρωες
+Σε αυτό το σεμινάριο, το `HeroService.getHeroes()` επιστρέφει ένα `Observable`
+έτσι ώστε να μπορέσει να χρησιμοποιήσει τη μέθοδο `HttpClient.get` της Angular για να φέρει τους ήρωες
 και η [`HttpClient.get()` επιστρέφει ένα `Observable`](guide/http).
 
 ### Observable `HeroService`
 
 Το `Observable` είναι ένα από τα βασικά classes στην [βιβλιοθήκη RxJS](https://rxjs.dev).
 
-Σε ένα [μετέπειτα σεμινάριο για το HTTP](tutorial/toh-pt6), θα μάθετε ότι οι μέθοδοι `HttpClient` της Angular επιστρέφουν `Observable` του RxJS. Σε αυτό το σεμινάριο, θα προσομοιώσετε τη λήψη δεδομένων από τον διακομιστή με τη συνάρτηση `of()` του RxJS.
+Στο [σεμινάριο για το HTTP](tutorial/toh-pt6), μπορείτε να μάθετε πως οι μέθοδοι `HttpClient` της Angular επιστρέφουν `Observable` αντικείμενα του RxJS. Αυτό το σεμινάριο προσομοιώνει τη λήψη δεδομένων από τον διακομιστή με τη συνάρτηση `of()` του RxJS.
 
 Ανοίξτε το αρχείο `HeroService` και κάντε import τα σύμβολα `Observable` και `of` από το RxJS.
 
@@ -200,7 +195,7 @@ To `HeroesComponent` καταναλώνει το αποτέλεσμα του `ge
 
 <div class="alert is-helpful">
 
-Στο [σεμινάριο HTTP](tutorial/toh-pt6), θα καλέσετε το `HttpClient.get<Hero[]>()`το οποίο επίσης επιστρέφει ένα `Observable<Hero[]>` που επιστρέφει  *μια ενιαία τιμή*, μια λίστα από ήρωες από το περιεχόμενο της απάντησης του HTTP.
+Το [σεμινάριο HTTP](tutorial/toh-pt6) σας δείχνει πως να καλέσετε το `HttpClient.get<Hero[]>()`το οποίο επίσης επιστρέφει ένα `Observable<Hero[]>` που επιστρέφει  *μια ενιαία τιμή*, μια λίστα από ήρωες από το περιεχόμενο της απάντησης του HTTP.
 
 </div>
 
@@ -209,10 +204,10 @@ To `HeroesComponent` καταναλώνει το αποτέλεσμα του `ge
 Η μέθοδος `HeroService.getHeroes` επέστρεφε ένα `Hero[]`.
 Τώρα επιστρέφει ένα `Observable<Hero[]>`.
 
-Θα πρέπει να προσαρμοστείτε σε αυτή τη αλλαγή στο `HeroesComponent`.
+Πρέπει να προσαρμόσετε την εφαρμογή σας ώστε να λειτουργεί με αυτή τη αλλαγή στο `HeroesComponent`.
 
-Βρείτε τη μέθοδο `getHeroes` και αντικαταστήστε την με τον παρακάτω κώδικα
-\(εμφανίζεται δίπλα-δίπλα με την προηγούμενη έκδοση για σύγκριση\)
+Βρείτε τη μέθοδο `getHeroes` και αντικαταστήστε την με τον παρακάτω κώδικα.
+Ο νέος κώδικας εμφανίζεται δίπλα-δίπλα με την προηγούμενη έκδοση για σύγκριση.
 
 <code-tabs>
     <code-pane header="heroes.component.ts (Observable)" path="toh-pt4/src/app/heroes/heroes.component.ts" region="getHeroes"></code-pane>
@@ -227,12 +222,12 @@ To `HeroesComponent` καταναλώνει το αποτέλεσμα του `ge
 
 Αυτό *δεν θα λειτουργήσει* όταν το `HeroService` κάνει πραγματικά αιτήματα από έναν απομακρυσμένο διακομιστή.
 
-Η νέα έκδοση περιμένει το `Observable` να επιστρέψει την λίστα των ηρώων &mdash;που
+Η νέα έκδοση περιμένει το `Observable` να επιστρέψει την λίστα των ηρώων, που
 μπορεί να συμβεί τώρα ή σε μερικά λεπτά από τώρα.
 Η μέθοδος `subscribe()` περνά την λίστα που επιστρέφεται στο callback,
 το οποίο θέτει την ιδιότητα `heroes` του component.
 
-Αυτή η ασύγχρονη προσέγγιση *θα λειτουργήσει* όταν
+Αυτή η ασύγχρονη προσέγγιση *λειτουργεί* όταν
 το `HeroService` ζητά ήρωες από τον διακομιστή.
 
 ## Εμφάνιση μηνυμάτων
@@ -246,7 +241,7 @@ To `HeroesComponent` καταναλώνει το αποτέλεσμα του `ge
 
 ### Δημιουργήστε το `MessagesComponent`
 
-Χρησιμοποιήστε το CLI για να δημιουργήσετε το `MessagesComponent`.
+Χρησιμοποιήστε το `ng generate` για να δημιουργήσετε το `MessagesComponent`.
 
 <code-example format="shell" language="shell">
 
@@ -254,9 +249,9 @@ ng generate component messages
 
 </code-example>
 
-Το CLI δημιουργεί τα αρχεία του component στο φάκελο `src/app/messages` και δηλώνει το `MessagesComponent` στο `AppModule`.
+Το `ng generate` δημιουργεί τα αρχεία του component στο φάκελο `src/app/messages` και δηλώνει το `MessagesComponent` στο `AppModule`.
 
-Τροποποιήστε το template του `AppComponent` για να εμφανίσετε το `MessagesComponent` που δημιουργήθηκε.
+Τροποποιήστε το template του `AppComponent` για να εμφανίσετε το `MessagesComponent`.
 
 <code-example header="src/app/app.component.html" path="toh-pt4/src/app/app.component.html"></code-example>
 
@@ -264,7 +259,7 @@ ng generate component messages
 
 ### Δημιουργήστε το `MessageService`
 
-Χρησιμοποιήστε το CLI για να δημιουργήσετε το `MessageService` στο `src/app`.
+Χρησιμοποιήστε το `ng generate` για να δημιουργήσετε το `MessageService` στο `src/app`.
 
 <code-example format="shell" language="shell">
 
@@ -276,7 +271,10 @@ ng generate service message
 
 <code-example header="src/app/message.service.ts" path="toh-pt4/src/app/message.service.ts"></code-example>
 
-Το service διαθέτει προς τα έξω την κρυφή μνήμη των `messages` και δύο μεθόδους: μια για να κάνει `add()` ένα μήνυμα στην κρυφή μνήμη και μια άλλη για να κάνει `clear()` την κρυφή μνήμη.
+Το service διαθέτει προς τα έξω την κρυφή μνήμη των `messages` και δύο μεθόδους:
+
+* Μία για να κάνει `add()` ένα μήνυμα στην κρυφή μνήμη
+* Μία άλλη για να κάνει `clear()` την κρυφή μνήμη.
 
 <a id="inject-message-service"></a>
 
@@ -286,16 +284,15 @@ ng generate service message
 
 <code-example header="src/app/hero.service.ts (import MessageService)" path="toh-pt4/src/app/hero.service.ts" region="import-message-service"></code-example>
 
-Τροποποιήστε το constructor με μια παράμετρο που δηλώνει μια private ιδιότητα `messageService`.
-Η Angular θα εισάγει το singleton `MessageService` σε αυτήν την ιδιότητα
+Τροποποιήστε τον constructor με μια παράμετρο που δηλώνει μια private ιδιότητα `messageService`.
+Η Angular εισάγει το singleton `MessageService` σε αυτήν την ιδιότητα
 όταν δημιουργεί το `HeroService`.
 
 <code-example header="src/app/hero.service.ts" path="toh-pt4/src/app/hero.service.ts" region="ctor"></code-example>
 
 <div class="alert is-helpful">
 
-Αυτό είναι ένα τυπικό σενάριο "*service-in-service*":
-εισάγετε το `MessageService` στο `HeroService` το οποίο εισάγεται στο `HeroesComponent`.
+Αυτό είναι ένα παράδειγμα ενός τυπικού σεναρίου "*service-in-service*" στο οποίο εισάγετε το `MessageService` στο `HeroService` το οποίο εισάγεται στο `HeroesComponent`.
 
 </div>
 
@@ -315,7 +312,7 @@ ng generate service message
 <code-example header="src/app/messages/messages.component.ts (import MessageService)" path="toh-pt4/src/app/messages/messages.component.ts" region="import-message-service"></code-example>
 
 Τροποποιήστε το constructor με μια παράμετρο που δηλώνει μια ιδιότητα **public** `messageService`.
-Η Angular θα εισάγει το singleton `MessageService` σε αυτήν την ιδιότητα
+Η Angular εισάγει το singleton `MessageService` σε αυτήν την ιδιότητα
 όταν δημιουργεί το `MessagesComponent`.
 
 <code-example header="src/app/messages/messages.component.ts" path="toh-pt4/src/app/messages/messages.component.ts" region="ctor"></code-example>
@@ -330,7 +327,7 @@ ng generate service message
 
 ### Συνδέστε το `MessageService`
 
-Αντικαταστήστε το template του `MessagesComponent` που δημιουργήθηκε από το CLI με το ακόλουθο.
+Αντικαταστήστε το template του `MessagesComponent` που δημιουργήθηκε από το `ng generate` με το ακόλουθο.
 
 <code-example header="src/app/messages/messages.component.html" path="toh-pt4/src/app/messages/messages.component.html"></code-example>
 
@@ -342,13 +339,13 @@ ng generate service message
 | `*ngFor`                                     | Παρουσιάζει τη λίστα των μηνυμάτων σε επαναλαμβανόμενα στοιχεία `<div>`    |
 | Angular [event binding](guide/event-binding) | Συνδέει το event click του κουμπιού στο `MessageService.clear()`.    |
 
-Τα μηνύματα θα φαίνονται καλύτερα όταν προσθέσετε τα στυλ CSS στο `messages.component.css`
+Τα μηνύματα φαίνονται καλύτερα αφού προσθέσετε τα στυλ CSS στο `messages.component.css`
 όπως αναφέρεται σε μία από τις καρτέλες της ["τελικής προεπισκόπησης του κώδικα"](#final-code-review) παρακάτω.
 
-## Προσθέστε επιπλέον μηνύματα στο service του ήρωα
+## Προσθέστε μηνύματα στο service του ήρωα
 
-Το ακόλουθο παράδειγμα δείχνει πώς να στέλνετε και να εμφανίζετε ένα μήνυμα κάθε φορά που ο χρήστης κάνει κλικ σε
-έναν ήρωα, εμφανίζοντας ένα ιστορικό των επιλογών του χρήστη. Αυτό θα είναι χρήσιμο όταν φτάσετε στην
+Το ακόλουθο παράδειγμα δείχνει πώς να εμφανίσετε το ιστορικό κάθε φορά που ο χρήστης κάνει κλικ σε
+έναν ήρωα. Αυτό είναι χρήσιμο όταν φτάσετε στην
 επόμενη ενότητα για την [Δρομολόγηση](tutorial/toh-pt5).
 
 <code-example header="src/app/heroes/heroes.component.ts" path="toh-pt4/src/app/heroes/heroes.component.ts"></code-example>
@@ -377,15 +374,15 @@ ng generate service message
 
 ## Περίληψη
 
-*   Τροποποιήσατε την πρόσβαση δεδομένων στο class `HeroService`
-*   Καταχωρίσατε το `HeroService` ως *provider* του service του στο επίπεδο root ώστε να μπορεί να εισαχθεί οπουδήποτε στην εφαρμογή
-*   Χρησιμοποιήσατε το [Dependency Injection της Angular](guide/dependency-injection) για να το εισάγετε σε ένα component
-*   Δώσατε στη μέθοδο `HeroService` `get data` μια ασύγχρονη μορφή
-*   Ανακαλύψατε το `Observable` και τη βιβλιοθήκη `RxJS`
-*   Χρησιμοποιήσατε το `of()` του RxJS για να επιστρέψετε ένα observable από εικονικούς ήρωες \(`Observable<Hero[]>`\)
-*   Το lifecycle hook `ngOnInit` του component καλεί τη μέθοδο `HeroService`, και όχι το constructor
-*   Δημιουργήσατε ένα `MessageService` για loosely-coupled επικοινωνία μεταξύ των classes
+*   Τροποποιήσατε την πρόσβαση δεδομένων στο class `HeroService`.
+*   Καταχωρίσατε το `HeroService` ως *provider* του service του στο επίπεδο root ώστε να μπορεί να εισαχθεί οπουδήποτε στην εφαρμογή.
+*   Χρησιμοποιήσατε το [Dependency Injection της Angular](guide/dependency-injection) για να το εισάγετε σε ένα component.
+*   Δώσατε στη μέθοδο `HeroService` `get data` μια ασύγχρονη μορφή.
+*   Ανακαλύψατε το `Observable` και τη βιβλιοθήκη `RxJS`.
+*   Χρησιμοποιήσατε το `of()` του RxJS για να επιστρέψετε ένα observable από εικονικούς ήρωες `Observable<Hero[]>`.
+*   Το lifecycle hook `ngOnInit` του component καλεί τη μέθοδο `HeroService`, και όχι το constructor.
+*   Δημιουργήσατε ένα `MessageService` για loosely-coupled επικοινωνία μεταξύ των classes.
 *   Το `HeroService` που εισάγεται σε ένα component δημιουργείται με ένα άλλο service που εισάγεται,
- το `MessageService`
+ το `MessageService`.
 
-@reviewed 2022-05-21
+@reviewed 2022-07-24

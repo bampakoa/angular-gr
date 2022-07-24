@@ -3,12 +3,12 @@
 Προς το παρόν, το `HeroesComponent` εμφανίζει τόσο τη λίστα των ηρώων όσο και τα στοιχεία του επιλεγμένου ήρωα.
 
 Δεν θα είναι διαχειρίσιμη η διατήρηση όλων των λειτουργιών σε ένα component καθώς μεγαλώνει η εφαρμογή.
-Θα θέλετε να χωρίσετε μεγάλα components σε μικρότερα υπό-components, καθένα από τα οποία θα εστιάζει σε μια συγκεκριμένη εργασία ή ροή εργασίας.
+Αυτό το σεμινάριο χωρίζει μεγάλα components σε μικρότερα υπό-components, καθένα από τα οποία θα εστιάζει σε μια συγκεκριμένη εργασία ή ροή εργασίας.
 
-Σε αυτήν τη σελίδα, θα κάνετε το πρώτο βήμα προς αυτή την κατεύθυνση μετακινώντας τις λεπτομέρειες του ήρωα σε ένα ξεχωριστό, επαναχρησιμοποιήσιμο `HeroDetailComponent`.
+Το πρώτο βήμα είναι να μετακινήσουμε τις λεπτομέρειες του ήρωα σε ένα ξεχωριστό, επαναχρησιμοποιήσιμο `HeroDetailComponent`.
 
-Το `HeroesComponent` θα παρουσιάζει μόνο τη λίστα των ηρώων.
-Το `HeroDetailComponent` θα παρουσιάζει στοιχεία ενός επιλεγμένου ήρωα.
+* Ένα `HeroesComponent` που παρουσιάζει τη λίστα των ηρώων.
+* Ένα `HeroDetailComponent` που παρουσιάζει στοιχεία ενός επιλεγμένου ήρωα.
 
 <div class="alert is-helpful">
 
@@ -18,7 +18,7 @@
 
 ## Κατασκευάστε το `HeroDetailComponent`
 
-Χρησιμοποιήστε το Angular CLI για να δημιουργήσετε ένα νέο component με το όνομα `hero-detail`.
+Χρησιμοποιήστε την εντολή `ng generate` για να δημιουργήσετε ένα νέο component με το όνομα `hero-detail`.
 
 <code-example format="shell" language="shell">
 
@@ -45,7 +45,7 @@ ng generate component hero-detail
 
 Το επικολλημένο HTML αναφέρεται σε ένα `selectedHero`.
 Το νέο `HeroDetailComponent` μπορεί να εμφανίσει *οποιονδήποτε* ήρωα, όχι απλώς έναν επιλεγμένο ήρωα.
-Αντικαταστήστε λοιπόν το "selectedHero" με το "hero" παντού στο template.
+Αντικαταστήστε το `selectedHero` με το `hero` παντού στο template.
 
 Όταν τελειώσετε, το template του `HeroDetailComponent` θα πρέπει να μοιάζει με αυτό:
 
@@ -63,7 +63,7 @@ ng generate component hero-detail
 Η ιδιότητα `hero`
 [πρέπει να είναι μια ιδιότητα `Input`](guide/inputs-outputs "Ιδιότητες Input και Output"),
 που ορίζεται με το decorator `@Input()`,
-επειδή το *εξωτερικό* `HeroesComponent` [θα δεθεί με αυτήν](#heroes-component-template) ως εξής.
+επειδή το *εξωτερικό* `HeroesComponent` [δένεται με αυτήν](#heroes-component-template) ως εξής.
 
 <code-example path="toh-pt3/src/app/heroes/heroes.component.html" region="hero-detail-binding"></code-example>
 
@@ -84,12 +84,12 @@ ng generate component hero-detail
 Το `HeroesComponent` χρησιμοποιήθηκε για την εμφάνιση των λεπτομερειών του ήρωα από μόνο του, προτού αφαιρέσετε αυτό το τμήμα του template.
 Αυτή η ενότητα σας καθοδηγεί στην ανάθεση λογικής στο `HeroDetailComponent`.
 
-Τα δύο components θα έχουν σχέση parent/child.
-Το parent `HeroesComponent` θα ελέγχει το child `HeroDetailComponent`
+Τα δύο components έχουν σχέση parent/child.
+Το parent `HeroesComponent` ελέγχει το child `HeroDetailComponent`
 στέλνοντάς του έναν νέο ήρωα για εμφάνιση όποτε
 ο χρήστης επιλέγει έναν ήρωα από τη λίστα.
 
-Δεν θα αλλάξετε το *class* του `HeroesComponent` αλλά θα αλλάξετε το *template* του.
+Δεν χρειάζεται να αλλάξετε το *class* του `HeroesComponent`, αντίθετα αλλάξτε το *template* του.
 
 <a id="heroes-component-template"></a>
 

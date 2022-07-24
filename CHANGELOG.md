@@ -1,3 +1,42 @@
+<a name="14.0.7"></a>
+# 14.0.7 (2022-07-20)
+### animations
+| Commit | Type | Description |
+| -- | -- | -- |
+| [5bdbb6285b](https://github.com/angular/angular/commit/5bdbb6285b77f070347a5878bbd8218f6e01b5e8) | fix | make sure falsy values are added to _globalTimelineStyles ([#46863](https://github.com/angular/angular/pull/46863)) |
+### compiler
+| Commit | Type | Description |
+| -- | -- | -- |
+| [41253f9c46](https://github.com/angular/angular/commit/41253f9c467aa9742ef0b69ddd063043fe0300e2) | fix | inputs/outputs incorrectly parsed in jit mode ([#46813](https://github.com/angular/angular/pull/46813)) |
+### core
+| Commit | Type | Description |
+| -- | -- | -- |
+| [4e77c7fbf3](https://github.com/angular/angular/commit/4e77c7fbf38f27741617303165068e1cb1ef6354) | fix | do not invoke jasmine `done` callback multiple times with `waitForAsync` |
+## Special Thanks
+Andrew Kushnir, Andrew Scott, Bob Watson, Cédric Exbrayat, Doug Parker, George Kalpakas, Jessica Janiuk, Kristiyan Kostadinov, Paul Gschwendtner, acvi, dario-piotrowicz, jnizet and piyush132000
+
+<!-- CHANGELOG SPLIT MARKER -->
+
+<a name="14.0.6"></a>
+# 14.0.6 (2022-07-13)
+### compiler-cli
+| Commit | Type | Description |
+| -- | -- | -- |
+| [99697dae66](https://github.com/angular/angular/commit/99697dae668d8df07a5c46caf08a071371131e56) | fix | only consider used pipes for inline type-check requirement ([#46807](https://github.com/angular/angular/pull/46807)) |
+### forms
+| Commit | Type | Description |
+| -- | -- | -- |
+| [4f469cbef3](https://github.com/angular/angular/commit/4f469cbef3664746750338d167964c247151de01) | fix | expose ControlConfig in public API ([#46594](https://github.com/angular/angular/pull/46594)) |
+| [e8c8b695f2](https://github.com/angular/angular/commit/e8c8b695f20174a520ca1ba88164458c31e5b024) | fix | Move all remaining errors in Forms to use RuntimeErrorCode. ([#46654](https://github.com/angular/angular/pull/46654)) |
+### localize
+| Commit | Type | Description |
+| -- | -- | -- |
+| [14863acb1a](https://github.com/angular/angular/commit/14863acb1a642e9f6d36ea5d10d64f26d84ad475) | fix | add `--project` option to `ng-add` schematic ([#46664](https://github.com/angular/angular/pull/46664)) |
+## Special Thanks
+Alan Agius, Andrew Scott, Bob Watson, Dylan Hunn, George Kalpakas, Ivaylo Kirov, Jessica Janiuk, JoostK, Joshua VanAllen, Lukas Matta, Marcin Wosinek, Nicolas Molina Monroy, Paul Gschwendtner, SoulsMark, Uday Sony, dario-piotrowicz, markostanimirovic and zhysky
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="14.0.5"></a>
 # 14.0.5 (2022-07-06)
 ### router

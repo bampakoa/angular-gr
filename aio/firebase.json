@@ -112,6 +112,11 @@
         },
         {
           "type": 301,
+          "source": "/guide/ivy",
+          "destination": "https://v12.angular.io/guide/ivy"
+        },
+        {
+          "type": 301,
           "source": "/guide/updating-to-version-10",
           "destination": "https://v10.angular.io/guide/updating-to-version-10"
         },
