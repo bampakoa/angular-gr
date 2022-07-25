@@ -9,11 +9,21 @@ load("@bazel_skylib//rules:common_settings.bzl", "string_flag")
 package(default_visibility = ["//visibility:public"])
 
 sass_binary(
-    name = "shell_chrome_styles",
+    name = "shell_common_styles",
     src = "styles.scss",
     include_paths = ["external/npm/node_modules"],
     sourcemap = False,
     deps = ["//devtools:material_sass_deps"],
+)
+
+sass_binary(
+    name = "shell_firefox_styles",
+    src = "styles/firefox_styles.scss",
+)
+
+sass_binary(
+    name = "shell_chrome_styles",
+    src = "styles/chrome_styles.scss",
 )
 
 ts_library(
@@ -77,6 +87,8 @@ filegroup(
     srcs = [
         ":index.html",
         ":shell_chrome_styles",
+        ":shell_common_styles",
+        ":shell_firefox_styles",
         "//packages/zone.js/bundles:zone.umd.js",
     ],
 )

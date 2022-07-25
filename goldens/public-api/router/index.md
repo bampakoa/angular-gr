@@ -136,6 +136,15 @@ export interface CanLoad {
 }
 
 // @public
+export interface CanMatch {
+    // (undocumented)
+    canMatch(route: Route, segments: UrlSegment[]): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree;
+}
+
+// @public
+export type CanMatchFn = (route: Route, segments: UrlSegment[]) => Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree;
+
+// @public
 export class ChildActivationEnd {
     constructor(
     snapshot: ActivatedRouteSnapshot);
@@ -174,6 +183,9 @@ export class ChildrenOutletContexts {
 
 // @public
 export function convertToParamMap(params: Params): ParamMap;
+
+// @public
+export function createUrlTreeFromSnapshot(relativeTo: ActivatedRouteSnapshot, commands: any[], queryParams?: Params | null, fragment?: string | null): UrlTree;
 
 // @public
 export type Data = {
@@ -339,13 +351,22 @@ export class NavigationCancel extends RouterEvent {
     constructor(
     id: number,
     url: string,
-    reason: string);
-    // (undocumented)
+    reason: string,
+    code?: NavigationCancellationCode | undefined);
+    readonly code?: NavigationCancellationCode | undefined;
     reason: string;
     // (undocumented)
     toString(): string;
     // (undocumented)
     readonly type = EventType.NavigationCancel;
+}
+
+// @public
+export const enum NavigationCancellationCode {
+    GuardRejected = 3,
+    NoDataFromResolver = 2,
+    Redirect = 0,
+    SupersededByNewNavigation = 1
 }
 
 // @public
@@ -367,9 +388,11 @@ export class NavigationError extends RouterEvent {
     constructor(
     id: number,
     url: string,
-    error: any);
+    error: any,
+    target?: RouterStateSnapshot | undefined);
     // (undocumented)
     error: any;
+    readonly target?: RouterStateSnapshot | undefined;
     // (undocumented)
     toString(): string;
     // (undocumented)
@@ -516,6 +539,7 @@ export interface Route {
     canActivateChild?: any[];
     canDeactivate?: any[];
     canLoad?: any[];
+    canMatch?: Array<Type<CanMatch> | InjectionToken<CanMatchFn>>;
     children?: Routes;
     component?: Type<any>;
     data?: Data;
@@ -758,7 +782,7 @@ export interface RouterOutletContract {
     activatedRoute: ActivatedRoute | null;
     activatedRouteData: Data;
     activateEvents?: EventEmitter<unknown>;
-    activateWith(activatedRoute: ActivatedRoute, environmnetInjector: EnvironmentInjector | null): void;
+    activateWith(activatedRoute: ActivatedRoute, environmentInjector: EnvironmentInjector | null): void;
     // @deprecated
     activateWith(activatedRoute: ActivatedRoute, resolver: ComponentFactoryResolver | null): void;
     attach(ref: ComponentRef<unknown>, activatedRoute: ActivatedRoute): void;

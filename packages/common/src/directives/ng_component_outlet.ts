@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {ComponentRef, createNgModuleRef, Directive, Injector, Input, NgModuleFactory, NgModuleRef, OnChanges, OnDestroy, SimpleChanges, Type, ViewContainerRef} from '@angular/core';
+import {ComponentRef, createNgModule, Directive, Injector, Input, NgModuleFactory, NgModuleRef, OnChanges, OnDestroy, SimpleChanges, Type, ViewContainerRef} from '@angular/core';
 
 
 /**
@@ -68,7 +68,10 @@ import {ComponentRef, createNgModuleRef, Directive, Injector, Input, NgModuleFac
  * @publicApi
  * @ngModule CommonModule
  */
-@Directive({selector: '[ngComponentOutlet]'})
+@Directive({
+  selector: '[ngComponentOutlet]',
+  standalone: true,
+})
 export class NgComponentOutlet implements OnChanges, OnDestroy {
   @Input() ngComponentOutlet: Type<any>|null = null;
 
@@ -103,7 +106,7 @@ export class NgComponentOutlet implements OnChanges, OnDestroy {
         if (this._moduleRef) this._moduleRef.destroy();
 
         if (ngModule) {
-          this._moduleRef = createNgModuleRef(ngModule, getParentInjector(injector));
+          this._moduleRef = createNgModule(ngModule, getParentInjector(injector));
         } else if (ngModuleFactory) {
           this._moduleRef = ngModuleFactory.create(getParentInjector(injector));
         } else {
