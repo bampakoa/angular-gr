@@ -138,8 +138,8 @@
             },
             {
               "url": "guide/inputs-outputs",
-              "title": "Sharing data between child and parent directives and components",
-              "tooltip": "Introductory guide to sharing data between parent and child directives or components."
+              "title": "Κοινή χρήση δεδομένων μεταξύ child και parent directives και components",
+              "tooltip": "Εισαγωγή στην κοινή χρήση δεδομένων μεταξύ child και parent directives ή components."
             },
             {
               "url": "guide/content-projection",
