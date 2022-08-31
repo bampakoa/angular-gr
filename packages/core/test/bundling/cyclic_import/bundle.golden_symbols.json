@@ -42,9 +42,6 @@
     "name": "CIRCULAR"
   },
   {
-    "name": "CLEAN_PROMISE"
-  },
-  {
     "name": "COMPONENT_REGEX"
   },
   {
@@ -363,9 +360,6 @@
     "name": "__forward_ref__"
   },
   {
-    "name": "_chromeNumKeyPadMap"
-  },
-  {
     "name": "_currentInjector"
   },
   {
@@ -421,9 +415,6 @@
   },
   {
     "name": "attachPatchData"
-  },
-  {
-    "name": "autoRegisterModuleById"
   },
   {
     "name": "baseElement"
@@ -499,9 +490,6 @@
   },
   {
     "name": "deepForEach"
-  },
-  {
-    "name": "defaultScheduler"
   },
   {
     "name": "detachMovedView"

@@ -8,13 +8,13 @@
 
 import {Compiler, Component, Inject, Injectable, InjectionToken, Injector, NgModule, NgModuleFactory, NgModuleRef, Optional, Type} from '@angular/core';
 import {fakeAsync, inject, TestBed, tick} from '@angular/core/testing';
-import {PreloadAllModules, PreloadingStrategy, RouterPreloader} from '@angular/router';
+import {PreloadAllModules, PreloadingStrategy, provideRoutes, RouterPreloader, withPreloading} from '@angular/router';
 import {BehaviorSubject, Observable, of, throwError} from 'rxjs';
 import {catchError, delay, filter, switchMap, take} from 'rxjs/operators';
 
 import {Route, RouteConfigLoadEnd, RouteConfigLoadStart, Router, RouterModule} from '../index';
 import {getLoadedComponent, getLoadedInjector, getLoadedRoutes, getProvidersInjector} from '../src/utils/config';
-import {RouterTestingModule} from '../testing';
+import {provideRouterForTesting} from '../testing/src/provide_router_for_testing';
 
 
 describe('RouterPreloader', () => {
@@ -25,9 +25,11 @@ describe('RouterPreloader', () => {
   describe('should properly handle', () => {
     beforeEach(() => {
       TestBed.configureTestingModule({
-        imports: [RouterTestingModule.withRoutes(
-            [{path: 'lazy', loadChildren: jasmine.createSpy('expected'), canLoad: ['someGuard']}])],
-        providers: [{provide: PreloadingStrategy, useExisting: PreloadAllModules}]
+        providers: [
+          provideRouterForTesting(
+              [{path: 'lazy', loadChildren: jasmine.createSpy('expected'), canLoad: ['someGuard']}],
+              withPreloading(PreloadAllModules)),
+        ]
       });
     });
 
@@ -39,24 +41,24 @@ describe('RouterPreloader', () => {
     });
   });
 
-  describe('should not load configurations with canLoad guard', () => {
+  describe('configurations with canLoad guard', () => {
     @NgModule({
       declarations: [LazyLoadedCmp],
-      imports: [RouterModule.forChild([{path: 'LoadedModule1', component: LazyLoadedCmp}])]
+      providers: [provideRoutes([{path: 'LoadedModule1', component: LazyLoadedCmp}])]
     })
     class LoadedModule {
     }
 
     beforeEach(() => {
       TestBed.configureTestingModule({
-        imports: [RouterTestingModule.withRoutes(
-            [{path: 'lazy', loadChildren: () => LoadedModule, canLoad: ['someGuard']}])],
-        providers: [{provide: PreloadingStrategy, useExisting: PreloadAllModules}]
+        providers: [provideRouterForTesting(
+            [{path: 'lazy', loadChildren: () => LoadedModule, canLoad: ['someGuard']}],
+            withPreloading(PreloadAllModules))],
       });
     });
 
 
-    it('should work',
+    it('should not load children',
        fakeAsync(inject([RouterPreloader, Router], (preloader: RouterPreloader, router: Router) => {
          preloader.preload().subscribe(() => {});
 
@@ -65,6 +67,17 @@ describe('RouterPreloader', () => {
          const c = router.config;
          expect((c[0] as any)._loadedConfig).not.toBeDefined();
        })));
+
+    it('should not call the preloading method because children will not be loaded anyways',
+       fakeAsync(() => {
+         const preloader = TestBed.inject(RouterPreloader);
+         const preloadingStrategy = TestBed.inject(PreloadingStrategy);
+         spyOn(preloadingStrategy, 'preload').and.callThrough();
+         preloader.preload().subscribe(() => {});
+
+         tick();
+         expect(preloadingStrategy.preload).not.toHaveBeenCalled();
+       }));
   });
 
   describe('should preload configurations', () => {
@@ -72,8 +85,8 @@ describe('RouterPreloader', () => {
     beforeEach(() => {
       lazySpy = jasmine.createSpy('expected');
       TestBed.configureTestingModule({
-        imports: [RouterTestingModule.withRoutes([{path: 'lazy', loadChildren: lazySpy}])],
-        providers: [{provide: PreloadingStrategy, useExisting: PreloadAllModules}]
+        providers: [provideRouterForTesting(
+            [{path: 'lazy', loadChildren: lazySpy}], withPreloading(PreloadAllModules))],
       });
     });
 
@@ -139,14 +152,13 @@ describe('RouterPreloader', () => {
        }
 
        TestBed.configureTestingModule({
-         imports: [RouterTestingModule.withRoutes([{
-           path: 'parent',
-           providers: [{provide: TOKEN, useValue: 'parent'}],
-           loadChildren: () => Child,
-         }])],
-         providers: [
-           {provide: PreloadingStrategy, useExisting: PreloadAllModules},
-         ]
+         providers: [provideRouterForTesting(
+             [{
+               path: 'parent',
+               providers: [{provide: TOKEN, useValue: 'parent'}],
+               loadChildren: () => Child,
+             }],
+             withPreloading(PreloadAllModules))],
        });
 
        TestBed.inject(RouterPreloader).preload().subscribe(() => {});
@@ -171,8 +183,10 @@ describe('RouterPreloader', () => {
     beforeEach(() => {
       lazySpy = jasmine.createSpy('expected');
       TestBed.configureTestingModule({
-        imports: [RouterTestingModule.withRoutes([{path: 'lazy', loadChildren: lazySpy}])],
-        providers: [{provide: PreloadingStrategy, useExisting: PreloadAllModules}]
+        providers: [
+          provideRouterForTesting(
+              [{path: 'lazy', loadChildren: lazySpy}], withPreloading(PreloadAllModules)),
+        ],
       });
     });
 
@@ -276,9 +290,10 @@ describe('RouterPreloader', () => {
       subLoadChildrenSpy.calls.reset();
       lazyLoadChildrenSpy.calls.reset();
       TestBed.configureTestingModule({
-        imports:
-            [RouterTestingModule.withRoutes([{path: 'lazy', loadChildren: lazyLoadChildrenSpy}])],
-        providers: [{provide: PreloadingStrategy, useFactory: mockPreloaderFactory}]
+        providers: [
+          provideRouterForTesting([{path: 'lazy', loadChildren: lazyLoadChildrenSpy}]),
+          {provide: PreloadingStrategy, useFactory: mockPreloaderFactory}
+        ]
       });
       events = [];
     });
@@ -536,11 +551,13 @@ describe('RouterPreloader', () => {
 
     beforeEach(() => {
       TestBed.configureTestingModule({
-        imports: [RouterTestingModule.withRoutes([
-          {path: 'lazy1', loadChildren: jasmine.createSpy('expected1')},
-          {path: 'lazy2', loadChildren: () => LoadedModule}
-        ])],
-        providers: [{provide: PreloadingStrategy, useExisting: PreloadAllModules}]
+        providers: [
+          provideRoutes([
+            {path: 'lazy1', loadChildren: jasmine.createSpy('expected1')},
+            {path: 'lazy2', loadChildren: () => LoadedModule}
+          ]),
+          {provide: PreloadingStrategy, useExisting: PreloadAllModules},
+        ]
       });
     });
 
@@ -559,15 +576,16 @@ describe('RouterPreloader', () => {
 
   describe('should copy loaded configs', () => {
     const configs = [{path: 'LoadedModule1', component: LazyLoadedCmp}];
-    @NgModule({declarations: [LazyLoadedCmp], imports: [RouterModule.forChild(configs)]})
+    @NgModule({declarations: [LazyLoadedCmp], providers: [provideRoutes(configs)]})
     class LoadedModule {
     }
 
     beforeEach(() => {
       TestBed.configureTestingModule({
-        imports:
-            [RouterTestingModule.withRoutes([{path: 'lazy1', loadChildren: () => LoadedModule}])],
-        providers: [{provide: PreloadingStrategy, useExisting: PreloadAllModules}]
+        providers: [provideRouterForTesting(
+            [{path: 'lazy1', loadChildren: () => LoadedModule}],
+            withPreloading(PreloadAllModules),
+            )],
       });
     });
 
@@ -590,7 +608,7 @@ describe('RouterPreloader', () => {
       'should work with lazy loaded modules that don\'t provide RouterModule.forChild()', () => {
         @NgModule({
           declarations: [LazyLoadedCmp],
-          imports: [RouterModule.forChild([{path: 'LoadedModule1', component: LazyLoadedCmp}])]
+          providers: [provideRoutes([{path: 'LoadedModule1', component: LazyLoadedCmp}])]
         })
         class LoadedModule {
         }
@@ -601,9 +619,12 @@ describe('RouterPreloader', () => {
 
         beforeEach(() => {
           TestBed.configureTestingModule({
-            imports: [RouterTestingModule.withRoutes(
-                [{path: 'lazyEmptyModule', loadChildren: () => EmptyModule}])],
-            providers: [{provide: PreloadingStrategy, useExisting: PreloadAllModules}]
+            providers: [
+              provideRouterForTesting(
+                  [{path: 'lazyEmptyModule', loadChildren: () => EmptyModule}],
+                  withPreloading(PreloadAllModules),
+                  ),
+            ]
           });
         });
 
@@ -617,9 +638,12 @@ describe('RouterPreloader', () => {
     beforeEach(() => {
       lazyComponentSpy = jasmine.createSpy('expected');
       TestBed.configureTestingModule({
-        imports:
-            [RouterTestingModule.withRoutes([{path: 'lazy', loadComponent: lazyComponentSpy}])],
-        providers: [{provide: PreloadingStrategy, useExisting: PreloadAllModules}]
+        providers: [
+          provideRouterForTesting(
+              [{path: 'lazy', loadComponent: lazyComponentSpy}],
+              withPreloading(PreloadAllModules),
+              ),
+        ]
       });
     });
 
@@ -692,8 +716,9 @@ describe('RouterPreloader', () => {
          class LoadedComponent {
          }
 
-         @NgModule(
-             {imports: [RouterModule.forChild([{path: 'child', component: LoadedComponent}])]})
+         @NgModule({
+           providers: [provideRouterForTesting([{path: 'child', component: LoadedComponent}])],
+         })
          class LoadedModule {
          }
 
@@ -722,7 +747,7 @@ describe('RouterPreloader', () => {
          lazyComponentSpy.and.returnValue(of(LoadedComponent).pipe(delay(5)));
 
          @NgModule({
-           imports: [RouterModule.forChild([{
+           providers: [provideRouterForTesting([{
              path: 'child',
              loadChildren: () => of([
                                    {path: 'grandchild', children: []},

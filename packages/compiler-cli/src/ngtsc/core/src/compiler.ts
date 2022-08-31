@@ -27,6 +27,7 @@ import {ComponentScopeReader, CompoundComponentScopeReader, LocalModuleScopeRegi
 import {StandaloneComponentScopeReader} from '../../scope/src/standalone';
 import {generatedFactoryTransform} from '../../shims';
 import {aliasTransformFactory, CompilationMode, declarationTransformFactory, DecoratorHandler, DtsTransformRegistry, ivyTransformFactory, TraitCompiler} from '../../transform';
+import {getModifiers} from '../../ts_compatibility';
 import {TemplateTypeCheckerImpl} from '../../typecheck';
 import {OptimizeFor, TemplateTypeChecker, TypeCheckingConfig} from '../../typecheck/api';
 import {ALL_DIAGNOSTIC_FACTORIES, ExtendedTemplateCheckerImpl} from '../../typecheck/extended';
@@ -255,6 +256,7 @@ export class NgCompiler {
   private cycleAnalyzer: CycleAnalyzer;
   readonly ignoreForDiagnostics: Set<ts.SourceFile>;
   readonly ignoreForEmit: Set<ts.SourceFile>;
+  readonly enableTemplateTypeChecker: boolean;
 
   /**
    * `NgCompiler` can be reused for multiple compilations (for resource-only changes), and each
@@ -313,10 +315,12 @@ export class NgCompiler {
       readonly programDriver: ProgramDriver,
       readonly incrementalStrategy: IncrementalBuildStrategy,
       readonly incrementalCompilation: IncrementalCompilation,
-      readonly enableTemplateTypeChecker: boolean,
+      enableTemplateTypeChecker: boolean,
       readonly usePoisonedData: boolean,
       private livePerfRecorder: ActivePerfRecorder,
   ) {
+    this.enableTemplateTypeChecker =
+        enableTemplateTypeChecker || (options._enableTemplateTypeChecker ?? false);
     this.constructionDiagnostics.push(
         ...this.adapter.constructionDiagnostics, ...verifyCompatibleTypeCheckOptions(this.options));
 
@@ -1063,8 +1067,8 @@ export class NgCompiler {
 
     const templateTypeChecker = new TemplateTypeCheckerImpl(
         this.inputProgram, notifyingDriver, traitCompiler, this.getTypeCheckingConfig(), refEmitter,
-        reflector, this.adapter, this.incrementalCompilation, scopeReader, typeCheckScopeRegistry,
-        this.delegatingPerfRecorder);
+        reflector, this.adapter, this.incrementalCompilation, metaReader, scopeReader,
+        typeCheckScopeRegistry, this.delegatingPerfRecorder);
 
     // Only construct the extended template checker if the configuration is valid and usable.
     const extendedTemplateChecker = this.constructionDiagnostics.length === 0 ?
@@ -1107,8 +1111,9 @@ export function isAngularCorePackage(program: ts.Program): boolean {
       return false;
     }
     // It must be exported.
-    if (stmt.modifiers === undefined ||
-        !stmt.modifiers.some(mod => mod.kind === ts.SyntaxKind.ExportKeyword)) {
+    const modifiers = getModifiers(stmt);
+    if (modifiers === undefined ||
+        !modifiers.some(mod => mod.kind === ts.SyntaxKind.ExportKeyword)) {
       return false;
     }
     // It must declare ITS_JUST_ANGULAR.

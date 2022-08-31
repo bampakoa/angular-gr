@@ -24,9 +24,6 @@
     "name": "CIRCULAR"
   },
   {
-    "name": "CLEAN_PROMISE"
-  },
-  {
     "name": "ComponentFactory"
   },
   {
@@ -297,9 +294,6 @@
     "name": "attachPatchData"
   },
   {
-    "name": "autoRegisterModuleById"
-  },
-  {
     "name": "baseElement"
   },
   {
@@ -355,9 +349,6 @@
   },
   {
     "name": "deepForEach"
-  },
-  {
-    "name": "defaultScheduler"
   },
   {
     "name": "detachMovedView"

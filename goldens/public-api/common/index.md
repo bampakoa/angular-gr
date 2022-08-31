@@ -17,7 +17,9 @@ import { NgModuleFactory } from '@angular/core';
 import { Observable } from 'rxjs';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
+import { OnInit } from '@angular/core';
 import { PipeTransform } from '@angular/core';
+import { Provider } from '@angular/core';
 import { Renderer2 } from '@angular/core';
 import { SimpleChanges } from '@angular/core';
 import { Subscribable } from 'rxjs';
@@ -257,6 +259,18 @@ export class I18nSelectPipe implements PipeTransform {
 }
 
 // @public
+export const IMAGE_LOADER: InjectionToken<ImageLoader>;
+
+// @public
+export type ImageLoader = (config: ImageLoaderConfig) => string;
+
+// @public
+export interface ImageLoaderConfig {
+    src: string;
+    width?: number;
+}
+
+// @public
 export function isPlatformBrowser(platformId: Object): boolean;
 
 // @public
@@ -403,7 +417,7 @@ export class NgClass implements DoCheck {
     // (undocumented)
     set ngClass(value: string | string[] | Set<string> | {
         [klass: string]: any;
-    });
+    } | null | undefined);
     // (undocumented)
     ngDoCheck(): void;
     // (undocumented)
@@ -518,6 +532,32 @@ export abstract class NgLocalization {
 }
 
 // @public
+export class NgOptimizedImage implements OnInit, OnChanges, OnDestroy {
+    set height(value: string | number | undefined);
+    // (undocumented)
+    get height(): number | undefined;
+    loading?: 'lazy' | 'eager' | 'auto';
+    // (undocumented)
+    ngOnChanges(changes: SimpleChanges): void;
+    // (undocumented)
+    ngOnDestroy(): void;
+    // (undocumented)
+    ngOnInit(): void;
+    set priority(value: string | boolean | undefined);
+    // (undocumented)
+    get priority(): boolean;
+    rawSrc: string;
+    rawSrcset: string;
+    set width(value: string | number | undefined);
+    // (undocumented)
+    get width(): number | undefined;
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<NgOptimizedImage, "img[rawSrc]", never, { "rawSrc": "rawSrc"; "rawSrcset": "rawSrcset"; "width": "width"; "height": "height"; "loading": "loading"; "priority": "priority"; "src": "src"; "srcset": "srcset"; }, {}, never, never, true>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<NgOptimizedImage, never>;
+}
+
+// @public
 export class NgPlural {
     constructor(_localization: NgLocalization);
     // (undocumented)
@@ -549,7 +589,7 @@ export class NgStyle implements DoCheck {
     // (undocumented)
     set ngStyle(values: {
         [klass: string]: any;
-    } | null);
+    } | null | undefined);
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<NgStyle, "[ngStyle]", never, { "ngStyle": "ngStyle"; }, {}, never, never, true>;
     // (undocumented)
@@ -742,6 +782,29 @@ interface PopStateEvent_2 {
     url?: string;
 }
 export { PopStateEvent_2 as PopStateEvent }
+
+// @public
+export const PRECONNECT_CHECK_BLOCKLIST: InjectionToken<(string | string[])[]>;
+
+// @public
+export const provideCloudflareLoader: (path: string, options?: {
+    ensurePreconnect?: boolean | undefined;
+}) => Provider[];
+
+// @public
+export const provideCloudinaryLoader: (path: string, options?: {
+    ensurePreconnect?: boolean | undefined;
+}) => Provider[];
+
+// @public
+export const provideImageKitLoader: (path: string, options?: {
+    ensurePreconnect?: boolean | undefined;
+}) => Provider[];
+
+// @public
+export const provideImgixLoader: (path: string, options?: {
+    ensurePreconnect?: boolean | undefined;
+}) => Provider[];
 
 // @public
 export function registerLocaleData(data: any, localeId?: string | any, extraData?: any): void;

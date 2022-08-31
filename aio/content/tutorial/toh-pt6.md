@@ -327,17 +327,6 @@ class `HeroesComponent`:
 Πραγματικά δεν υπάρχει τίποτα που να κάνει το component με το `Observable` που επιστράφηκε από
 το `heroService.delete()` **αλλά πρέπει να κάνει subscribe ούτως ή άλλως**.
 
-<div class="alert is-important">
-
-  Εάν αμελήσετε να κάνετε `subscribe()`, το service δεν μπορεί να στείλει το αίτημα διαγραφής στον διακομιστή.
-  Κατά κανόνα, ένα `Observable` *δεν κάνει τίποτα* μέχρι κάτι να κάνει subscribe.
-
-  Επιβεβαιώστε το μόνοι σας αφαιρώντας προσωρινά το `subscribe()`,
-  κάνοντας κλικ στο **Dashboard** και μετά κάνοντας κλικ στο **Heroes**.
-  Αυτό δείχνει ξανά την πλήρη λίστα των ηρώων.
-
-</div>
-
 Στη συνέχεια, προσθέστε μια μέθοδο `deleteHero()` στο `HeroService` όπως αυτή.
 
 <code-example header="src/app/hero.service.ts (delete)" path="toh-pt6/src/app/hero.service.ts" region="deleteHero"></code-example>
@@ -350,6 +339,17 @@ class `HeroesComponent`:
 *   Εξακολουθείτε να στέλνετε το `httpOptions`
 
 Ανανεώστε το πρόγραμμα περιήγησης και δοκιμάστε τη νέα ικανότητα διαγραφής.
+
+<div class="alert is-important">
+
+  Εάν αμελήσετε να κάνετε `subscribe()`, το service δεν μπορεί να στείλει το αίτημα διαγραφής στον διακομιστή.
+  Κατά κανόνα, ένα `Observable` *δεν κάνει τίποτα* μέχρι κάτι να κάνει subscribe.
+
+  Επιβεβαιώστε το μόνοι σας αφαιρώντας προσωρινά το `subscribe()`,
+  κάνοντας κλικ στο **Dashboard** και μετά κάνοντας κλικ στο **Heroes**.
+  Αυτό δείχνει ξανά την πλήρη λίστα των ηρώων.
+
+</div>
 
 ## Αναζήτηση με το όνομα
 

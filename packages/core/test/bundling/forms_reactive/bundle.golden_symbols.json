@@ -63,9 +63,6 @@
     "name": "CIRCULAR"
   },
   {
-    "name": "CLEAN_PROMISE"
-  },
-  {
     "name": "COMPONENT_REGEX"
   },
   {
@@ -195,6 +192,9 @@
     "name": "FormGroupName"
   },
   {
+    "name": "FormRecord"
+  },
+  {
     "name": "FormsExampleModule"
   },
   {
@@ -322,9 +322,6 @@
   },
   {
     "name": "NgForOf"
-  },
-  {
-    "name": "NgModuleFactory2"
   },
   {
     "name": "NgModuleRef"
@@ -519,9 +516,6 @@
     "name": "__forward_ref__"
   },
   {
-    "name": "_chromeNumKeyPadMap"
-  },
-  {
     "name": "_currentInjector"
   },
   {
@@ -601,9 +595,6 @@
   },
   {
     "name": "attachPatchData"
-  },
-  {
-    "name": "autoRegisterModuleById"
   },
   {
     "name": "baseElement"
@@ -727,9 +718,6 @@
   },
   {
     "name": "defaultIterableDiffersFactory"
-  },
-  {
-    "name": "defaultScheduler"
   },
   {
     "name": "destroyLView"

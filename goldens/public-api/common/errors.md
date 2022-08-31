@@ -7,11 +7,33 @@
 // @public
 export const enum RuntimeErrorCode {
     // (undocumented)
+    INVALID_INPUT = 2952,
+    // (undocumented)
+    INVALID_LOADER_ARGUMENTS = 2959,
+    // (undocumented)
     INVALID_PIPE_ARGUMENT = 2100,
+    // (undocumented)
+    INVALID_PRECONNECT_CHECK_BLOCKLIST = 2957,
+    // (undocumented)
+    LCP_IMG_MISSING_PRIORITY = 2955,
     // (undocumented)
     NG_FOR_MISSING_DIFFER = -2200,
     // (undocumented)
-    PARENT_NG_SWITCH_NOT_FOUND = 2000
+    OVERSIZED_IMAGE = 2960,
+    // (undocumented)
+    PARENT_NG_SWITCH_NOT_FOUND = 2000,
+    // (undocumented)
+    PRIORITY_IMG_MISSING_PRECONNECT_TAG = 2956,
+    // (undocumented)
+    REQUIRED_INPUT_MISSING = 2954,
+    // (undocumented)
+    UNEXPECTED_DEV_MODE_CHECK_IN_PROD_MODE = 2958,
+    // (undocumented)
+    UNEXPECTED_INPUT_CHANGE = 2953,
+    // (undocumented)
+    UNEXPECTED_SRC_ATTR = 2950,
+    // (undocumented)
+    UNEXPECTED_SRCSET_ATTR = 2951
 }
 
 // (No @packageDocumentation comment for this package)
