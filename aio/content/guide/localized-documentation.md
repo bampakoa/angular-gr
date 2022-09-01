@@ -1,6 +1,6 @@
 # Μεταφράσεις
 
-Αυτό το θέμα περιέχει τις διαθέσιμες μεταφράσεις του εγχειρίδιου της Angular.
+Αυτό το θέμα περιέχει τις διαθέσιμες μεταφράσεις της τεκμηρίωσης της Angular.
 
 *   [Espa&ntilde;o](http://docs.angular.lat) <!-- Español -->
 *   [简体中文版](https://angular.cn) <!-- 简体中文版 -->
@@ -9,7 +9,7 @@
 *   [한국어](https://angular.kr) <!-- 한국어 -->
 *   [&Epsilon;&lambda;&lambda;&eta;&nu;&iota;&kappa;ά](https://angular-gr.web.app) <!-- Ελληνικά -->
 
-Για πληροφορίες σχετικά με τις μεταφράσεις του εγχειρίδιου της Angular, ανατρέξτε στις [Οδηγίες μετάφρασης της Angular](guide/localizing-angular).
+Για πληροφορίες σχετικά με τις μεταφράσεις της τεκμηρίωσης της Angular, ανατρέξτε στις [Οδηγίες μετάφρασης της Angular](guide/localizing-angular).
 
 <!-- links -->
 
@@ -17,4 +17,4 @@
 
 <!-- end links -->
 
-@reviewed 2022-05-21
+@reviewed 2022-09-01

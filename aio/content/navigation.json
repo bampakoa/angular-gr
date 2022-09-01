@@ -6,7 +6,7 @@
     },
     {
       "url": "docs",
-      "title": "Οδηγιες"
+      "title": "Τεκμηριωση"
     },
     {
       "url": "resources",
@@ -48,7 +48,7 @@
     {
       "url": "docs",
       "title": "Εισαγωγή",
-      "tooltip": "Καλώς ορίσατε στα Angular Docs.",
+      "tooltip": "Καλώς ορίσατε στην τεκμηρίωση της Angular.",
       "hidden": false
     },
     {
@@ -1184,8 +1184,8 @@
       ]
     },
     {
-      "title": "Documentation contributor guide",
-      "tooltip": "Describes how to contribute to the Angular documentation.",
+      "title": "Οδηγός συνεισφοράς τεκμηρίωσης",
+      "tooltip": "Περιγράφει πως να συνεισφέρετε στην τεκμηρίωση της Angular.",
       "children": [
         {
           "url": "guide/contributors-guide-overview",
@@ -1194,7 +1194,7 @@
         },
         {
           "url": "guide/reviewing-content",
-              "title": "'Έλεγχος περιεχομένου",
+              "title": "'Έλεγχος τεκμηρίωσης",
               "tooltip": "Διατηρήστε το περιεχόμενο της Angular ενημερωμένο ελέγχοντας τα θέματα για ακρίβεια."
             },
             {
