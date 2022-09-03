@@ -16,7 +16,7 @@ if (angularVersion.length === 0) {
 // Αφαιρούμε τα περιεχόμενα του angular-gr
 fs.readdir(angularGrPath, (_, entries) => {
   for(entry of entries) {
-    if (!['.git', 'upgrade.js', '.github', 'node_modules'].includes(entry)) {
+    if (!['.git', 'upgrade.js', '.github', 'node_modules', '.gitignore'].includes(entry)) {
       fs.rmSync(path.join(angularGrPath, entry), { recursive: true, force: true });
     }
   }
@@ -30,7 +30,7 @@ exec(`git fetch --all && git checkout ${angularVersion}`);
 // Αντιγράφουμε τα περιεχόμενα από το angular στο angular-gr για να πάρουμε τις αλλαγές της ζητούμενης έκδοσης
 fs.readdir(angularPath, (_, entries) => {
   for(entry of entries) {
-    if (!['.git', '.github', '.circleci', '.devcontainer', '.husky', '.ng-dev', '.pullapprove.yml', '.gitmessage'].includes(entry)) {
+    if (!['.git', '.github', '.circleci', '.devcontainer', '.husky', '.ng-dev', '.pullapprove.yml', '.gitmessage', '.gitignore'].includes(entry)) {
       fs.copy(path.join(angularPath, entry), path.join(angularGrPath, entry));
     }
   }
