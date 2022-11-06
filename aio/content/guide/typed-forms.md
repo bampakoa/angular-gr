@@ -12,6 +12,8 @@ As background for this guide, you should already be familiar with [Angular React
 
 ## Overview of Typed Forms
 
+<iframe width="560" height="315" src="https://www.youtube.com/embed/L-odCf4MfJc" title="YouTube video player" frameborder="0" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
 With Angular reactive forms, you explicitly specify a *form model*. As a simple example, consider this basic user login form:
 
 ```ts
@@ -169,7 +171,7 @@ addresses.addControl('Andrew', new FormControl('2340 Folsom St'));
 
 Any control of type `string|null` can be added to this `FormRecord`.
 
-If you need a `FormGroup` that is both dynamic (open-ended) and heterogenous (the controls are different types), no improved type safety is possible, and you should use `UntypedFormGroup`.
+If you need a `FormGroup` that is both dynamic (open-ended) and heterogeneous (the controls are different types), no improved type safety is possible, and you should use `UntypedFormGroup`.
 
 A `FormRecord` can also be built with the `FormBuilder`:
 

@@ -473,7 +473,7 @@ pipe `|` ακολουθούμενο από το `async`. Αυτό προσδιο
 
 <div class="alert is-helpful">
 
-Με τον [τελεστή switchMap](https://www.learnrxjs.io/learn-rxjs/operators/transformation/switchmap),
+Με τον [τελεστή `switchMap`](https://www.learnrxjs.io/learn-rxjs/operators/transformation/switchmap),
 κάθε event που πληροί τις προϋποθέσεις μπορεί να ενεργοποιήσει μια κλήση της μεθόδου `HttpClient.get()`.
 Ακόμη και με μια παύση 300&nbsp;ms μεταξύ των αιτημάτων, θα μπορούσατε να έχετε πολλά ενεργά αιτήματα HTTP
 και μπορεί να μην επιστρέψουν με την σειρά που τα στείλατε.
@@ -575,4 +575,4 @@ pipe `|` ακολουθούμενο από το `async`. Αυτό προσδιο
 Είστε έτοιμοι να μάθετε περισσότερα σχετικά με την ανάπτυξη Angular στην ενότητα βασικών στοιχείων,
 ξεκινώντας με τον οδηγό [Αρχιτεκτονική](guide/architecture "Architecture").
 
-@reviewed 2022-05-21
+@reviewed 2022-11-06

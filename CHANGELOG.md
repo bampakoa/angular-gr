@@ -1,3 +1,127 @@
+<a name="14.2.9"></a>
+# 14.2.9 (2022-11-03)
+### platform-browser
+| Commit | Type | Description |
+| -- | -- | -- |
+| [92d28bdd99](https://github.com/angular/angular/commit/92d28bdd99d3e18f42f6ed8494344b72b15d0104) | perf | resolve memory leak when using animations with shadow DOM ([#47903](https://github.com/angular/angular/pull/47903)) |
+### platform-server
+| Commit | Type | Description |
+| -- | -- | -- |
+| [d2d9bbf5ce](https://github.com/angular/angular/commit/d2d9bbf5ce5a2f5e95e7c836fbca67d90db62371) | fix | call `onSerialize` when state is empty ([#47888](https://github.com/angular/angular/pull/47888)) |
+## Special Thanks
+Alan Agius, Kristiyan Kostadinov, Virginia Dooley and mgechev
+
+<!-- CHANGELOG SPLIT MARKER -->
+
+<a name="14.2.8"></a>
+# 14.2.8 (2022-10-26)
+## Special Thanks
+Andrew Scott, Balaji, Paul Gschwendtner, WD Snoeijer, onrails and vyom1611
+
+<!-- CHANGELOG SPLIT MARKER -->
+
+<a name="14.2.7"></a>
+# 14.2.7 (2022-10-19)
+
+This release contains API docs improvements.
+
+## Special Thanks
+Bob Watson, Charles Barnes, Joey Perrott, Virginia Dooley, WD Snoeijer, abergquist and urugator
+
+<!-- CHANGELOG SPLIT MARKER -->
+
+<a name="14.2.6"></a>
+# 14.2.6 (2022-10-12)
+### compiler-cli
+| Commit | Type | Description |
+| -- | -- | -- |
+| [3fd176a905](https://github.com/angular/angular/commit/3fd176a9054bea6f6c4cd22e8ff3b8f63b86b637) | fix | add missing period to error message ([#47744](https://github.com/angular/angular/pull/47744)) |
+| [c3821f5ab5](https://github.com/angular/angular/commit/c3821f5ab5bf54b2c9d7868da79a742d4e4b7667) | perf | minimize filesystem calls when generating shims ([#47682](https://github.com/angular/angular/pull/47682)) |
+## Special Thanks
+Alan Agius, Andrew Kushnir, Andrew Scott, Aristeidis Bampakos, Bob Watson, Charles Lyding, Joey Perrott, Joshua Morony, Mathew Berg, Paul Gschwendtner, Peter Dickten, Renan Ferro, Sri Ram, WD Snoeijer, markostanimirovic and Álvaro Martínez
+
+<!-- CHANGELOG SPLIT MARKER -->
+
+<a name="14.2.5"></a>
+# 14.2.5 (2022-10-05)
+
+This release contains various API docs improvements.
+
+## Special Thanks
+Alexander Wiebe, Ciprian Sauliuc, Dmytro Mezhenskyi, George Kalpakas, Joe Martin (Crowdstaffing), Jordan, Ole M, Paul Gschwendtner, Pawel Kozlowski and mgechev
+
+<!-- CHANGELOG SPLIT MARKER -->
+
+<a name="14.2.4"></a>
+# 14.2.4 (2022-09-28)
+### compiler-cli
+| Commit | Type | Description |
+| -- | -- | -- |
+| [a4b66fe1e5](https://github.com/angular/angular/commit/a4b66fe1e5acaf148069933720499652f21a7bce) | perf | cache source file for reporting type-checking diagnostics ([#47508](https://github.com/angular/angular/pull/47508)) |
+### core
+| Commit | Type | Description |
+| -- | -- | -- |
+| [2c46b5ab24](https://github.com/angular/angular/commit/2c46b5ab24e209381bca70d875bf0e98a2846ef5) | fix | correctly check for `typeof` of undefined in `ngDevMode` check ([#47480](https://github.com/angular/angular/pull/47480)) |
+## Special Thanks
+Alan Agius, Ashley Hunter, Doug Parker, Jessica Janiuk, JoostK, Kristiyan Kostadinov, Rokas Brazdžionis and Simona Cotin
+
+<!-- CHANGELOG SPLIT MARKER -->
+
+<a name="14.2.3"></a>
+# 14.2.3 (2022-09-21)
+### animations
+| Commit | Type | Description |
+| -- | -- | -- |
+| [bba2dae812](https://github.com/angular/angular/commit/bba2dae81263d07c55cd059eb8ef51baa7774055) | fix | make sure that the useAnimation function delay is applied ([#47468](https://github.com/angular/angular/pull/47468)) |
+## Special Thanks
+AleksanderBodurri, Andrew Kushnir, Andrew Scott, Bob Watson, George Kalpakas, Joey Perrott, Mauro Mattos, dario-piotrowicz, fabioemoutinho and famzila
+
+<!-- CHANGELOG SPLIT MARKER -->
+
+<a name="14.2.2"></a>
+# 14.2.2 (2022-09-14)
+### animations
+| Commit | Type | Description |
+| -- | -- | -- |
+| [937e6c5b3d](https://github.com/angular/angular/commit/937e6c5b3d4c4bfc6ba202ee6692bc2fd8a35b89) | fix | make sure that the animation function delay is applied ([#47285](https://github.com/angular/angular/pull/47285)) |
+### common
+| Commit | Type | Description |
+| -- | -- | -- |
+| [c9bdf9bab1](https://github.com/angular/angular/commit/c9bdf9bab1bc4cc4da207f6bfc8ebc75eb605486) | fix | rename `rawSrc` -> `ngSrc` in NgOptimizedImage directive ([#47362](https://github.com/angular/angular/pull/47362)) ([#47396](https://github.com/angular/angular/pull/47396)) |
+### core
+| Commit | Type | Description |
+| -- | -- | -- |
+| [a3e1303f04](https://github.com/angular/angular/commit/a3e1303f04d4afe456f3728939b3aa54e29f9fb3) | fix | imply @Optional flag when a default value is provided ([#47242](https://github.com/angular/angular/pull/47242)) |
+### forms
+| Commit | Type | Description |
+| -- | -- | -- |
+| [80c66a1e57](https://github.com/angular/angular/commit/80c66a1e57af33342ed851a0de886fc17b53f7a3) | fix | don't prevent default behavior for forms with method="dialog" ([#47308](https://github.com/angular/angular/pull/47308)) |
+## Special Thanks
+Abhishek Rawat, Andrew Kushnir, Benjamin Chanudet, Bob Watson, George Kalpakas, Ikko Ashimine, Kristiyan Kostadinov, Marc Wrobel, Mariia Subkov, Pawel Kozlowski, Sebastian, abergquist, dario-piotrowicz, onrails and vyom1611
+
+<!-- CHANGELOG SPLIT MARKER -->
+
+<a name="14.2.1"></a>
+# 14.2.1 (2022-09-07)
+### common
+| Commit | Type | Description |
+| -- | -- | -- |
+| [c0d7ac9ec2](https://github.com/angular/angular/commit/c0d7ac9ec2df9af36d80382bc70c4580720f35a3) | fix | improve formatting of image warnings ([#47299](https://github.com/angular/angular/pull/47299)) |
+| [1875ce520a](https://github.com/angular/angular/commit/1875ce520afe7b5c55680b8c6a938a2331dda599) | fix | use DOCUMENT token to query for preconnect links ([#47353](https://github.com/angular/angular/pull/47353)) |
+### compiler
+| Commit | Type | Description |
+| -- | -- | -- |
+| [0e35829580](https://github.com/angular/angular/commit/0e3582958079f798a75240873aebf3c4f5e3df5b) | fix | avoid errors for inputs with Object-builtin names ([#47220](https://github.com/angular/angular/pull/47220)) |
+### service-worker
+| Commit | Type | Description |
+| -- | -- | -- |
+| [6091786696](https://github.com/angular/angular/commit/60917866961b7ab80ec9637c72300f2707aadd09) | fix | include headers in requests for assets ([#47260](https://github.com/angular/angular/pull/47260)) |
+| [28d33505fd](https://github.com/angular/angular/commit/28d33505fd4be00eaf4bf417cd27e20733ddfb80) | fix | only consider GET requests as navigation requests ([#47263](https://github.com/angular/angular/pull/47263)) |
+## Special Thanks
+Aristeidis Bampakos, Asaf M, Bingo's Code, Bob Watson, Daniel Ostrovsky, George Kalpakas, Giovanni Alberto Rivas, Jeremy Elbourn, Jobayer Hossain, Joe Martin (Crowdstaffing), Joey Perrott, JoostK, Kara Erickson, Kristiyan Kostadinov, Maina Wycliffe, Sabareesh Kappagantu, Simona Cotin, Sonu Sindhu, Yann Provoost, abergquist, jaybell and vyom1611
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="14.2.0"></a>
 # 14.2.0 (2022-08-25)
 ### common

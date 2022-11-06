@@ -3,6 +3,7 @@ bazel
 bing
 bombasto
 chiho
+esbuild
 heydon
 homebrew
 jazdzewski
@@ -21,6 +22,8 @@ savkin's
 sinatra
 stackblitz
 tolisten
+tsickle
 tslib
 tslint
 vercel
+vmware

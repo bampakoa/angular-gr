@@ -1,68 +1,122 @@
-# Έλεγχος τεκμηρίωσης
+# Review documentation
 
-Μπορείτε να ελέγξετε την τεκμηρίωση της Angular ακόμα κι αν δεν έχετε συνεισφέρει ποτέ στην Angular στο παρελθόν.
+You can review the Angular documentation, even if you have never contributed to Angular before.
+Reviewing the Angular documentation provides a valuable contribution to the community.
 
-Οι προγραμματιστές Angular λειτουργούν καλύτερα όταν έχουν πρόσβαση σε ακριβή και πλήρη τεκμηρίωση. Η διατήρηση μιας ενημερωμένης τεκμηρίωσης αποτελεί ουσιαστικό μέρος της διασφάλισης ότι όλοι οι προγραμματιστές έχουν μια εξαιρετική εμπειρία ανάπτυξης.
+Finding and reporting issues in the documentation helps the community know that the content is up to date.
+Even if you don't find any problems, seeing that a document has been reviewed recently, gives readers confidence in the content.
 
-Αυτό το θέμα περιγράφει πώς μπορείτε να βοηθήσετε στην διατήρηση μιας ενημερωμένης τεκμηρίωσης της Angular ελέγχοντας και ενημερώνοντάς την.
+This topic describes how you can review and update the Angular documentation to help keep it up to date.
 
-## Πριν ξεκινήσετε
+<!-- markdownLint-disable MD001 -->
+<!-- markdownLint-disable MD033 -->
 
-Ελέγξτε τον [Οδηγό συνεισφοράς τεκμηρίωσης][AioDocContributorGuide] για να προετοιμαστείτε να ελέγξετε ή ενημερώσετε την τεκμηρίωση.
-Ο *Οδηγός συνεισφοράς τεκμηρίωσης* περιγράφει πως να προετοιμαστείτε να ενημερώσετε ένα θέμα της τεκμηρίωσης.
+#### To review a topic in angular.io
 
-Μπορείτε να επεξεργαστείτε ένα θέμα στο περιβάλλον του GitHub ή στον αγαπημένο σας επεξεργαστή κώδικα ή ενσωματωμένο περιβάλλον ανάπτυξης (IDE).
-Σε οποιαδήποτε περίπτωση, πρέπει να εργαστείτε στο δικό σας fork του αποθετηρίου της Angular.
+Perform these steps in a browser.
 
-Για να επεξεργαστείτε ένα θέμα της τεκμηρίωσης, πρέπει να μπορείτε να επεργαστείτε το θέμα.
-Ακόμα και αν δεν βρείτε κάποιο πρόβλημα, θα θέλετε να ενημερώσετε την ετικέτα `@reviewed` στο τέλος του θέματος πριν τελειώσετε.
+1.  [Find a topic to review](#find-topics-to-review) by:
+    1.  Finding a topic with a **Last reviewed** date that is six months or more in the past.
+    1.  Finding a topic that has no **Last reviewed** date.
+    1.  Finding a topic that you've read recently.
+1.  Review the topic for errors or inaccuracies.
+1.  Complete the review.
+    1.  If the topic looks good:
+        1.  [Update or add the `@reviewed` entry](#update-the-last-reviewed-date) at the end of the topic's source code.
+        1.  [Make a minor change to a documentation topic](/guide/contributors-guide-overview#to-make-a-minor-change-to-a-documentation-topic) to publish the new reviewed date.
 
-## Πως να βρείτε θέματα για έλεγχο
+    1.  If you find an error that you don't feel comfortable fixing:
+        1.  [Open a docs issue in GitHub](https://github.com/angular/angular/issues/new?assignees=&labels=&template=3-docs-bug.yaml).
+        1.  [Update or add the `@reviewed` entry](#update-the-last-reviewed-date) at the end of the topic's source code.
+        1.  [Make a minor change to a documentation topic](/guide/contributors-guide-overview#to-make-a-minor-change-to-a-documentation-topic) to publish the new reviewed date.
 
-Βρείτε ένα θέμα που δεν έχει ελεγχθεί τους τελευταίους έξι μήνες.
+    1.  If you find an error that needs only a minor change:
+        1.  [Update or add the `@reviewed` entry](#update-the-last-reviewed-date) at the end of the topic's source code.
+        1.  [Make a minor change to a documentation topic](/guide/contributors-guide-overview#to-make-a-minor-change-to-a-documentation-topic) to fix the error and save the new reviewed date.
 
-Στο κάτω μέρος μερικών θεμάτων, υπάρχει μια ετικέτα `@reviewed` που δείχνει την ημερομηνία κατά την οποία ελέγχθηκε τελευταία. 
-Αυτό είναι ένα παράδειγμα μιας τέτοιας ετικέτας από το κάτω μέρος ενός θέματος.
+    1.  If you find an error that needs major changes:
+        1.  Address the error:
+            1.  [Make a major change](guide/contributors-guide-overview#make-a-major-change), if you're comfortable, or
+            1.  [Open a docs issue in GitHub](https://github.com/angular/angular/issues/new?assignees=&labels=&template=3-docs-bug.yaml).
+        1.  Whether you fix the error or open a new issue, [update or add the `@reviewed` entry](#update-the-last-reviewed-date) at the end of the topic's source code.
+        1.  [Make a minor change to a documentation topic](/guide/contributors-guide-overview#to-make-a-minor-change-to-a-documentation-topic) to save the new reviewed date.
+
+## Find topics to review
+
+You can review any topic in the Angular documentation, but these are the topics that benefit most from your review.
+
+### Topics that have not been reviewed in over six months
+
+At the bottom of some topics, there's a date that shows when the topic was last reviewed.
+If that date is over six months ago, the topic is ready for a review.
+
+This is an example of a **Last reviewed** date from the bottom of a topic.
+You can also see an example of this at the end of this topic.
 
 <div class="lightbox">
 
-<img alt="Παράδειγμα της τελευταίας ημερομηνίας ελέγχου που δείχνει την ημερομηνία κατά την οποία ελέγχθηκε το θέμα με μήνα, ημέρα, και έτος." src="generated/images/guide/contributors-guide/last-reviewed.png">
+<img alt="Example of the last reviewed date entry showing the date the topic was reviewed as month, day, and year" src="generated/images/guide/contributors-guide/last-reviewed.png">
 
 </div>
 
-## Έλεγχος και ενημέρωση θέματος
+### Topics that have never been reviewed
 
-Για να ελέγξετε ένα θέμα, χρησιμοποιήστε το περιβάλλον του GitHub ή επεξεργαστείτε κατευθείαν το πηγαίο αρχείο markdown του θέματος στον υπολογιστή σας.
+If a topic doesn't have a **Last reviewed** date at the bottom, it has never been reviewed.
+You can review such a topic and add a new **Last reviewed** date after you review it.
 
-Μπορείτε να ελέγξτε όποιο θέμα σας ενδιαφέρει.
-Προηγούμενη εμπειρία στο συγκεκριμένο θέμα είναι χρήσιμη, αλλά δεν απαιτείται.
+### Topics that you know have a problem
 
-**Για να ελέγξετε και ενημερώσετε ένα θέμα της τεκμηρίωσης:**
+If you know of a topic that has an error or inaccuracy, you can review it and make corrections during your review. If you don't feel comfortable fixing an error during your review, [open a docs issue in GitHub](https://github.com/angular/angular/issues/new?assignees=&labels=&template=3-docs-bug.yaml).
+Be sure to add or update the **Last reviewed** date after you review the topic. Whether you fix the error or just open an issue, you still reviewed the topic.
 
-1.  Στο πρόγραμμα περιήγησής σας, μεταβείτε στο θέμα που θέλετε να ελέγξετε.
-2.  Εντοπίστε την τελευταία ημερομηνία αξιολόγησης στο κάτω μέρος του θέματος. Επαληθεύστε ότι το θέμα δεν έχει ελεγχθεί τους τελευταίους έξι μήνες.
-3.  Διαβάστε το θέμα.
-4.  Εάν το θέμα απαιτεί ενημέρωση μπορείτε να:
-    *  [Υποβάλετε ένα issue][GithubAngularAngularBlobMainContributingMdSubmitIssue] που περιγράφει την απαιτούμενη ενημέρωση.
-    *  Διορθώσετε το issue και [καταχωρήσετε ένα pull request][GithubAngularAngularBlobMainContributingMdSubmitPr] με την ενημέρωση.
-5.  Εάν το θέμα είναι ακριβές και δεν χρειάζεται έλεγχο, ενημερώστε, ή προσθέστε την ετικέτα `@reviewed` ακολουθούμενη από την ημερομηνία που ελέγξατε το θέμα. Μπορείτε να το κάνετε:
-    * Χρησιμοποιώντας το [περιβάλλον του GitHub][AioGuideUpdatingContentGithubUi].
-    * Επεξεργάζοντας το αρχείο στον υπολογιστή σας και δημιουργώντας μια [τυπικής διαδικασία pull request της Angular][GithubAngularAngularBlobMainContributingMdSubmitPr].
+## Update the last reviewed date
+
+After you review a topic, whether you change it or not, update the topic's **Last reviewed** date.
+The **Last reviewed** text at the bottom of the topic is created by the `@reviewed` tag followed by the date you reviewed the topic.
+
+This is an example of an `@reviewed` tag at the end of the topic's source code as it appears in a code editor.
+
+<code-example>
+
+@reviewed 2022-09-08
+
+</code-example>
+
+The date is formatted as `YYYY-MM-DD` where:
+
+* `YYYY` is the current year
+* `MM` is the two-digit number of the current month with a leading zero if the month is 01 (January) through 09 (September)
+* `DD` is the two-digit number of the current day of the month with a leading zero if the day is 01-09.
+
+For example:
+
+| Review date | `@reviewed` tag | Resulting text displayed in the docs
+|:--- |:--- |:---
+| January 12, 2023 | `@reviewed 2023-01-12` | *Last reviewed on Thu Jan 12, 2023*
+| November 3, 2022 | `@reviewed 2022-11-03` | *Last reviewed on Fri Nov 03, 2022*
+
+## Reviewing and updating a topic
+
+These are the actions you can take after you review a topic.
+
+### The topic is accurate and has no errors
+
+If the topic is accurate and has no errors, [make a minor change](/guide/contributors-guide-overview#to-make-a-minor-change-to-a-documentation-topic) to [update the **Last reviewed** date](#update-the-last-reviewed-date) at the bottom of the page. You can use the GitHub user interface to edit the topic's source code.
+
+### The topic requires minor changes
+
+If the topic has minor errors, you can fix them when you [make a minor change](/guide/contributors-guide-overview#to-make-a-minor-change-to-a-documentation-topic). Remember to [update the **Last reviewed** date](#update-the-last-reviewed-date) at the bottom of the page when you fix the error. For a minor change, you can use the GitHub user interface in a browser to edit the topic's source code.
+
+### The topic requires major changes
+
+If the topic requires major changes, you can [make a major change](guide/contributors-guide-overview#make-a-major-change), or [open a docs issue in GitHub](https://github.com/angular/angular/issues/new?assignees=&labels=&template=3-docs-bug.yaml). You shouldn't make major changes in the GitHub user interface because it doesn't allow you to test them before you submit them.
+
+Whether you make the changes the topic needs or open a docs issue, you should still [update the **Last reviewed** date](#update-the-last-reviewed-date). You can use the GitHub user interface in the browse if you only want to update the **Last reviewed** date.
 
 <!-- links -->
 
-[AioDocContributorGuide]: guide/contributors-guide-overview "Οδηγός συνεισφοράς τεκμηρίωσης | Angular"
-
-[AioGuideReviewingContentReviewCriteria]: guide/reviewing-content#review-criteria "Κριτήρια αξιολόγησης - Reviewing content | Angular"
-
-[AioGuideUpdatingContentGithubUi]: guide/updating-content-github-ui "Ενημέρωση θεμάτων από το περιβάλλον του GitHub | Angular"
-
 <!-- external links -->
-
-[GithubAngularAngularBlobMainContributingMd]: https://github.com/angular/angular/blob/main/CONTRIBUTING.md "Συνεισφέροντας στην Angular | angular/angular | Github"
-[GithubAngularAngularBlobMainContributingMdSubmitIssue]: https://github.com/angular/angular/blob/main/CONTRIBUTING.md#submit-issue "Υποβολή issue - Συνεισφέροντας στην Angular | angular/angular | GitHub"
-[GithubAngularAngularBlobMainContributingMdSubmitPr]: https://github.com/angular/angular/blob/main/CONTRIBUTING.md#submit-pr "Υποβολή Pull Request (PR) - Συνεισφέροντας στην Angular | angular/angular | GitHub"
 
 <!-- end links -->
 
-@reviewed 2022-09-01
+@reviewed 2022-10-12

@@ -1,15 +1,17 @@
 # Getting started with standalone components
 
-In v14 and higher, **standalone components** provide a simplified way to build Angular applications. Standalone components, directives, and pipes aim to streamline the authoring experience by reducing the need for `NgModule`s. Existing applications can optionally and incrementally adopt the new standalone style without any breaking changes.
-
 <div class="alert is-important">
 
-The standalone component feature is available for developer preview. 
-It's ready for you to try; but it might change before it is stable.
+The standalone component feature is available for [developer preview](https://angular.io/guide/releases#developer-preview).
+It's ready for you to try, but it might change before it is stable.
 
 </div>
 
+In v14 and higher, **standalone components** provide a simplified way to build Angular applications. Standalone components, directives, and pipes aim to streamline the authoring experience by reducing the need for `NgModule`s. Existing applications can optionally and incrementally adopt the new standalone style without any breaking changes.
+
 ## Creating standalone components
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/x5PZwb4XurU" title="YouTube video player" frameborder="0" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 ### The `standalone` flag and component `imports`
 
@@ -218,7 +220,7 @@ This pattern is useful for Angular libraries that publish a set of cooperating d
 As an alternative to publishing a `NgModule`, library authors might want to export an array of cooperating directives:
 
 ```ts
-export CAROUSEL_DIRECTIVES = [ImageCarouselComponent, ImageSlideComponent] as const;
+export const CAROUSEL_DIRECTIVES = [ImageCarouselComponent, ImageSlideComponent] as const;
 ```
 
 Such an array could be imported by applications using `NgModule`s and added to the `@NgModule.imports`. Please note the presence of the TypeScript’s `as const` construct: it gives Angular compiler additional information required for proper compilation and is a recommended practice (as it makes the exported array immutable from the TypeScript point of view).
@@ -249,7 +251,7 @@ The new bootstrap API gives us back the means of configuring “module injectors
 Environment injectors can be configured using one of the following:
 
 *   `@NgModule.providers` (in applications bootstrapping through an `NgModule`);
-*   `@Injectable({provideIn: "..."})`(in both the NgModule-based as well as “standalone” applications);
+*   `@Injectable({provideIn: "..."})`(in both the NgModule-based and the “standalone” applications);
 *   `providers` option in the `bootstrapApplication` call (in fully “standalone” applications);
 *   `providers` field in a `Route` configuration.
 

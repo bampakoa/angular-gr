@@ -40,6 +40,7 @@ swap:
   byelog: bye log
   callout: call-out
   callouts: call-outs
+  camel case: camelCase
   cellular data: mobile data
   cellular network: mobile network
   chapter: documents|pages|sections
@@ -57,6 +58,7 @@ swap:
   curated roles: predefined roles
   datasource: data source
   Developers Console: Google API Console|API Console
+  entrypoint: entry point
   ephemeral IP address: ephemeral external IP address
   execute: run|call
   fewer data: less data
