@@ -457,11 +457,6 @@
         },
         {
           "type": 301,
-          "source": "/config/app-package-json",
-          "destination": "/guide/strict-mode#non-local-side-effects-in-applications"
-        },
-        {
-          "type": 301,
           "source": "/strict",
           "destination": "/guide/strict-mode"
         },
