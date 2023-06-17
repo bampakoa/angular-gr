@@ -27,6 +27,7 @@ import {isLContainer, isLView} from './interfaces/type_checks';
 import {CHILD_HEAD, CLEANUP, DECLARATION_COMPONENT_VIEW, DECLARATION_LCONTAINER, DestroyHookData, FLAGS, HookData, HookFn, HOST, LView, LViewFlags, NEXT, PARENT, QUERIES, RENDERER, T_HOST, TVIEW, TView, TViewType, unusedValueExportToPlacateAjd as unused5} from './interfaces/view';
 import {assertTNodeType} from './node_assert';
 import {profiler, ProfilerEvent} from './profiler';
+import {setUpAttributes} from './util/attrs_utils';
 import {getLViewParent} from './util/view_traversal_utils';
 import {getNativeByTNode, unwrapRNode, updateTransplantedViewCount} from './util/view_utils';
 
@@ -576,10 +577,11 @@ export function getClosestRElement(tView: TView, tNode: TNode|null, lView: LView
     return lView[HOST];
   } else {
     ngDevMode && assertTNodeType(parentTNode, TNodeType.AnyRNode | TNodeType.Container);
-    if (parentTNode.flags & TNodeFlags.isComponentHost) {
+    const {componentOffset} = parentTNode;
+    if (componentOffset > -1) {
       ngDevMode && assertTNodeForLView(parentTNode, lView);
-      const encapsulation =
-          (tView.data[parentTNode.directiveStart] as ComponentDef<unknown>).encapsulation;
+      const {encapsulation} =
+          (tView.data[parentTNode.directiveStart + componentOffset] as ComponentDef<unknown>);
       // We've got a parent which is an element in the current view. We just need to verify if the
       // parent element is not a component. Component's content nodes are not inserted immediately
       // because they will be projected, and so doing insert at this point would be wasteful.
@@ -1089,4 +1091,21 @@ export function writeDirectClass(renderer: Renderer, element: RElement, newValue
     renderer.setAttribute(element, 'class', newValue);
   }
   ngDevMode && ngDevMode.rendererSetClassName++;
+}
+
+/** Sets up the static DOM attributes on an `RNode`. */
+export function setupStaticAttributes(renderer: Renderer, element: RElement, tNode: TNode) {
+  const {mergedAttrs, classes, styles} = tNode;
+
+  if (mergedAttrs !== null) {
+    setUpAttributes(renderer, element, mergedAttrs);
+  }
+
+  if (classes !== null) {
+    writeDirectClass(renderer, element, classes);
+  }
+
+  if (styles !== null) {
+    writeDirectStyle(renderer, element, styles);
+  }
 }

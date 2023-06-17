@@ -474,7 +474,9 @@
           "type": 302,
           "source": "/generated/docs/devtools.json",
           "destination": "/generated/docs/guide/devtools.json"
-        }
+        },
+        {"type": 301, "source": "/cli/usage-analytics-gathering", "destination": "/cli/analytics"},
+        {"type": 301, "source": "/analytics", "destination": "/cli/analytics"}
       ],
       "rewrites": [
         {

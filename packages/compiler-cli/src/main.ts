@@ -7,12 +7,11 @@
  */
 
 import ts from 'typescript';
-import type {TsickleHost} from 'tsickle';
+import type {TsickleHost, EmitResult as TsickleEmitResult} from 'tsickle';
 import yargs from 'yargs';
 import {exitCodeFromResult, formatDiagnostics, ParsedConfiguration, performCompilation, readConfiguration} from './perform_compile';
 import {createPerformWatchHost, performWatchCompilation} from './perform_watch';
 import * as api from './transformers/api';
-import {GENERATED_FILES} from './transformers/util';
 
 type TsickleModule = typeof import('tsickle');
 
@@ -92,8 +91,8 @@ export function mainDiagnosticsForTest(
   };
 }
 
-function createEmitCallback(
-    options: api.CompilerOptions, tsickle?: TsickleModule): api.TsEmitCallback|undefined {
+function createEmitCallback(options: api.CompilerOptions, tsickle?: TsickleModule):
+    api.TsEmitCallback<TsickleEmitResult>|undefined {
   if (!options.annotateForClosureCompiler) {
     return undefined;
   }
@@ -106,9 +105,7 @@ function createEmitCallback(
       'fileNameToModuleId'|'googmodule'|'untyped'|'convertIndexImportShorthand'|
       'transformDecorators'|'transformTypesToClosure'|'generateExtraSuppressions'|
       'rootDirsRelative'> = {
-    shouldSkipTsickleProcessing: (fileName) => /\.d\.ts$/.test(fileName) ||
-        // View Engine's generated files were never intended to be processed with tsickle.
-        (!options.enableIvy && GENERATED_FILES.test(fileName)),
+    shouldSkipTsickleProcessing: (fileName) => fileName.endsWith('.d.ts'),
     pathToModuleName: (context, importPath) => '',
     shouldIgnoreWarningsForPath: (filePath) => false,
     fileNameToModuleId: (fileName) => fileName,

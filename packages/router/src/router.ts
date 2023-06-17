@@ -24,7 +24,6 @@ import {recognize} from './operators/recognize';
 import {resolveData} from './operators/resolve_data';
 import {switchTap} from './operators/switch_tap';
 import {DefaultTitleStrategy, TitleStrategy} from './page_title_strategy';
-import {assignRelativeLinkResolution} from './patchable_relative_link_resolution';
 import {DefaultRouteReuseStrategy, RouteReuseStrategy} from './route_reuse_strategy';
 import {ErrorHandler, ExtraOptions, ROUTER_CONFIGURATION} from './router_config';
 import {RouterConfigLoader, ROUTES} from './router_config_loader';
@@ -32,7 +31,7 @@ import {ChildrenOutletContexts} from './router_outlet_context';
 import {ActivatedRoute, ActivatedRouteSnapshot, createEmptyState, RouterState, RouterStateSnapshot} from './router_state';
 import {Params} from './shared';
 import {DefaultUrlHandlingStrategy, UrlHandlingStrategy} from './url_handling_strategy';
-import {containsTree, createEmptyUrlTree, IsActiveMatchOptions, isUrlTree, UrlSerializer, UrlTree} from './url_tree';
+import {containsTree, IsActiveMatchOptions, isUrlTree, UrlSerializer, UrlTree} from './url_tree';
 import {flatten} from './utils/collection';
 import {standardizeConfig, validateConfig} from './utils/config';
 import {Checks, getAllRouteGuards} from './utils/preactivation';
@@ -219,7 +218,7 @@ export interface Navigation {
    */
   initialUrl: UrlTree;
   /**
-   * The initial target URL after being parsed with `UrlSerializer.extract()`.
+   * The initial target URL after being parsed with `UrlHandlingStrategy.extract()`.
    */
   extractedUrl: UrlTree;
   /**
@@ -310,10 +309,6 @@ export function assignExtraOptionsToRouter(opts: ExtraOptions, router: Router): 
     router.paramsInheritanceStrategy = opts.paramsInheritanceStrategy;
   }
 
-  if (opts.relativeLinkResolution) {
-    router.relativeLinkResolution = opts.relativeLinkResolution;
-  }
-
   if (opts.urlUpdateStrategy) {
     router.urlUpdateStrategy = opts.urlUpdateStrategy;
   }
@@ -349,8 +344,6 @@ export function setupRouter() {
   router.titleStrategy = titleStrategy ?? defaultTitleStrategy;
 
   assignExtraOptionsToRouter(opts, router);
-
-  assignRelativeLinkResolution(router);
 
   return router;
 }
@@ -531,14 +524,6 @@ export class Router {
   urlUpdateStrategy: 'deferred'|'eager' = 'deferred';
 
   /**
-   * Enables a bug fix that corrects relative link resolution in components with empty paths.
-   * @see `RouterModule`
-   *
-   * @deprecated
-   */
-  relativeLinkResolution: 'legacy'|'corrected' = 'corrected';
-
-  /**
    * Configures how the Router attempts to restore state when a navigation is cancelled.
    *
    * 'replace' - Always uses `location.replaceState` to set the browser state to the state of the
@@ -582,7 +567,7 @@ export class Router {
     this.isNgZoneEnabled = ngZone instanceof NgZone && NgZone.isInAngularZone();
 
     this.resetConfig(config);
-    this.currentUrlTree = createEmptyUrlTree();
+    this.currentUrlTree = new UrlTree();
     this.rawUrlTree = this.currentUrlTree;
     this.browserUrlTree = this.currentUrlTree;
 
@@ -698,8 +683,7 @@ export class Router {
                                  // Recognize
                                  recognize(
                                      this.ngModule.injector, this.rootComponentType, this.config,
-                                     this.urlSerializer, this.paramsInheritanceStrategy,
-                                     this.relativeLinkResolution),
+                                     this.urlSerializer, this.paramsInheritanceStrategy),
 
                                  // Update URL if in `eager` update mode
                                  tap(t => {

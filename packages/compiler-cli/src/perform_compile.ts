@@ -119,9 +119,6 @@ export function readConfiguration(
         ts.parseJsonConfigFileContent(
             config, parseConfigHost, basePath, existingCompilerOptions, configFileName);
 
-    // Coerce to boolean as `enableIvy` can be `ngtsc|true|false|undefined` here.
-    options.enableIvy = !!(options.enableIvy ?? true);
-
     let emitFlags = api.EmitFlags.Default;
     if (!(options.skipMetadataEmit || options.flatModuleOutFile)) {
       emitFlags |= api.EmitFlags.Metadata;
@@ -211,7 +208,7 @@ export function exitCodeFromResult(diags: ReadonlyArray<ts.Diagnostic>|undefined
   return diags.some(d => d.source === 'angular' && d.code === api.UNKNOWN_ERROR_CODE) ? 2 : 1;
 }
 
-export function performCompilation({
+export function performCompilation<CbEmitRes extends ts.EmitResult = ts.EmitResult>({
   rootNames,
   options,
   host,
@@ -228,8 +225,8 @@ export function performCompilation({
   options: api.CompilerOptions,
   host?: api.CompilerHost,
   oldProgram?: api.Program,
-  emitCallback?: api.TsEmitCallback,
-  mergeEmitResultsCallback?: api.TsMergeEmitResultsCallback,
+  emitCallback?: api.TsEmitCallback<CbEmitRes>,
+  mergeEmitResultsCallback?: api.TsMergeEmitResultsCallback<CbEmitRes>,
   gatherDiagnostics?: (program: api.Program) => ReadonlyArray<ts.Diagnostic>,
   customTransformers?: api.CustomTransformers,
   emitFlags?: api.EmitFlags,

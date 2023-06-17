@@ -468,6 +468,9 @@
     "name": "addComponentLogic"
   },
   {
+    "name": "addPropertyAlias"
+  },
+  {
     "name": "addToArray"
   },
   {
@@ -558,6 +561,9 @@
     "name": "connectableObservableDescriptor"
   },
   {
+    "name": "convertToBitFlags"
+  },
+  {
     "name": "createDirectivesInstances"
   },
   {
@@ -597,6 +603,9 @@
     "name": "deepForEach"
   },
   {
+    "name": "deepForEachProvider"
+  },
+  {
     "name": "defaultIterableDiffersFactory"
   },
   {
@@ -628,6 +637,9 @@
   },
   {
     "name": "executeCheckHooks"
+  },
+  {
+    "name": "executeContentQueries"
   },
   {
     "name": "executeInitAndCheckHooks"
@@ -852,10 +864,7 @@
     "name": "incrementInitPhaseFlags"
   },
   {
-    "name": "initTNodeFlags"
-  },
-  {
-    "name": "initializeInputAndOutputAliases"
+    "name": "initializeDirectives"
   },
   {
     "name": "injectArgs"
@@ -891,6 +900,9 @@
     "name": "invertObject"
   },
   {
+    "name": "invokeDirectivesHostBindings"
+  },
+  {
     "name": "invokeHostBindingsInCreationMode"
   },
   {
@@ -918,10 +930,10 @@
     "name": "isDirectiveHost"
   },
   {
-    "name": "isFunction"
+    "name": "isEnvironmentProviders"
   },
   {
-    "name": "isImportedNgModuleProviders"
+    "name": "isFunction"
   },
   {
     "name": "isInlineTemplate"
@@ -1098,9 +1110,6 @@
     "name": "refreshView"
   },
   {
-    "name": "registerHostBindingOpCodes"
-  },
-  {
     "name": "registerPostOrderHooks"
   },
   {
@@ -1200,6 +1209,9 @@
     "name": "setUpAttributes"
   },
   {
+    "name": "setupStaticAttributes"
+  },
+  {
     "name": "shareSubjectFactory"
   },
   {
@@ -1255,9 +1267,6 @@
   },
   {
     "name": "writeDirectClass"
-  },
-  {
-    "name": "writeDirectStyle"
   },
   {
     "name": "ɵɵadvance"

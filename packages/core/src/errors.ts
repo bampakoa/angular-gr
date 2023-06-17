@@ -42,6 +42,12 @@ export const enum RuntimeErrorCode {
   UNKNOWN_ELEMENT = 304,
   TEMPLATE_STRUCTURE_ERROR = 305,
   INVALID_EVENT_BINDING = 306,
+  HOST_DIRECTIVE_UNRESOLVABLE = 307,
+  HOST_DIRECTIVE_NOT_STANDALONE = 308,
+  DUPLICATE_DIRECTITVE = 309,
+  HOST_DIRECTIVE_COMPONENT = 310,
+  HOST_DIRECTIVE_UNDEFINED_BINDING = 311,
+  HOST_DIRECTIVE_CONFLICTING_ALIAS = 312,
 
   // Bootstrap Errors
   MULTIPLE_PLATFORMS = 400,
@@ -108,6 +114,7 @@ export function formatRuntimeError<T extends number = RuntimeErrorCode>(
     code: T, message: null|false|string): string {
   // Error code might be a negative number, which is a special marker that instructs the logic to
   // generate a link to the error details page on angular.io.
+  // We also prepend `0` to non-compile-time errors.
   const fullCode = `NG0${Math.abs(code)}`;
 
   let errorMessage = `${fullCode}${message ? ': ' + message.trim() : ''}`;

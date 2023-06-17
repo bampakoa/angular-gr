@@ -12,7 +12,7 @@ import ts from 'typescript';
 import {ErrorCode, FatalDiagnosticError, makeDiagnostic, makeRelatedInformation} from '../../../diagnostics';
 import {assertSuccessfulReferenceEmit, Reference, ReferenceEmitter} from '../../../imports';
 import {isArrayEqual, isReferenceEqual, isSymbolEqual, SemanticReference, SemanticSymbol} from '../../../incremental/semantic_graph';
-import {InjectableClassRegistry, MetadataReader, MetadataRegistry, MetaKind} from '../../../metadata';
+import {MetadataReader, MetadataRegistry, MetaKind} from '../../../metadata';
 import {PartialEvaluator, ResolvedValue, SyntheticValue} from '../../../partial_evaluator';
 import {PerfEvent, PerfRecorder} from '../../../perf';
 import {ClassDeclaration, DeclarationNode, Decorator, isNamedClassDeclaration, ReflectionHost, reflectObjectLiteral} from '../../../reflection';
@@ -21,7 +21,7 @@ import {getDiagnosticNode} from '../../../scope/src/util';
 import {FactoryTracker} from '../../../shims/api';
 import {AnalysisOutput, CompileResult, DecoratorHandler, DetectResult, HandlerPrecedence, ResolveResult} from '../../../transform';
 import {getSourceFile} from '../../../util/src/typescript';
-import {combineResolvers, compileDeclareFactory, compileNgFactoryDefField, createValueHasWrongTypeError, extractClassMetadata, extractSchemas, findAngularDecorator, forwardRefResolver, getProviderDiagnostics, getValidConstructorDependencies, isExpressionForwardReference, ReferencesRegistry, resolveProvidersRequiringFactory, toR3Reference, unwrapExpression, wrapFunctionExpressionsInParens, wrapTypeReference} from '../../common';
+import {combineResolvers, compileDeclareFactory, compileNgFactoryDefField, createValueHasWrongTypeError, extractClassMetadata, extractSchemas, findAngularDecorator, forwardRefResolver, getProviderDiagnostics, getValidConstructorDependencies, InjectableClassRegistry, isExpressionForwardReference, ReferencesRegistry, resolveProvidersRequiringFactory, toR3Reference, unwrapExpression, wrapFunctionExpressionsInParens, wrapTypeReference} from '../../common';
 
 import {createModuleWithProvidersResolver, isResolvedModuleWithProviders} from './module_with_providers';
 
@@ -202,7 +202,7 @@ export class NgModuleDecoratorHandler implements
       // Look through the declarations to make sure they're all a part of the current compilation.
       for (const ref of declarationRefs) {
         if (ref.node.getSourceFile().isDeclarationFile) {
-          const errorNode: ts.Expression = ref.getOriginForDiagnostics(rawDeclarations);
+          const errorNode = ref.getOriginForDiagnostics(rawDeclarations);
 
           diagnostics.push(makeDiagnostic(
               ErrorCode.NGMODULE_INVALID_DECLARATION, errorNode,
@@ -475,7 +475,9 @@ export class NgModuleDecoratorHandler implements
       });
     }
 
-    this.injectableRegistry.registerInjectable(node);
+    this.injectableRegistry.registerInjectable(node, {
+      ctorDeps: analysis.fac.deps,
+    });
   }
 
   resolve(node: ClassDeclaration, analysis: Readonly<NgModuleAnalysis>):

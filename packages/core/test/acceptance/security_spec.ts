@@ -583,6 +583,79 @@ describe('iframe processing', () => {
            expectIframeToBeCreated(IframeComp, {src: TEST_IFRAME_URL});
          });
 
+      it('should work when a directive that sets a security-sensitive attribute has ' +
+             'a host directive that sets an `src` attribute value',
+         () => {
+           @Directive({
+             standalone: true,
+             selector: '[set-src-dir]',
+             host: {
+               'src': TEST_IFRAME_URL,
+             },
+           })
+           class DirThatSetsSrc {
+           }
+
+           @Directive({
+             standalone: true,
+             selector: '[dir]',
+             hostDirectives: [DirThatSetsSrc],
+             host: {
+               'sandbox': '',
+             },
+           })
+           class DirThatSetsSandbox {
+           }
+
+           @Component({
+             standalone: true,
+             imports: [DirThatSetsSandbox],
+             selector: 'my-comp',
+             template: '<iframe dir></iframe>',
+           })
+           class IframeComp {
+           }
+
+           expectIframeToBeCreated(IframeComp, {src: TEST_IFRAME_URL});
+         });
+
+      it('should work when a directive that sets an `src` has ' +
+             'a host directive that sets a security-sensitive attribute value',
+         () => {
+           @Directive({
+             standalone: true,
+             selector: '[set-sandbox-dir]',
+             host: {
+               'sandbox': '',
+             },
+           })
+           class DirThatSetsSandbox {
+           }
+
+           @Directive({
+             standalone: true,
+             selector: '[dir]',
+             hostDirectives: [DirThatSetsSandbox],
+             host: {
+               'src': TEST_IFRAME_URL,
+             },
+           })
+           class DirThatSetsSrc {
+           }
+
+           @Component({
+             standalone: true,
+             imports: [DirThatSetsSrc],
+             selector: 'my-comp',
+             template: '<iframe dir></iframe>',
+           })
+           class IframeComp {
+           }
+
+           expectIframeToBeCreated(IframeComp, {src: TEST_IFRAME_URL});
+         });
+
+
       it('should error when creating a view that contains an <iframe> ' +
              'with security-sensitive attributes set via property bindings',
          () => {

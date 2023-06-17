@@ -188,7 +188,7 @@ export interface Component extends Directive {
     encapsulation?: ViewEncapsulation;
     // @deprecated
     entryComponents?: Array<Type<any> | any[]>;
-    imports?: (Type<any> | any[])[];
+    imports?: (Type<any> | ReadonlyArray<any>)[];
     interpolation?: [string, string];
     moduleId?: string;
     preserveWhitespaces?: boolean;
@@ -324,7 +324,7 @@ export function createComponent<C>(component: Type<C>, options: {
 }): ComponentRef<C>;
 
 // @public
-export function createEnvironmentInjector(providers: Array<Provider | ImportedNgModuleProviders>, parent: EnvironmentInjector, debugName?: string | null): EnvironmentInjector;
+export function createEnvironmentInjector(providers: Array<Provider | EnvironmentProviders>, parent: EnvironmentInjector, debugName?: string | null): EnvironmentInjector;
 
 // @public
 export function createNgModule<T>(ngModule: Type<T>, parentInjector?: Injector): NgModuleRef<T>;
@@ -439,6 +439,11 @@ export interface Directive {
     host?: {
         [key: string]: string;
     };
+    hostDirectives?: (Type<unknown> | {
+        directive: Type<unknown>;
+        inputs?: string[];
+        outputs?: string[];
+    })[];
     inputs?: string[];
     jit?: true;
     outputs?: string[];
@@ -492,11 +497,22 @@ export const ENVIRONMENT_INITIALIZER: InjectionToken<() => void>;
 export abstract class EnvironmentInjector implements Injector {
     // (undocumented)
     abstract destroy(): void;
+    abstract get<T>(token: ProviderToken<T>, notFoundValue: undefined, options: InjectOptions & {
+        optional?: false;
+    }): T;
+    abstract get<T>(token: ProviderToken<T>, notFoundValue: null | undefined, options: InjectOptions): T | null;
+    abstract get<T>(token: ProviderToken<T>, notFoundValue?: T, options?: InjectOptions): T;
+    // @deprecated
     abstract get<T>(token: ProviderToken<T>, notFoundValue?: T, flags?: InjectFlags): T;
     // @deprecated (undocumented)
     abstract get(token: any, notFoundValue?: any): any;
     abstract runInContext<ReturnT>(fn: () => ReturnT): ReturnT;
 }
+
+// @public
+export type EnvironmentProviders = {
+    ɵbrand: 'EnvironmentProviders';
+};
 
 // @public
 export class ErrorHandler {
@@ -616,14 +632,11 @@ export interface HostListenerDecorator {
     new (eventName: string, args?: string[]): any;
 }
 
-// @public
-export interface ImportedNgModuleProviders {
-    // (undocumented)
-    ɵproviders: Provider[];
-}
+// @public @deprecated
+export type ImportedNgModuleProviders = EnvironmentProviders;
 
 // @public
-export function importProvidersFrom(...sources: ImportProvidersSource[]): ImportedNgModuleProviders;
+export function importProvidersFrom(...sources: ImportProvidersSource[]): EnvironmentProviders;
 
 // @public
 export type ImportProvidersSource = Type<unknown> | ModuleWithProviders<unknown> | Array<ImportProvidersSource>;
@@ -731,6 +744,12 @@ export abstract class Injector {
         parent?: Injector;
         name?: string;
     }): Injector;
+    abstract get<T>(token: ProviderToken<T>, notFoundValue: undefined, options: InjectOptions & {
+        optional?: false;
+    }): T;
+    abstract get<T>(token: ProviderToken<T>, notFoundValue: null | undefined, options: InjectOptions): T | null;
+    abstract get<T>(token: ProviderToken<T>, notFoundValue?: T, options?: InjectOptions | InjectFlags): T;
+    // @deprecated
     abstract get<T>(token: ProviderToken<T>, notFoundValue?: T, flags?: InjectFlags): T;
     // @deprecated (undocumented)
     abstract get(token: any, notFoundValue?: any): any;
@@ -862,6 +881,9 @@ export class KeyValueDiffers {
 export const LOCALE_ID: InjectionToken<string>;
 
 // @public
+export function makeEnvironmentProviders(providers: Provider[]): EnvironmentProviders;
+
+// @public
 export enum MissingTranslationStrategy {
     // (undocumented)
     Error = 0,
@@ -885,7 +907,7 @@ export interface ModuleWithProviders<T> {
     // (undocumented)
     ngModule: Type<T>;
     // (undocumented)
-    providers?: Provider[];
+    providers?: Array<Provider | EnvironmentProviders>;
 }
 
 // @public
@@ -901,7 +923,7 @@ export interface NgModule {
     id?: string;
     imports?: Array<Type<any> | ModuleWithProviders<{}> | any[]>;
     jit?: true;
-    providers?: Provider[];
+    providers?: Array<Provider | EnvironmentProviders>;
     schemas?: Array<SchemaMetadata | any[]>;
 }
 

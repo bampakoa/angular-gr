@@ -21,6 +21,7 @@ import {TemplateInfo} from '../utils';
  */
 export interface CodeActionContext {
   templateInfo: TemplateInfo;
+  fileName: string;
   compiler: NgCompiler;
   start: number;
   end: number;
@@ -132,4 +133,6 @@ export function isFixAllAvailable(meta: CodeActionMeta, diagnostics: tss.Diagnos
 export enum FixIdForCodeFixesAll {
   FIX_SPELLING = 'fixSpelling',
   FIX_MISSING_MEMBER = 'fixMissingMember',
+  FIX_INVALID_BANANA_IN_BOX = 'fixInvalidBananaInBox',
+  FIX_MISSING_IMPORT = 'fixMissingImport',
 }

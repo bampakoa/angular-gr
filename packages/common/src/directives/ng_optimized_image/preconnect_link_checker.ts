@@ -88,7 +88,7 @@ export class PreconnectLinkChecker {
   }
 
   /**
-   * Checks that a preconnect resource hint exists in the head for the
+   * Checks that a preconnect resource hint exists in the head fo rthe
    * given src.
    *
    * @param rewrittenSrc src formatted with loader

@@ -483,9 +483,6 @@
     "name": "RouterLinkActive"
   },
   {
-    "name": "RouterLinkWithHref"
-  },
-  {
     "name": "RouterOutlet"
   },
   {
@@ -699,6 +696,9 @@
     "name": "addComponentLogic"
   },
   {
+    "name": "addPropertyAlias"
+  },
+  {
     "name": "addToArray"
   },
   {
@@ -712,6 +712,9 @@
   },
   {
     "name": "allocLFrame"
+  },
+  {
+    "name": "allowSanitizationBypassAndThrow"
   },
   {
     "name": "appendChild"
@@ -810,6 +813,9 @@
     "name": "containsTree"
   },
   {
+    "name": "convertToBitFlags"
+  },
+  {
     "name": "convertToParamMap"
   },
   {
@@ -877,6 +883,9 @@
   },
   {
     "name": "deepForEach"
+  },
+  {
+    "name": "deepForEachProvider"
   },
   {
     "name": "defaultErrorFactory"
@@ -955,6 +964,9 @@
   },
   {
     "name": "executeCheckHooks"
+  },
+  {
+    "name": "executeContentQueries"
   },
   {
     "name": "executeInitAndCheckHooks"
@@ -1176,6 +1188,9 @@
     "name": "getResolve"
   },
   {
+    "name": "getSanitizer"
+  },
+  {
     "name": "getSelectedIndex"
   },
   {
@@ -1245,10 +1260,7 @@
     "name": "inheritedParamsDataResolve"
   },
   {
-    "name": "initTNodeFlags"
-  },
-  {
-    "name": "initializeInputAndOutputAliases"
+    "name": "initializeDirectives"
   },
   {
     "name": "inject"
@@ -1293,6 +1305,9 @@
     "name": "invertObject"
   },
   {
+    "name": "invokeDirectivesHostBindings"
+  },
+  {
     "name": "invokeHostBindingsInCreationMode"
   },
   {
@@ -1329,6 +1344,9 @@
     "name": "isEmptyError"
   },
   {
+    "name": "isEnvironmentProviders"
+  },
+  {
     "name": "isFunction"
   },
   {
@@ -1336,9 +1354,6 @@
   },
   {
     "name": "isImmediateMatch"
-  },
-  {
-    "name": "isImportedNgModuleProviders"
   },
   {
     "name": "isInlineTemplate"
@@ -1455,6 +1470,9 @@
     "name": "matrixParamsMatch"
   },
   {
+    "name": "maybeUnwrapDefaultExport"
+  },
+  {
     "name": "maybeUnwrapFn"
   },
   {
@@ -1548,6 +1566,9 @@
     "name": "pipeFromArray"
   },
   {
+    "name": "policy"
+  },
+  {
     "name": "prioritizedGuardValue"
   },
   {
@@ -1555,9 +1576,6 @@
   },
   {
     "name": "promise"
-  },
-  {
-    "name": "provideRoutes"
   },
   {
     "name": "redirectIfUrlTree"
@@ -1579,9 +1597,6 @@
   },
   {
     "name": "refreshView"
-  },
-  {
-    "name": "registerHostBindingOpCodes"
   },
   {
     "name": "registerPostOrderHooks"
@@ -1621,6 +1636,9 @@
   },
   {
     "name": "rootRoute"
+  },
+  {
+    "name": "routes"
   },
   {
     "name": "rxSubscriber"
@@ -1687,6 +1705,9 @@
   },
   {
     "name": "setUpAttributes"
+  },
+  {
+    "name": "setupStaticAttributes"
   },
   {
     "name": "shallowEqual"
@@ -1773,6 +1794,9 @@
     "name": "tree"
   },
   {
+    "name": "trustedScriptURLFromStringBypass"
+  },
+  {
     "name": "uniqueIdCounter"
   },
   {
@@ -1780,6 +1804,9 @@
   },
   {
     "name": "unwrapRNode"
+  },
+  {
+    "name": "unwrapSafeValue"
   },
   {
     "name": "updateMicroTaskStatus"
@@ -1812,9 +1839,6 @@
     "name": "writeDirectClass"
   },
   {
-    "name": "writeDirectStyle"
-  },
-  {
     "name": "ɵEmptyOutletComponent"
   },
   {
@@ -1825,9 +1849,6 @@
   },
   {
     "name": "ɵɵattribute"
-  },
-  {
-    "name": "ɵɵcontentQuery"
   },
   {
     "name": "ɵɵdefineComponent"
@@ -1854,16 +1875,13 @@
     "name": "ɵɵinject"
   },
   {
-    "name": "ɵɵinjectAttribute"
-  },
-  {
     "name": "ɵɵlistener"
   },
   {
-    "name": "ɵɵloadQuery"
+    "name": "ɵɵqueryRefresh"
   },
   {
-    "name": "ɵɵqueryRefresh"
+    "name": "ɵɵsanitizeResourceUrl"
   },
   {
     "name": "ɵɵsanitizeUrl"

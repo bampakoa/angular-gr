@@ -552,6 +552,9 @@
     "name": "addComponentLogic"
   },
   {
+    "name": "addPropertyAlias"
+  },
+  {
     "name": "addToViewTree"
   },
   {
@@ -651,6 +654,9 @@
     "name": "containsElement"
   },
   {
+    "name": "convertToBitFlags"
+  },
+  {
     "name": "convertToMap"
   },
   {
@@ -705,6 +711,9 @@
     "name": "deepForEach"
   },
   {
+    "name": "deepForEachProvider"
+  },
+  {
     "name": "detachMovedView"
   },
   {
@@ -730,6 +739,9 @@
   },
   {
     "name": "executeCheckHooks"
+  },
+  {
+    "name": "executeContentQueries"
   },
   {
     "name": "executeInitAndCheckHooks"
@@ -921,10 +933,7 @@
     "name": "incrementInitPhaseFlags"
   },
   {
-    "name": "initTNodeFlags"
-  },
-  {
-    "name": "initializeInputAndOutputAliases"
+    "name": "initializeDirectives"
   },
   {
     "name": "injectArgs"
@@ -960,6 +969,9 @@
     "name": "invertObject"
   },
   {
+    "name": "invokeDirectivesHostBindings"
+  },
+  {
     "name": "invokeHostBindingsInCreationMode"
   },
   {
@@ -993,10 +1005,10 @@
     "name": "isElementNode"
   },
   {
-    "name": "isFunction"
+    "name": "isEnvironmentProviders"
   },
   {
-    "name": "isImportedNgModuleProviders"
+    "name": "isFunction"
   },
   {
     "name": "isInlineTemplate"
@@ -1179,9 +1191,6 @@
     "name": "refreshView"
   },
   {
-    "name": "registerHostBindingOpCodes"
-  },
-  {
     "name": "registerPostOrderHooks"
   },
   {
@@ -1287,6 +1296,9 @@
     "name": "setUpAttributes"
   },
   {
+    "name": "setupStaticAttributes"
+  },
+  {
     "name": "shareSubjectFactory"
   },
   {
@@ -1342,9 +1354,6 @@
   },
   {
     "name": "writeDirectClass"
-  },
-  {
-    "name": "writeDirectStyle"
   },
   {
     "name": "writeStyleAttribute"

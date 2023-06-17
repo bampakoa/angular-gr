@@ -269,6 +269,11 @@
               "url": "guide/structural-directives",
               "title": "Structural directives",
               "tooltip": "Structural directives manipulate the layout of the page."
+            },
+            {
+              "url": "guide/directive-composition-api",
+              "title": "Directive composition API",
+              "tooltip": "Apply directive to host elements."
             }
           ]
         },
@@ -313,6 +318,11 @@
           "url": "guide/developer-guide-overview",
           "title": "Overview",
           "tooltip": "A list of developer guides for building Angular applications."
+        },
+        {
+          "url": "guide/standalone-components",
+          "title": "Standalone components",
+          "tooltip": "Standalone components, directives, and pipes"
         },
         {
           "title": "Change detection",
@@ -411,6 +421,11 @@
           "url": "guide/http",
           "title": "HTTP client",
           "tooltip": "Use HTTP to talk to a remote server."
+        },
+        {
+          "url": "guide/image-directive",
+          "title": "Image optimization",
+          "tooltip": "Performant images with the Angular image directive."
         },
         {
           "title": "Testing",
@@ -844,22 +859,6 @@
       ]
     },
     {
-      "title": "Feature preview",
-      "tooltip": "Angular preview features and APIs",
-      "children": [
-        {
-          "url": "guide/standalone-components",
-          "title": "Standalone components",
-          "tooltip": "Standalone components, directives and pipes"
-        },
-        {
-          "url": "guide/image-directive",
-          "title": "Image Directive",
-          "tooltip": "Performant images with the Angular image directive."
-        }
-      ]
-    },
-    {
       "title": "Release Information",
       "tooltip": "Angular release practices, updating, and upgrading.",
       "children": [
@@ -1115,11 +1114,6 @@
               "title": "Overview",
               "tooltip": "An introduction to the CLI tool, commands, and syntax.",
               "url": "cli"
-            },
-            {
-              "title": "Usage analytics",
-              "tooltip": "For administrators, guide to gathering usage analytics from your users.",
-              "url": "cli/usage-analytics-gathering"
             }
           ]
         },
@@ -1311,11 +1305,6 @@
           "url": "https://blog.angular.io/",
           "title": "Άρθρα",
           "tooltip": "Αρθογραφία για την Angular"
-        },
-        {
-          "url": "analytics",
-          "title": "Ανάλυση χρήσης",
-          "tooltip": "Στατιστικά για την Angular"
         }
       ]
     },

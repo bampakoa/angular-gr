@@ -60,6 +60,9 @@
     "name": "BuiltInControlValueAccessor"
   },
   {
+    "name": "CALL_SET_DISABLED_STATE"
+  },
+  {
     "name": "CHECKBOX_VALUE_ACCESSOR"
   },
   {
@@ -540,6 +543,9 @@
     "name": "addComponentLogic"
   },
   {
+    "name": "addPropertyAlias"
+  },
+  {
     "name": "addToArray"
   },
   {
@@ -648,6 +654,9 @@
     "name": "controlPath"
   },
   {
+    "name": "convertToBitFlags"
+  },
+  {
     "name": "createDirectivesInstances"
   },
   {
@@ -687,6 +696,9 @@
     "name": "deepForEach"
   },
   {
+    "name": "deepForEachProvider"
+  },
+  {
     "name": "defaultIterableDiffersFactory"
   },
   {
@@ -718,6 +730,9 @@
   },
   {
     "name": "executeCheckHooks"
+  },
+  {
+    "name": "executeContentQueries"
   },
   {
     "name": "executeInitAndCheckHooks"
@@ -978,10 +993,7 @@
     "name": "inheritViewQuery"
   },
   {
-    "name": "initTNodeFlags"
-  },
-  {
-    "name": "initializeInputAndOutputAliases"
+    "name": "initializeDirectives"
   },
   {
     "name": "injectArgs"
@@ -1020,6 +1032,9 @@
     "name": "invertObject"
   },
   {
+    "name": "invokeDirectivesHostBindings"
+  },
+  {
     "name": "invokeHostBindingsInCreationMode"
   },
   {
@@ -1047,6 +1062,9 @@
     "name": "isDirectiveHost"
   },
   {
+    "name": "isEnvironmentProviders"
+  },
+  {
     "name": "isFormControlState"
   },
   {
@@ -1054,9 +1072,6 @@
   },
   {
     "name": "isFunction"
-  },
-  {
-    "name": "isImportedNgModuleProviders"
   },
   {
     "name": "isInlineTemplate"
@@ -1290,9 +1305,6 @@
     "name": "registerDestroyHooksIfSupported"
   },
   {
-    "name": "registerHostBindingOpCodes"
-  },
-  {
     "name": "registerOnValidatorChange"
   },
   {
@@ -1386,6 +1398,9 @@
     "name": "setDirectiveInputsWhichShadowsStyling"
   },
   {
+    "name": "setDisabledStateDefault"
+  },
+  {
     "name": "setIncludeViewProviders"
   },
   {
@@ -1417,6 +1432,9 @@
   },
   {
     "name": "setUpValidators"
+  },
+  {
+    "name": "setupStaticAttributes"
   },
   {
     "name": "shareSubjectFactory"
@@ -1480,9 +1498,6 @@
   },
   {
     "name": "writeDirectClass"
-  },
-  {
-    "name": "writeDirectStyle"
   },
   {
     "name": "ɵInternalFormsSharedModule"
