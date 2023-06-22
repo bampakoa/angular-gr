@@ -10,7 +10,7 @@ Bazel.
 ## Installation
 
 In order to ensure that everyone builds Angular in a _consistent_ way, Bazel
-will be installed through NPM and therefore it's not necessary to install Bazel
+will be installed through NPM. It's not necessary to install Bazel
 manually.
 
 The binaries for Bazel will be provided by the [`@bazel/bazelisk`](https://github.com/bazelbuild/bazelisk)
@@ -48,9 +48,18 @@ new as of May 2017 and not very stable yet.
 
 ## Testing Angular
 
-- Test package in node: `yarn bazel test packages/core/test:test`
-- Test package in karma: `yarn bazel test packages/core/test:test_web`
-- Test all packages: `yarn bazel test packages/...`
+- Test package in node: `yarn test packages/core/test:test`
+- Test package in karma: `yarn test packages/core/test:test_web`
+- Test all packages: `yarn test packages/...`
+
+**Note**: The ellipsis in the last command above are not meant to be substituted by a package name, but
+are used by Bazel as a wildcard to execute all tests in the specified path. To execute all the tests for a
+single package, the commands are (exemplary):
+- `yarn test //packages/core/...` for all tests, or
+- `yarn test //packages/core/test:test` for a particular test suite.
+
+**Note**: The first test run will be much slower than future runs. This is because future runs will
+benefit from Bazel's capability to do incremental builds.
 
 You can use [ibazel] to get a "watch mode" that continuously
 keeps the outputs up-to-date as you save sources.
@@ -105,7 +114,7 @@ Apple+Shift+D on Mac) and click on the green play icon next to the configuration
 
 ### Debugging a Karma Test
 
-- Run test: `yarn bazel run packages/core/test:test_web_chromium` or `yarn bazel run packages/core/test:test_web_firefox`
+- Run test: `yarn bazel run packages/core/test:test_web_debug` (any `karma_web_test_suite` target has a `_debug` target)
 - Open any browser at: [http://localhost:9876/debug.html](http://localhost:9876/debug.html)
 - Open the browser's DevTools to debug the tests (after, for example, having focused on specific tests via `fit` and/or `fdescribe` or having added `debugger` statements in them)
 
@@ -148,7 +157,7 @@ Of course, non-hermeticity in an action can cause problems.
 At worst, you can fetch a broken artifact from the cache, making your build non-reproducible.
 For this reason, we are careful to implement our Bazel rules to depend only on their inputs.
 
-Currently we only use remote caching on CircleCI and we let Angular core developers enable remote caching to speed up their builds.
+Currently, we only use remote caching on CircleCI. We let Angular core developers enable remote caching to speed up their builds.
 
 ### Remote cache in development
 
@@ -230,7 +239,7 @@ yarn bazel analyze-profile filename_name.profile --html --html_details --html_hi
 
 This will generate a `filename_name.profile.html` file that you can open in your browser.
 
-On the upper right corner that is a small table of contents with links to three areas: Tasks, Legend and Statistics.
+In the upper right corner that is a small table of contents with links to three areas: Tasks, Legend, and Statistics.
 
 In the Tasks section you will find a graph of where time is spent. Legend shows what the colors in the Tasks graph mean.
 Hovering over the background will show what phase that is, while hovering over bars will show more details about that specific action.
@@ -274,7 +283,7 @@ e.g: `yarn bazel test packages/core/test/bundling/forms:symbol_test`
 #### mkdir missing
 If you see the following error::
 ```
- 
+
 ERROR: An error occurred during the fetch of repository 'npm':
    Traceback (most recent call last):
         File "C:/users/anusername/_bazel_anusername/idexbm2i/external/build_bazel_rules_nodejs/internal/npm_install/npm_install.bzl", line 618, column 15, in _yarn_install_impl
@@ -286,9 +295,9 @@ Error in fail: mkdir -p _ failed:
 ```
 The `msys64` library and associated tools (like `mkdir`) are required to build Angular.
 
-Make sure you have `C:\msys64\usr\bin` in the "system" `PATH` rather than the "user" `PATH`. 
+Make sure you have `C:\msys64\usr\bin` in the "system" `PATH` rather than the "user" `PATH`.
 
-After that, a `git clean -xfd`, `yarn`, and `node scripts\build\build-packages-dist.js` should resolve this issue.
+After that, a `git clean -xfd`, `yarn`, and `yarn build` should resolve this issue.
 
 ### Xcode
 

@@ -14,8 +14,6 @@ export type Import = {
   node: ts.ImportDeclaration
 };
 
-const PARSED_TS_VERSION = parseFloat(ts.versionMajorMinor);
-
 /** Gets import information about the specified identifier by using the Type checker. */
 export function getImportOfIdentifier(typeChecker: ts.TypeChecker, node: ts.Identifier): Import|
     null {
@@ -84,6 +82,7 @@ export function getImportSpecifier(
 
 /**
  * Replaces an import inside a named imports node with a different one.
+ *
  * @param node Node that contains the imports.
  * @param existingImport Import that should be replaced.
  * @param newImportName Import that should be inserted.
@@ -101,20 +100,30 @@ export function replaceImport(
   }
 
   const importPropertyName =
-      existingImportNode.propertyName ? ts.createIdentifier(newImportName) : undefined;
+      existingImportNode.propertyName ? ts.factory.createIdentifier(newImportName) : undefined;
   const importName = existingImportNode.propertyName ? existingImportNode.name :
-                                                       ts.createIdentifier(newImportName);
+                                                       ts.factory.createIdentifier(newImportName);
 
-  return ts.updateNamedImports(node, [
+  return ts.factory.updateNamedImports(node, [
     ...node.elements.filter(current => current !== existingImportNode),
     // Create a new import while trying to preserve the alias of the old one.
-    PARSED_TS_VERSION > 4.4 ? ts.createImportSpecifier(false, importPropertyName, importName) :
-                              // TODO(crisbeto): backwards-compatibility layer for TS 4.4.
-                              // Should be cleaned up when we drop support for it.
-                              (ts.createImportSpecifier as any)(importPropertyName, importName)
+    ts.factory.createImportSpecifier(false, importPropertyName, importName)
   ]);
 }
 
+/**
+ * Removes a symbol from the named imports and updates a node
+ * that represents a given named imports.
+ *
+ * @param node Node that contains the imports.
+ * @param symbol Symbol that should be removed.
+ * @returns An updated node (ts.NamedImports).
+ */
+export function removeSymbolFromNamedImports(node: ts.NamedImports, symbol: ts.ImportSpecifier) {
+  return ts.factory.updateNamedImports(node, [
+    ...node.elements.filter(current => current !== symbol),
+  ]);
+}
 
 /** Finds an import specifier with a particular name. */
 export function findImportSpecifier(

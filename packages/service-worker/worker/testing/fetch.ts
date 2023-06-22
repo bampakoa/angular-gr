@@ -100,7 +100,7 @@ export class MockRequest extends MockBody implements Request {
   readonly isHistoryNavigation: boolean = false;
   readonly isReloadNavigation: boolean = false;
   readonly cache: RequestCache = 'default';
-  readonly credentials: RequestCredentials = 'omit';
+  readonly credentials: RequestCredentials = 'same-origin';
   readonly destination: RequestDestination = 'document';
   readonly headers: Headers = new MockHeaders();
   readonly integrity: string = '';
@@ -115,7 +115,7 @@ export class MockRequest extends MockBody implements Request {
   url: string;
 
   constructor(input: string|Request, init: RequestInit = {}) {
-    super(init !== undefined ? (init.body as (string | null)) || null : null);
+    super((init.body as string | null) ?? null);
     if (typeof input !== 'string') {
       throw 'Not implemented';
     }
@@ -171,7 +171,7 @@ export class MockResponse extends MockBody implements Response {
       init: ResponseInit&{type?: ResponseType, redirected?: boolean, url?: string} = {}) {
     super(typeof body === 'string' ? body : null);
     this.status = (init.status !== undefined) ? init.status : 200;
-    this.statusText = init.statusText || 'OK';
+    this.statusText = (init.statusText !== undefined) ? init.statusText : 'OK';
     const headers = init.headers as {[key: string]: string};
     if (headers !== undefined) {
       if (headers instanceof MockHeaders) {
@@ -197,7 +197,13 @@ export class MockResponse extends MockBody implements Response {
     if (this.bodyUsed) {
       throw 'Body already consumed';
     }
-    return new MockResponse(
-        this._body, {status: this.status, statusText: this.statusText, headers: this.headers});
+    return new MockResponse(this._body, {
+      status: this.status,
+      statusText: this.statusText,
+      headers: this.headers,
+      type: this.type,
+      redirected: this.redirected,
+      url: this.url,
+    });
   }
 }

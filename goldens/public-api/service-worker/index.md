@@ -8,6 +8,17 @@ import * as i0 from '@angular/core';
 import { ModuleWithProviders } from '@angular/core';
 import { Observable } from 'rxjs';
 
+// @public
+export interface NoNewVersionDetectedEvent {
+    // (undocumented)
+    type: 'NO_NEW_VERSION_DETECTED';
+    // (undocumented)
+    version: {
+        hash: string;
+        appData?: Object;
+    };
+}
+
 // @public (undocumented)
 export class ServiceWorkerModule {
     static register(script: string, opts?: SwRegistrationOptions): ModuleWithProviders<ServiceWorkerModule>;
@@ -118,7 +129,7 @@ export interface VersionDetectedEvent {
 }
 
 // @public
-export type VersionEvent = VersionDetectedEvent | VersionInstallationFailedEvent | VersionReadyEvent;
+export type VersionEvent = VersionDetectedEvent | VersionInstallationFailedEvent | VersionReadyEvent | NoNewVersionDetectedEvent;
 
 // @public
 export interface VersionInstallationFailedEvent {

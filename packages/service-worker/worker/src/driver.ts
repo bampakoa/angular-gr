@@ -380,6 +380,10 @@ export class Driver implements Debuggable, UpdateSource {
         }
         break;
       }
+      case 'sendRequest': {
+        await this.scope.fetch(urlToOpen);
+        break;
+      }
       default:
         break;
     }
@@ -878,6 +882,7 @@ export class Driver implements Debuggable, UpdateSource {
 
       // Check whether this is really an update.
       if (this.versions.has(hash)) {
+        await this.notifyClientsAboutNoNewVersionDetected(manifest, hash);
         return false;
       }
 
@@ -1070,6 +1075,18 @@ export class Driver implements Debuggable, UpdateSource {
         version: this.mergeHashWithAppData(manifest, hash),
         error: errorToString(error),
       });
+    }));
+  }
+
+  async notifyClientsAboutNoNewVersionDetected(manifest: Manifest, hash: string): Promise<void> {
+    await this.initialized;
+
+    const clients = await this.scope.clients.matchAll();
+
+    await Promise.all(clients.map(async client => {
+      // Send a notice.
+      client.postMessage(
+          {type: 'NO_NEW_VERSION_DETECTED', version: this.mergeHashWithAppData(manifest, hash)});
     }));
   }
 

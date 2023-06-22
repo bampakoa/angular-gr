@@ -10,10 +10,10 @@ import {CssSelector, SchemaMetadata, SelectorMatcher} from '@angular/compiler';
 import ts from 'typescript';
 
 import {Reference} from '../../imports';
-import {DirectiveMeta, flattenInheritedDirectiveMetadata, MetadataReader} from '../../metadata';
+import {DirectiveMeta, flattenInheritedDirectiveMetadata, HostDirectivesResolver, MetadataReader, MetaKind} from '../../metadata';
 import {ClassDeclaration} from '../../reflection';
 
-import {ComponentScopeReader} from './component_scope';
+import {ComponentScopeKind, ComponentScopeReader} from './api';
 
 /**
  * The scope that is used for type-check code generation of a component template.
@@ -23,7 +23,7 @@ export interface TypeCheckScope {
    * A `SelectorMatcher` instance that contains the flattened directive metadata of all directives
    * that are in the compilation scope of the declaring NgModule.
    */
-  matcher: SelectorMatcher<DirectiveMeta>;
+  matcher: SelectorMatcher<DirectiveMeta[]>;
 
   /**
    * All of the directives available in the compilation scope of the declaring NgModule.
@@ -62,7 +62,9 @@ export class TypeCheckScopeRegistry {
    */
   private scopeCache = new Map<ClassDeclaration, TypeCheckScope>();
 
-  constructor(private scopeReader: ComponentScopeReader, private metaReader: MetadataReader) {}
+  constructor(
+      private scopeReader: ComponentScopeReader, private metaReader: MetadataReader,
+      private hostDirectivesResolver: HostDirectivesResolver) {}
 
   /**
    * Computes the type-check scope information for the component declaration. If the NgModule
@@ -70,7 +72,7 @@ export class TypeCheckScopeRegistry {
    * an empty type-check scope is returned.
    */
   getTypeCheckScope(node: ClassDeclaration): TypeCheckScope {
-    const matcher = new SelectorMatcher<DirectiveMeta>();
+    const matcher = new SelectorMatcher<DirectiveMeta[]>();
     const directives: DirectiveMeta[] = [];
     const pipes = new Map<string, Reference<ClassDeclaration<ts.ClassDeclaration>>>();
 
@@ -85,24 +87,29 @@ export class TypeCheckScopeRegistry {
       };
     }
 
-    if (this.scopeCache.has(scope.ngModule)) {
-      return this.scopeCache.get(scope.ngModule)!;
+    const cacheKey = scope.kind === ComponentScopeKind.NgModule ? scope.ngModule : scope.component;
+    const dependencies = scope.kind === ComponentScopeKind.NgModule ?
+        scope.compilation.dependencies :
+        scope.dependencies;
+
+    if (this.scopeCache.has(cacheKey)) {
+      return this.scopeCache.get(cacheKey)!;
     }
 
-    for (const meta of scope.compilation.directives) {
-      if (meta.selector !== null) {
+    for (const meta of dependencies) {
+      if (meta.kind === MetaKind.Directive && meta.selector !== null) {
         const extMeta = this.getTypeCheckDirectiveMetadata(meta.ref);
-        matcher.addSelectables(CssSelector.parse(meta.selector), extMeta);
+        matcher.addSelectables(
+            CssSelector.parse(meta.selector),
+            [...this.hostDirectivesResolver.resolve(extMeta), extMeta]);
         directives.push(extMeta);
+      } else if (meta.kind === MetaKind.Pipe) {
+        if (!ts.isClassDeclaration(meta.ref.node)) {
+          throw new Error(`Unexpected non-class declaration ${
+              ts.SyntaxKind[meta.ref.node.kind]} for pipe ${meta.ref.debugName}`);
+        }
+        pipes.set(meta.name, meta.ref as Reference<ClassDeclaration<ts.ClassDeclaration>>);
       }
-    }
-
-    for (const {name, ref} of scope.compilation.pipes) {
-      if (!ts.isClassDeclaration(ref.node)) {
-        throw new Error(`Unexpected non-class declaration ${
-            ts.SyntaxKind[ref.node.kind]} for pipe ${ref.debugName}`);
-      }
-      pipes.set(name, ref as Reference<ClassDeclaration<ts.ClassDeclaration>>);
     }
 
     const typeCheckScope: TypeCheckScope = {
@@ -110,9 +117,11 @@ export class TypeCheckScopeRegistry {
       directives,
       pipes,
       schemas: scope.schemas,
-      isPoisoned: scope.compilation.isPoisoned || scope.exported.isPoisoned,
+      isPoisoned: scope.kind === ComponentScopeKind.NgModule ?
+          scope.compilation.isPoisoned || scope.exported.isPoisoned :
+          scope.isPoisoned,
     };
-    this.scopeCache.set(scope.ngModule, typeCheckScope);
+    this.scopeCache.set(cacheKey, typeCheckScope);
     return typeCheckScope;
   }
 

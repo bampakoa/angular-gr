@@ -50,6 +50,13 @@ export const NON_BINDABLE_ATTR = 'ngNonBindable';
 /** Name for the variable keeping track of the context returned by `ɵɵrestoreView`. */
 export const RESTORED_VIEW_CONTEXT_NAME = 'restoredCtx';
 
+/**
+ * Maximum length of a single instruction chain. Because our output AST uses recursion, we're
+ * limited in how many expressions we can nest before we reach the call stack limit. This
+ * length is set very conservatively in order to reduce the chance of problems.
+ */
+const MAX_CHAIN_LENGTH = 500;
+
 /** Instructions that support chaining. */
 const CHAINABLE_INSTRUCTIONS = new Set([
   R3.element,
@@ -168,7 +175,6 @@ function mapToExpression(
     map: {[key: string]: string|string[]}, keepDeclared?: boolean): o.Expression {
   return o.literalMap(Object.getOwnPropertyNames(map).map(key => {
     // canonical syntax: `dirProp: publicProp`
-    // if there is no `:`, use dirProp = elProp
     const value = map[key];
     let declaredName: string;
     let publicName: string;
@@ -179,12 +185,9 @@ function mapToExpression(
       minifiedName = key;
       needsDeclaredName = publicName !== declaredName;
     } else {
-      [declaredName, publicName] = splitAtColon(key, [key, value]);
-      minifiedName = declaredName;
-      // Only include the declared name if extracted from the key, i.e. the key contains a colon.
-      // Otherwise the declared name should be omitted even if it is different from the public name,
-      // as it may have already been minified.
-      needsDeclaredName = publicName !== declaredName && key.includes(':');
+      minifiedName = declaredName = key;
+      publicName = value;
+      needsDeclaredName = false;
     }
     return {
       key: minifiedName,
@@ -309,6 +312,7 @@ export function getInstructionStatements(instructions: Instruction[]): o.Stateme
   const statements: o.Statement[] = [];
   let pendingExpression: o.Expression|null = null;
   let pendingExpressionType: o.ExternalReference|null = null;
+  let chainLength = 0;
 
   for (const current of instructions) {
     const resolvedParams =
@@ -318,16 +322,18 @@ export function getInstructionStatements(instructions: Instruction[]): o.Stateme
 
     // If the current instruction is the same as the previous one
     // and it can be chained, add another call to the chain.
-    if (pendingExpressionType === current.reference &&
+    if (chainLength < MAX_CHAIN_LENGTH && pendingExpressionType === current.reference &&
         CHAINABLE_INSTRUCTIONS.has(pendingExpressionType)) {
       // We'll always have a pending expression when there's a pending expression type.
       pendingExpression = pendingExpression!.callFn(params, pendingExpression!.sourceSpan);
+      chainLength++;
     } else {
       if (pendingExpression !== null) {
         statements.push(pendingExpression.toStmt());
       }
       pendingExpression = invokeInstruction(current.span, current.reference, params);
       pendingExpressionType = current.reference;
+      chainLength = 0;
     }
   }
 

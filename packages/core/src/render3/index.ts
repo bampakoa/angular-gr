@@ -5,12 +5,14 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
-import {LifecycleHooksFeature, renderComponent, whenRendered} from './component';
+import {LifecycleHooksFeature} from './component_ref';
 import {ɵɵdefineComponent, ɵɵdefineDirective, ɵɵdefineNgModule, ɵɵdefinePipe, ɵɵsetComponentScope, ɵɵsetNgModuleScope} from './definition';
 import {ɵɵCopyDefinitionFeature} from './features/copy_definition_feature';
+import {ɵɵHostDirectivesFeature} from './features/host_directives_feature';
 import {ɵɵInheritDefinitionFeature} from './features/inherit_definition_feature';
 import {ɵɵNgOnChangesFeature} from './features/ng_onchanges_feature';
 import {ɵɵProvidersFeature} from './features/providers_feature';
+import {ɵɵStandaloneFeature} from './features/standalone_feature';
 import {ComponentDef, ComponentTemplate, ComponentType, DirectiveDef, DirectiveType, PipeDef} from './interfaces/definition';
 import {ɵɵComponentDeclaration, ɵɵDirectiveDeclaration, ɵɵFactoryDeclaration, ɵɵInjectorDeclaration, ɵɵNgModuleDeclaration, ɵɵPipeDeclaration} from './interfaces/public_definitions';
 import {ComponentDebugMetadata, DirectiveDebugMetadata, getComponent, getDirectiveMetadata, getDirectives, getHostElement, getRenderedText} from './util/discovery_utils';
@@ -22,9 +24,7 @@ export {getLocaleId, setLocaleId} from './i18n/i18n_locale_id';
 // clang-format off
 export {
   detectChanges,
-  markDirty,
   store,
-  tick,
   ɵɵadvance,
 
   ɵɵattribute,
@@ -128,6 +128,10 @@ export {
   ɵɵtextInterpolate7,
   ɵɵtextInterpolate8,
   ɵɵtextInterpolateV,
+  ɵgetUnknownElementStrictMode,
+  ɵsetUnknownElementStrictMode,
+  ɵgetUnknownPropertyStrictMode,
+  ɵsetUnknownPropertyStrictMode
 } from './instructions/all';
 export {ɵɵi18n, ɵɵi18nApply, ɵɵi18nAttributes, ɵɵi18nEnd, ɵɵi18nExp,ɵɵi18nPostprocess, ɵɵi18nStart} from './instructions/i18n';
 export {RenderFlags} from './interfaces/definition';
@@ -138,7 +142,7 @@ export {CssSelectorList, ProjectionSlots} from './interfaces/projection';
 export {
   setClassMetadata,
 } from './metadata';
-export {NgModuleFactory, NgModuleRef} from './ng_module_ref';
+export {NgModuleFactory, NgModuleRef, createEnvironmentInjector} from './ng_module_ref';
 export {
   ɵɵpipe,
   ɵɵpipeBind1,
@@ -168,6 +172,7 @@ export {
   ɵɵdisableBindings,
 
   ɵɵenableBindings,
+  ɵɵresetView,
   ɵɵrestoreView,
 } from './state';
 export {NO_CHANGE} from './tokens';
@@ -190,8 +195,6 @@ export {
   getRenderedText,
   LifecycleHooksFeature,
   PipeDef,
-  renderComponent,
-  whenRendered,
   ɵɵComponentDeclaration,
   ɵɵCopyDefinitionFeature,
   ɵɵdefineComponent,
@@ -200,6 +203,7 @@ export {
   ɵɵdefinePipe,
   ɵɵDirectiveDeclaration,
   ɵɵFactoryDeclaration,
+  ɵɵHostDirectivesFeature,
   ɵɵInheritDefinitionFeature,
   ɵɵInjectorDeclaration,
   ɵɵNgModuleDeclaration,
@@ -208,4 +212,5 @@ export {
   ɵɵProvidersFeature,
   ɵɵsetComponentScope,
   ɵɵsetNgModuleScope,
+  ɵɵStandaloneFeature,
 };

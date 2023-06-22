@@ -8,12 +8,12 @@ import { AbsoluteFsPath } from '@angular/compiler-cli/private/localize';
 import * as _babelNamespace from '@babel/core';
 import { Element as Element_2 } from '@angular/compiler';
 import { Logger } from '@angular/compiler-cli/private/localize';
+import { MessageId } from '@angular/localize';
 import { NodePath } from '@babel/traverse';
 import { ParseError } from '@angular/compiler';
 import { PathManipulation } from '@angular/compiler-cli/private/localize';
 import { ReadonlyFileSystem } from '@angular/compiler-cli/private/localize';
 import * as t from '@babel/types';
-import { ɵMessageId } from '@angular/localize';
 import { ɵParsedMessage } from '@angular/localize';
 import { ɵParsedTranslation } from '@angular/localize';
 import { ɵSourceLocation } from '@angular/localize';
@@ -23,8 +23,6 @@ import { ɵSourceMessage } from '@angular/localize';
 export class ArbTranslationParser implements TranslationParser<ArbJsonObject> {
     // (undocumented)
     analyze(_filePath: string, contents: string): ParseAnalysis<ArbJsonObject>;
-    // @deprecated (undocumented)
-    canParse(filePath: string, contents: string): ArbJsonObject | false;
     // (undocumented)
     parse(_filePath: string, contents: string, arb?: ArbJsonObject): ParsedTranslationBundle;
 }
@@ -96,8 +94,6 @@ export class MessageExtractor {
 export class SimpleJsonTranslationParser implements TranslationParser<SimpleJsonFile> {
     // (undocumented)
     analyze(filePath: string, contents: string): ParseAnalysis<SimpleJsonFile>;
-    // @deprecated (undocumented)
-    canParse(filePath: string, contents: string): SimpleJsonFile | false;
     // (undocumented)
     parse(_filePath: string, contents: string, json?: SimpleJsonFile): ParsedTranslationBundle;
 }
@@ -131,10 +127,8 @@ export function unwrapSubstitutionsFromLocalizeCall(call: NodePath<t.CallExpress
 export class Xliff1TranslationParser implements TranslationParser<XmlTranslationParserHint> {
     // (undocumented)
     analyze(filePath: string, contents: string): ParseAnalysis<XmlTranslationParserHint>;
-    // @deprecated (undocumented)
-    canParse(filePath: string, contents: string): XmlTranslationParserHint | false;
     // (undocumented)
-    parse(filePath: string, contents: string, hint?: XmlTranslationParserHint): ParsedTranslationBundle;
+    parse(filePath: string, contents: string, hint: XmlTranslationParserHint): ParsedTranslationBundle;
 }
 
 // @public
@@ -148,10 +142,8 @@ export class Xliff1TranslationSerializer implements TranslationSerializer {
 export class Xliff2TranslationParser implements TranslationParser<XmlTranslationParserHint> {
     // (undocumented)
     analyze(filePath: string, contents: string): ParseAnalysis<XmlTranslationParserHint>;
-    // @deprecated (undocumented)
-    canParse(filePath: string, contents: string): XmlTranslationParserHint | false;
     // (undocumented)
-    parse(filePath: string, contents: string, hint?: XmlTranslationParserHint): ParsedTranslationBundle;
+    parse(filePath: string, contents: string, hint: XmlTranslationParserHint): ParsedTranslationBundle;
 }
 
 // @public
@@ -172,10 +164,8 @@ export class XmbTranslationSerializer implements TranslationSerializer {
 export class XtbTranslationParser implements TranslationParser<XmlTranslationParserHint> {
     // (undocumented)
     analyze(filePath: string, contents: string): ParseAnalysis<XmlTranslationParserHint>;
-    // @deprecated (undocumented)
-    canParse(filePath: string, contents: string): XmlTranslationParserHint | false;
     // (undocumented)
-    parse(filePath: string, contents: string, hint?: XmlTranslationParserHint): ParsedTranslationBundle;
+    parse(filePath: string, contents: string, hint: XmlTranslationParserHint): ParsedTranslationBundle;
 }
 
 // (No @packageDocumentation comment for this package)

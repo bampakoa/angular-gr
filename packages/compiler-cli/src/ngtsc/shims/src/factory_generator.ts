@@ -9,6 +9,7 @@ import ts from 'typescript';
 
 import {absoluteFromSourceFile, AbsoluteFsPath, basename} from '../../file_system';
 import {ImportRewriter} from '../../imports';
+import {getDecorators, getModifiers, updateImportDeclaration} from '../../ts_compatibility';
 import {FactoryInfo, FactoryTracker, ModuleInfo, PerFileShimGenerator} from '../api';
 
 import {generatedModuleName} from './util';
@@ -41,7 +42,7 @@ export class FactoryGenerator implements PerFileShimGenerator, FactoryTracker {
                             .filter(ts.isClassDeclaration)
                             // which are named, exported, and have decorators.
                             .filter(
-                                decl => isExported(decl) && decl.decorators !== undefined &&
+                                decl => isExported(decl) && getDecorators(decl) !== undefined &&
                                     decl.name !== undefined)
                             // Grab the symbol name.
                             .map(decl => decl.name!.text);
@@ -103,8 +104,8 @@ export class FactoryGenerator implements PerFileShimGenerator, FactoryTracker {
 }
 
 function isExported(decl: ts.Declaration): boolean {
-  return decl.modifiers !== undefined &&
-      decl.modifiers.some(mod => mod.kind == ts.SyntaxKind.ExportKeyword);
+  const modifiers = getModifiers(decl);
+  return modifiers !== undefined && modifiers.some(mod => mod.kind == ts.SyntaxKind.ExportKeyword);
 }
 
 export function generatedFactoryTransform(
@@ -159,9 +160,9 @@ function transformFactorySourceFile(
       const rewrittenModuleSpecifier =
           importRewriter.rewriteSpecifier('@angular/core', sourceFilePath);
       if (rewrittenModuleSpecifier !== stmt.moduleSpecifier.text) {
-        transformedStatements.push(ts.updateImportDeclaration(
-            stmt, stmt.decorators, stmt.modifiers, stmt.importClause,
-            ts.createStringLiteral(rewrittenModuleSpecifier), undefined));
+        transformedStatements.push(updateImportDeclaration(
+            stmt, getModifiers(stmt), stmt.importClause,
+            ts.factory.createStringLiteral(rewrittenModuleSpecifier), undefined));
 
         // Record the identifier by which this imported module goes, so references to its symbols
         // can be discovered later.
@@ -186,22 +187,12 @@ function transformFactorySourceFile(
         const match = STRIP_NG_FACTORY.exec(decl.name.text);
         const module = match ? moduleSymbols.get(match[1]) : null;
         if (module) {
-          // If the module can be tree shaken, then the factory should be wrapped in a
-          // `noSideEffects()` call which tells Closure to treat the expression as pure, allowing
-          // it to be removed if the result is not used.
-          //
-          // `NgModule`s with an `id` property will be lazy loaded. Google-internal lazy loading
-          // infra relies on a side effect from the `new NgModuleFactory()` call, which registers
-          // the module globally. Because of this, we **cannot** tree shake any module which has
-          // an `id` property. Doing so would cause lazy loaded modules to never be registered.
-          const moduleIsTreeShakable = !module.hasId;
-          const newStmt = !moduleIsTreeShakable ?
-              stmt :
-              updateInitializers(
-                  stmt,
-                  (init) => init ? wrapInNoSideEffects(init) : undefined,
-              );
-          transformedStatements.push(newStmt);
+          // The factory should be wrapped in a `noSideEffects()` call which tells Closure to treat
+          // the expression as pure, allowing it to be removed if the result is not used.
+          transformedStatements.push(updateInitializers(
+              stmt,
+              (init) => init ? wrapInNoSideEffects(init) : undefined,
+              ));
         }
       } else {
         // Leave the statement alone, as it can't be understood.
@@ -220,7 +211,7 @@ function transformFactorySourceFile(
     transformedStatements.push(nonEmptyExport);
   }
 
-  file = ts.updateSourceFileNode(file, transformedStatements);
+  file = ts.factory.updateSourceFile(file, transformedStatements);
 
   // If any imports to @angular/core were detected and rewritten (which happens when compiling
   // @angular/core), go through the SourceFile and rewrite references to symbols imported from core.
@@ -235,8 +226,8 @@ function transformFactorySourceFile(
         // This is an import of a symbol from @angular/core. Transform it with the importRewriter.
         const rewrittenSymbol = importRewriter.rewriteSymbol(node.name.text, '@angular/core');
         if (rewrittenSymbol !== node.name.text) {
-          const updated =
-              ts.updatePropertyAccess(node, node.expression, ts.createIdentifier(rewrittenSymbol));
+          const updated = ts.factory.updatePropertyAccessExpression(
+              node, node.expression, ts.factory.createIdentifier(rewrittenSymbol));
           node = updated as T & ts.PropertyAccessExpression;
         }
       }
@@ -291,25 +282,25 @@ function getFileoverviewComment(sourceFile: ts.SourceFile): string|null {
  * Example: Takes `1 + 2` and returns `i0.ɵnoSideEffects(() => 1 + 2)`.
  */
 function wrapInNoSideEffects(expr: ts.Expression): ts.Expression {
-  const noSideEffects = ts.createPropertyAccess(
-      ts.createIdentifier('i0'),
+  const noSideEffects = ts.factory.createPropertyAccessExpression(
+      ts.factory.createIdentifier('i0'),
       'ɵnoSideEffects',
   );
 
-  return ts.createCall(
+  return ts.factory.createCallExpression(
       noSideEffects,
       /* typeArguments */[],
       /* arguments */
       [
-        ts.createFunctionExpression(
+        ts.factory.createFunctionExpression(
             /* modifiers */[],
             /* asteriskToken */ undefined,
             /* name */ undefined,
             /* typeParameters */[],
             /* parameters */[],
             /* type */ undefined,
-            /* body */ ts.createBlock([
-              ts.createReturn(expr),
+            /* body */ ts.factory.createBlock([
+              ts.factory.createReturnStatement(expr),
             ]),
             ),
       ],
@@ -324,15 +315,16 @@ function updateInitializers(
     stmt: ts.VariableStatement,
     update: (initializer?: ts.Expression) => ts.Expression | undefined,
     ): ts.VariableStatement {
-  return ts.updateVariableStatement(
+  return ts.factory.updateVariableStatement(
       stmt,
-      stmt.modifiers,
-      ts.updateVariableDeclarationList(
+      getModifiers(stmt),
+      ts.factory.updateVariableDeclarationList(
           stmt.declarationList,
           stmt.declarationList.declarations.map(
-              (decl) => ts.updateVariableDeclaration(
+              (decl) => ts.factory.updateVariableDeclaration(
                   decl,
                   decl.name,
+                  decl.exclamationToken,
                   decl.type,
                   update(decl.initializer),
                   ),

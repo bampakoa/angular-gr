@@ -4,13 +4,13 @@
 
 ```ts
 
+import { ANIMATION_MODULE_TYPE } from '@angular/core';
 import * as i0 from '@angular/core';
 import * as i1 from '@angular/platform-browser';
-import { InjectionToken } from '@angular/core';
 import { ModuleWithProviders } from '@angular/core';
+import { Provider } from '@angular/core';
 
-// @public (undocumented)
-export const ANIMATION_MODULE_TYPE: InjectionToken<"NoopAnimations" | "BrowserAnimations">;
+export { ANIMATION_MODULE_TYPE }
 
 // @public
 export class BrowserAnimationsModule {
@@ -37,6 +37,12 @@ export class NoopAnimationsModule {
     // (undocumented)
     static ɵmod: i0.ɵɵNgModuleDeclaration<NoopAnimationsModule, never, never, [typeof i1.BrowserModule]>;
 }
+
+// @public
+export function provideAnimations(): Provider[];
+
+// @public
+export function provideNoopAnimations(): Provider[];
 
 // (No @packageDocumentation comment for this package)
 

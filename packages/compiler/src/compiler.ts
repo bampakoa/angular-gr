@@ -69,7 +69,7 @@ export * from './render3/view/t2_binder';
 export {Identifiers as R3Identifiers} from './render3/r3_identifiers';
 export {R3ClassMetadata, CompileClassMetadataFn, compileClassMetadata} from './render3/r3_class_metadata_compiler';
 export {compileFactoryFunction, R3DependencyMetadata, R3FactoryMetadata, FactoryTarget} from './render3/r3_factory';
-export {compileNgModule, R3NgModuleMetadata} from './render3/r3_module_compiler';
+export {compileNgModule, R3NgModuleMetadata, R3SelectorScopeMode} from './render3/r3_module_compiler';
 export {compileInjector, R3InjectorMetadata} from './render3/r3_injector_compiler';
 export {compilePipeFromMetadata, R3PipeMetadata} from './render3/r3_pipe_compiler';
 export {makeBindingParser, ParsedTemplate, parseTemplate, ParseTemplateOptions} from './render3/view/template';
@@ -85,7 +85,8 @@ export {compileDeclareNgModuleFromMetadata} from './render3/partial/ng_module';
 export {compileDeclarePipeFromMetadata} from './render3/partial/pipe';
 export {publishFacade} from './jit_compiler_facade';
 export {emitDistinctChangesOnlyDefaultValue, ChangeDetectionStrategy, ViewEncapsulation} from './core';
-export * as outputAst from './output/output_ast';
+import * as outputAst from './output/output_ast';
+export {outputAst};
 // This file only reexports content of the `src` folder. Keep it that way.
 
 // This function call has a global side effects and publishes the compiler into global namespace for

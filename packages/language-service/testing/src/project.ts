@@ -68,7 +68,7 @@ export class Project {
       const dirPath = fs.dirname(filePath);
       fs.ensureDir(dirPath);
       fs.writeFile(filePath, contents);
-      if (projectFilePath.endsWith('.ts')) {
+      if (projectFilePath.endsWith('.ts') && !projectFilePath.endsWith('.d.ts')) {
         entryFiles.push(filePath);
       }
     }
@@ -102,7 +102,10 @@ export class Project {
     if (!this.buffers.has(projectFileName)) {
       const fileName = absoluteFrom(`/${this.name}/${projectFileName}`);
       let scriptInfo = this.tsProject.getScriptInfo(fileName);
-      this.projectService.openClientFile(fileName);
+      this.projectService.openClientFile(
+          // By attempting to open the file, the compiler is going to try to parse it as
+          // TS which will throw an error. We pass in JSX which is more permissive.
+          fileName, undefined, fileName.endsWith('.html') ? ts.ScriptKind.JSX : ts.ScriptKind.TS);
       // Mark the project as dirty because the act of opening a file may result in the version
       // changing since TypeScript will `switchToScriptVersionCache` when a file is opened.
       // Note that this emulates what we have to do in the server/extension as well.
@@ -141,6 +144,26 @@ export class Project {
     return diagnostics;
   }
 
+  getCodeFixesAtPosition(
+      projectFileName: string,
+      start: number,
+      end: number,
+      errorCodes: readonly number[],
+      ): readonly ts.CodeFixAction[] {
+    const fileName = absoluteFrom(`/${this.name}/${projectFileName}`);
+    return this.ngLS.getCodeFixesAtPosition(fileName, start, end, errorCodes, {}, {});
+  }
+
+  getCombinedCodeFix(projectFileName: string, fixId: string): ts.CombinedCodeActions {
+    const fileName = absoluteFrom(`/${this.name}/${projectFileName}`);
+    return this.ngLS.getCombinedCodeFix(
+        {
+          type: 'file',
+          fileName,
+        },
+        fixId, {}, {});
+  }
+
   expectNoSourceDiagnostics(): void {
     const program = this.tsLS.getProgram();
     if (program === undefined) {
@@ -150,7 +173,8 @@ export class Project {
     const ngCompiler = this.ngLS.compilerFactory.getOrCreate();
 
     for (const sf of program.getSourceFiles()) {
-      if (sf.isDeclarationFile || sf.fileName.endsWith('.ngtypecheck.ts')) {
+      if (sf.isDeclarationFile || sf.fileName.endsWith('.ngtypecheck.ts') ||
+          !sf.fileName.endsWith('.ts')) {
         continue;
       }
 

@@ -6,8 +6,9 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {InjectorType} from '../di/interface/defs';
+import {isEnvironmentProviders} from '../di/interface/provider';
 import {RuntimeError, RuntimeErrorCode} from '../errors';
+import {Type} from '../interface/type';
 import {stringify} from '../util/stringify';
 
 import {stringifyForError} from './util/stringify_utils';
@@ -26,16 +27,25 @@ export function throwMixedMultiProviderError() {
 }
 
 export function throwInvalidProviderError(
-    ngModuleType?: InjectorType<any>, providers?: any[], provider?: any) {
-  let ngModuleDetail = '';
+    ngModuleType?: Type<unknown>, providers?: any[], provider?: any): never {
   if (ngModuleType && providers) {
     const providerDetail = providers.map(v => v == provider ? '?' + provider + '?' : '...');
-    ngModuleDetail =
-        ` - only instances of Provider and Type are allowed, got: [${providerDetail.join(', ')}]`;
+    throw new Error(`Invalid provider for the NgModule '${
+        stringify(ngModuleType)}' - only instances of Provider and Type are allowed, got: [${
+        providerDetail.join(', ')}]`);
+  } else if (isEnvironmentProviders(provider)) {
+    if (provider.ɵfromNgModule) {
+      throw new RuntimeError(
+          RuntimeErrorCode.PROVIDER_IN_WRONG_CONTEXT,
+          `Invalid providers from 'importProvidersFrom' present in a non-environment injector. 'importProvidersFrom' can't be used for component providers.`);
+    } else {
+      throw new RuntimeError(
+          RuntimeErrorCode.PROVIDER_IN_WRONG_CONTEXT,
+          `Invalid providers present in a non-environment injector. 'EnvironmentProviders' can't be used for component providers.`);
+    }
+  } else {
+    throw new Error('Invalid provider');
   }
-
-  throw new Error(
-      `Invalid provider for the NgModule '${stringify(ngModuleType)}'` + ngModuleDetail);
 }
 
 
@@ -44,5 +54,5 @@ export function throwProviderNotFoundError(token: any, injectorName?: string): n
   const injectorDetails = injectorName ? ` in ${injectorName}` : '';
   throw new RuntimeError(
       RuntimeErrorCode.PROVIDER_NOT_FOUND,
-      `No provider for ${stringifyForError(token)} found${injectorDetails}`);
+      ngDevMode && `No provider for ${stringifyForError(token)} found${injectorDetails}`);
 }

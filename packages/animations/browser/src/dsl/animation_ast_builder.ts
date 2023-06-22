@@ -5,12 +5,12 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
-import {AnimateTimings, AnimationAnimateChildMetadata, AnimationAnimateMetadata, AnimationAnimateRefMetadata, AnimationGroupMetadata, AnimationKeyframesSequenceMetadata, AnimationMetadata, AnimationMetadataType, AnimationOptions, AnimationQueryMetadata, AnimationQueryOptions, AnimationReferenceMetadata, AnimationSequenceMetadata, AnimationStaggerMetadata, AnimationStateMetadata, AnimationStyleMetadata, AnimationTransitionMetadata, AnimationTriggerMetadata, AUTO_STYLE, style, ɵStyleData} from '@angular/animations';
+import {AnimateTimings, AnimationAnimateChildMetadata, AnimationAnimateMetadata, AnimationAnimateRefMetadata, AnimationGroupMetadata, AnimationKeyframesSequenceMetadata, AnimationMetadata, AnimationMetadataType, AnimationOptions, AnimationQueryMetadata, AnimationQueryOptions, AnimationReferenceMetadata, AnimationSequenceMetadata, AnimationStaggerMetadata, AnimationStateMetadata, AnimationStyleMetadata, AnimationTransitionMetadata, AnimationTriggerMetadata, AUTO_STYLE, style, ɵStyleDataMap} from '@angular/animations';
 
 import {invalidDefinition, invalidKeyframes, invalidOffset, invalidParallelAnimation, invalidProperty, invalidStagger, invalidState, invalidStyleValue, invalidTrigger, keyframeOffsetsOutOfOrder, keyframesMissingOffsets} from '../error_helpers';
 import {AnimationDriver} from '../render/animation_driver';
-import {getOrSetAsInMap} from '../render/shared';
-import {copyObj, extractStyleParams, iteratorToArray, NG_ANIMATING_SELECTOR, NG_TRIGGER_SELECTOR, normalizeAnimationEntry, resolveTiming, SUBSTITUTION_EXPR_START, validateStyleParams, visitDslNode} from '../util';
+import {getOrSetDefaultValue} from '../render/shared';
+import {convertToMap, copyObj, extractStyleParams, iteratorToArray, NG_ANIMATING_SELECTOR, NG_TRIGGER_SELECTOR, normalizeAnimationEntry, resolveTiming, SUBSTITUTION_EXPR_START, validateStyleParams, visitDslNode} from '../util';
 import {pushUnrecognizedPropertiesWarning} from '../warning_helpers';
 
 import {AnimateAst, AnimateChildAst, AnimateRefAst, Ast, DynamicTimingAst, GroupAst, KeyframesAst, QueryAst, ReferenceAst, SequenceAst, StaggerAst, StateAst, StyleAst, TimingAst, TransitionAst, TriggerAst} from './animation_ast';
@@ -74,19 +74,22 @@ export class AnimationAstBuilderVisitor implements AnimationDslVisitor {
     const ast =
         <Ast<AnimationMetadataType>>visitDslNode(this, normalizeAnimationEntry(metadata), context);
 
-    if (context.unsupportedCSSPropertiesFound.size) {
-      pushUnrecognizedPropertiesWarning(
-          warnings,
-          [...context.unsupportedCSSPropertiesFound.keys()],
-      );
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      if (context.unsupportedCSSPropertiesFound.size) {
+        pushUnrecognizedPropertiesWarning(
+            warnings,
+            [...context.unsupportedCSSPropertiesFound.keys()],
+        );
+      }
     }
+
     return ast;
   }
 
   private _resetContextStyleTimingState(context: AnimationAstBuilderContext) {
     context.currentQuerySelector = ROOT_SELECTOR;
-    context.collectedStyles = {};
-    context.collectedStyles[ROOT_SELECTOR] = {};
+    context.collectedStyles = new Map<string, Map<string, StyleTimeTuple>>();
+    context.collectedStyles.set(ROOT_SELECTOR, new Map());
     context.currentTime = 0;
   }
 
@@ -137,11 +140,10 @@ export class AnimationAstBuilderVisitor implements AnimationDslVisitor {
     if (styleAst.containsDynamicStyles) {
       const missingSubs = new Set<string>();
       const params = astParams || {};
-      styleAst.styles.forEach(value => {
-        if (isObject(value)) {
-          const stylesObj = value as any;
-          Object.keys(stylesObj).forEach(prop => {
-            extractStyleParams(stylesObj[prop]).forEach(sub => {
+      styleAst.styles.forEach(style => {
+        if (style instanceof Map) {
+          style.forEach(value => {
+            extractStyleParams(value).forEach(sub => {
               if (!params.hasOwnProperty(sub)) {
                 missingSubs.add(sub);
               }
@@ -211,9 +213,9 @@ export class AnimationAstBuilderVisitor implements AnimationDslVisitor {
       AnimateAst {
     const timingAst = constructTimingAst(metadata.timings, context.errors);
     context.currentAnimateTimings = timingAst;
-
     let styleAst: StyleAst|KeyframesAst;
-    let styleMetadata: AnimationMetadata = metadata.styles ? metadata.styles : style({});
+    let styleMetadata: AnimationStyleMetadata|AnimationKeyframesSequenceMetadata =
+        metadata.styles ? metadata.styles : style({});
     if (styleMetadata.type == AnimationMetadataType.Keyframes) {
       styleAst = this.visitKeyframes(styleMetadata as AnimationKeyframesSequenceMetadata, context);
     } else {
@@ -250,37 +252,32 @@ export class AnimationAstBuilderVisitor implements AnimationDslVisitor {
 
   private _makeStyleAst(metadata: AnimationStyleMetadata, context: AnimationAstBuilderContext):
       StyleAst {
-    const styles: (ɵStyleData|string)[] = [];
-    if (Array.isArray(metadata.styles)) {
-      (metadata.styles as (ɵStyleData | string)[]).forEach(styleTuple => {
-        if (typeof styleTuple == 'string') {
-          if (styleTuple == AUTO_STYLE) {
-            styles.push(styleTuple);
-          } else {
-            context.errors.push(invalidStyleValue(styleTuple));
-          }
-        } else {
+    const styles: Array<(ɵStyleDataMap | string)> = [];
+    const metadataStyles = Array.isArray(metadata.styles) ? metadata.styles : [metadata.styles];
+
+    for (let styleTuple of metadataStyles) {
+      if (typeof styleTuple === 'string') {
+        if (styleTuple === AUTO_STYLE) {
           styles.push(styleTuple);
+        } else {
+          context.errors.push(invalidStyleValue(styleTuple));
         }
-      });
-    } else {
-      styles.push(metadata.styles);
+      } else {
+        styles.push(convertToMap(styleTuple));
+      }
     }
 
     let containsDynamicStyles = false;
     let collectedEasing: string|null = null;
     styles.forEach(styleData => {
-      if (isObject(styleData)) {
-        const styleMap = styleData as ɵStyleData;
-        const easing = styleMap['easing'];
-        if (easing) {
-          collectedEasing = easing as string;
-          delete styleMap['easing'];
+      if (styleData instanceof Map) {
+        if (styleData.has('easing')) {
+          collectedEasing = styleData.get('easing') as string;
+          styleData.delete('easing');
         }
         if (!containsDynamicStyles) {
-          for (let prop in styleMap) {
-            const value = styleMap[prop];
-            if (value.toString().indexOf(SUBSTITUTION_EXPR_START) >= 0) {
+          for (let value of styleData.values()) {
+            if (value!.toString().indexOf(SUBSTITUTION_EXPR_START) >= 0) {
               containsDynamicStyles = true;
               break;
             }
@@ -308,17 +305,21 @@ export class AnimationAstBuilderVisitor implements AnimationDslVisitor {
     }
 
     ast.styles.forEach(tuple => {
-      if (typeof tuple == 'string') return;
+      if (typeof tuple === 'string') return;
 
-      Object.keys(tuple).forEach(prop => {
-        if (!this._driver.validateStyleProperty(prop)) {
-          delete tuple[prop];
-          context.unsupportedCSSPropertiesFound.add(prop);
-          return;
+      tuple.forEach((value, prop) => {
+        if (typeof ngDevMode === 'undefined' || ngDevMode) {
+          if (!this._driver.validateStyleProperty(prop)) {
+            tuple.delete(prop);
+            context.unsupportedCSSPropertiesFound.add(prop);
+            return;
+          }
         }
 
-        const collectedStyles = context.collectedStyles[context.currentQuerySelector!];
-        const collectedEntry = collectedStyles[prop];
+        // This is guaranteed to have a defined Map at this querySelector location making it
+        // safe to add the assertion here. It is set as a default empty map in prior methods.
+        const collectedStyles = context.collectedStyles.get(context.currentQuerySelector!)!;
+        const collectedEntry = collectedStyles.get(prop);
         let updateCollectedStyle = true;
         if (collectedEntry) {
           if (startTime != endTime && startTime >= collectedEntry.startTime &&
@@ -335,11 +336,11 @@ export class AnimationAstBuilderVisitor implements AnimationDslVisitor {
         }
 
         if (updateCollectedStyle) {
-          collectedStyles[prop] = {startTime, endTime};
+          collectedStyles.set(prop, {startTime, endTime});
         }
 
         if (context.options) {
-          validateStyleParams(tuple[prop], context.options, context.errors);
+          validateStyleParams(value, context.options, context.errors);
         }
       });
     });
@@ -447,7 +448,7 @@ export class AnimationAstBuilderVisitor implements AnimationDslVisitor {
     const [selector, includeSelf] = normalizeSelector(metadata.selector);
     context.currentQuerySelector =
         parentSelector.length ? (parentSelector + ' ' + selector) : selector;
-    getOrSetAsInMap(context.collectedStyles, context.currentQuerySelector, {});
+    getOrSetDefaultValue(context.collectedStyles, context.currentQuerySelector, new Map());
 
     const animation = visitDslNode(this, normalizeAnimationEntry(metadata.animation), context);
     context.currentQuery = null;
@@ -492,7 +493,7 @@ function normalizeSelector(selector: string): [string, boolean] {
   // Note: the :enter and :leave aren't normalized here since those
   // selectors are filled in at runtime during timeline building
   selector = selector.replace(/@\*/g, NG_TRIGGER_SELECTOR)
-                 .replace(/@\w+/g, match => NG_TRIGGER_SELECTOR + '-' + match.substr(1))
+                 .replace(/@\w+/g, match => NG_TRIGGER_SELECTOR + '-' + match.slice(1))
                  .replace(/:animating/g, NG_ANIMATING_SELECTOR);
 
   return [selector, hasAmpersand];
@@ -515,42 +516,41 @@ export class AnimationAstBuilderContext {
   public currentQuerySelector: string|null = null;
   public currentAnimateTimings: TimingAst|null = null;
   public currentTime: number = 0;
-  public collectedStyles: {[selectorName: string]: {[propName: string]: StyleTimeTuple}} = {};
+  public collectedStyles = new Map<string, Map<string, StyleTimeTuple>>();
   public options: AnimationOptions|null = null;
   public unsupportedCSSPropertiesFound: Set<string> = new Set<string>();
   constructor(public errors: Error[]) {}
 }
 
-function consumeOffset(styles: ɵStyleData|string|(ɵStyleData | string)[]): number|null {
+type OffsetStyles = string|ɵStyleDataMap;
+
+function consumeOffset(styles: OffsetStyles|Array<OffsetStyles>): number|null {
   if (typeof styles == 'string') return null;
 
   let offset: number|null = null;
 
   if (Array.isArray(styles)) {
     styles.forEach(styleTuple => {
-      if (isObject(styleTuple) && styleTuple.hasOwnProperty('offset')) {
-        const obj = styleTuple as ɵStyleData;
-        offset = parseFloat(obj['offset'] as string);
-        delete obj['offset'];
+      if (styleTuple instanceof Map && styleTuple.has('offset')) {
+        const obj = styleTuple as ɵStyleDataMap;
+        offset = parseFloat(obj.get('offset') as string);
+        obj.delete('offset');
       }
     });
-  } else if (isObject(styles) && styles.hasOwnProperty('offset')) {
+  } else if (styles instanceof Map && styles.has('offset')) {
     const obj = styles;
-    offset = parseFloat(obj['offset'] as string);
-    delete obj['offset'];
+    offset = parseFloat(obj.get('offset') as string);
+    obj.delete('offset');
   }
   return offset;
 }
 
-function isObject(value: any): boolean {
-  return !Array.isArray(value) && typeof value == 'object';
-}
-
 function constructTimingAst(value: string|number|AnimateTimings, errors: Error[]) {
-  let timings: AnimateTimings|null = null;
   if (value.hasOwnProperty('duration')) {
-    timings = value as AnimateTimings;
-  } else if (typeof value == 'number') {
+    return value as AnimateTimings;
+  }
+
+  if (typeof value == 'number') {
     const duration = resolveTiming(value, errors).duration;
     return makeTimingAst(duration, 0, '');
   }
@@ -564,7 +564,7 @@ function constructTimingAst(value: string|number|AnimateTimings, errors: Error[]
     return ast as DynamicTimingAst;
   }
 
-  timings = timings || resolveTiming(strValue, errors);
+  const timings = resolveTiming(strValue, errors);
   return makeTimingAst(timings.duration, timings.delay, timings.easing);
 }
 

@@ -54,7 +54,7 @@ export class AppComponent implements OnInit {
    */
   pageId: string;
   /**
-   * An HTML friendly identifer for the "folder" of the currently displayed page.
+   * An HTML friendly identifier for the "folder" of the currently displayed page.
    * This is computed by taking everything up to the first `/` in the `currentDocument.id`
    */
   folderId: string;
@@ -88,9 +88,9 @@ export class AppComponent implements OnInit {
   tocMaxHeight: string;
   private tocMaxHeightOffset = 0;
 
-  versionInfo: VersionInfo;
+  currentDocsVersionNode?: NavigationNode;
 
-  private currentUrl: string;
+  versionInfo: VersionInfo | undefined;
 
   get isOpened() { return this.dockSideNav && this.isSideNavDoc; }
   get mode() { return this.isOpened ? 'side' : 'over'; }
@@ -102,6 +102,8 @@ export class AppComponent implements OnInit {
   searchElements: QueryList<ElementRef>;
   @ViewChild(SearchBoxComponent, { static: true })
   searchBox: SearchBoxComponent;
+  @ViewChild('searchResultsView', { read: ElementRef })
+  searchResultsView: ElementRef;
 
   @ViewChild(MatSidenav, { static: true })
   sidenav: MatSidenav;
@@ -109,6 +111,10 @@ export class AppComponent implements OnInit {
   @ViewChild(NotificationComponent, { static: true })
   notification: NotificationComponent;
   notificationAnimating = false;
+
+  @ViewChild('appToolbar', { read: ElementRef }) toolbar: ElementRef;
+
+  @ViewChildren('themeToggle, externalIcons', { read: ElementRef }) toolbarIcons: QueryList<ElementRef>;
 
   constructor(
     public deployment: Deployment,
@@ -163,7 +169,8 @@ export class AppComponent implements OnInit {
     combineLatest([
       this.navigationService.versionInfo,
       this.navigationService.navigationViews.pipe(map(views => views.docVersions)),
-    ]).subscribe(([versionInfo, versions]) => {
+      this.locationService.currentUrl,
+    ]).subscribe(([versionInfo, versions, currentUrl]) => {
       // TODO(pbd): consider whether we can lookup the stable and next versions from the internet
       const computedVersions: NavigationNode[] = [
         { title: 'next', url: 'https://next.angular.io/' },
@@ -173,13 +180,22 @@ export class AppComponent implements OnInit {
       if (this.deployment.mode === 'archive') {
         computedVersions.push({ title: `v${versionInfo.major}` });
       }
-      this.docVersions = [...computedVersions, ...versions];
-
+      const allDocsVersionNodes = [...computedVersions, ...versions].map(version => ({
+        ...version,
+        // Update the urls so that they point to the same page the user is currently at
+        url: `${version.url}${(version.url?.endsWith('/') ? '' : '/' )}${currentUrl}`,
+      }));
       // Find the current version - either title matches the current deployment mode
       // or its title matches the major version of the current version info
-      this.currentDocVersion = this.docVersions.find(version =>
-        version.title === this.deployment.mode || version.title === `v${versionInfo.major}`) as NavigationNode;
-      this.currentDocVersion.title += ` (v${versionInfo.raw})`;
+      this.currentDocsVersionNode = allDocsVersionNodes.find(
+        version => version.title === this.deployment.mode || version.title === `v${versionInfo.major}`
+      );
+      this.docVersions = [
+        {
+          title: 'Docs Versions',
+          children : allDocsVersionNodes
+        }
+      ];
     });
 
     this.navigationService.navigationViews.subscribe(views => {
@@ -205,8 +221,6 @@ export class AppComponent implements OnInit {
       this.navigationService.currentNodes,   // ...needed to determine `sidenav` state
     ]).pipe(first())
       .subscribe(() => this.updateShell());
-
-    this.locationService.currentUrl.subscribe(url => this.currentUrl = url);
 
     // Start listening for SW version update events.
     this.swUpdatesService.enable();
@@ -250,14 +264,6 @@ export class AppComponent implements OnInit {
     this.isTransitioning = false;
   }
 
-  onDocVersionChange(versionIndex: number) {
-    const version = this.docVersions[versionIndex];
-    if (version.url) {
-      const versionUrl = version.url  + (!version.url.endsWith('/') ? '/' : '');
-      this.locationService.go(`${versionUrl}${this.currentUrl}`);
-    }
-  }
-
   @HostListener('window:resize', ['$event.target.innerWidth'])
   onResize(width: number) {
     this.showTopMenu = width >= showTopMenuWidth;
@@ -273,10 +279,38 @@ export class AppComponent implements OnInit {
     }
   }
 
+  @HostListener('focusin', ['$event.target'])
+  onFocus(eventTarget: HTMLElement) {
+    // Implement a focus trap starting at the input search and ending after the search results
+    if (this.showSearchResults) {
+      const insideFocusLoop = [
+        ...this.toolbarIcons,
+        ...this.searchElements
+      ].some(element => element.nativeElement.contains(eventTarget));
+      const insideToolbar = this.toolbar.nativeElement.contains(eventTarget);
+      if (!insideFocusLoop) {
+        if (!insideToolbar) {
+          // the user is focusing forward at the last search result element,
+          // loop it back to the search input
+          this.focusSearchBox();
+        } else {
+          // the user is focusing backward from the search input,
+          // loop it back to the results' close button
+          const closeBtn: HTMLButtonElement =
+            this.searchResultsView.nativeElement.querySelector('button.close-button');
+          closeBtn.focus();
+        }
+      }
+    }
+  }
+
   @HostListener('click', ['$event.target', '$event.button', '$event.ctrlKey', '$event.metaKey', '$event.altKey'])
   onClick(eventTarget: HTMLElement, button: number, ctrlKey: boolean, metaKey: boolean, altKey: boolean): boolean {
     // Hide the search results if we clicked outside both the "search box" and the "search results"
-    if (!this.searchElements.some(element => element.nativeElement.contains(eventTarget))) {
+    if (
+      this.showSearchResults &&
+      !this.searchElements.some(element => element.nativeElement.contains(eventTarget))
+    ) {
       this.hideSearchResults();
     }
 
@@ -419,7 +453,12 @@ export class AppComponent implements OnInit {
     }
   }
 
-  doSearch(query: string) {
+  doSearch(query: string, fromFocus = false) {
+    if (this.showSearchResults && fromFocus) {
+      // the results where already being displayed so there is no
+      // need to perform the search until the input actually changes
+      return;
+    }
     this.searchResults = this.searchService.search(query);
     this.showSearchResults = !!query;
   }

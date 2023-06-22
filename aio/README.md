@@ -2,7 +2,7 @@
 
 Everything in this folder is part of the documentation project. This includes:
 
-* the web site for displaying the documentation
+* the web site for displaying the documentation.
 * the dgeni configuration for converting source files to rendered files that can be viewed in the web site.
 * the tooling for setting up examples for development; and generating live-example and zip files from the examples.
 
@@ -65,7 +65,7 @@ serve the files in `dist/` with `yarn http-server dist -p 4200`.
 
 There are two types of content in the documentation:
 
-* **API docs**: descriptions of the modules, classes, interfaces, decorators, etc that make up the Angular platform.
+* **API docs**: descriptions of all that make up the Angular platform, such as the modules, classes, interfaces or decorators.
 API docs are generated directly from the source code.
 The source code is contained in TypeScript files, located in the `angular/packages` folder.
 Each API item may have a preceding comment, which contains JSDoc style tags and content.

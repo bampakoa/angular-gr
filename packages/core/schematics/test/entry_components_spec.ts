@@ -33,7 +33,7 @@ describe('entryComponents migration', () => {
     }));
     writeFile('/angular.json', JSON.stringify({
       version: 1,
-      projects: {t: {architect: {build: {options: {tsConfig: './tsconfig.json'}}}}}
+      projects: {t: {root: '', architect: {build: {options: {tsConfig: './tsconfig.json'}}}}}
     }));
 
     previousWorkingDir = shx.pwd();
@@ -173,7 +173,7 @@ describe('entryComponents migration', () => {
   }
 
   function runMigration() {
-    return runner.runSchematicAsync('migration-v13.1-entry-components', {}, tree).toPromise();
+    return runner.runSchematicAsync('migration-entry-components', {}, tree).toPromise();
   }
 
   function stripWhitespace(contents: string) {

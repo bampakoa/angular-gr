@@ -13,6 +13,7 @@
     }
 
     // TERMINAL / SHELL TEXT STYLES
+    &[language="shell"],
     &[language="sh"],
     &[language="bash"] {
       background-color: constants.$darkgray;
@@ -65,14 +66,6 @@
         }
       }
 
-      .copy-button {
-        color: constants.$blue-grey-200;
-
-        &:hover {
-          color: constants.$mediumgray;
-        }
-      }
-
       &.lang-sh,
       &.lang-bash {
         .copy-button {
@@ -83,6 +76,10 @@
           }
         }
       }
+    }
+
+    .copy-button {
+      color: if($is-dark-theme, constants.$blue-grey-200, constants.$darkblue);
     }
   }
 
@@ -201,6 +198,7 @@
   /* SHELL / TERMINAL CODE BLOCKS */
 
   code-example {
+    &[language="shell"],
     &[language="sh"],
     &[language="bash"] {
       .pnk,
@@ -219,6 +217,10 @@
       .dec {
         color: constants.$codegreen;
       }
+      .copy-button {
+        color: constants.$blue-grey-200;
+      }
     }
+
   }
 }

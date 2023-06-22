@@ -62,24 +62,15 @@
 2. Δημιουργήστε ένα νέο αρχείο, `<component-name>.component.ts`.
 3. Στην κορυφή του αρχείου, προσθέστε το ακόλουθο import.
 
-   <code-example
-        path="component-overview/src/app/component-overview/component-overview.component.ts"
-        region="import">
-   </code-example>
+    <code-example path="component-overview/src/app/component-overview/component-overview.component.ts" region="import"></code-example>
 
 4. Μετά το `import`, προσθέστε έναν `@Component` decorator.
 
-   <code-example
-        path="component-overview/src/app/component-overview/component-overview.component.ts"
-        region="decorator-skeleton">
-   </code-example>
+    <code-example path="component-overview/src/app/component-overview/component-overview.component.ts" region="decorator-skeleton"></code-example>
 
 5. Επιλέξτε έναν selector CSS για το component.
 
-   <code-example
-        path="component-overview/src/app/component-overview/component-overview.component.ts"
-        region="selector">
-   </code-example>
+    <code-example path="component-overview/src/app/component-overview/component-overview.component.ts" region="selector"></code-example>
 
    Για περισσότερες πληροφορίες σχετικά με την επιλογή ενός selector, δείτε [Καθορισμός του selector ενός component](#specifying-a-components-css-selector).
    
@@ -97,17 +88,11 @@
 7. Επιλέξτε τα στυλ για το template του component.
    Στις περισσότερες περιπτώσεις, ορίζετε εσείς τα στυλ για το template του component σας σε ένα ξεχωριστό αρχείο.
 
-   <code-example
-        path="component-overview/src/app/component-overview/component-overview.component.ts"
-        region="decorator">
-   </code-example>
+    <code-example path="component-overview/src/app/component-overview/component-overview.component.ts" region="decorator"></code-example>
 
 8.  Προσθέστε ένα  `class` που περιλαμβάνει τον κώδικα για το component.
 
-   <code-example
-        path="component-overview/src/app/component-overview/component-overview.component.ts"
-        region="class">
-   </code-example>
+    <code-example path="component-overview/src/app/component-overview/component-overview.component.ts" region="class"></code-example>
 
 ## Καθορισμός του selector CSS ενός component
 
@@ -115,10 +100,7 @@
 
 Καθορίστε τον selector ενός component προσθέτοντας την `selector` δήλωση στον `@Component` decorator.
 
-<code-example
-    path="component-overview/src/app/component-overview/component-overview.component.ts"
-    region="selector">
-</code-example>
+<code-example path="component-overview/src/app/component-overview/component-overview.component.ts" region="selector"></code-example>
 
 ## Καθορισμός του template ενός component
 
@@ -127,25 +109,16 @@
 
 Για να ορίσετε ένα template ως εξωτερικό αρχείο, προσθέστε μια `templateUrl` ιδιότητα στον `@Component` decorator.
 
-<code-example
-    path="component-overview/src/app/component-overview/component-overview.component.ts"
-    region="templateUrl">
-</code-example>
+<code-example path="component-overview/src/app/component-overview/component-overview.component.ts" region="templateUrl"></code-example>
 
 Για να ορίσετε ένα template εντός του component, προσθέστε μια `template` ιδιότητα στον `@Component` decorator, που περιέχει την HTML που θέλετε να χρησιμοποιήσετε.
 
-<code-example
-    path="component-overview/src/app/component-overview/component-overview.component.1.ts"
-    region="template">
-</code-example>
+<code-example path="component-overview/src/app/component-overview/component-overview.component.1.ts" region="template"></code-example>
 
 Εάν θέλετε το template σας να εκτείνεται σε πολλές γραμμές, χρησιμοποιήστε backticks (<code> ` </code>).
 Για παράδειγμα:
 
-<code-example
-    path="component-overview/src/app/component-overview/component-overview.component.2.ts"
-    region="templatebacktick">
-</code-example>
+<code-example path="component-overview/src/app/component-overview/component-overview.component.2.ts" region="templatebacktick"></code-example>
 
 <div class="alert is-helpful">
 
@@ -159,17 +132,11 @@
 
 Για να δηλώσετε τα στυλ για ένα component σε ένα ξεχωριστό αρχείο, προσθέστε μια `styleUrls` ιδιότητα στον `@Component` decorator.
 
-<code-example
-    path="component-overview/src/app/component-overview/component-overview.component.ts"
-    region="decorator">
-</code-example>
+<code-example path="component-overview/src/app/component-overview/component-overview.component.ts" region="decorator"></code-example>
 
 Για να δηλώσετε τα στυλ μέσα στο component, προσθέστε μια `styles` ιδιότητα στον `@Component` decorator που περιέχει τα στυλ που θέλετε να χρησιμοποιήσετε.
 
-<code-example
-    path="component-overview/src/app/component-overview/component-overview.component.3.ts"
-    region="styles">
-</code-example>
+<code-example path="component-overview/src/app/component-overview/component-overview.component.3.ts" region="styles"></code-example>
 
 Η ιδιότητα `styles` δέχεται μια λίστα από strings που περιέχουν τους κανόνες CSS.
 

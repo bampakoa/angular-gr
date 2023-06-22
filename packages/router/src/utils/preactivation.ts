@@ -6,9 +6,9 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Injector} from '@angular/core';
+import {Injector, ProviderToken, ɵisInjectable as isInjectable} from '@angular/core';
 
-import {LoadedRouterConfig, RunGuardsAndResolvers} from '../config';
+import {RunGuardsAndResolvers} from '../models';
 import {ChildrenOutletContexts, OutletContext} from '../router_outlet_context';
 import {ActivatedRouteSnapshot, equalParamsAndUrlSegments, RouterStateSnapshot} from '../router_state';
 import {equalPath} from '../url_tree';
@@ -47,22 +47,20 @@ export function getCanActivateChild(p: ActivatedRouteSnapshot):
   return {node: p, guards: canActivateChild};
 }
 
-export function getToken(
-    token: any, snapshot: ActivatedRouteSnapshot, moduleInjector: Injector): any {
-  const config = getClosestLoadedConfig(snapshot);
-  const injector = config ? config.module.injector : moduleInjector;
-  return injector.get(token);
-}
-
-function getClosestLoadedConfig(snapshot: ActivatedRouteSnapshot): LoadedRouterConfig|null {
-  if (!snapshot) return null;
-
-  for (let s = snapshot.parent; s; s = s.parent) {
-    const route = s.routeConfig;
-    if (route && route._loadedConfig) return route._loadedConfig;
+export function getTokenOrFunctionIdentity<T>(
+    tokenOrFunction: Function|ProviderToken<T>, injector: Injector): Function|T {
+  const NOT_FOUND = Symbol();
+  const result = injector.get<T|Symbol>(tokenOrFunction, NOT_FOUND);
+  if (result === NOT_FOUND) {
+    if (typeof tokenOrFunction === 'function' && !isInjectable(tokenOrFunction)) {
+      // We think the token is just a function so return it as-is
+      return tokenOrFunction;
+    } else {
+      // This will throw the not found error
+      return injector.get<T>(tokenOrFunction);
+    }
   }
-
-  return null;
+  return result as T;
 }
 
 function getChildRouteGuards(

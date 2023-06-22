@@ -23,6 +23,7 @@ import {mapLiteral} from '../../output/map_util';
 import * as o from '../../output/output_ast';
 import {ParseError, ParseSourceSpan, sanitizeIdentifier} from '../../parse_util';
 import {DomElementSchemaRegistry} from '../../schema/dom_element_schema_registry';
+import {isIframeSecuritySensitiveAttr} from '../../schema/dom_security_schema';
 import {isTrustedTypesSink} from '../../schema/trusted_types_sinks';
 import {CssSelector} from '../../selector';
 import {BindingParser} from '../../template_parser/binding_parser';
@@ -36,7 +37,7 @@ import {I18nContext} from './i18n/context';
 import {createGoogleGetMsgStatements} from './i18n/get_msg_utils';
 import {createLocalizeStatements} from './i18n/localize_utils';
 import {I18nMetaVisitor} from './i18n/meta';
-import {assembleBoundTextPlaceholders, assembleI18nBoundString, declareI18nVariable, getTranslationConstPrefix, hasI18nMeta, I18N_ICU_MAPPING_PREFIX, i18nFormatPlaceholderNames, icuFromI18nMessage, isI18nRootNode, isSingleI18nIcu, placeholdersToParams, TRANSLATION_VAR_PREFIX, wrapI18nPlaceholder} from './i18n/util';
+import {assembleBoundTextPlaceholders, assembleI18nBoundString, declareI18nVariable, formatI18nPlaceholderNamesInMap, getTranslationConstPrefix, hasI18nMeta, I18N_ICU_MAPPING_PREFIX, icuFromI18nMessage, isI18nRootNode, isSingleI18nIcu, placeholdersToParams, TRANSLATION_VAR_PREFIX, wrapI18nPlaceholder} from './i18n/util';
 import {StylingBuilder, StylingInstruction} from './styling_builder';
 import {asLiteral, CONTEXT_NAME, getInstructionStatements, getInterpolationArgsLength, IMPLICIT_REFERENCE, Instruction, InstructionParams, invalid, invokeInstruction, NON_BINDABLE_ATTR, REFERENCE_PREFIX, RENDER_FLAGS, RESTORED_VIEW_CONTEXT_NAME, trimTrailingNulls} from './util';
 
@@ -81,13 +82,31 @@ export function prepareEventListenerParameters(
       scope, implicitReceiverExpr, handler, 'b', eventAst.handlerSpan, implicitReceiverAccesses,
       EVENT_BINDING_SCOPE_GLOBALS);
   const statements = [];
-  if (scope) {
+  const variableDeclarations = scope?.variableDeclarations();
+  const restoreViewStatement = scope?.restoreViewStatement();
+
+  if (variableDeclarations) {
     // `variableDeclarations` needs to run first, because
     // `restoreViewStatement` depends on the result.
-    statements.push(...scope.variableDeclarations());
-    statements.unshift(...scope.restoreViewStatement());
+    statements.push(...variableDeclarations);
   }
+
   statements.push(...bindingStatements);
+
+  if (restoreViewStatement) {
+    statements.unshift(restoreViewStatement);
+
+    // If there's a `restoreView` call, we need to reset the view at the end of the listener
+    // in order to avoid a leak. If there's a `return` statement already, we wrap it in the
+    // call, e.g. `return resetView(ctx.foo())`. Otherwise we add the call as the last statement.
+    const lastStatement = statements[statements.length - 1];
+    if (lastStatement instanceof o.ReturnStatement) {
+      statements[statements.length - 1] = new o.ReturnStatement(
+          invokeInstruction(lastStatement.value.sourceSpan, R3.resetView, [lastStatement.value]));
+    } else {
+      statements.push(new o.ExpressionStatement(invokeInstruction(null, R3.resetView, [])));
+    }
+  }
 
   const eventName: string =
       type === ParsedEventType.Animation ? prepareSyntheticListenerName(name, phase!) : name;
@@ -765,8 +784,19 @@ export class TemplateDefinitionBuilder implements t.Visitor<void>, LocalResolver
           const params: any[] = [];
           const [attrNamespace, attrName] = splitNsName(input.name);
           const isAttributeBinding = inputType === BindingType.Attribute;
-          const sanitizationRef = resolveSanitizationFn(input.securityContext, isAttributeBinding);
-          if (sanitizationRef) params.push(sanitizationRef);
+          let sanitizationRef = resolveSanitizationFn(input.securityContext, isAttributeBinding);
+          if (!sanitizationRef) {
+            // If there was no sanitization function found based on the security context
+            // of an attribute/property - check whether this attribute/property is
+            // one of the security-sensitive <iframe> attributes (and that the current
+            // element is actually an <iframe>).
+            if (isIframeElement(element.name) && isIframeSecuritySensitiveAttr(input.name)) {
+              sanitizationRef = o.importExpr(R3.validateIframeAttribute);
+            }
+          }
+          if (sanitizationRef) {
+            params.push(sanitizationRef);
+          }
           if (attrNamespace) {
             const namespaceLiteral = o.literal(attrNamespace);
 
@@ -1017,7 +1047,7 @@ export class TemplateDefinitionBuilder implements t.Visitor<void>, LocalResolver
     // - all ICU vars (such as `VAR_SELECT` or `VAR_PLURAL`) are replaced with correct values
     const transformFn = (raw: o.ReadVarExpr) => {
       const params = {...vars, ...placeholders};
-      const formatted = i18nFormatPlaceholderNames(params, /* useCamelCase */ false);
+      const formatted = formatI18nPlaceholderNamesInMap(params, /* useCamelCase */ false);
       return invokeInstruction(null, R3.i18nPostprocess, [raw, mapLiteral(formatted, true)]);
     };
 
@@ -1760,18 +1790,16 @@ export class BindingScope implements LocalResolver {
     }
   }
 
-  restoreViewStatement(): o.Statement[] {
-    const statements: o.Statement[] = [];
+  restoreViewStatement(): o.Statement|null {
     if (this.restoreViewVariable) {
       const restoreCall = invokeInstruction(null, R3.restoreView, [this.restoreViewVariable]);
       // Either `const restoredCtx = restoreView($state$);` or `restoreView($state$);`
       // depending on whether it is being used.
-      statements.push(
-          this.usesRestoredViewContext ?
-              o.variable(RESTORED_VIEW_CONTEXT_NAME).set(restoreCall).toConstDecl() :
-              restoreCall.toStmt());
+      return this.usesRestoredViewContext ?
+          o.variable(RESTORED_VIEW_CONTEXT_NAME).set(restoreCall).toConstDecl() :
+          restoreCall.toStmt();
     }
-    return statements;
+    return null;
   }
 
   viewSnapshotStatements(): o.Statement[] {
@@ -1994,7 +2022,7 @@ export interface ParseTemplateOptions {
   /**
    * Render `$localize` message ids with additional legacy message ids.
    *
-   * This option defaults to `true` but in the future the defaul will be flipped.
+   * This option defaults to `true` but in the future the default will be flipped.
    *
    * For now set this option to false if you have migrated the translation files to use the new
    * `$localize` message id format and you are not using compile time translation merging.
@@ -2195,6 +2223,10 @@ function isTextNode(node: t.Node): boolean {
   return node instanceof t.Text || node instanceof t.BoundText || node instanceof t.Icu;
 }
 
+function isIframeElement(tagName: string): boolean {
+  return tagName.toLowerCase() === 'iframe';
+}
+
 function hasTextChildrenOnly(children: t.Node[]): boolean {
   return children.every(isTextNode);
 }
@@ -2253,11 +2285,9 @@ export function getTranslationDeclStmts(
     declareI18nVariable(variable),
     o.ifStmt(
         createClosureModeGuard(),
-        createGoogleGetMsgStatements(
-            variable, message, closureVar,
-            i18nFormatPlaceholderNames(params, /* useCamelCase */ true)),
+        createGoogleGetMsgStatements(variable, message, closureVar, params),
         createLocalizeStatements(
-            variable, message, i18nFormatPlaceholderNames(params, /* useCamelCase */ false))),
+            variable, message, formatI18nPlaceholderNamesInMap(params, /* useCamelCase */ false))),
   ];
 
   if (transformFn) {

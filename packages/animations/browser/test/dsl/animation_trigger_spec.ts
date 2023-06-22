@@ -17,7 +17,11 @@ import {makeTrigger} from '../shared';
 {
   describe('AnimationTrigger', () => {
     // these tests are only meant to be run within the DOM (for now)
-    if (isNode) return;
+    if (isNode) {
+      // Jasmine will throw if there are no tests.
+      it('should pass', () => {});
+      return;
+    }
 
     let element: any;
     beforeEach(() => {
@@ -61,8 +65,10 @@ import {makeTrigger} from '../shared';
           transition('off => on', animate(1000)),
         ]);
 
-        expect(result.states['on'].buildStyles({}, [])).toEqual({width: 0});
-        expect(result.states['off'].buildStyles({}, [])).toEqual({width: 100});
+        expect(result.states.get('on')!.buildStyles({}, []))
+            .toEqual(new Map<string, string|number>([['width', 0]]));
+        expect(result.states.get('off')!.buildStyles({}, []))
+            .toEqual(new Map<string, string|number>([['width', 100]]));
         expect(result.transitionFactories.length).toEqual(2);
       });
 
@@ -72,8 +78,10 @@ import {makeTrigger} from '../shared';
           transition('off => on', animate(1000))
         ]);
 
-        expect(result.states['on'].buildStyles({}, [])).toEqual({width: 50});
-        expect(result.states['off'].buildStyles({}, [])).toEqual({width: 50});
+        expect(result.states.get('on')!.buildStyles({}, []))
+            .toEqual(new Map<string, string|number>([['width', 50]]));
+        expect(result.states.get('off')!.buildStyles({}, []))
+            .toEqual(new Map<string, string|number>([['width', 50]]));
       });
 
       it('should find the first transition that matches', () => {
@@ -142,7 +150,10 @@ import {makeTrigger} from '../shared';
 
           const trans = buildTransition(result, element, 'a', 'b')!;
           const keyframes = trans.timelines[0].keyframes;
-          expect(keyframes).toEqual([{height: '100px', offset: 0}, {height: '200px', offset: 1}]);
+          expect(keyframes).toEqual([
+            new Map<string, string|number>([['height', '100px'], ['offset', 0]]),
+            new Map<string, string|number>([['height', '200px'], ['offset', 1]])
+          ]);
         });
 
         it('should substitute variable params provided directly within the transition match',
@@ -158,8 +169,10 @@ import {makeTrigger} from '../shared';
                  buildTransition(result, element, 'a', 'b', {}, buildParams({a: '300px'}))!;
 
              const keyframes = trans.timelines[0].keyframes;
-             expect(keyframes).toEqual(
-                 [{height: '300px', offset: 0}, {height: '200px', offset: 1}]);
+             expect(keyframes).toEqual([
+               new Map<string, string|number>([['height', '300px'], ['offset', 0]]),
+               new Map<string, string|number>([['height', '200px'], ['offset', 1]])
+             ]);
            });
       });
 
@@ -192,7 +205,8 @@ import {makeTrigger} from '../shared';
 
            const trans = buildTransition(result, element, false, true)!;
            expect(trans.timelines[0].keyframes).toEqual([
-             {offset: 0, color: 'red'}, {offset: 1, color: 'green'}
+             new Map<string, string|number>([['offset', 0], ['color', 'red']]),
+             new Map<string, string|number>([['offset', 1], ['color', 'green']])
            ]);
          });
 
@@ -205,7 +219,8 @@ import {makeTrigger} from '../shared';
 
            const trans = buildTransition(result, element, false, true)!;
            expect(trans.timelines[0].keyframes).toEqual([
-             {offset: 0, color: 'orange'}, {offset: 1, color: 'blue'}
+             new Map<string, string|number>([['offset', 0], ['color', 'orange']]),
+             new Map<string, string|number>([['offset', 1], ['color', 'blue']])
            ]);
          });
 

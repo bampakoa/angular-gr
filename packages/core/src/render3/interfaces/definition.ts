@@ -7,14 +7,15 @@
  */
 
 import {ProcessProvidersFunction} from '../../di/interface/provider';
+import {EnvironmentInjector} from '../../di/r3_injector';
 import {Type} from '../../interface/type';
 import {SchemaMetadata} from '../../metadata/schema';
 import {ViewEncapsulation} from '../../metadata/view';
 import {FactoryFn} from '../definition_factory';
 
-import {TAttributes, TConstantsOrFactory} from './node';
+import {TAttributes, TConstantsOrFactory, TContainerNode, TElementContainerNode, TElementNode} from './node';
 import {CssSelectorList} from './projection';
-import {TView} from './view';
+import {LView, TView} from './view';
 
 
 /**
@@ -190,6 +191,11 @@ export interface DirectiveDef<T> {
   readonly exportAs: string[]|null;
 
   /**
+   * Whether this directive (or component) is standalone.
+   */
+  readonly standalone: boolean;
+
+  /**
    * Factory function used to create a new directive instance. Will be null initially.
    * Populated when the factory is first requested by directive instantiation logic.
    */
@@ -199,6 +205,22 @@ export interface DirectiveDef<T> {
    * The features applied to this directive
    */
   readonly features: DirectiveDefFeature[]|null;
+
+  /**
+   * Function that will add the host directives to the list of matches during directive matching.
+   * Patched onto the definition by the `HostDirectivesFeature`.
+   * @param currentDef Definition that has been matched.
+   * @param matchedDefs List of all matches for a specified node. Will be mutated to include the
+   * host directives.
+   * @param hostDirectiveDefs Mapping of directive definitions to their host directive
+   * configuration. Host directives will be added to the map as they're being matched to the node.
+   */
+  findHostDirectiveDefs:
+      ((currentDef: DirectiveDef<unknown>, matchedDefs: DirectiveDef<unknown>[],
+        hostDirectiveDefs: HostDirectiveDefs) => void)|null;
+
+  /** Additional directives to be applied whenever the directive has been matched. */
+  hostDirectives: HostDirectiveDef[]|null;
 
   setInput:
       (<U extends T>(
@@ -220,7 +242,8 @@ export interface DirectiveDef<T> {
  */
 export interface ComponentDef<T> extends DirectiveDef<T> {
   /**
-   * Runtime unique component ID.
+   * Unique ID for the component. Used in view encapsulation and
+   * to keep track of the injector in standalone components.
    */
   readonly id: string;
 
@@ -301,6 +324,11 @@ export interface ComponentDef<T> extends DirectiveDef<T> {
   pipeDefs: PipeDefListOrFactory|null;
 
   /**
+   * Unfiltered list of all dependencies of a component, or `null` if none.
+   */
+  dependencies: TypeOrFactory<DependencyTypeList>|null;
+
+  /**
    * The set of schemas that declare elements to be allowed in the component's template.
    */
   schemas: SchemaMetadata[]|null;
@@ -310,6 +338,12 @@ export interface ComponentDef<T> extends DirectiveDef<T> {
    * the first run of component.
    */
   tView: TView|null;
+
+  /**
+   * A function added by the {@link ɵɵStandaloneFeature} and used by the framework to create
+   * standalone injectors.
+   */
+  getStandaloneInjector: ((parentInjector: EnvironmentInjector) => EnvironmentInjector | null)|null;
 
   /**
    * Used to store the result of `noSideEffects` function so that it is not removed by closure
@@ -355,6 +389,11 @@ export interface PipeDef<T> {
    */
   readonly pure: boolean;
 
+  /**
+   * Whether this pipe is standalone.
+   */
+  readonly standalone: boolean;
+
   /* The following are lifecycle hooks for this pipe */
   onDestroy: (() => void)|null;
 }
@@ -371,6 +410,33 @@ export interface DirectiveDefFeature {
    */
   ngInherit?: true;
 }
+
+/** Runtime information used to configure a host directive. */
+export interface HostDirectiveDef<T = unknown> {
+  /** Class representing the host directive. */
+  directive: Type<T>;
+
+  /** Directive inputs that have been exposed. */
+  inputs: HostDirectiveBindingMap;
+
+  /** Directive outputs that have been exposed. */
+  outputs: HostDirectiveBindingMap;
+}
+
+/**
+ * Mapping between the public aliases of directive bindings and the underlying inputs/outputs that
+ * they represent. Also serves as an allowlist of the inputs/outputs from the host directive that
+ * the author has decided to expose.
+ */
+export type HostDirectiveBindingMap = {
+  [publicName: string]: string
+};
+
+/**
+ * Mapping between a directive that was used as a host directive
+ * and the configuration that was used to define it as such.
+ */
+export type HostDirectiveDefs = Map<DirectiveDef<unknown>, HostDirectiveDef>;
 
 export interface ComponentDefFeature {
   <T>(componentDef: ComponentDef<T>): void;
@@ -400,6 +466,10 @@ export type DirectiveTypesOrFactory = (() => DirectiveTypeList)|DirectiveTypeLis
 export type DirectiveTypeList =
     (DirectiveType<any>|ComponentType<any>|
      Type<any>/* Type as workaround for: Microsoft/TypeScript/issues/4881 */)[];
+
+export type DependencyTypeList = (DirectiveType<any>|ComponentType<any>|PipeType<any>|Type<any>)[];
+
+export type TypeOrFactory<T> = T|(() => T);
 
 export type HostBindingsFunction<T> = <U extends T>(rf: RenderFlags, ctx: U) => void;
 

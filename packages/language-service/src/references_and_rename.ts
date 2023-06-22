@@ -8,7 +8,7 @@
 import {AST, TmplAstNode} from '@angular/compiler';
 import {NgCompiler} from '@angular/compiler-cli/src/ngtsc/core';
 import {absoluteFrom} from '@angular/compiler-cli/src/ngtsc/file_system';
-import {MetaType, PipeMeta} from '@angular/compiler-cli/src/ngtsc/metadata';
+import {MetaKind, PipeMeta} from '@angular/compiler-cli/src/ngtsc/metadata';
 import {PerfPhase} from '@angular/compiler-cli/src/ngtsc/perf';
 import {ProgramDriver} from '@angular/compiler-cli/src/ngtsc/program_driver';
 import {SymbolKind} from '@angular/compiler-cli/src/ngtsc/typecheck/api';
@@ -248,7 +248,7 @@ export class RenameBuilder {
   findRenameLocationsAtTypescriptPosition(renameRequest: RenameRequest):
       readonly ts.RenameLocation[]|null {
     return this.compiler.perfRecorder.inPhase(PerfPhase.LsReferencesAndRenames, () => {
-      const renameInfo = getExpectedRenameTextAndInitalRenameEntries(renameRequest);
+      const renameInfo = getExpectedRenameTextAndInitialRenameEntries(renameRequest);
       if (renameInfo === null) {
         return null;
       }
@@ -308,7 +308,7 @@ export class RenameBuilder {
         if (targetDetails.symbol.kind === SymbolKind.Pipe) {
           const meta =
               this.compiler.getMeta(targetDetails.symbol.classSymbol.tsSymbol.valueDeclaration);
-          if (meta === null || meta.type !== MetaType.Pipe) {
+          if (meta === null || meta.kind !== MetaKind.Pipe) {
             return null;
           }
           const renameRequest = this.buildPipeRenameRequest(meta);
@@ -337,7 +337,7 @@ export class RenameBuilder {
       return null;
     }
     const meta = getParentClassMeta(requestNode, this.compiler);
-    if (meta !== null && meta.type === MetaType.Pipe && meta.nameExpr === requestNode) {
+    if (meta !== null && meta.kind === MetaKind.Pipe && meta.nameExpr === requestNode) {
       return this.buildPipeRenameRequest(meta);
     } else {
       return {type: RequestKind.DirectFromTypeScript, requestNode};
@@ -372,7 +372,7 @@ export class RenameBuilder {
  * `ts.RenameLocation`s to have and creates an initial entry for indirect renames (one which is
  * required for the rename operation, but cannot be found by the native TS LS).
  */
-function getExpectedRenameTextAndInitalRenameEntries(renameRequest: RenameRequest):
+function getExpectedRenameTextAndInitialRenameEntries(renameRequest: RenameRequest):
     {expectedRenameText: string, entries: ts.RenameLocation[]}|null {
   let expectedRenameText: string;
   const entries: ts.RenameLocation[] = [];

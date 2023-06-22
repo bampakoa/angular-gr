@@ -39,13 +39,13 @@
     "name": "BROWSER_MODULE_PROVIDERS"
   },
   {
+    "name": "BROWSER_MODULE_PROVIDERS_MARKER"
+  },
+  {
     "name": "BaseControlValueAccessor"
   },
   {
     "name": "BrowserDomAdapter"
-  },
-  {
-    "name": "BrowserGetTestability"
   },
   {
     "name": "BrowserModule"
@@ -57,13 +57,13 @@
     "name": "BuiltInControlValueAccessor"
   },
   {
+    "name": "CALL_SET_DISABLED_STATE"
+  },
+  {
     "name": "CHECKBOX_VALUE_ACCESSOR"
   },
   {
     "name": "CIRCULAR"
-  },
-  {
-    "name": "CLEAN_PROMISE"
   },
   {
     "name": "COMPONENT_REGEX"
@@ -102,16 +102,10 @@
     "name": "ConnectableSubscriber"
   },
   {
-    "name": "Console"
-  },
-  {
     "name": "ControlContainer"
   },
   {
     "name": "DEFAULT_VALUE_ACCESSOR"
-  },
-  {
-    "name": "DOCUMENT"
   },
   {
     "name": "DOCUMENT2"
@@ -150,6 +144,9 @@
     "name": "EMPTY_PAYLOAD"
   },
   {
+    "name": "ENVIRONMENT_INITIALIZER"
+  },
+  {
     "name": "EVENT_MANAGER_PLUGINS"
   },
   {
@@ -157,6 +154,9 @@
   },
   {
     "name": "EmulatedEncapsulationDomRenderer2"
+  },
+  {
+    "name": "EnvironmentInjector"
   },
   {
     "name": "ErrorHandler"
@@ -195,10 +195,16 @@
     "name": "FormGroupName"
   },
   {
+    "name": "FormRecord"
+  },
+  {
     "name": "FormsExampleModule"
   },
   {
     "name": "INJECTOR2"
+  },
+  {
+    "name": "INJECTOR_DEF_TYPES"
   },
   {
     "name": "INJECTOR_SCOPE"
@@ -321,9 +327,6 @@
     "name": "NgForOf"
   },
   {
-    "name": "NgModuleFactory2"
-  },
-  {
     "name": "NgModuleRef"
   },
   {
@@ -352,6 +355,9 @@
   },
   {
     "name": "Optional"
+  },
+  {
+    "name": "PLATFORM_DESTROY_LISTENERS"
   },
   {
     "name": "PLATFORM_ID"
@@ -447,7 +453,19 @@
     "name": "Subscription"
   },
   {
+    "name": "TESTABILITY"
+  },
+  {
+    "name": "TESTABILITY_GETTER"
+  },
+  {
+    "name": "TESTABILITY_PROVIDERS"
+  },
+  {
     "name": "THROW_IF_NOT_FOUND"
+  },
+  {
+    "name": "TRACKED_LVIEWS"
   },
   {
     "name": "TRANSITION_ID"
@@ -501,21 +519,6 @@
     "name": "__forward_ref__"
   },
   {
-    "name": "__global"
-  },
-  {
-    "name": "__globalThis"
-  },
-  {
-    "name": "__self"
-  },
-  {
-    "name": "__window"
-  },
-  {
-    "name": "_chromeNumKeyPadMap"
-  },
-  {
     "name": "_currentInjector"
   },
   {
@@ -534,13 +537,10 @@
     "name": "_keyMap"
   },
   {
-    "name": "_platform"
+    "name": "_platformInjector"
   },
   {
     "name": "_randomChar"
-  },
-  {
-    "name": "_renderCompCount"
   },
   {
     "name": "_symbolIterator"
@@ -553,6 +553,9 @@
   },
   {
     "name": "addComponentLogic"
+  },
+  {
+    "name": "addPropertyAlias"
   },
   {
     "name": "addToArray"
@@ -600,9 +603,6 @@
     "name": "attachPatchData"
   },
   {
-    "name": "autoRegisterModuleById"
-  },
-  {
     "name": "baseElement"
   },
   {
@@ -648,6 +648,9 @@
     "name": "collectStylingFromTAttrs"
   },
   {
+    "name": "componentDefCount"
+  },
+  {
     "name": "compose"
   },
   {
@@ -679,6 +682,9 @@
   },
   {
     "name": "controlPath"
+  },
+  {
+    "name": "convertToBitFlags"
   },
   {
     "name": "createDirectivesInstances"
@@ -720,13 +726,10 @@
     "name": "deepForEach"
   },
   {
-    "name": "defaultErrorLogger"
+    "name": "deepForEachProvider"
   },
   {
     "name": "defaultIterableDiffersFactory"
-  },
-  {
-    "name": "defaultScheduler"
   },
   {
     "name": "destroyLView"
@@ -738,16 +741,10 @@
     "name": "detachView"
   },
   {
-    "name": "detectChangesInRootView"
-  },
-  {
     "name": "detectChangesInternal"
   },
   {
     "name": "diPublicInInjector"
-  },
-  {
-    "name": "domRendererFactory3"
   },
   {
     "name": "empty"
@@ -763,6 +760,9 @@
   },
   {
     "name": "executeCheckHooks"
+  },
+  {
+    "name": "executeContentQueries"
   },
   {
     "name": "executeInitAndCheckHooks"
@@ -783,9 +783,6 @@
     "name": "extractDirectiveDef"
   },
   {
-    "name": "extractPipeDef"
-  },
-  {
     "name": "fillProperties"
   },
   {
@@ -799,6 +796,9 @@
   },
   {
     "name": "flattenUnsubscriptionErrors"
+  },
+  {
+    "name": "forEachSingleProvider"
   },
   {
     "name": "forkJoinInternal"
@@ -861,6 +861,9 @@
     "name": "getDeclarationTNode"
   },
   {
+    "name": "getDirectiveDef"
+  },
+  {
     "name": "getFactoryDef"
   },
   {
@@ -897,13 +900,13 @@
     "name": "getNextLContainer"
   },
   {
-    "name": "getNgModuleDef"
-  },
-  {
     "name": "getNodeInjectable"
   },
   {
     "name": "getNullInjector"
+  },
+  {
+    "name": "getOrCreateComponentTView"
   },
   {
     "name": "getOrCreateInjectable"
@@ -913,9 +916,6 @@
   },
   {
     "name": "getOrCreateNodeInjectorForNode"
-  },
-  {
-    "name": "getOrCreateTComponentView"
   },
   {
     "name": "getOrCreateTNode"
@@ -942,6 +942,9 @@
     "name": "getParentInjectorView"
   },
   {
+    "name": "getPipeDef"
+  },
+  {
     "name": "getPlatform"
   },
   {
@@ -952,9 +955,6 @@
   },
   {
     "name": "getPromiseCtor"
-  },
-  {
-    "name": "getRawValue"
   },
   {
     "name": "getSelectedIndex"
@@ -970,6 +970,9 @@
   },
   {
     "name": "getTNode"
+  },
+  {
+    "name": "getTNodeFromLView"
   },
   {
     "name": "getTStylingRangeNext"
@@ -1008,6 +1011,9 @@
     "name": "identity"
   },
   {
+    "name": "importProvidersFrom"
+  },
+  {
     "name": "includeViewProviders"
   },
   {
@@ -1026,10 +1032,7 @@
     "name": "inheritViewQuery"
   },
   {
-    "name": "initTNodeFlags"
-  },
-  {
-    "name": "inject"
+    "name": "initializeDirectives"
   },
   {
     "name": "injectArgs"
@@ -1059,13 +1062,19 @@
     "name": "instructionState"
   },
   {
+    "name": "internalImportProvidersFrom"
+  },
+  {
     "name": "invertObject"
+  },
+  {
+    "name": "invokeDirectivesHostBindings"
   },
   {
     "name": "invokeHostBindingsInCreationMode"
   },
   {
-    "name": "isAnimationProp"
+    "name": "isAbstractControlOptions"
   },
   {
     "name": "isArray"
@@ -1095,22 +1104,16 @@
     "name": "isEmptyInputValue"
   },
   {
-    "name": "isFormArray"
+    "name": "isEnvironmentProviders"
   },
   {
-    "name": "isFormControl"
-  },
-  {
-    "name": "isFormGroup"
+    "name": "isFormControlState"
   },
   {
     "name": "isForwardRef"
   },
   {
     "name": "isFunction"
-  },
-  {
-    "name": "isInCheckNoChangesMode"
   },
   {
     "name": "isInlineTemplate"
@@ -1134,9 +1137,6 @@
     "name": "isObject"
   },
   {
-    "name": "isObservable"
-  },
-  {
     "name": "isOptionsObj"
   },
   {
@@ -1144,9 +1144,6 @@
   },
   {
     "name": "isPresent"
-  },
-  {
-    "name": "isProceduralRenderer"
   },
   {
     "name": "isPromise"
@@ -1159,6 +1156,9 @@
   },
   {
     "name": "isStylingValuePresent"
+  },
+  {
+    "name": "isTemplateNode"
   },
   {
     "name": "isTypeProvider"
@@ -1191,6 +1191,9 @@
     "name": "lookupTokenUsingModuleInjector"
   },
   {
+    "name": "lookupTokenUsingNodeInjector"
+  },
+  {
     "name": "makeParamDecorator"
   },
   {
@@ -1206,6 +1209,9 @@
     "name": "markAsComponentHost"
   },
   {
+    "name": "markDirtyIfOnPush"
+  },
+  {
     "name": "markDuplicates"
   },
   {
@@ -1213,9 +1219,6 @@
   },
   {
     "name": "maybeUnwrapEmpty"
-  },
-  {
-    "name": "maybeUnwrapFn"
   },
   {
     "name": "maybeWrapInNotSelector"
@@ -1237,9 +1240,6 @@
   },
   {
     "name": "mergeValidators"
-  },
-  {
-    "name": "modules"
   },
   {
     "name": "multiFactoryAdd"
@@ -1273,6 +1273,9 @@
   },
   {
     "name": "noSideEffects"
+  },
+  {
+    "name": "nonNull"
   },
   {
     "name": "noop"
@@ -1311,13 +1314,13 @@
     "name": "platformCore"
   },
   {
+    "name": "processInjectorTypesWithProviders"
+  },
+  {
     "name": "promise"
   },
   {
     "name": "providerToFactory"
-  },
-  {
-    "name": "readPatchedLView"
   },
   {
     "name": "refCount"
@@ -1338,9 +1341,6 @@
     "name": "registerDestroyHooksIfSupported"
   },
   {
-    "name": "registerHostBindingOpCodes"
-  },
-  {
     "name": "registerOnValidatorChange"
   },
   {
@@ -1356,7 +1356,7 @@
     "name": "removeFromArray"
   },
   {
-    "name": "removeListItem"
+    "name": "removeListItem2"
   },
   {
     "name": "removeStyle"
@@ -1366,9 +1366,6 @@
   },
   {
     "name": "renderComponent"
-  },
-  {
-    "name": "renderComponentOrTemplate"
   },
   {
     "name": "renderView"
@@ -1425,6 +1422,9 @@
     "name": "setDirectiveInputsWhichShadowsStyling"
   },
   {
+    "name": "setDisabledStateDefault"
+  },
+  {
     "name": "setIncludeViewProviders"
   },
   {
@@ -1435,9 +1435,6 @@
   },
   {
     "name": "setInputsFromAttrs"
-  },
-  {
-    "name": "setIsInCheckNoChangesMode"
   },
   {
     "name": "setSelectedIndex"
@@ -1461,6 +1458,9 @@
     "name": "setUpValidators"
   },
   {
+    "name": "setupStaticAttributes"
+  },
+  {
     "name": "shareSubjectFactory"
   },
   {
@@ -1471,9 +1471,6 @@
   },
   {
     "name": "stringifyCSSSelector"
-  },
-  {
-    "name": "stringifyForError"
   },
   {
     "name": "subscribeTo"
@@ -1497,6 +1494,9 @@
     "name": "trackByIdentity"
   },
   {
+    "name": "uniqueIdCounter"
+  },
+  {
     "name": "unwrapRNode"
   },
   {
@@ -1515,13 +1515,13 @@
     "name": "viewAttachedToChangeDetector"
   },
   {
+    "name": "walkProviderTree"
+  },
+  {
     "name": "wrapListener"
   },
   {
     "name": "writeDirectClass"
-  },
-  {
-    "name": "writeDirectStyle"
   },
   {
     "name": "ɵInternalFormsSharedModule"

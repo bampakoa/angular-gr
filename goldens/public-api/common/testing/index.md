@@ -10,6 +10,7 @@ import { Location as Location_2 } from '@angular/common';
 import { LocationChangeListener } from '@angular/common';
 import { LocationStrategy } from '@angular/common';
 import { PlatformLocation } from '@angular/common';
+import { Provider } from '@angular/core';
 import { SubscriptionLike } from 'rxjs';
 
 // @public
@@ -106,6 +107,9 @@ export interface MockPlatformLocationConfig {
 }
 
 // @public
+export function provideLocationMocks(): Provider[];
+
+// @public
 export class SpyLocation implements Location_2 {
     // (undocumented)
     back(): void;
@@ -120,9 +124,11 @@ export class SpyLocation implements Location_2 {
     // (undocumented)
     isCurrentPathEqualTo(path: string, query?: string): boolean;
     // (undocumented)
+    ngOnDestroy(): void;
+    // (undocumented)
     normalize(url: string): string;
     // (undocumented)
-    onUrlChange(fn: (url: string, state: unknown) => void): void;
+    onUrlChange(fn: (url: string, state: unknown) => void): VoidFunction;
     // (undocumented)
     path(): string;
     // (undocumented)

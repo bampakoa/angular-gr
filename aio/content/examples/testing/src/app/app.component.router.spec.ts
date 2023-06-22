@@ -1,5 +1,5 @@
 // For more examples:
-//   https://github.com/angular/angular/blob/master/modules/@angular/router/test/integration.spec.ts
+//   https://github.com/angular/angular/blob/main/packages/router/test/integration.spec.ts
 
 import { waitForAsync, ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 
@@ -8,7 +8,7 @@ import { asyncData } from '../testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { SpyLocation } from '@angular/common/testing';
 
-import { Router, RouterLinkWithHref } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 import { By } from '@angular/platform-browser';
 import { DebugElement, Type } from '@angular/core';
@@ -157,7 +157,7 @@ class Page {
   fixture: ComponentFixture<AppComponent>;
 
   constructor() {
-    const links = fixture.debugElement.queryAll(By.directive(RouterLinkWithHref));
+    const links = fixture.debugElement.queryAll(By.directive(RouterLink));
     this.aboutLinkDe = links[2];
     this.dashboardLinkDe = links[0];
     this.heroesLinkDe = links[1];

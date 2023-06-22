@@ -194,7 +194,7 @@ export class AppVersion implements UpdateSource {
       }
 
       // This was a navigation request. Re-enter `handleFetch` with a request for
-      // the URL.
+      // the index URL.
       return this.handleFetch(this.adapter.newRequest(this.indexUrl), event);
     }
 
@@ -203,10 +203,10 @@ export class AppVersion implements UpdateSource {
 
   /**
    * Determine whether the request is a navigation request.
-   * Takes into account: Request mode, `Accept` header, `navigationUrls` patterns.
+   * Takes into account: Request method and mode, `Accept` header, `navigationUrls` patterns.
    */
   isNavigationRequest(req: Request): boolean {
-    if (req.mode !== 'navigate') {
+    if (req.method !== 'GET' || req.mode !== 'navigate') {
       return false;
     }
 
@@ -215,7 +215,7 @@ export class AppVersion implements UpdateSource {
     }
 
     const urlPrefix = this.scope.registration.scope.replace(/\/$/, '');
-    const url = req.url.startsWith(urlPrefix) ? req.url.substr(urlPrefix.length) : req.url;
+    const url = req.url.startsWith(urlPrefix) ? req.url.slice(urlPrefix.length) : req.url;
     const urlWithoutQueryOrHash = url.replace(/[?#].*$/, '');
 
     return this.navigationUrls.include.some(regex => regex.test(urlWithoutQueryOrHash)) &&

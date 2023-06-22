@@ -4,9 +4,11 @@
 
 ```ts
 
+import { ApplicationRef } from '@angular/core';
 import { ComponentRef } from '@angular/core';
 import { DebugElement } from '@angular/core';
 import { DebugNode } from '@angular/core';
+import { EnvironmentProviders } from '@angular/core';
 import * as i0 from '@angular/core';
 import * as i1 from '@angular/common';
 import { InjectionToken } from '@angular/core';
@@ -14,6 +16,7 @@ import { ModuleWithProviders } from '@angular/core';
 import { NgZone } from '@angular/core';
 import { PlatformRef } from '@angular/core';
 import { Predicate } from '@angular/core';
+import { Provider } from '@angular/core';
 import { Sanitizer } from '@angular/core';
 import { SecurityContext } from '@angular/core';
 import { StaticProvider } from '@angular/core';
@@ -21,8 +24,16 @@ import { Type } from '@angular/core';
 import { Version } from '@angular/core';
 
 // @public
+export interface ApplicationConfig {
+    providers: Array<Provider | EnvironmentProviders>;
+}
+
+// @public
+export function bootstrapApplication(rootComponent: Type<unknown>, options?: ApplicationConfig): Promise<ApplicationRef>;
+
+// @public
 export class BrowserModule {
-    constructor(parentModule: BrowserModule | null);
+    constructor(providersAlreadyPresent: boolean | null);
     static withServerTransition(params: {
         appId: string;
     }): ModuleWithProviders<BrowserModule>;
@@ -34,7 +45,7 @@ export class BrowserModule {
     static ɵmod: i0.ɵɵNgModuleDeclaration<BrowserModule, never, never, [typeof i1.CommonModule, typeof i0.ApplicationModule]>;
 }
 
-// @public
+// @public @deprecated
 export class BrowserTransferStateModule {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<BrowserTransferStateModule, never>;
@@ -50,6 +61,9 @@ export class By {
     static css(selector: string): Predicate<DebugElement>;
     static directive(type: Type<any>): Predicate<DebugNode>;
 }
+
+// @public
+export function createApplication(options?: ApplicationConfig): Promise<ApplicationRef>;
 
 // @public
 export function disableDebugTools(): void;
@@ -167,6 +181,9 @@ export type MetaDefinition = {
 export const platformBrowser: (extraProviders?: StaticProvider[]) => PlatformRef;
 
 // @public
+export function provideProtractorTestingSupport(): Provider[];
+
+// @public
 export interface SafeHtml extends SafeValue {
 }
 
@@ -193,6 +210,7 @@ export interface SafeValue {
 // @public
 export type StateKey<T> = string & {
     __not_a_string: never;
+    __value_type?: T;
 };
 
 // @public
@@ -210,6 +228,7 @@ export class Title {
 export class TransferState {
     get<T>(key: StateKey<T>, defaultValue: T): T;
     hasKey<T>(key: StateKey<T>): boolean;
+    get isEmpty(): boolean;
     onSerialize<T>(key: StateKey<T>, callback: () => T): void;
     remove<T>(key: StateKey<T>): void;
     set<T>(key: StateKey<T>, value: T): void;

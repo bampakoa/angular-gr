@@ -5,7 +5,7 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
-import {Component, NgModule, ɵNgModuleFactory as NgModuleFactory} from '@angular/core';
+import {Component, NgModule} from '@angular/core';
 import {FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {BrowserModule, platformBrowser} from '@angular/platform-browser';
 
@@ -93,5 +93,8 @@ class FormsExampleModule {
   }
 }
 
-(window as any).waitForApp = platformBrowser().bootstrapModuleFactory(
-    new NgModuleFactory(FormsExampleModule), {ngZone: 'noop'});
+function bootstrapApp() {
+  return platformBrowser().bootstrapModule(FormsExampleModule, {ngZone: 'noop'});
+}
+
+(window as any).bootstrapApp = bootstrapApp;

@@ -13,7 +13,6 @@ export enum ErrorCode {
   DECORATOR_ARG_NOT_LITERAL = 1001,
   DECORATOR_ARITY_WRONG = 1002,
   DECORATOR_NOT_CALLED = 1003,
-  DECORATOR_ON_ANONYMOUS_CLASS = 1004,
   DECORATOR_UNEXPECTED = 1005,
 
   /**
@@ -56,8 +55,53 @@ export enum ErrorCode {
    */
   COMPONENT_INVALID_SHADOW_DOM_SELECTOR = 2009,
 
+  /**
+   * Raised when a component has `imports` but is not marked as `standalone: true`.
+   */
+  COMPONENT_NOT_STANDALONE = 2010,
+
+  /**
+   * Raised when a type in the `imports` of a component is a directive or pipe, but is not
+   * standalone.
+   */
+  COMPONENT_IMPORT_NOT_STANDALONE = 2011,
+
+  /**
+   * Raised when a type in the `imports` of a component is not a directive, pipe, or NgModule.
+   */
+  COMPONENT_UNKNOWN_IMPORT = 2012,
+
+  /**
+   * Raised when the compiler wasn't able to resolve the metadata of a host directive.
+   */
+  HOST_DIRECTIVE_INVALID = 2013,
+
+  /**
+   * Raised when a host directive isn't standalone.
+   */
+  HOST_DIRECTIVE_NOT_STANDALONE = 2014,
+
+  /**
+   * Raised when a host directive is a component.
+   */
+  HOST_DIRECTIVE_COMPONENT = 2015,
+
+  /**
+   * Raised when a type with Angular decorator inherits its constructor from a base class
+   * which has a constructor that is incompatible with Angular DI.
+   */
+  INJECTABLE_INHERITS_INVALID_CONSTRUCTOR = 2016,
+
+  /** Raised when a host tries to alias a host directive binding that does not exist. */
+  HOST_DIRECTIVE_UNDEFINED_BINDING = 2017,
+
+  /**
+   * Raised when a host tries to alias a host directive
+   * binding to a pre-existing binding's public name.
+   */
+  HOST_DIRECTIVE_CONFLICTING_ALIAS = 2018,
+
   SYMBOL_NOT_EXPORTED = 3001,
-  SYMBOL_EXPORTED_UNDER_DIFFERENT_NAME = 3002,
   /**
    * Raised when a relationship between directives and/or pipes would cause a cyclic import to be
    * created that cannot be handled, such as in partial compilation mode.
@@ -125,6 +169,23 @@ export enum ErrorCode {
   NGMODULE_DECLARATION_NOT_UNIQUE = 6007,
 
   /**
+   * Raised when a standalone directive/pipe is part of the declarations of an NgModule.
+   */
+  NGMODULE_DECLARATION_IS_STANDALONE = 6008,
+
+  /**
+   * Raised when a standalone component is part of the bootstrap list of an NgModule.
+   */
+  NGMODULE_BOOTSTRAP_IS_STANDALONE = 6009,
+
+  /**
+   * Indicates that an NgModule is declared with `id: module.id`. This is an anti-pattern that is
+   * disabled explicitly in the compiler, that was originally based on a misunderstanding of
+   * `NgModule.id`.
+   */
+  WARN_NGMODULE_ID_UNNECESSARY = 6100,
+
+  /**
    * Not actually raised by the compiler, but reserved for documentation of a View Engine error when
    * a View Engine build depends on an Ivy-compiled NgModule.
    */
@@ -175,7 +236,7 @@ export enum ErrorCode {
   DUPLICATE_VARIABLE_DECLARATION = 8006,
 
   /**
-   * A template has a two way binding (two bindings created by a single syntactial element)
+   * A template has a two way binding (two bindings created by a single syntactical element)
    * in which the input and output are going to different places.
    */
   SPLIT_TWO_WAY_BINDING = 8007,
@@ -199,6 +260,63 @@ export enum ErrorCode {
    * When the type of foo doesn't include `null` or `undefined`.
    */
   NULLISH_COALESCING_NOT_NULLABLE = 8102,
+
+  /**
+   * A known control flow directive (e.g. `*ngIf`) is used in a template,
+   * but the `CommonModule` is not imported.
+   */
+  MISSING_CONTROL_FLOW_DIRECTIVE = 8103,
+
+  /**
+   * A text attribute is not interpreted as a binding but likely intended to be.
+   *
+   * For example:
+   * ```
+   * <div
+   *   attr.x="value"
+   *   class.blue="true"
+   *   style.margin-right.px="5">
+   * </div>
+   * ```
+   *
+   * All of the above attributes will just be static text attributes and will not be interpreted as
+   * bindings by the compiler.
+   */
+  TEXT_ATTRIBUTE_NOT_BINDING = 8104,
+
+  /**
+   * NgForOf is used in a template, but the user forgot to include let
+   * in their statement.
+   *
+   * For example:
+   * ```
+   * <ul><li *ngFor="item of items">{{item["name"]}};</li></ul>
+   * ```
+   */
+  MISSING_NGFOROF_LET = 8105,
+  /**
+   * Indicates that the binding suffix is not supported
+   *
+   * Style bindings support suffixes like `style.width.px`, `.em`, and `.%`.
+   * These suffixes are _not_ supported for attribute bindings.
+   *
+   * For example `[attr.width.px]="5"` becomes `width.px="5"` when bound.
+   * This is almost certainly unintentional and this error is meant to
+   * surface this mistake to the developer.
+   */
+  SUFFIX_NOT_SUPPORTED = 8106,
+
+  /**
+   * The left side of an optional chain operation is not nullable.
+   *
+   * ```
+   * {{ foo?.bar }}
+   * {{ foo?.['bar'] }}
+   * {{ foo?.() }}
+   * ```
+   * When the type of foo doesn't include `null` or `undefined`.
+   */
+  OPTIONAL_CHAIN_NOT_NULLABLE = 8107,
 
   /**
    * The template type-checking engine would need to generate an inline type check block for a

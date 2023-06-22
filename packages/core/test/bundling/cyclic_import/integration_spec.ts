@@ -12,31 +12,33 @@ import {withBody} from '@angular/private/testing';
 import * as fs from 'fs';
 import * as path from 'path';
 
-const UTF8 = {
-  encoding: 'utf-8'
-};
 const PACKAGE = 'angular/packages/core/test/bundling/cyclic_import';
 
 describe('treeshaking with uglify', () => {
   let content: string;
   const contentPath = require.resolve(path.join(PACKAGE, 'bundle.debug.min.js'));
   beforeAll(() => {
-    content = fs.readFileSync(contentPath, UTF8);
+    content = fs.readFileSync(contentPath, {encoding: 'utf-8'});
   });
 
   describe('functional test in domino', () => {
-    it('should render hello world when not minified', withBody('<trigger></trigger>', () => {
+    it('should render hello world when not minified', withBody('<trigger></trigger>', async () => {
          require(path.join(PACKAGE, 'bundle.js'));
+         await (window as any).appReady;
          expect(document.body.textContent).toEqual('dep');
        }));
 
-    it('should render hello world when debug minified', withBody('<trigger></trigger>', () => {
+    it('should render hello world when debug minified',
+       withBody('<trigger></trigger>', async () => {
          require(path.join(PACKAGE, 'bundle.debug.min.js'));
+         await (window as any).appReady;
          expect(document.body.textContent).toEqual('dep');
        }));
 
-    it('should render hello world when fully minified', withBody('<trigger></trigger>', () => {
+    it('should render hello world when fully minified',
+       withBody('<trigger></trigger>', async () => {
          require(path.join(PACKAGE, 'bundle.min.js'));
+         await (window as any).appReady;
          expect(document.body.textContent).toEqual('dep');
        }));
   });

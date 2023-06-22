@@ -26,7 +26,7 @@ runInEachFileSystem(() => {
       if (!ts.isExpressionStatement(node)) {
         return fail(`Expected a ts.ExpressionStatement`);
       }
-      expect(node.expression.getText()).toEqual('ctx.');
+      expect(node.expression.getText()).toEqual('this.');
       // The position should be between the '.' and a following space.
       expect(tcbSf.text.slice(positionInFile - 1, positionInFile + 1)).toEqual('. ');
     });
@@ -104,7 +104,8 @@ runInEachFileSystem(() => {
       const sf = getSourceFileOrError(program, MAIN_TS);
       const SomeCmp = getClass(sf, 'SomeCmp');
 
-      const directives = templateTypeChecker.getDirectivesInScope(SomeCmp) ?? [];
+      let directives = templateTypeChecker.getPotentialTemplateDirectives(SomeCmp) ?? [];
+      directives = directives.filter(d => d.isInScope);
       const pipes = templateTypeChecker.getPipesInScope(SomeCmp) ?? [];
       expect(directives.map(dir => dir.selector)).toEqual(['other-dir']);
       expect(pipes.map(pipe => pipe.name)).toEqual(['otherPipe']);

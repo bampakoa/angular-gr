@@ -1,4 +1,5 @@
-load("//tools:defaults.bzl", "app_bundle", "jasmine_node_test", "ng_benchmark", "ts_library")
+load("//tools:defaults.bzl", "app_bundle", "jasmine_node_test", "ts_library")
+load("//tools:ng_benchmark.bzl", "ng_benchmark")
 
 package(default_visibility = ["//visibility:private"])
 
@@ -286,4 +287,18 @@ app_bundle(
 ng_benchmark(
     name = "render_stringify",
     bundle = ":render_stringify_lib",
+)
+
+app_bundle(
+    name = "embedded_view_injector_lib",
+    entry_point = ":embedded_view_injector/index.ts",
+    external = ["perf_hooks"],
+    deps = [
+        ":perf_lib",
+    ],
+)
+
+ng_benchmark(
+    name = "embedded_view_injector",
+    bundle = ":embedded_view_injector_lib",
 )

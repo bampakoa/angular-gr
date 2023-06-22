@@ -7,13 +7,13 @@ import { ServiceWorkerModule } from '@angular/service-worker';
 import { Location, LocationStrategy, PathLocationStrategy } from '@angular/common';
 
 import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule, MatIconRegistry } from '@angular/material/icon';
+import { MatIconRegistry } from '@angular/material/icon';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 
 import { svg } from 'app/shared/security';
-import { scriptUrl, unwrapScriptUrlForSink } from 'safevalues';
+import { trustedResourceUrl, unwrapResourceUrl } from 'safevalues';
 
 import { AppComponent } from 'app/app.component';
 import { CustomIconRegistry, SVG_ICONS } from 'app/shared/custom-icon-registry';
@@ -22,7 +22,7 @@ import { CookiesPopupComponent } from 'app/layout/cookies-popup/cookies-popup.co
 import { DocViewerComponent } from 'app/layout/doc-viewer/doc-viewer.component';
 import { DtComponent } from 'app/layout/doc-viewer/dt.component';
 import { ModeBannerComponent } from 'app/layout/mode-banner/mode-banner.component';
-import { GaService } from 'app/shared/ga.service';
+import { AnalyticsService } from 'app/shared/analytics.service';
 import { Logger } from 'app/shared/logger.service';
 import { LocationService } from 'app/shared/location.service';
 import { STORAGE_PROVIDERS } from 'app/shared/storage.service';
@@ -150,14 +150,13 @@ export const svgIconProviders = [
     CustomElementsModule,
     HttpClientModule,
     MatButtonModule,
-    MatIconModule,
     MatProgressBarModule,
     MatSidenavModule,
     MatToolbarModule,
     SharedModule,
     ServiceWorkerModule.register(
         // Make sure service worker is loaded with a TrustedScriptURL
-        unwrapScriptUrlForSink(scriptUrl`/ngsw-worker.js`),
+        unwrapResourceUrl(trustedResourceUrl`/ngsw-worker.js`) as string,
         {enabled: environment.production}),
   ],
   declarations: [
@@ -175,10 +174,10 @@ export const svgIconProviders = [
     ThemeToggleComponent,
   ],
   providers: [
+    AnalyticsService,
     Deployment,
     DocumentService,
     { provide: ErrorHandler, useClass: ReportingErrorHandler },
-    GaService,
     Logger,
     Location,
     { provide: LocationStrategy, useClass: PathLocationStrategy },
