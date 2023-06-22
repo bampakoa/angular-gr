@@ -149,7 +149,7 @@
 
 <div class="alert is-helpful">
 
-Ένα Angular component απαιτεί ένα template που ορίζεται με χρήση του `template` ή `templateUrl`. Δεν μπορείτε να έχετε και τις δύο δηλώσεις σε ένα component.
+Ένα Angular component απαιτεί ένα template που ορίζεται με χρήση του `template` ή `templateUrl`. Δεν μπορείτε να έχετε και τις δύο ιδιότητες σε ένα component.
 
 </div>
 
