@@ -47,7 +47,7 @@
 <div class="alert is-helpful">
 
 Μπορείτε να αλλάξετε τον τρόπο που η εντολή `ng generate component` δημιουργεί νέα components.
-Για περισσότερες πληροφορίες, δείτε [ng generate component](cli/generate#component-command) στο εγχειρίδιο του Angular CLI.
+Για περισσότερες πληροφορίες, δείτε [ng generate component](cli/generate#component-command) στην τεκμηρίωση του Angular CLI.
 
 </div>
 
