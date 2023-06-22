@@ -102,7 +102,7 @@
         region="decorator">
    </code-example>
 
-8.  Προσθέστε μια `class` δήλωση που περιλαμβάνει τον κώδικα για το component.
+8.  Προσθέστε ένα  `class` που περιλαμβάνει τον κώδικα για το component.
 
    <code-example
         path="component-overview/src/app/component-overview/component-overview.component.ts"
