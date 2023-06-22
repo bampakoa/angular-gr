@@ -9,7 +9,7 @@
 
 Τα θέματα σε αυτήν την ενότητα εξηγούν αυτά τα χαρακτηριστικά και τις έννοιες, και πώς μπορείτε να τα χρησιμοποιήσετε. 
 
-## Prerequisites
+## Προαπαιτούμενα
 
 To get the most out of these developer guides, you should review the following topics:
 
