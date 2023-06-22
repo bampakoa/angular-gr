@@ -60,7 +60,7 @@
 
 1. Μεταβείτε στον φάκελο του δικού σας Angular project.
 2. Δημιουργήστε ένα νέο αρχείο, `<component-name>.component.ts`.
-3. Στην κορυφή του αρχείου, προσθέστε την άκολουθη import δήλωση.
+3. Στην κορυφή του αρχείου, προσθέστε το ακόλουθο import.
 
    <code-example
         path="component-overview/src/app/component-overview/component-overview.component.ts"
