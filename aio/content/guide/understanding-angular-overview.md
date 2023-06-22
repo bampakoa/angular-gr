@@ -1,42 +1,42 @@
-# Understanding Angular
+# Κατανοώντας την Angular
 
-To understand the capabilities of the Angular framework, you need to learn about the following:
+Για να κατανοήσετε τις δυνατότητες της Angular, χρειάζεται να μάθετε τα εξής:
 
 *   Components
 *   Templates
 *   Directives
 *   Dependency injection
 
-The topics in this section explain these features and concepts, and how you can use them.
+Τα θέματα σε αυτήν την ενότητα εξηγούν αυτά τα χαρακτηριστικά και τις έννοιες, και πώς μπορείτε να τα χρησιμοποιήσετε. 
 
-## Prerequisites
+## Προαπαιτούμενα
 
-To get the most out of these developer guides, you should review the following topics:
+Για να αξιοποιήσετε στο έπακρο αυτούς τους οδηγούς προγραμματισμού, θα πρέπει να διαβάσετε τα ακόλουθα θέματα:
 
-*   [What is Angular][AioGuideWhatIsAngular]
-*   [Getting started tutorial][AioStart]
+* [Τι είναι η Angular][AioGuideWhatIsAngular]
+* [Σεμινάριο έναρξης][AioStart]
 
-## Learn about Angular basics
+## Μάθετε για τα βασικά της Angular
 
 <div class="card-container">
   <a href="guide/component-overview" class="docs-card" title="Components">
     <section>Components</section>
-    <p>Learn about Angular components. A component is a key building block of Angular development.</p>
+    <p>Μάθετε για τα Angular components. Ένα component είναι ένα βασικό δομικό στοιχείο ανάπτυξης σε Angular.</p>
     <p class="card-footer">Components</p>
   </a>
   <a href="guide/template-syntax" class="docs-card" title="Templates">
     <section>Templates</section>
-    <p>Learn about how to build an Angular template.</p>
+    <p>Μάθετε πώς να δημιουργείτε ένα Angular template.</p>
     <p class="card-footer">Templates</p>
   </a>
   <a href="guide/built-in-directives" class="docs-card" title="Directives">
     <section>Directives</section>
-    <p>Learn about Angular directives. A directive is a class that adds additional behavior to elements in your Angular applications.</p>
+    <p>Μάθετε για τα Angular directives. Ένα directive είναι ένα class που προσθέτει επιπλέον συμπεριφορά σε στοιχεία στις Angular εφαρμογές σας.</p>
     <p class="card-footer">Directives</p>
   </a>
   <a href="guide/dependency-injection" class="docs-card" title="Dependency injection">
     <section>Dependency injection</section>
-    <p>Learn about dependency injection. Dependency injection refers to services or objects that a class needs to perform a specific function.</p>
+    <p>Μάθετε για το dependency injection. Το dependency injection αναφέρεται σε services ή objects που χρειάζεται ένα class για να εκτελέσει μια συγκεκριμένη λειτουργία.</p>
     <p class="card-footer">Dependency injection</p>
   </a>
   <!-- <a href="guide/rendering-overview" class="docs-card" title="Angular service worker developer guide">
@@ -56,4 +56,4 @@ To get the most out of these developer guides, you should review the following t
 
 <!-- end links -->
 
-@reviewed 2022-02-28
+@reviewed 2022-06-22
