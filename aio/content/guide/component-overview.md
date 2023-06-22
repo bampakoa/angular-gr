@@ -1,158 +1,151 @@
-# Angular components overview
+# Επισκόπηση των Angular Components
 
-Components are the main building block for Angular applications.
-Each component consists of:
+Τα components είναι το κύριο δομικό στοιχείο για τις Angular εφαρμογές. Κάθε component αποτελείται από:
 
-*   An HTML template that declares what renders on the page
-*   A TypeScript class that defines behavior
-*   A CSS selector that defines how the component is used in a template
-*   Optionally, CSS styles applied to the template
+* Ένα HTML template που δηλώνει τι απεικονίζεται στη σελίδα
+* Ένα TypeScript class που ορίζει τη συμπεριφορά
+* Ένας selector CSS που ορίζει πώς το component χρησιμοποιείται σε ένα template
+* Προαιρετικά, τα CSS στυλ που εφαρμόζονται στο template
 
-This topic describes how to create and configure an Angular component.
-
-<div class="alert is-helpful">
-
-To view or download the example code used in this topic, see the <live-example></live-example>.
-
-</div>
-
-## Prerequisites
-
-To create a component, verify that you have met the following prerequisites:
-
-1.  [Install the Angular CLI.](guide/setup-local#install-the-angular-cli)
-1.  [Create an Angular workspace](guide/setup-local#create-a-workspace-and-initial-application) with initial application.
-    If you don't have a project, create one using `ng new <project-name>`, where `<project-name>` is the name of your Angular application.
-
-## Creating a component
-
-The best way to create a component is with the Angular CLI.
-You can also create a component manually.
-
-### Creating a component using the Angular CLI
-
-To create a component using the Angular CLI:
-
-1.  From a terminal window, navigate to the directory containing your application.
-1.  Run the `ng generate component <component-name>` command, where `<component-name>` is the name of your new component.
-
-By default, this command creates the following:
-
-*   A directory named after the component
-*   A component file, `<component-name>.component.ts`
-*   A template file, `<component-name>.component.html`
-*   A CSS file, `<component-name>.component.css`
-*   A testing specification file, `<component-name>.component.spec.ts`
-
-Where `<component-name>` is the name of your component.
+Αυτό το θέμα περιγράφει τον τρόπο δημιουργίας και διαμόρφωσης ενός Angular component.
 
 <div class="alert is-helpful">
 
-You can change how `ng generate component` creates new components.
-For more information, see [ng generate component](cli/generate#component-command) in the Angular CLI documentation.
+Για να δείτε ή να κατεβάσετε τον κώδικα του παραδείγματος που χρησιμοποιείται σε αυτό το θέμα, ανατρέξτε στο <live-example></live-example>.
 
 </div>
 
-### Creating a component manually
+## Προαπαιτούμενα
 
-Although the Angular CLI is the best way to create an Angular component, you can also create a component manually.
-This section describes how to create the core component file within an existing Angular project.
+Για να δημιουργήσετε ένα component, βεβαιωθείτε ότι πληροίτε τις ακόλουθες προϋποθέσεις:
 
-To create a new component manually:
+1. [Εγκαταστήστε το Angular CLI.](guide/setup-local#εγκαταστήστε-το-angular-cli)
+2. [Δημιουργήστε έναν χώρο εργασίας Angular](guide/setup-local#δημιουργήστε-έναν-χώρο-εργασίας-και-μια-αρχική-εφαρμογή) με την αρχική εφαρμογή.
+   Εάν δεν έχετε ένα project, δημιουργήστε ένα χρησιμοποιώντας την εντολή  `ng new <project-name>`, όπου `<project-name>` είναι το όνομα της δικιά σας Angular εφαρμογής.
 
-1.  Navigate to your Angular project directory.
-1.  Create a new file, `<component-name>.component.ts`.
-1.  At the top of the file, add the following import statement.
+## Δημιουργώντας ενα component
+
+Ο καλύτερος τρόπος για να δημιουργήσετε ένα component είναι με το Angular CLI. Μπορείτε επίσης να δημιουργήσετε ένα component με χειροκίνητο τρόπο.
+
+### Δημιουργώντας ενα component, χρησιμοποιώντας το Angular CLI
+
+Για να δημιουργήσετε ένα component χρησιμοποιώντας το Angular CLI:
+
+1. Απο το terminal παράθυρο, μεταβείτε στον φάκελο που περιέχει την εφαρμογή σας.
+2. Εκτελέστε την εντολή `ng generate component <component-name>`, όπου `<component-name>` είναι το όνομα του νέου σας component.
+
+Από προεπιλογή, αυτή η εντολή δημιουργεί τα ακόλουθα:
+
+* Ένα φάκελο με το όνομα του component
+* Ένα component αρχείο, `<component-name>.component.ts`
+* Ένα template αρχείο, `<component-name>.component.html`
+* Ένα CSS αρχείο, `<component-name>.component.css`
+* Ένα test αρχείο, `<component-name>.component.spec.ts`
+
+Όπου `<component-name>` είναι το όνομα του component σας.
+
+<div class="alert is-helpful">
+
+Μπορείτε να αλλάξετε τον τρόπο που η εντολή `ng generate component` δημιουργεί νέα components.
+Για περισσότερες πληροφορίες, δείτε [ng generate component](cli/generate#component-command) στην τεκμηρίωση του Angular CLI.
+
+</div>
+
+### Δημιουργώντας ένα component με χειροκίνητο τρόπο
+
+Αν και το Angular CLI είναι ο καλύτερος τρόπος για να δημιουργήσετε ένα Angular component, μπορείτε επίσης να δημιουργήσετε ένα component με χειροκίνητο τρόπο.
+Αυτή η ενότητα περιγράφει τον τρόπο δημιουργίας του βασικού component αρχείου σε ένα υπάρχον Angular project.
+
+Για να δημιουργήσετε ένα νέο component χειροκίνητα:
+
+1. Μεταβείτε στον φάκελο του δικού σας Angular project.
+2. Δημιουργήστε ένα νέο αρχείο, `<component-name>.component.ts`.
+3. Στην κορυφή του αρχείου, προσθέστε το ακόλουθο import.
 
     <code-example path="component-overview/src/app/component-overview/component-overview.component.ts" region="import"></code-example>
 
-1.  After the `import` statement, add a `@Component` decorator.
+4. Μετά το `import`, προσθέστε έναν `@Component` decorator.
 
     <code-example path="component-overview/src/app/component-overview/component-overview.component.ts" region="decorator-skeleton"></code-example>
 
-1.  Choose a CSS selector for the component.
+5. Επιλέξτε έναν selector CSS για το component.
 
     <code-example path="component-overview/src/app/component-overview/component-overview.component.ts" region="selector"></code-example>
 
-    For more information on choosing a selector, see [Specifying a component's selector](#specifying-a-components-css-selector).
+   Για περισσότερες πληροφορίες σχετικά με την επιλογή ενός selector, δείτε [Καθορισμός του selector ενός component](#specifying-a-components-css-selector).
+   
 
-1.  Define the HTML template that the component uses to display information.
-    In most cases, this template is a separate HTML file.
+6. Καθορίστε το HTML template που χρησιμοποιεί το component για την εμφάνιση πληροφοριών.
+   Στις περισσότερες περιπτώσεις, αυτό το template είναι ένα ξεχωριστό αρχείο HTML.
+   
+   <code-example
+        path="component-overview/src/app/component-overview/component-overview.component.ts"
+        region="templateUrl">
+   </code-example>
 
-    <code-example path="component-overview/src/app/component-overview/component-overview.component.ts" region="templateUrl"></code-example>
+   Για περισσότερες πληροφορίες σχετικά με τον ορισμό του template του component, δείτε [Καθορισμός του template ενός component](#defining-a-components-template).
 
-    For more information on defining a component's template, see [Defining a component's template](#defining-a-components-template).
-
-1.  Select the styles for the component's template.
-    In most cases, you define the styles for your component's template in a separate file.
+7. Επιλέξτε τα στυλ για το template του component.
+   Στις περισσότερες περιπτώσεις, ορίζετε εσείς τα στυλ για το template του component σας σε ένα ξεχωριστό αρχείο.
 
     <code-example path="component-overview/src/app/component-overview/component-overview.component.ts" region="decorator"></code-example>
 
-1.  Add a `class` statement that includes the code for the component.
+8.  Προσθέστε ένα  `class` που περιλαμβάνει τον κώδικα για το component.
 
     <code-example path="component-overview/src/app/component-overview/component-overview.component.ts" region="class"></code-example>
 
-## Specifying a component's CSS selector
+## Καθορισμός του selector CSS ενός component
 
-Every component requires a CSS *selector*. A selector instructs Angular to instantiate this component wherever it finds the corresponding tag in template HTML.
-For example, consider a component `hello-world.component.ts` that defines its selector as `app-hello-world`.
-This selector instructs Angular to instantiate this component any time the tag `<app-hello-world>` appears in a template.
+Κάθε component απαιτεί έναν CSS _selector_. Ένας selector δίνει εντολή στο Angular να δημιουργήσει αυτό το component όπου βρίσκει την αντίστοιχη ετικέτα στο HTML template. Για παράδειγμα, σκεφτείτε ένα component `hello-world.component.ts` που ορίζει τον selector του ως `app-hello-world`. Αυτός ο selector δίνει εντολή στο Angular να δημιουργήσει αυτό το component κάθε φορά που εμφανίζεται η ετικέτα `<app-hello-world>` σε ένα template.
 
-Specify a component's selector by adding a `selector` statement to the `@Component` decorator.
+Καθορίστε τον selector ενός component προσθέτοντας την `selector` δήλωση στον `@Component` decorator.
 
 <code-example path="component-overview/src/app/component-overview/component-overview.component.ts" region="selector"></code-example>
 
-## Defining a component's template
+## Καθορισμός του template ενός component
 
-A template is a block of HTML that tells Angular how to render the component in your application.
-Define a template for your component in one of two ways: by referencing an external file, or directly within the component.
+Ένα template είναι ένα κομμάτι HTML που λέει στην Angular πώς να απεικονίσει το component στην εφαρμογή σας.
+Ορίστε ένα template για το component σας με έναν από τους δύο τρόπους: με αναφορά σε ένα εξωτερικό αρχείο ή απευθείας μέσα στο component.
 
-To define a template as an external file, add a `templateUrl` property to the `@Component` decorator.
+Για να ορίσετε ένα template ως εξωτερικό αρχείο, προσθέστε μια `templateUrl` ιδιότητα στον `@Component` decorator.
 
 <code-example path="component-overview/src/app/component-overview/component-overview.component.ts" region="templateUrl"></code-example>
 
-To define a template within the component, add a `template` property to the `@Component` decorator that contains the HTML you want to use.
+Για να ορίσετε ένα template εντός του component, προσθέστε μια `template` ιδιότητα στον `@Component` decorator, που περιέχει την HTML που θέλετε να χρησιμοποιήσετε.
 
 <code-example path="component-overview/src/app/component-overview/component-overview.component.1.ts" region="template"></code-example>
 
-If you want your template to span multiple lines, use backticks \(<code>&grave;</code>\).
-For example:
+Εάν θέλετε το template σας να εκτείνεται σε πολλές γραμμές, χρησιμοποιήστε backticks (<code> ` </code>).
+Για παράδειγμα:
 
 <code-example path="component-overview/src/app/component-overview/component-overview.component.2.ts" region="templatebacktick"></code-example>
 
 <div class="alert is-helpful">
 
-An Angular component requires a template defined using `template` or `templateUrl`.
-You cannot have both statements in a component.
+Ένα Angular component απαιτεί ένα template που ορίζεται με χρήση του `template` ή `templateUrl`. Δεν μπορείτε να έχετε και τις δύο ιδιότητες σε ένα component.
 
 </div>
 
-## Declaring a component's styles
+## Δήλωση του στυλ ενός component
 
-Declare component styles used for its template in one of two ways:
-By referencing an external file, or directly within the component.
+Δηλώστε τα στυλ του component για το template του με έναν από τους δύο τρόπους: με αναφορά σε ένα εξωτερικό αρχείο ή απευθείας μέσα στο component.
 
-To declare the styles for a component in a separate file, add a `styleUrls` property to the `@Component` decorator.
+Για να δηλώσετε τα στυλ για ένα component σε ένα ξεχωριστό αρχείο, προσθέστε μια `styleUrls` ιδιότητα στον `@Component` decorator.
 
 <code-example path="component-overview/src/app/component-overview/component-overview.component.ts" region="decorator"></code-example>
 
-To declare the styles within the component, add a `styles` property to the `@Component` decorator that contains the styles you want to use.
+Για να δηλώσετε τα στυλ μέσα στο component, προσθέστε μια `styles` ιδιότητα στον `@Component` decorator που περιέχει τα στυλ που θέλετε να χρησιμοποιήσετε.
 
 <code-example path="component-overview/src/app/component-overview/component-overview.component.3.ts" region="styles"></code-example>
 
-The `styles` property takes an array of strings that contain the CSS rule declarations.
+Η ιδιότητα `styles` δέχεται μια λίστα από strings που περιέχουν τους κανόνες CSS.
 
-## Next steps
 
-*   For an architectural overview of components, see [Introduction to components and templates](guide/architecture-components)
-*   For additional options to use when creating a component, see [Component](api/core/Component) in the API Reference
-*   For more information on styling components, see [Component styles](guide/component-styles)
-*   For more information on templates, see [Template syntax](guide/template-syntax)
+## Επόμενα βήματα
 
-<!-- links -->
+* Για μια αρχιτεκτονική επισκόπηση των components, δείτε [Εισαγωγή στα components και τα templates](guide/architecture-components).
+* Για πρόσθετες επιλογές που μπορείτε να χρησιμοποιήσετε κατά τη δημιουργία ενός component, δείτε [Component](api/core/Component) στο API Reference.
+* Για περισσότερες πληροφορίες σχετικά με τα στυλ των components, ανατρέξτε στο [Στυλ του Component](guide/component-styles).
+* Για περισσότερες πληροφορίες σχετικά με τα templates, δειτε [Σύνταξη του Template ](guide/template-syntax).
 
-<!-- external links -->
-
-<!-- end links -->
-
-@reviewed 2022-02-28
+@reviewed 2022-04-02
