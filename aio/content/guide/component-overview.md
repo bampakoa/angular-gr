@@ -40,7 +40,7 @@
 * Ένα component αρχείο, `<component-name>.component.ts`
 * Ένα template αρχείο, `<component-name>.component.html`
 * Ένα CSS αρχείο, `<component-name>.component.css`
-* Ένα αρχείο προδιαγραφών δοκιμής, `<component-name>.component.spec.ts`
+* Ένα test αρχείο, `<component-name>.component.spec.ts`
 
 Όπου `<component-name>` είναι το όνομα του component σας.
 
