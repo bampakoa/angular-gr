@@ -122,7 +122,7 @@
 
 ## Καθορισμός του template ενός component
 
-Ένα template είναι ένα μπλοκ HTML που λέει στο Angular πώς να απεικονίσει το component στην εφαρμογή σας.
+Ένα template είναι ένα κομμάτι HTML που λέει στην Angular πώς να απεικονίσει το component στην εφαρμογή σας.
 Ορίστε ένα template για το component σας με έναν από τους δύο τρόπους: με αναφορά σε ένα εξωτερικό αρχείο ή απευθείας μέσα στο component.
 
 Για να ορίσετε ένα template ως εξωτερικό αρχείο, προσθέστε μια `templateUrl` ιδιότητα στον `@Component` decorator.
