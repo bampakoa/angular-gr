@@ -67,7 +67,7 @@
         region="import">
    </code-example>
 
-4. Μετά την `import` δήλωση, προσθέστε έναν `@Component` decorator.
+4. Μετά το `import`, προσθέστε έναν `@Component` decorator.
 
    <code-example
         path="component-overview/src/app/component-overview/component-overview.component.ts"
