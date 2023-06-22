@@ -38,10 +38,6 @@ Zone.__load_patch('jasmine', (global: any, Zone: ZoneType, api: _ZonePrivate) =>
   if (!ProxyZoneSpec) throw new Error('Missing: ProxyZoneSpec');
 
   const ambientZone = Zone.current;
-  // Create a synchronous-only zone in which to run `describe` blocks in order to raise an
-  // error if any asynchronous operations are attempted inside of a `describe` but outside of
-  // a `beforeEach` or `it`.
-  const syncZone = ambientZone.fork(new SyncTestZoneSpec('jasmine.describe'));
 
   const symbol = Zone.__symbol__;
 
@@ -66,13 +62,28 @@ Zone.__load_patch('jasmine', (global: any, Zone: ZoneType, api: _ZonePrivate) =>
         if (originalInstall && !instance[symbol('install')]) {
           instance[symbol('install')] = originalInstall;
           instance.install = function() {
-            const originalHandlers = process.listeners('unhandledRejection');
-            const r = originalInstall.apply(this, arguments);
-            process.removeAllListeners('unhandledRejection');
+            const isNode = typeof process !== 'undefined' && !!process.on;
+            // Note: Jasmine checks internally if `process` and `process.on` is defined. Otherwise,
+            // it installs the browser rejection handler through the `global.addEventListener`.
+            // This code may be run in the browser environment where `process` is not defined, and
+            // this will lead to a runtime exception since Webpack 5 removed automatic Node.js
+            // polyfills. Note, that events are named differently, it's `unhandledRejection` in
+            // Node.js and `unhandledrejection` in the browser.
+            const originalHandlers: any[] = isNode ? process.listeners('unhandledRejection') :
+                                                     global.eventListeners('unhandledrejection');
+            const result = originalInstall.apply(this, arguments);
+            isNode ? process.removeAllListeners('unhandledRejection') :
+                     global.removeAllListeners('unhandledrejection');
             if (originalHandlers) {
-              originalHandlers.forEach(h => process.on('unhandledRejection', h));
+              originalHandlers.forEach(handler => {
+                if (isNode) {
+                  process.on('unhandledRejection', handler);
+                } else {
+                  global.addEventListener('unhandledrejection', handler);
+                }
+              });
             }
-            return r;
+            return result;
           };
         }
         return instance;
@@ -85,7 +96,8 @@ Zone.__load_patch('jasmine', (global: any, Zone: ZoneType, api: _ZonePrivate) =>
   ['describe', 'xdescribe', 'fdescribe'].forEach(methodName => {
     let originalJasmineFn: Function = jasmineEnv[methodName];
     jasmineEnv[methodName] = function(description: string, specDefinitions: Function) {
-      return originalJasmineFn.call(this, description, wrapDescribeInZone(specDefinitions));
+      return originalJasmineFn.call(
+          this, description, wrapDescribeInZone(description, specDefinitions));
     };
   });
   ['it', 'xit', 'fit'].forEach(methodName => {
@@ -183,8 +195,11 @@ Zone.__load_patch('jasmine', (global: any, Zone: ZoneType, api: _ZonePrivate) =>
    * Gets a function wrapping the body of a Jasmine `describe` block to execute in a
    * synchronous-only zone.
    */
-  function wrapDescribeInZone(describeBody: Function): Function {
+  function wrapDescribeInZone(description: string, describeBody: Function): Function {
     return function(this: unknown) {
+      // Create a synchronous-only zone in which to run `describe` blocks in order to raise an
+      // error if any asynchronous operations are attempted inside of a `describe`.
+      const syncZone = ambientZone.fork(new SyncTestZoneSpec(`jasmine.describe#${description}`));
       return syncZone.run(describeBody, this, (arguments as any) as any[]);
     };
   }

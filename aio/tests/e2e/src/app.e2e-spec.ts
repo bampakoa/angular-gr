@@ -1,4 +1,5 @@
-import { browser, by, element, ElementFinder } from 'protractor';
+import { ElementFinder, browser, by, element } from 'protractor';
+
 import { SitePage } from './app.po';
 
 describe('site App', () => {
@@ -77,7 +78,7 @@ describe('site App', () => {
   it('should show the tutorial index page at `/tutorial` after jitterbugging through features', async () => {
     // check that we can navigate directly to the tutorial page
     await page.navigateTo('tutorial');
-    expect(await page.getDocViewerText()).toMatch(/Tour of Heroes App and Tutorial/i);
+    expect(await page.getDocViewerText()).toMatch(/Tour of Heroes application and tutorial/i);
 
     // navigate to a different page
     await page.click(page.getTopMenuLink('features'));
@@ -93,9 +94,9 @@ describe('site App', () => {
   });
 
   it('should render `{@example}` dgeni tags as `<code-example>` elements with HTML escaped content', async () => {
-    await page.navigateTo('guide/component-styles');
-    const codeExample = element.all(by.css('code-example')).first();
-    expect(await page.getInnerHtml(codeExample)).toContain('&lt;h1&gt;Tour of Heroes&lt;/h1&gt;');
+    await page.navigateTo('api/common/NgIf');
+    const codeExample = element.all(by.css('code-example[region="NgIfSimple"]')).first();
+    expect(await page.getInnerHtml(codeExample)).toContain('&lt;br&gt;');
   });
 
   describe('scrolling to the top', () => {
@@ -182,23 +183,23 @@ describe('site App', () => {
 
   describe('google analytics', () => {
 
-    it('should call ga with initial URL', async () => {
+    it('should call legacy ga with initial URL', async () => {
       await page.navigateTo('api');
 
       const path = await page.locationPath();
-      const calls = await page.ga();
+      const calls = await page.legacyGa();
 
       // The last call (length-1) will be the `send` command
       // The second to last call (length-2) will be the command to `set` the page url
       expect(calls[calls.length - 2]).toEqual(['set', 'page', path]);
     });
 
-    it('should call ga with new URL on navigation', async () => {
+    it('should call legacy ga with new URL on navigation', async () => {
       await page.navigateTo('');
       await page.click(page.getTopMenuLink('features'));
 
       const path = await page.locationPath();
-      const calls = await page.ga();
+      const calls = await page.legacyGa();
 
       // The last call (length-1) will be the `send` command
       // The second to last call (length-2) will be the command to `set` the page url
@@ -232,12 +233,12 @@ describe('site App', () => {
       expect(await page.ghLinks.count()).toEqual(1);
       /* eslint-disable max-len */
       expect(await page.ghLinks.get(0).getAttribute('href'))
-        .toMatch(/https:\/\/github\.com\/angular\/angular\/edit\/master\/aio\/content\/tutorial\/toh-pt1\.md\?message=docs%3A%20describe%20your%20change\.\.\./);
+        .toMatch(/https:\/\/github\.com\/angular\/angular\/edit\/main\/aio\/content\/tutorial\/toh-pt1\.md\?message=docs%3A%20describe%20your%20change\.\.\./);
 
       await page.navigateTo('guide/router');
       expect(await page.ghLinks.count()).toEqual(1);
       expect(await page.ghLinks.get(0).getAttribute('href'))
-        .toMatch(/https:\/\/github\.com\/angular\/angular\/edit\/master\/aio\/content\/guide\/router\.md\?message=docs%3A%20describe%20your%20change\.\.\./);
+        .toMatch(/https:\/\/github\.com\/angular\/angular\/edit\/main\/aio\/content\/guide\/router\.md\?message=docs%3A%20describe%20your%20change\.\.\./);
       /* eslint-enable max-len */
     });
 

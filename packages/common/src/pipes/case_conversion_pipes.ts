@@ -7,6 +7,7 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
+
 import {invalidPipeArgumentError} from './invalid_pipe_argument_error';
 
 /**
@@ -24,7 +25,10 @@ import {invalidPipeArgumentError} from './invalid_pipe_argument_error';
  * @ngModule CommonModule
  * @publicApi
  */
-@Pipe({name: 'lowercase'})
+@Pipe({
+  name: 'lowercase',
+  standalone: true,
+})
 export class LowerCasePipe implements PipeTransform {
   /**
    * @param value The string to transform to lower case.
@@ -70,7 +74,10 @@ const unicodeWordMatch =
  * @ngModule CommonModule
  * @publicApi
  */
-@Pipe({name: 'titlecase'})
+@Pipe({
+  name: 'titlecase',
+  standalone: true,
+})
 export class TitleCasePipe implements PipeTransform {
   /**
    * @param value The string to transform to title case.
@@ -85,7 +92,7 @@ export class TitleCasePipe implements PipeTransform {
     }
 
     return value.replace(
-        unicodeWordMatch, (txt => txt[0].toUpperCase() + txt.substr(1).toLowerCase()));
+        unicodeWordMatch, (txt => txt[0].toUpperCase() + txt.slice(1).toLowerCase()));
   }
 }
 
@@ -97,7 +104,10 @@ export class TitleCasePipe implements PipeTransform {
  * @ngModule CommonModule
  * @publicApi
  */
-@Pipe({name: 'uppercase'})
+@Pipe({
+  name: 'uppercase',
+  standalone: true,
+})
 export class UpperCasePipe implements PipeTransform {
   /**
    * @param value The string to transform to upper case.

@@ -6,8 +6,11 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Routes} from '../src/config';
+import {EnvironmentInjector} from '@angular/core';
+import {TestBed} from '@angular/core/testing';
+
 import {createRouterState} from '../src/create_router_state';
+import {Routes} from '../src/models';
 import {recognize} from '../src/recognize';
 import {DefaultRouteReuseStrategy} from '../src/route_reuse_strategy';
 import {ActivatedRoute, advanceActivatedRoute, createEmptyState, RouterState, RouterStateSnapshot} from '../src/router_state';
@@ -15,7 +18,7 @@ import {PRIMARY_OUTLET} from '../src/shared';
 import {DefaultUrlSerializer, UrlSegmentGroup, UrlTree} from '../src/url_tree';
 import {TreeNode} from '../src/utils/tree';
 
-describe('create router state', () => {
+describe('create router state', async () => {
   let reuseStrategy: DefaultRouteReuseStrategy;
   beforeEach(() => {
     reuseStrategy = new DefaultRouteReuseStrategy();
@@ -24,10 +27,10 @@ describe('create router state', () => {
   const emptyState = () =>
       createEmptyState(new (UrlTree as any)(new UrlSegmentGroup([], {}), {}, null!), RootComponent);
 
-  it('should create new state', () => {
+  it('should create new state', async () => {
     const state = createRouterState(
         reuseStrategy,
-        createState(
+        await createState(
             [
               {path: 'a', component: ComponentA},
               {path: 'b', component: ComponentB, outlet: 'left'},
@@ -44,16 +47,17 @@ describe('create router state', () => {
     checkActivatedRoute(c[2], ComponentC, 'right');
   });
 
-  it('should reuse existing nodes when it can', () => {
+  it('should reuse existing nodes when it can', async () => {
     const config = [
       {path: 'a', component: ComponentA}, {path: 'b', component: ComponentB, outlet: 'left'},
       {path: 'c', component: ComponentC, outlet: 'left'}
     ];
 
     const prevState =
-        createRouterState(reuseStrategy, createState(config, 'a(left:b)'), emptyState());
+        createRouterState(reuseStrategy, await createState(config, 'a(left:b)'), emptyState());
     advanceState(prevState);
-    const state = createRouterState(reuseStrategy, createState(config, 'a(left:c)'), prevState);
+    const state =
+        createRouterState(reuseStrategy, await createState(config, 'a(left:c)'), prevState);
 
     expect(prevState.root).toBe(state.root);
     const prevC = (prevState as any).children(prevState.root);
@@ -64,7 +68,7 @@ describe('create router state', () => {
     checkActivatedRoute(currC[1], ComponentC, 'left');
   });
 
-  it('should handle componentless routes', () => {
+  it('should handle componentless routes', async () => {
     const config = [{
       path: 'a/:id',
       children:
@@ -73,10 +77,10 @@ describe('create router state', () => {
 
 
     const prevState = createRouterState(
-        reuseStrategy, createState(config, 'a/1;p=11/(b//right:c)'), emptyState());
+        reuseStrategy, await createState(config, 'a/1;p=11/(b//right:c)'), emptyState());
     advanceState(prevState);
-    const state =
-        createRouterState(reuseStrategy, createState(config, 'a/2;p=22/(b//right:c)'), prevState);
+    const state = createRouterState(
+        reuseStrategy, await createState(config, 'a/2;p=22/(b//right:c)'), prevState);
 
     expect(prevState.root).toBe(state.root);
     const prevP = (prevState as any).firstChild(prevState.root)!;
@@ -92,31 +96,32 @@ describe('create router state', () => {
     checkActivatedRoute(currC[1], ComponentB, 'right');
   });
 
-  it('should not retrieve routes when `shouldAttach` is always false', () => {
-    const config = [
+  it('should not retrieve routes when `shouldAttach` is always false', async () => {
+    const config: Routes = [
       {path: 'a', component: ComponentA}, {path: 'b', component: ComponentB, outlet: 'left'},
       {path: 'c', component: ComponentC, outlet: 'left'}
     ];
     spyOn(reuseStrategy, 'retrieve');
 
     const prevState =
-        createRouterState(reuseStrategy, createState(config, 'a(left:b)'), emptyState());
+        createRouterState(reuseStrategy, await createState(config, 'a(left:b)'), emptyState());
     advanceState(prevState);
-    createRouterState(reuseStrategy, createState(config, 'a(left:c)'), prevState);
+    createRouterState(reuseStrategy, await createState(config, 'a(left:c)'), prevState);
     expect(reuseStrategy.retrieve).not.toHaveBeenCalled();
   });
 
-  it('should consistently represent future and current state', () => {
-    const config = [
+  it('should consistently represent future and current state', async () => {
+    const config: Routes = [
       {path: '', pathMatch: 'full', component: ComponentA},
       {path: 'product/:id', component: ComponentB}
     ];
     spyOn(reuseStrategy, 'shouldReuseRoute').and.callThrough();
-    const previousState = createRouterState(reuseStrategy, createState(config, ''), emptyState());
+    const previousState =
+        createRouterState(reuseStrategy, await createState(config, ''), emptyState());
     advanceState(previousState);
     (reuseStrategy.shouldReuseRoute as jasmine.Spy).calls.reset();
 
-    createRouterState(reuseStrategy, createState(config, 'product/30'), previousState);
+    createRouterState(reuseStrategy, await createState(config, 'product/30'), previousState);
 
     // One call for the root and one call for each of the children
     expect(reuseStrategy.shouldReuseRoute).toHaveBeenCalledTimes(2);
@@ -143,10 +148,11 @@ function advanceNode(node: TreeNode<ActivatedRoute>): void {
   node.children.forEach(advanceNode);
 }
 
-function createState(config: Routes, url: string): RouterStateSnapshot {
-  let res: RouterStateSnapshot = undefined!;
-  recognize(RootComponent, config, tree(url), url).forEach(s => res = s);
-  return res;
+async function createState(config: Routes, url: string): Promise<RouterStateSnapshot> {
+  return recognize(
+             TestBed.inject(EnvironmentInjector), RootComponent, config, tree(url), url,
+             new DefaultUrlSerializer())
+      .toPromise();
 }
 
 function checkActivatedRoute(

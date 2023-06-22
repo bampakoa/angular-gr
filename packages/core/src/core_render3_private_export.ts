@@ -24,9 +24,13 @@ export {
 export {
   NG_INJ_DEF as ɵNG_INJ_DEF,
   NG_PROV_DEF as ɵNG_PROV_DEF,
+  isInjectable as ɵisInjectable,
 } from './di/interface/defs';
-export {createInjector as ɵcreateInjector} from './di/r3_injector';
-export { registerNgModuleType as ɵregisterNgModuleType } from './linker/ng_module_factory_registration';
+export {createInjector as ɵcreateInjector} from './di/create_injector';
+export {
+  registerNgModuleType as ɵɵregisterNgModuleType,
+  setAllowDuplicateNgModuleIdsForTest as ɵsetAllowDuplicateNgModuleIdsForTest,
+} from './linker/ng_module_registration';
 export {
   NgModuleDef as ɵNgModuleDef,
   NgModuleTransitiveScopes as ɵNgModuleTransitiveScopes,
@@ -54,18 +58,15 @@ export {
   getDirectives as ɵgetDirectives,
   getHostElement as ɵgetHostElement,
   LifecycleHooksFeature as ɵLifecycleHooksFeature,
-  markDirty as ɵmarkDirty,
   NgModuleFactory as ɵNgModuleFactory,
   NgModuleRef as ɵRender3NgModuleRef,
   NgModuleType as ɵNgModuleType,
   NO_CHANGE as ɵNO_CHANGE,
   PipeDef as ɵPipeDef,
-  renderComponent as ɵrenderComponent,
   RenderFlags as ɵRenderFlags,
   setClassMetadata as ɵsetClassMetadata,
   setLocaleId as ɵsetLocaleId,
   store as ɵstore,
-  whenRendered as ɵwhenRendered,
   ɵɵadvance,
   ɵɵattribute,
   ɵɵattributeInterpolate1,
@@ -149,6 +150,7 @@ export {
   ɵɵpropertyInterpolate8,
   ɵɵpropertyInterpolateV,
   ɵɵProvidersFeature,
+  ɵɵHostDirectivesFeature,
   ɵɵpureFunction0,
   ɵɵpureFunction1,
   ɵɵpureFunction2,
@@ -161,6 +163,7 @@ export {
   ɵɵpureFunctionV,
   ɵɵqueryRefresh,
   ɵɵreference,
+  ɵɵresetView,
   ɵɵresolveBody,
   ɵɵresolveDocument,
   ɵɵresolveWindow,
@@ -168,6 +171,7 @@ export {
 
   ɵɵsetComponentScope,
   ɵɵsetNgModuleScope,
+  ɵɵStandaloneFeature,
   ɵɵstyleMap,
   ɵɵstyleMapInterpolate1,
   ɵɵstyleMapInterpolate2,
@@ -204,6 +208,10 @@ export {
   ɵɵtextInterpolate8,
   ɵɵtextInterpolateV,
   ɵɵviewQuery,
+  ɵgetUnknownElementStrictMode,
+  ɵsetUnknownElementStrictMode,
+  ɵgetUnknownPropertyStrictMode,
+  ɵsetUnknownPropertyStrictMode
 } from './render3/index';
 export {
   LContext as ɵLContext,
@@ -211,12 +219,6 @@ export {
 export {
   setDocument as ɵsetDocument
 } from './render3/interfaces/document';
-export {
-  Player as ɵPlayer,
-  PlayerFactory as ɵPlayerFactory,
-  PlayerHandler as ɵPlayerHandler,
-  PlayState as ɵPlayState,
-} from './render3/interfaces/player';
 export {
   compileComponent as ɵcompileComponent,
   compileDirective as ɵcompileDirective,
@@ -246,6 +248,7 @@ export {
 export {
   compilePipe as ɵcompilePipe,
 } from './render3/jit/pipe';
+export { isStandalone as ɵisStandalone} from './render3/definition';
 export { Profiler as ɵProfiler, ProfilerEvent as ɵProfilerEvent } from './render3/profiler';
 export {
   publishDefaultGlobalUtils as ɵpublishDefaultGlobalUtils
@@ -269,6 +272,9 @@ export {
   ɵɵtrustConstantHtml,
   ɵɵtrustConstantResourceUrl,
 } from './sanitization/sanitization';
+export {
+  ɵɵvalidateIframeAttribute,
+} from './sanitization/iframe_attrs_validation';
 export {
   noSideEffects as ɵnoSideEffects,
 } from './util/closure';

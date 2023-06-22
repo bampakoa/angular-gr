@@ -2,10 +2,10 @@
 
 Για να κατανοήσετε τις δυνατότητες της Angular, χρειάζεται να μάθετε τα εξής:
 
-* Components
-* Templates
-* Directives
-* Dependency injection
+*   Components
+*   Templates
+*   Directives
+*   Dependency injection
 
 Τα θέματα σε αυτήν την ενότητα εξηγούν αυτά τα χαρακτηριστικά και τις έννοιες, και πώς μπορείτε να τα χρησιμοποιήσετε. 
 

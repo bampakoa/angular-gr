@@ -17,9 +17,11 @@ const LOCAL_STORAGE_NAMESPACE = 'aio-notification/';
       // - aio/src/app/app.component.ts : notificationDismissed()
       transition('show => hide', animate(250))
     ])
-  ]
+  ],
+  host: { role: 'group', 'aria-label': 'Notification' }
 })
 export class NotificationComponent implements OnInit {
+  @Input() bannerNotficationDescription = 'notification banner.';
   @Input() dismissOnContentClick: boolean;
   @Input() notificationId: string;
   @Input() expirationDate: string;

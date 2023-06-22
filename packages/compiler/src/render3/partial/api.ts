@@ -113,6 +113,16 @@ export interface R3DeclareDirectiveMetadata extends R3PartialDeclaration {
    * Whether the directive implements the `ngOnChanges` hook. Defaults to false.
    */
   usesOnChanges?: boolean;
+
+  /**
+   * Whether the directive is standalone. Defaults to false.
+   */
+  isStandalone?: boolean;
+
+  /**
+   * Additional directives applied to the directive host.
+   */
+  hostDirectives?: R3DeclareHostDirectiveMetadata[];
 }
 
 /**
@@ -144,7 +154,7 @@ export interface R3DeclareComponentMetadata extends R3DeclareDirectiveMetadata {
    * the template to each directive specifically, if the runtime instructions
    * support this.
    */
-  components?: R3DeclareUsedDirectiveMetadata[];
+  components?: R3DeclareDirectiveDependencyMetadata[];
 
   /**
    * List of directives which matched in the template, including sufficient
@@ -152,7 +162,15 @@ export interface R3DeclareComponentMetadata extends R3DeclareDirectiveMetadata {
    * the template to each directive specifically, if the runtime instructions
    * support this.
    */
-  directives?: R3DeclareUsedDirectiveMetadata[];
+  directives?: R3DeclareDirectiveDependencyMetadata[];
+
+  /**
+   * List of dependencies which matched in the template, including sufficient
+   * metadata for each directive/pipe to attribute bindings and references within
+   * the template to each directive specifically, if the runtime instructions
+   * support this.
+   */
+  dependencies?: R3DeclareTemplateDependencyMetadata[];
 
   /**
    * A map of pipe names to an expression referencing the pipe type (possibly a forward reference
@@ -193,7 +211,12 @@ export interface R3DeclareComponentMetadata extends R3DeclareDirectiveMetadata {
   preserveWhitespaces?: boolean;
 }
 
-export interface R3DeclareUsedDirectiveMetadata {
+export type R3DeclareTemplateDependencyMetadata = R3DeclareDirectiveDependencyMetadata|
+    R3DeclarePipeDependencyMetadata|R3DeclareNgModuleDependencyMetadata;
+
+export interface R3DeclareDirectiveDependencyMetadata {
+  kind: 'directive'|'component';
+
   /**
    * Selector of the directive.
    */
@@ -219,6 +242,24 @@ export interface R3DeclareUsedDirectiveMetadata {
    * Names by which this directive exports itself for references.
    */
   exportAs?: string[];
+}
+
+export interface R3DeclarePipeDependencyMetadata {
+  kind: 'pipe';
+
+  name: string;
+
+  /**
+   * Reference to the pipe class (possibly a forward reference wrapped in a `forwardRef`
+   * invocation).
+   */
+  type: o.Expression|(() => o.Expression);
+}
+
+export interface R3DeclareNgModuleDependencyMetadata {
+  kind: 'ngmodule';
+
+  type: o.Expression|(() => o.Expression);
 }
 
 export interface R3DeclareQueryMetadata {
@@ -337,6 +378,13 @@ export interface R3DeclarePipeMetadata extends R3PartialDeclaration {
    * Default: true.
    */
   pure?: boolean;
+
+  /**
+   * Whether the pipe is standalone.
+   *
+   * Default: false.
+   */
+  isStandalone?: boolean;
 }
 
 
@@ -486,4 +534,14 @@ export interface R3DeclareClassMetadata extends R3PartialDeclaration {
    * omitted if no properties have any decorators.
    */
   propDecorators?: o.Expression;
+}
+
+/**
+ * Describes the shape of the object literal that can be
+ * passed in as a part of the `hostDirectives` array.
+ */
+export interface R3DeclareHostDirectiveMetadata {
+  directive: o.Expression;
+  inputs?: string[];
+  outputs?: string[];
 }

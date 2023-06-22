@@ -7,10 +7,11 @@
  */
 
 import {DOCUMENT} from '@angular/common';
-import {Inject, Injectable} from '@angular/core';
+import {EnvironmentInjector, Inject, inject, Injectable} from '@angular/core';
 import {Observable, Observer} from 'rxjs';
 
 import {HttpBackend, HttpHandler} from './backend';
+import {HttpHandlerFn} from './interceptor';
 import {HttpRequest} from './request';
 import {HttpErrorResponse, HttpEvent, HttpEventType, HttpResponse, HttpStatusCode} from './response';
 
@@ -36,6 +37,10 @@ export const JSONP_ERR_NO_CALLBACK = 'JSONP injected script did not invoke callb
 export const JSONP_ERR_WRONG_METHOD = 'JSONP requests must use JSONP request method.';
 export const JSONP_ERR_WRONG_RESPONSE_TYPE = 'JSONP requests must use Json response type.';
 
+// Error text given when a request is passed to the JsonpClientBackend that has
+// headers set
+export const JSONP_ERR_HEADERS_NOT_SUPPORTED = 'JSONP requests do not support headers.';
+
 /**
  * DI token/abstract type representing a map of JSONP callbacks.
  *
@@ -45,6 +50,21 @@ export const JSONP_ERR_WRONG_RESPONSE_TYPE = 'JSONP requests must use Json respo
  */
 export abstract class JsonpCallbackContext {
   [key: string]: (data: any) => void;
+}
+
+/**
+ * Factory function that determines where to store JSONP callbacks.
+ *
+ * Ordinarily JSONP callbacks are stored on the `window` object, but this may not exist
+ * in test environments. In that case, callbacks are stored on an anonymous object instead.
+ *
+ *
+ */
+export function jsonpCallbackContext(): Object {
+  if (typeof window === 'object') {
+    return window;
+  }
+  return {};
 }
 
 /**
@@ -84,6 +104,12 @@ export class JsonpClientBackend implements HttpBackend {
       throw new Error(JSONP_ERR_WRONG_METHOD);
     } else if (req.responseType !== 'json') {
       throw new Error(JSONP_ERR_WRONG_RESPONSE_TYPE);
+    }
+
+    // Check the request headers. JSONP doesn't support headers and
+    // cannot set any that were supplied.
+    if (req.headers.keys().length > 0) {
+      throw new Error(JSONP_ERR_HEADERS_NOT_SUPPORTED);
     }
 
     // Everything else happens inside the Observable boundary.
@@ -220,6 +246,19 @@ export class JsonpClientBackend implements HttpBackend {
 }
 
 /**
+ * Identifies requests with the method JSONP and shifts them to the `JsonpClientBackend`.
+ */
+export function jsonpInterceptorFn(
+    req: HttpRequest<unknown>, next: HttpHandlerFn): Observable<HttpEvent<unknown>> {
+  if (req.method === 'JSONP') {
+    return inject(JsonpClientBackend).handle(req as HttpRequest<never>);
+  }
+
+  // Fall through for normal HTTP requests.
+  return next(req);
+}
+
+/**
  * Identifies requests with the method JSONP and
  * shifts them to the `JsonpClientBackend`.
  *
@@ -229,20 +268,18 @@ export class JsonpClientBackend implements HttpBackend {
  */
 @Injectable()
 export class JsonpInterceptor {
-  constructor(private jsonp: JsonpClientBackend) {}
+  constructor(private injector: EnvironmentInjector) {}
 
   /**
    * Identifies and handles a given JSONP request.
-   * @param req The outgoing request object to handle.
+   * @param initialRequest The outgoing request object to handle.
    * @param next The next interceptor in the chain, or the backend
    * if no interceptors remain in the chain.
    * @returns An observable of the event stream.
    */
-  intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    if (req.method === 'JSONP') {
-      return this.jsonp.handle(req as HttpRequest<never>);
-    }
-    // Fall through for normal HTTP requests.
-    return next.handle(req);
+  intercept(initialRequest: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    return this.injector.runInContext(
+        () => jsonpInterceptorFn(
+            initialRequest, downstreamRequest => next.handle(downstreamRequest)));
   }
 }

@@ -8,12 +8,13 @@
 
 import ts from 'typescript';
 
-import {Reference} from '../../imports';
+import {OwningModule, Reference} from '../../imports';
 import {ClassDeclaration, isNamedClassDeclaration, ReflectionHost, TypeValueReferenceKind} from '../../reflection';
+import {nodeDebugInfo} from '../../util/src/typescript';
 
-import {DirectiveMeta, MetadataReader, MetaType, NgModuleMeta, PipeMeta} from './api';
+import {DirectiveMeta, HostDirectiveMeta, MatchSource, MetadataReader, MetaKind, NgModuleMeta, PipeMeta} from './api';
 import {ClassPropertyMapping} from './property_mapping';
-import {extractDirectiveTypeCheckMeta, extractReferencesFromType, readStringArrayType, readStringMapType, readStringType} from './util';
+import {extractDirectiveTypeCheckMeta, extractReferencesFromType, extraReferenceFromTypeQuery, readBooleanType, readMapType, readStringArrayType, readStringType} from './util';
 
 /**
  * A `MetadataReader` that can read metadata from `.d.ts` files, which have static Ivy properties
@@ -48,6 +49,7 @@ export class DtsMetadataReader implements MetadataReader {
     // Read the ModuleData out of the type arguments.
     const [_, declarationMetadata, importMetadata, exportMetadata] = ngModuleDef.type.typeArguments;
     return {
+      kind: MetaKind.NgModule,
       ref,
       declarations:
           extractReferencesFromType(this.checker, declarationMetadata, ref.bestGuessOwningModule),
@@ -55,6 +57,9 @@ export class DtsMetadataReader implements MetadataReader {
       imports: extractReferencesFromType(this.checker, importMetadata, ref.bestGuessOwningModule),
       schemas: [],
       rawDeclarations: null,
+      rawImports: null,
+      rawExports: null,
+      decorator: null,
     };
   }
 
@@ -88,12 +93,20 @@ export class DtsMetadataReader implements MetadataReader {
           param.typeValueReference.importedName === 'TemplateRef';
     });
 
-    const inputs =
-        ClassPropertyMapping.fromMappedObject(readStringMapType(def.type.typeArguments[3]));
-    const outputs =
-        ClassPropertyMapping.fromMappedObject(readStringMapType(def.type.typeArguments[4]));
+    const isStandalone =
+        def.type.typeArguments.length > 7 && (readBooleanType(def.type.typeArguments[7]) ?? false);
+
+    const inputs = ClassPropertyMapping.fromMappedObject(
+        readMapType(def.type.typeArguments[3], readStringType));
+    const outputs = ClassPropertyMapping.fromMappedObject(
+        readMapType(def.type.typeArguments[4], readStringType));
+    const hostDirectives = def.type.typeArguments.length > 8 ?
+        readHostDirectivesType(this.checker, def.type.typeArguments[8], ref.bestGuessOwningModule) :
+        null;
+
     return {
-      type: MetaType.Directive,
+      kind: MetaKind.Directive,
+      matchSource: MatchSource.Selector,
       ref,
       name: clazz.name.text,
       isComponent,
@@ -101,12 +114,20 @@ export class DtsMetadataReader implements MetadataReader {
       exportAs: readStringArrayType(def.type.typeArguments[2]),
       inputs,
       outputs,
+      hostDirectives,
       queries: readStringArrayType(def.type.typeArguments[5]),
       ...extractDirectiveTypeCheckMeta(clazz, inputs, this.reflector),
       baseClass: readBaseClass(clazz, this.checker, this.reflector),
       isPoisoned: false,
       isStructural,
       animationTriggerNames: null,
+      isStandalone,
+      // Imports are tracked in metadata only for template type-checking purposes,
+      // so standalone components from .d.ts files don't have any.
+      imports: null,
+      // The same goes for schemas.
+      schemas: null,
+      decorator: null,
     };
   }
 
@@ -131,11 +152,17 @@ export class DtsMetadataReader implements MetadataReader {
       return null;
     }
     const name = type.literal.text;
+
+    const isStandalone =
+        def.type.typeArguments.length > 2 && (readBooleanType(def.type.typeArguments[2]) ?? false);
+
     return {
-      type: MetaType.Pipe,
+      kind: MetaKind.Pipe,
       ref,
       name,
       nameExpr: null,
+      isStandalone,
+      decorator: null,
     };
   }
 }
@@ -168,4 +195,34 @@ function readBaseClass(clazz: ClassDeclaration, checker: ts.TypeChecker, reflect
     }
   }
   return null;
+}
+
+
+function readHostDirectivesType(
+    checker: ts.TypeChecker, type: ts.TypeNode,
+    bestGuessOwningModule: OwningModule|null): HostDirectiveMeta[]|null {
+  if (!ts.isTupleTypeNode(type) || type.elements.length === 0) {
+    return null;
+  }
+
+  const result: HostDirectiveMeta[] = [];
+
+  for (const hostDirectiveType of type.elements) {
+    const {directive, inputs, outputs} = readMapType(hostDirectiveType, type => type);
+
+    if (directive) {
+      if (!ts.isTypeQueryNode(directive)) {
+        throw new Error(`Expected TypeQueryNode: ${nodeDebugInfo(directive)}`);
+      }
+
+      result.push({
+        directive: extraReferenceFromTypeQuery(checker, directive, type, bestGuessOwningModule),
+        isForwardReference: false,
+        inputs: readMapType(inputs, readStringType),
+        outputs: readMapType(outputs, readStringType)
+      });
+    }
+  }
+
+  return result.length > 0 ? result : null;
 }

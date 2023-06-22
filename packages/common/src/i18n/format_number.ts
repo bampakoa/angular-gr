@@ -163,7 +163,7 @@ export function formatCurrency(
       // if we have 2 time the currency character, the second one is ignored
       .replace(CURRENCY_CHAR, '')
       // If there is a spacing between currency character and the value and
-      // the currency character is supressed by passing an empty string, the
+      // the currency character is suppressed by passing an empty string, the
       // spacing character would remain as part of the string. Then we
       // should remove it.
       .trim();
@@ -266,7 +266,7 @@ function parseNumberFormat(format: string, minusSign = '-'): ParsedNumberFormat 
       ],
         integer = positiveParts[0], fraction = positiveParts[1] || '';
 
-  p.posPre = integer.substr(0, integer.indexOf(DIGIT_CHAR));
+  p.posPre = integer.substring(0, integer.indexOf(DIGIT_CHAR));
 
   for (let i = 0; i < fraction.length; i++) {
     const ch = fraction.charAt(i);
@@ -287,8 +287,8 @@ function parseNumberFormat(format: string, minusSign = '-'): ParsedNumberFormat 
     const trunkLen = positive.length - p.posPre.length - p.posSuf.length,
           pos = negative.indexOf(DIGIT_CHAR);
 
-    p.negPre = negative.substr(0, pos).replace(/'/g, '');
-    p.negSuf = negative.substr(pos + trunkLen).replace(/'/g, '');
+    p.negPre = negative.substring(0, pos).replace(/'/g, '');
+    p.negSuf = negative.slice(pos + trunkLen).replace(/'/g, '');
   } else {
     p.negPre = minusSign + p.posPre;
     p.negSuf = p.posSuf;

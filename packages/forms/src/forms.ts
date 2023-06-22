@@ -17,7 +17,6 @@
  * explicitly.
  */
 
-
 export {ɵInternalFormsSharedModule} from './directives';
 export {AbstractControlDirective} from './directives/abstract_control_directive';
 export {AbstractFormGroupDirective} from './directives/abstract_form_group_directive';
@@ -41,26 +40,14 @@ export {FormGroupDirective} from './directives/reactive_directives/form_group_di
 export {FormArrayName, FormGroupName} from './directives/reactive_directives/form_group_name';
 export {NgSelectOption, SelectControlValueAccessor} from './directives/select_control_value_accessor';
 export {SelectMultipleControlValueAccessor, ɵNgSelectMultipleOption} from './directives/select_multiple_control_value_accessor';
+export {SetDisabledStateOption} from './directives/shared';
 export {AsyncValidator, AsyncValidatorFn, CheckboxRequiredValidator, EmailValidator, MaxLengthValidator, MaxValidator, MinLengthValidator, MinValidator, PatternValidator, RequiredValidator, ValidationErrors, Validator, ValidatorFn} from './directives/validators';
-export {FormBuilder} from './form_builder';
-export {AbstractControl, AbstractControlOptions, FormArray, FormControl, FormControlOptions, FormControlStatus, FormGroup} from './model';
+export {ControlConfig, FormBuilder, NonNullableFormBuilder, UntypedFormBuilder, ɵElement} from './form_builder';
+export {AbstractControl, AbstractControlOptions, FormControlStatus, ɵCoerceStrArrToNumArr, ɵGetProperty, ɵNavigate, ɵRawValue, ɵTokenize, ɵTypedOrUntyped, ɵValue, ɵWriteable} from './model/abstract_model';
+export {FormArray, isFormArray, UntypedFormArray, ɵFormArrayRawValue, ɵFormArrayValue} from './model/form_array';
+export {FormControl, FormControlOptions, FormControlState, isFormControl, UntypedFormControl, ɵFormControlCtor} from './model/form_control';
+export {FormGroup, FormRecord, isFormGroup, isFormRecord, UntypedFormGroup, ɵFormGroupRawValue, ɵFormGroupValue, ɵOptionalKeys} from './model/form_group';
 export {NG_ASYNC_VALIDATORS, NG_VALIDATORS, Validators} from './validators';
 export {VERSION} from './version';
-
-/**
- * `AnyForUntypedForms` is an alias for `any` used as part of the typed forms
- * migration.
- *
- * `AnyForUntypedForms` was inserted into your code automatically as part of a migration. To
- * continue opting out of strong types, simply replace it with `any`. To opt-in to typed forms,
- * remove
- * `<AnyForUntypedForms>` from your call site.
- *
- * This symbol is currently unused. Please do not use it. These docs will be updated when this
- * symbol is in use.
- *
- * @publicApi
- */
-export type AnyForUntypedForms = any;
 
 export * from './form_providers';

@@ -47,7 +47,7 @@ function getFirstClassDeclaration(declaration: string) {
 
 export function createModuleAndProjectWithDeclarations(
     env: LanguageServiceTestEnv, projectName: string, projectFiles: ProjectFiles,
-    options: TestableOptions = {}): Project {
+    options: TestableOptions = {}, standaloneFiles: ProjectFiles = {}): Project {
   const externalClasses: string[] = [];
   const externalImports: string[] = [];
   for (const [fileName, fileContents] of Object.entries(projectFiles)) {
@@ -70,7 +70,7 @@ export function createModuleAndProjectWithDeclarations(
         export class AppModule {}
       `;
   projectFiles['app-module.ts'] = moduleContents;
-  return env.addProject(projectName, projectFiles, options);
+  return env.addProject(projectName, {...projectFiles, ...standaloneFiles}, options);
 }
 
 export function humanizeDocumentSpanLike<T extends ts.DocumentSpan>(
@@ -93,7 +93,7 @@ type Stringy<T> = {
 };
 
 export function getText(contents: string, textSpan: ts.TextSpan) {
-  return contents.substr(textSpan.start, textSpan.length);
+  return contents.slice(textSpan.start, textSpan.start + textSpan.length);
 }
 
 function last<T>(array: T[]): T {

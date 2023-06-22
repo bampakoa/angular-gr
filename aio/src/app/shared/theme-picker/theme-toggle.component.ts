@@ -57,7 +57,7 @@ export class ThemeToggleComponent {
   }
 
   getToggleLabel(): string {
-    return `Switch to ${this.isDark ? 'light' : 'dark'} mode`;
+    return `Αλλαγή σε ${this.isDark ? 'ανοιχτό' : 'σκούρο'} θέμα`;
   }
 
   private updateRenderedTheme(): void {

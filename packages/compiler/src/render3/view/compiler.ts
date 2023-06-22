@@ -12,6 +12,7 @@ import * as core from '../../core';
 import {AST, ParsedEvent, ParsedEventType, ParsedProperty} from '../../expression_parser/ast';
 import * as o from '../../output/output_ast';
 import {ParseError, ParseSourceSpan, sanitizeIdentifier} from '../../parse_util';
+import {isIframeSecuritySensitiveAttr} from '../../schema/dom_security_schema';
 import {CssSelector} from '../../selector';
 import {ShadowCss} from '../../shadow_css';
 import {BindingParser} from '../../template_parser/binding_parser';
@@ -20,7 +21,7 @@ import {BoundEvent} from '../r3_ast';
 import {Identifiers as R3} from '../r3_identifiers';
 import {prepareSyntheticListenerFunctionName, prepareSyntheticPropertyName, R3CompiledExpression, typeWithParameters} from '../util';
 
-import {DeclarationListEmitMode, R3ComponentMetadata, R3DirectiveMetadata, R3HostMetadata, R3QueryMetadata} from './api';
+import {DeclarationListEmitMode, R3ComponentMetadata, R3DirectiveMetadata, R3HostMetadata, R3QueryMetadata, R3TemplateDependency} from './api';
 import {MIN_STYLING_BINDING_SLOTS_REQUIRED, StylingBuilder, StylingInstructionCall} from './styling_builder';
 import {BindingScope, makeBindingParser, prepareEventListenerParameters, renderFlagCheckIfStmt, resolveSanitizationFn, TemplateDefinitionBuilder, ValueConverter} from './template';
 import {asLiteral, conditionallyCreateMapObjectLiteral, CONTEXT_NAME, DefinitionMap, getInstructionStatements, getQueryPredicate, Instruction, RENDER_FLAGS, TEMPORARY_NAME, temporaryAllocator} from './util';
@@ -77,18 +78,24 @@ function baseDirectiveFields(
     definitionMap.set('exportAs', o.literalArr(meta.exportAs.map(e => o.literal(e))));
   }
 
+  if (meta.isStandalone) {
+    definitionMap.set('standalone', o.literal(true));
+  }
+
   return definitionMap;
 }
 
 /**
  * Add features to the definition map.
  */
-function addFeatures(definitionMap: DefinitionMap, meta: R3DirectiveMetadata|R3ComponentMetadata) {
+function addFeatures(
+    definitionMap: DefinitionMap,
+    meta: R3DirectiveMetadata|R3ComponentMetadata<R3TemplateDependency>) {
   // e.g. `features: [NgOnChangesFeature]`
   const features: o.Expression[] = [];
 
   const providers = meta.providers;
-  const viewProviders = (meta as R3ComponentMetadata).viewProviders;
+  const viewProviders = (meta as R3ComponentMetadata<R3TemplateDependency>).viewProviders;
   if (providers || viewProviders) {
     const args = [providers || new o.LiteralArrayExpr([])];
     if (viewProviders) {
@@ -105,6 +112,14 @@ function addFeatures(definitionMap: DefinitionMap, meta: R3DirectiveMetadata|R3C
   }
   if (meta.lifecycle.usesOnChanges) {
     features.push(o.importExpr(R3.NgOnChangesFeature));
+  }
+  // TODO: better way of differentiating component vs directive metadata.
+  if (meta.hasOwnProperty('template') && meta.isStandalone) {
+    features.push(o.importExpr(R3.StandaloneFeature));
+  }
+  if (meta.hostDirectives?.length) {
+    features.push(o.importExpr(R3.HostDirectivesFeature).callFn([createHostDirectivesFeatureArg(
+        meta.hostDirectives)]));
   }
   if (features.length) {
     definitionMap.set('features', o.literalArr(features));
@@ -130,7 +145,7 @@ export function compileDirectiveFromMetadata(
  * Compile a component for the render3 runtime as defined by the `R3ComponentMetadata`.
  */
 export function compileComponentFromMetadata(
-    meta: R3ComponentMetadata, constantPool: ConstantPool,
+    meta: R3ComponentMetadata<R3TemplateDependency>, constantPool: ConstantPool,
     bindingParser: BindingParser): R3CompiledExpression {
   const definitionMap = baseDirectiveFields(meta, constantPool, bindingParser);
   addFeatures(definitionMap, meta);
@@ -195,18 +210,11 @@ export function compileComponentFromMetadata(
 
   definitionMap.set('template', templateFunctionExpression);
 
-  // e.g. `directives: [MyDirective]`
-  if (meta.directives.length > 0) {
-    const directivesList = o.literalArr(meta.directives.map(dir => dir.type));
-    const directivesExpr = compileDeclarationList(directivesList, meta.declarationListEmitMode);
-    definitionMap.set('directives', directivesExpr);
-  }
-
-  // e.g. `pipes: [MyPipe]`
-  if (meta.pipes.size > 0) {
-    const pipesList = o.literalArr(Array.from(meta.pipes.values()));
-    const pipesExpr = compileDeclarationList(pipesList, meta.declarationListEmitMode);
-    definitionMap.set('pipes', pipesExpr);
+  if (meta.declarations.length > 0) {
+    definitionMap.set(
+        'dependencies',
+        compileDeclarationList(
+            o.literalArr(meta.declarations.map(decl => decl.type)), meta.declarationListEmitMode));
   }
 
   if (meta.encapsulation === null) {
@@ -218,8 +226,16 @@ export function compileComponentFromMetadata(
     const styleValues = meta.encapsulation == core.ViewEncapsulation.Emulated ?
         compileStyles(meta.styles, CONTENT_ATTR, HOST_ATTR) :
         meta.styles;
-    const strings = styleValues.map(str => constantPool.getConstLiteral(o.literal(str)));
-    definitionMap.set('styles', o.literalArr(strings));
+    const styleNodes = styleValues.reduce((result, style) => {
+      if (style.trim().length > 0) {
+        result.push(constantPool.getConstLiteral(o.literal(style)));
+      }
+      return result;
+    }, [] as o.Expression[]);
+
+    if (styleNodes.length > 0) {
+      definitionMap.set('styles', o.literalArr(styleNodes));
+    }
   } else if (meta.encapsulation === core.ViewEncapsulation.Emulated) {
     // If there is no style, don't generate css selectors on elements
     meta.encapsulation = core.ViewEncapsulation.None;
@@ -252,9 +268,11 @@ export function compileComponentFromMetadata(
  * Creates the type specification from the component meta. This type is inserted into .d.ts files
  * to be consumed by upstream compilations.
  */
-export function createComponentType(meta: R3ComponentMetadata): o.Type {
-  const typeParams = createDirectiveTypeParams(meta);
+export function createComponentType(meta: R3ComponentMetadata<R3TemplateDependency>): o.Type {
+  const typeParams = createBaseDirectiveTypeParams(meta);
   typeParams.push(stringArrayAsType(meta.template.ngContentSelectors));
+  typeParams.push(o.expressionType(o.literal(meta.isStandalone)));
+  typeParams.push(createHostDirectivesType(meta));
   return o.expressionType(o.importExpr(R3.ComponentDeclaration, typeParams));
 }
 
@@ -378,7 +396,7 @@ function stringAsType(str: string): o.Type {
   return o.expressionType(o.literal(str));
 }
 
-function stringMapAsType(map: {[key: string]: string|string[]}): o.Type {
+function stringMapAsLiteralExpression(map: {[key: string]: string|string[]}): o.LiteralMapExpr {
   const mapValues = Object.keys(map).map(key => {
     const value = Array.isArray(map[key]) ? map[key][0] : map[key];
     return {
@@ -387,7 +405,8 @@ function stringMapAsType(map: {[key: string]: string|string[]}): o.Type {
       quoted: true,
     };
   });
-  return o.expressionType(o.literalMap(mapValues));
+
+  return o.literalMap(mapValues);
 }
 
 function stringArrayAsType(arr: ReadonlyArray<string|null>): o.Type {
@@ -395,7 +414,7 @@ function stringArrayAsType(arr: ReadonlyArray<string|null>): o.Type {
                           o.NONE_TYPE;
 }
 
-export function createDirectiveTypeParams(meta: R3DirectiveMetadata): o.Type[] {
+export function createBaseDirectiveTypeParams(meta: R3DirectiveMetadata): o.Type[] {
   // On the type side, remove newlines from the selector as it will need to fit into a TypeScript
   // string literal, which must be on one line.
   const selectorForType = meta.selector !== null ? meta.selector.replace(/\n/g, '') : null;
@@ -404,8 +423,8 @@ export function createDirectiveTypeParams(meta: R3DirectiveMetadata): o.Type[] {
     typeWithParameters(meta.type.type, meta.typeArgumentCount),
     selectorForType !== null ? stringAsType(selectorForType) : o.NONE_TYPE,
     meta.exportAs !== null ? stringArrayAsType(meta.exportAs) : o.NONE_TYPE,
-    stringMapAsType(meta.inputs),
-    stringMapAsType(meta.outputs),
+    o.expressionType(stringMapAsLiteralExpression(meta.inputs)),
+    o.expressionType(stringMapAsLiteralExpression(meta.outputs)),
     stringArrayAsType(meta.queries.map(q => q.propertyName)),
   ];
 }
@@ -415,7 +434,12 @@ export function createDirectiveTypeParams(meta: R3DirectiveMetadata): o.Type[] {
  * to be consumed by upstream compilations.
  */
 export function createDirectiveType(meta: R3DirectiveMetadata): o.Type {
-  const typeParams = createDirectiveTypeParams(meta);
+  const typeParams = createBaseDirectiveTypeParams(meta);
+  // Directives have no NgContentSelectors slot, but instead express a `never` type
+  // so that future fields align.
+  typeParams.push(o.NONE_TYPE);
+  typeParams.push(o.expressionType(o.literal(meta.isStandalone)));
+  typeParams.push(createHostDirectivesType(meta));
   return o.expressionType(o.importExpr(R3.DirectiveDeclaration, typeParams));
 }
 
@@ -551,6 +575,19 @@ function createHostBindingsFunction(
     const instructionParams = [o.literal(bindingName), bindingExpr.currValExpr];
     if (sanitizerFn) {
       instructionParams.push(sanitizerFn);
+    } else {
+      // If there was no sanitization function found based on the security context
+      // of an attribute/property binding - check whether this attribute/property is
+      // one of the security-sensitive <iframe> attributes.
+      // Note: for host bindings defined on a directive, we do not try to find all
+      // possible places where it can be matched, so we can not determine whether
+      // the host element is an <iframe>. In this case, if an attribute/binding
+      // name is in the `IFRAME_SECURITY_SENSITIVE_ATTRS` set - append a validation
+      // function, which would be invoked at runtime and would have access to the
+      // underlying DOM element, check if it's an <iframe> and if so - runs extra checks.
+      if (isIframeSecuritySensitiveAttr(bindingName)) {
+        instructionParams.push(o.importExpr(R3.validateIframeAttribute));
+      }
     }
 
     updateVariables.push(...bindingExpr.stmts);
@@ -795,4 +832,79 @@ function compileStyles(styles: string[], selector: string, hostSelector: string)
   return styles.map(style => {
     return shadowCss!.shimCssText(style, selector, hostSelector);
   });
+}
+
+function createHostDirectivesType(meta: R3DirectiveMetadata): o.Type {
+  if (!meta.hostDirectives?.length) {
+    return o.NONE_TYPE;
+  }
+
+  return o.expressionType(o.literalArr(meta.hostDirectives.map(hostMeta => o.literalMap([
+    {key: 'directive', value: o.typeofExpr(hostMeta.directive.type), quoted: false},
+    {key: 'inputs', value: stringMapAsLiteralExpression(hostMeta.inputs || {}), quoted: false},
+    {key: 'outputs', value: stringMapAsLiteralExpression(hostMeta.outputs || {}), quoted: false},
+  ]))));
+}
+
+function createHostDirectivesFeatureArg(
+    hostDirectives: NonNullable<R3DirectiveMetadata['hostDirectives']>): o.Expression {
+  const expressions: o.Expression[] = [];
+  let hasForwardRef = false;
+
+  for (const current of hostDirectives) {
+    // Use a shorthand if there are no inputs or outputs.
+    if (!current.inputs && !current.outputs) {
+      expressions.push(current.directive.type);
+    } else {
+      const keys = [{key: 'directive', value: current.directive.type, quoted: false}];
+
+      if (current.inputs) {
+        const inputsLiteral = createHostDirectivesMappingArray(current.inputs);
+        if (inputsLiteral) {
+          keys.push({key: 'inputs', value: inputsLiteral, quoted: false});
+        }
+      }
+
+      if (current.outputs) {
+        const outputsLiteral = createHostDirectivesMappingArray(current.outputs);
+        if (outputsLiteral) {
+          keys.push({key: 'outputs', value: outputsLiteral, quoted: false});
+        }
+      }
+
+      expressions.push(o.literalMap(keys));
+    }
+
+    if (current.isForwardReference) {
+      hasForwardRef = true;
+    }
+  }
+
+  // If there's a forward reference, we generate a `function() { return [HostDir] }`,
+  // otherwise we can save some bytes by using a plain array, e.g. `[HostDir]`.
+  return hasForwardRef ?
+      new o.FunctionExpr([], [new o.ReturnStatement(o.literalArr(expressions))]) :
+      o.literalArr(expressions);
+}
+
+/**
+ * Converts an input/output mapping object literal into an array where the even keys are the
+ * public name of the binding and the odd ones are the name it was aliased to. E.g.
+ * `{inputOne: 'aliasOne', inputTwo: 'aliasTwo'}` will become
+ * `['inputOne', 'aliasOne', 'inputTwo', 'aliasTwo']`.
+ *
+ * This conversion is necessary, because hosts bind to the public name of the host directive and
+ * keeping the mapping in an object literal will break for apps using property renaming.
+ */
+export function createHostDirectivesMappingArray(mapping: Record<string, string>):
+    o.LiteralArrayExpr|null {
+  const elements: o.LiteralExpr[] = [];
+
+  for (const publicName in mapping) {
+    if (mapping.hasOwnProperty(publicName)) {
+      elements.push(o.literal(publicName), o.literal(mapping[publicName]));
+    }
+  }
+
+  return elements.length > 0 ? o.literalArr(elements) : null;
 }

@@ -6,7 +6,7 @@
 """
 
 load("//integration:npm_package_archives.bzl", "NPM_PACKAGE_ARCHIVES", "npm_package_archive_label")
-load("@npm//@angular/dev-infra-private/bazel/integration:index.bzl", "integration_test")
+load("@npm//@angular/build-tooling/bazel/integration:index.bzl", "integration_test")
 
 # The generated npm packages should ALWAYS be replaced in integration tests
 # so we pass them to the `check_npm_packages` attribute of npm_integration_test
@@ -33,7 +33,6 @@ FRAMEWORK_PACKAGES = [
 
 def _ng_integration_test(name, setup_chromium = False, **kwargs):
     "Set defaults for the npm_integration_test common to the angular repo"
-    payload_size_tracking = kwargs.pop("payload_size_tracking", [])
     pinned_npm_packages = kwargs.pop("pinned_npm_packages", [])
     use_view_engine_packages = kwargs.pop("use_view_engine_packages", [])
     toolchains = kwargs.pop("toolchains", [])
@@ -41,15 +40,9 @@ def _ng_integration_test(name, setup_chromium = False, **kwargs):
     track_payload_size = kwargs.pop("track_payload_size", None)
     data = kwargs.pop("data", [])
 
-    data += [
-        # The Yarn files also need to be part of the integration test as runfiles
-        # because the `yarn_bin` target is not a self-contained standalone binary.
-        "@nodejs//:yarn_files",
-    ]
-
     if setup_chromium:
-        data += ["@npm//@angular/dev-infra-private/bazel/browsers/chromium"]
-        toolchains += ["@npm//@angular/dev-infra-private/bazel/browsers/chromium:toolchain_alias"]
+        data.append("@npm//@angular/build-tooling/bazel/browsers/chromium")
+        toolchains.append("@npm//@angular/build-tooling/bazel/browsers/chromium:toolchain_alias")
         environment.update({
             "CHROMEDRIVER_BIN": "$(CHROMEDRIVER)",
             "CHROME_BIN": "$(CHROMIUM)",
@@ -66,11 +59,11 @@ def _ng_integration_test(name, setup_chromium = False, **kwargs):
         commands += [
             "yarn build",
             # TODO: Replace the track payload-size script with a RBE and Windows-compatible script.
-            "$(rootpath //:scripts/ci/track-payload-size.sh) %s 'dist/*.js' true $${RUNFILES}/angular/$(rootpath //goldens:size-tracking/integration-payloads.json)" % track_payload_size,
+            "$(rootpath //:scripts/ci/bazel-payload-size.sh) %s 'dist/*.js' true $${RUNFILES}/angular/$(rootpath //goldens:size-tracking/integration-payloads.json)" % track_payload_size,
         ]
         data += [
             "//goldens:size-tracking/integration-payloads.json",
-            "//:scripts/ci/track-payload-size.sh",
+            "//:scripts/ci/bazel-payload-size.sh",
             "//:scripts/ci/payload-size.sh",
             "//:scripts/ci/payload-size.js",
         ]
@@ -110,8 +103,8 @@ def _ng_integration_test(name, setup_chromium = False, **kwargs):
         environment = environment,
         toolchains = toolchains,
         tool_mappings = {
-            "@nodejs//:yarn_bin": "yarn",
-            "@nodejs//:node_bin": "node",
+            "//:yarn_vendored": "yarn",
+            "@nodejs_toolchains//:resolved_toolchain": "node",
         },
         # 15-minute timeout
         timeout = "long",

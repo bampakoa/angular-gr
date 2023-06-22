@@ -34,7 +34,7 @@ Thanks for reporting this issue. However this issue is a duplicate of an existin
 
 ## Angular: Insufficient Information Provided (v2)
 ```
-Thanks for reporting this issue. However, you didn't provide sufficient information for us to understand and reproduce the problem. Please check out [our submission guidelines](https://github.com/angular/angular/blob/master/CONTRIBUTING.md#submit-issue) to understand why we can't act on issues that are lacking important information.
+Thanks for reporting this issue. However, you didn't provide sufficient information for us to understand and reproduce the problem. Please check out [our submission guidelines](https://github.com/angular/angular/blob/main/CONTRIBUTING.md#submit-issue) to understand why we can't act on issues that are lacking important information.
 
 If the problem still exists in your application, please [open a new issue](https://github.com/angular/angular/issues/new/choose) and follow the instructions in the issue template.
 
@@ -69,5 +69,17 @@ If the problem still exists in your application, please [open a new issue](https
 ```
 Hello, we reviewed this issue and determined that it doesn't fall into the bug report or feature request category. This issue tracker is not suitable for support requests, please repost your issue on [StackOverflow](https://stackoverflow.com/) using tag `angular`.
 
-If you are wondering why we don't resolve support issues via the issue tracker, please [check out this explanation](https://github.com/angular/angular/blob/master/CONTRIBUTING.md#question).
+If you are wondering why we don't resolve support issues via the issue tracker, please [check out this explanation](https://github.com/angular/angular/blob/main/CONTRIBUTING.md#question).
+```
+
+## Angular: Commit Header
+```
+It looks like you need to update your commit header to match our requirements. This is different from the PR title. To update the commit header, use the command `git commit --amend` and update the header there.
+
+Once you've finished that update, you will need to force push using `git push [origin name] [branch name] --force`. That should address this.
+```
+
+## Angular: Rebase and Squash
+```
+Please rebase and squash your commits. To do this, make sure to `git fetch upstream` to get the latest changes from the angular repository. Then in your branch run `git rebase upstream/main -i` to do an interactive rebase. This should allow you to fixup or drop any unnecessary commits. After you finish the rebase, force push using `git push [origin name] [branch name] --force`.
 ```

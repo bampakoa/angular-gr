@@ -8,9 +8,9 @@
 import '../../util/ng_dev_mode';
 import '../../util/ng_i18n_closure_mode';
 
-import {getTemplateContent, SRCSET_ATTRS, URI_ATTRS, VALID_ATTRS, VALID_ELEMENTS} from '../../sanitization/html_sanitizer';
+import {getTemplateContent, URI_ATTRS, VALID_ATTRS, VALID_ELEMENTS} from '../../sanitization/html_sanitizer';
 import {getInertBodyHelper} from '../../sanitization/inert_body';
-import {_sanitizeUrl, sanitizeSrcset} from '../../sanitization/url_sanitizer';
+import {_sanitizeUrl} from '../../sanitization/url_sanitizer';
 import {assertDefined, assertEqual, assertGreaterThanOrEqual, assertOneOf, assertString} from '../../util/assert';
 import {CharCode} from '../../util/char_code';
 import {loadIcuContainerVisitor} from '../instructions/i18n_icu_container_visitor';
@@ -384,7 +384,7 @@ function removeInnerTemplateTranslation(message: string): string {
           `Tag mismatch: unable to find the end of the sub-template in the translation "${
               message}"`);
 
-  res += message.substr(index);
+  res += message.slice(index);
   return res;
 }
 
@@ -483,7 +483,7 @@ export function parseICUBlock(pattern: string): IcuExpression {
     } else {
       icuType = IcuType.plural;
     }
-    mainBinding = parseInt(binding.substr(1), 10);
+    mainBinding = parseInt(binding.slice(1), 10);
     return '';
   });
 
@@ -624,9 +624,6 @@ function walkIcuTree(
                 if (URI_ATTRS[lowerAttrName]) {
                   generateBindingUpdateOpCodes(
                       update, attr.value, newIndex, attr.name, 0, _sanitizeUrl);
-                } else if (SRCSET_ATTRS[lowerAttrName]) {
-                  generateBindingUpdateOpCodes(
-                      update, attr.value, newIndex, attr.name, 0, sanitizeSrcset);
                 } else {
                   generateBindingUpdateOpCodes(update, attr.value, newIndex, attr.name, 0, null);
                 }

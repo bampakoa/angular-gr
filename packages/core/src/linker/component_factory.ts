@@ -8,6 +8,7 @@
 
 import {ChangeDetectorRef} from '../change_detection/change_detection';
 import {Injector} from '../di/injector';
+import {EnvironmentInjector} from '../di/r3_injector';
 import {Type} from '../interface/type';
 
 import {ElementRef} from './element_ref';
@@ -22,6 +23,16 @@ import {ViewRef} from './view_ref';
  * @publicApi
  */
 export abstract class ComponentRef<C> {
+  /**
+   * Updates a specified input name to a new value. Using this method will properly mark for check
+   * component using the `OnPush` change detection strategy. It will also assure that the
+   * `OnChanges` lifecycle hook runs when a dynamically created component is change-detected.
+   *
+   * @param name The name of an input.
+   * @param value The new value of an input.
+   */
+  abstract setInput(name: string, value: unknown): void;
+
   /**
    * The host or anchor [element](guide/glossary#element) for this component instance.
    */
@@ -105,5 +116,5 @@ export abstract class ComponentFactory<C> {
    */
   abstract create(
       injector: Injector, projectableNodes?: any[][], rootSelectorOrNode?: string|any,
-      ngModule?: NgModuleRef<any>): ComponentRef<C>;
+      environmentInjector?: EnvironmentInjector|NgModuleRef<any>): ComponentRef<C>;
 }

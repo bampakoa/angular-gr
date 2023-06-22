@@ -6,7 +6,9 @@
  * found in the LICENSE file at https://angular.io/license
  */
 import ts from 'typescript';
+
 import {ImportRewriter, NoopImportRewriter} from '../../imports';
+
 import {ImportGenerator, NamedImport} from './api/import_generator';
 
 /**
@@ -15,7 +17,7 @@ import {ImportGenerator, NamedImport} from './api/import_generator';
 export interface Import {
   /** The name of the module that has been imported. */
   specifier: string;
-  /** The `ts.Identifer` by which the imported module is known. */
+  /** The `ts.Identifier` by which the imported module is known. */
   qualifier: ts.Identifier;
 }
 
@@ -29,7 +31,7 @@ export class ImportManager implements ImportGenerator<ts.Identifier> {
   generateNamespaceImport(moduleName: string): ts.Identifier {
     if (!this.specifierToIdentifier.has(moduleName)) {
       this.specifierToIdentifier.set(
-          moduleName, ts.createIdentifier(`${this.prefix}${this.nextIndex++}`));
+          moduleName, ts.factory.createIdentifier(`${this.prefix}${this.nextIndex++}`));
     }
     return this.specifierToIdentifier.get(moduleName)!;
   }

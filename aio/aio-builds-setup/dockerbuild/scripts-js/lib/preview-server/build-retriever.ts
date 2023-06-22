@@ -1,5 +1,4 @@
 import * as fs from 'fs';
-import fetch from 'node-fetch';
 import {dirname} from 'path';
 import {mkdir} from 'shelljs';
 import {promisify} from 'util';
@@ -14,7 +13,6 @@ export interface GithubInfo {
   pr: number;
   repo: string;
   sha: string;
-  success: boolean;
 }
 
 /**
@@ -37,12 +35,12 @@ export class BuildRetriever {
    */
   public async getGithubInfo(buildNum: number): Promise<GithubInfo> {
     const buildInfo = await this.api.getBuildInfo(buildNum);
+    const pipelineInfo = await this.api.getPipelineInfo(buildInfo.pipeline.id);
     const githubInfo: GithubInfo = {
-      org: buildInfo.username,
-      pr: getPrFromBranch(buildInfo.branch),
-      repo: buildInfo.reponame,
-      sha: buildInfo.vcs_revision,
-      success: !buildInfo.failed,
+      org: buildInfo.organization.name,
+      pr: +pipelineInfo.vcs.review_id,
+      repo: buildInfo.project.name,
+      sha: pipelineInfo.vcs.revision,
     };
     return githubInfo;
   }
@@ -63,11 +61,7 @@ export class BuildRetriever {
           await new Promise(resolve => fs.exists(outPath, exists => resolve(exists)));
       if (!downloadExists) {
         const url = await this.api.getBuildArtifactUrl(buildNum, artifactPath);
-        const response = await fetch(url, {size: this.downloadSizeLimit});
-        if (response.status !== 200) {
-          throw new PreviewServerError(
-              response.status, `Error ${response.status} - ${response.statusText}`);
-        }
+        const response = await this.api.fetchFromCircleCi(url, {size: this.downloadSizeLimit});
         const buffer = await response.buffer();
         mkdir('-p', dirname(outPath));
         await promisify(fs.writeFile)(outPath, buffer);
@@ -80,13 +74,4 @@ export class BuildRetriever {
           status, `CircleCI artifact download failed (${error.message || error})`);
     }
   }
-}
-
-function getPrFromBranch(branch: string): number {
-  // CircleCI only exposes PR numbers via the `branch` field :-(
-  const match = /^pull\/(\d+)$/.exec(branch);
-  if (!match) {
-    throw new Error(`No PR found in branch field: ${branch}`);
-  }
-  return +match[1];
 }

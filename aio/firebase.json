@@ -38,7 +38,7 @@
         {
           "type": 301,
           "source": "/guide/bazel",
-          "destination": "https://github.com/angular/angular/blob/master/packages/bazel/docs/BAZEL_SCHEMATICS.md"
+          "destination": "https://github.com/angular/angular/blob/main/packages/bazel/docs/BAZEL_SCHEMATICS.md"
         },
         {
           "type": 301,
@@ -88,7 +88,7 @@
         {
           "type": 301,
           "source": "/guide/change-log",
-          "destination": "https://github.com/angular/angular/blob/master/CHANGELOG.md"
+          "destination": "https://github.com/angular/angular/blob/main/CHANGELOG.md"
         },
         {
           "type": 301,
@@ -112,6 +112,11 @@
         },
         {
           "type": 301,
+          "source": "/guide/ivy",
+          "destination": "https://v12.angular.io/guide/ivy"
+        },
+        {
+          "type": 301,
           "source": "/guide/updating-to-version-10",
           "destination": "https://v10.angular.io/guide/updating-to-version-10"
         },
@@ -124,6 +129,11 @@
           "type": 301,
           "source": "/guide/updating-to-version-12",
           "destination": "/guide/update-to-latest-version"
+        },
+        {
+          "type": 301,
+          "source": "/guide/set-document-title",
+          "destination": "/guide/router#setting-the-page-title"
         },
         {
           "type": 301,
@@ -447,11 +457,6 @@
         },
         {
           "type": 301,
-          "source": "/config/app-package-json",
-          "destination": "/guide/strict-mode#non-local-side-effects-in-applications"
-        },
-        {
-          "type": 301,
           "source": "/strict",
           "destination": "/guide/strict-mode"
         },
@@ -469,7 +474,9 @@
           "type": 302,
           "source": "/generated/docs/devtools.json",
           "destination": "/generated/docs/guide/devtools.json"
-        }
+        },
+        {"type": 301, "source": "/cli/usage-analytics-gathering", "destination": "/cli/analytics"},
+        {"type": 301, "source": "/analytics", "destination": "/cli/analytics"}
       ],
       "rewrites": [
         {
@@ -484,6 +491,10 @@
             {
               "key": "Content-Security-Policy-Report-Only",
               "value": "require-trusted-types-for 'script'; trusted-types angular angular#bundler angular#unsafe-bypass aio#analytics google#safe; report-uri https://csp.withgoogle.com/csp/angular.io"
+            },
+            {
+              "key": "X-Frame-Options",
+              "value": "DENY"
             }
           ]
         },
@@ -553,5 +564,8 @@
         }
       ]
     }
-  ]
+  ],
+  "database": {
+    "rules": "database.rules.json"
+  }
 }

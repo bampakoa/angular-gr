@@ -334,16 +334,28 @@ describe('XMLHttpRequest', function() {
      function(done) {
        testZone.run(function() {
          const req = new XMLHttpRequest();
+
          req.open('get', '/', true);
          req.send();
-         req.addEventListener('readystatechange', function(ev) {
+
+         let count = 0;
+         const listener = function(ev: any) {
            if (req.readyState >= 2) {
+             const isInitial = count++ === 0;
+
              expect(() => {
+               // this triggers a synchronous dispatch of the state change event.
                req.abort();
              }).not.toThrow();
-             done();
+
+             req.removeEventListener('readystatechange', listener);
+
+             if (isInitial) {
+               done();
+             }
            }
-         });
+         };
+         req.addEventListener('readystatechange', listener);
        });
      });
 

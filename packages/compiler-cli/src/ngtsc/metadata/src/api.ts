@@ -14,11 +14,11 @@ import {ClassDeclaration} from '../../reflection';
 
 import {ClassPropertyMapping, ClassPropertyName} from './property_mapping';
 
-
 /**
  * Metadata collected for an `NgModule`.
  */
 export interface NgModuleMeta {
+  kind: MetaKind.NgModule;
   ref: Reference<ClassDeclaration>;
   declarations: Reference<ClassDeclaration>[];
   imports: Reference<ClassDeclaration>[];
@@ -32,6 +32,29 @@ export interface NgModuleMeta {
    * because the module came from a .d.ts file).
    */
   rawDeclarations: ts.Expression|null;
+
+  /**
+   * The raw `ts.Expression` which gave rise to `imports`, if one exists.
+   *
+   * If this is `null`, then either no imports exist, or no expression was available (likely
+   * because the module came from a .d.ts file).
+   */
+  rawImports: ts.Expression|null;
+
+  /**
+   * The raw `ts.Expression` which gave rise to `exports`, if one exists.
+   *
+   * If this is `null`, then either no exports exist, or no expression was available (likely
+   * because the module came from a .d.ts file).
+   */
+  rawExports: ts.Expression|null;
+
+  /**
+   * The primary decorator associated with this `ngModule`.
+   *
+   * If this is `null`, no decorator exists, meaning it's probably from a .d.ts file.
+   */
+  decorator: ts.Decorator|null;
 }
 
 /**
@@ -80,16 +103,34 @@ export interface DirectiveTypeCheckMeta {
   isGeneric: boolean;
 }
 
-export enum MetaType {
-  Pipe,
+/**
+ * Disambiguates different kinds of compiler metadata objects.
+ */
+export enum MetaKind {
   Directive,
+  Pipe,
+  NgModule,
+}
+
+/**
+ * Possible ways that a directive can be matched.
+ */
+export enum MatchSource {
+  /** The directive was matched by its selector. */
+  Selector,
+
+  /** The directive was applied as a host directive. */
+  HostDirective,
 }
 
 /**
  * Metadata collected for a directive within an NgModule's scope.
  */
 export interface DirectiveMeta extends T2DirectiveMeta, DirectiveTypeCheckMeta {
-  type: MetaType.Directive;
+  kind: MetaKind.Directive;
+
+  /** Way in which the directive was matched. */
+  matchSource: MatchSource;
 
   ref: Reference<ClassDeclaration>;
   /**
@@ -126,6 +167,46 @@ export interface DirectiveMeta extends T2DirectiveMeta, DirectiveTypeCheckMeta {
    * Whether the directive is likely a structural directive (injects `TemplateRef`).
    */
   isStructural: boolean;
+
+  /**
+   * Whether the directive is a standalone entity.
+   */
+  isStandalone: boolean;
+
+  /**
+   * For standalone components, the list of imported types.
+   */
+  imports: Reference<ClassDeclaration>[]|null;
+
+  /**
+   * For standalone components, the list of schemas declared.
+   */
+  schemas: SchemaMetadata[]|null;
+
+  /**
+   * The primary decorator associated with this directive.
+   *
+   * If this is `null`, no decorator exists, meaning it's probably from a .d.ts file.
+   */
+  decorator: ts.Decorator|null;
+
+  /** Additional directives applied to the directive host. */
+  hostDirectives: HostDirectiveMeta[]|null;
+}
+
+/** Metadata collected about an additional directive that is being applied to a directive host. */
+export interface HostDirectiveMeta {
+  /** Reference to the host directive class. */
+  directive: Reference<ClassDeclaration>;
+
+  /** Whether the reference to the host directive is a forward reference. */
+  isForwardReference: boolean;
+
+  /** Inputs from the host directive that have been exposed. */
+  inputs: {[publicName: string]: string}|null;
+
+  /** Outputs from the host directive that have been exposed. */
+  outputs: {[publicName: string]: string}|null;
 }
 
 /**
@@ -151,10 +232,12 @@ export interface TemplateGuardMeta {
  * Metadata for a pipe within an NgModule's scope.
  */
 export interface PipeMeta {
-  type: MetaType.Pipe;
+  kind: MetaKind.Pipe;
   ref: Reference<ClassDeclaration>;
   name: string;
   nameExpr: ts.Expression|null;
+  isStandalone: boolean;
+  decorator: ts.Decorator|null;
 }
 
 /**
@@ -165,6 +248,13 @@ export interface MetadataReader {
   getDirectiveMetadata(node: Reference<ClassDeclaration>): DirectiveMeta|null;
   getNgModuleMetadata(node: Reference<ClassDeclaration>): NgModuleMeta|null;
   getPipeMetadata(node: Reference<ClassDeclaration>): PipeMeta|null;
+}
+
+/**
+ * A MetadataReader which also allows access to the set of all known directive classes.
+ */
+export interface MetadataReaderWithIndex extends MetadataReader {
+  getKnownDirectives(): Iterable<ClassDeclaration>;
 }
 
 /**

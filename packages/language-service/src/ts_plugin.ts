@@ -164,6 +164,38 @@ export function create(info: ts.server.PluginCreateInfo): NgLanguageService {
     return ngLS.getTemplateLocationForComponent(fileName, position);
   }
 
+  function getCodeFixesAtPosition(
+      fileName: string, start: number, end: number, errorCodes: readonly number[],
+      formatOptions: ts.FormatCodeSettings,
+      preferences: ts.UserPreferences): readonly ts.CodeFixAction[] {
+    if (angularOnly) {
+      return ngLS.getCodeFixesAtPosition(
+          fileName, start, end, errorCodes, formatOptions, preferences);
+    } else {
+      const tsLsCodeFixes =
+          tsLS.getCodeFixesAtPosition(fileName, start, end, errorCodes, formatOptions, preferences);
+      // If TS could answer the query, then return that result. Otherwise, return from Angular LS.
+      return tsLsCodeFixes.length > 0 ?
+          tsLsCodeFixes :
+          ngLS.getCodeFixesAtPosition(fileName, start, end, errorCodes, formatOptions, preferences);
+    }
+  }
+
+  function getCombinedCodeFix(
+      scope: ts.CombinedCodeFixScope, fixId: string, formatOptions: ts.FormatCodeSettings,
+      preferences: ts.UserPreferences): ts.CombinedCodeActions {
+    if (angularOnly) {
+      return ngLS.getCombinedCodeFix(scope, fixId, formatOptions, preferences);
+    } else {
+      const tsLsCombinedCodeFix = tsLS.getCombinedCodeFix(scope, fixId, formatOptions, preferences);
+      // If TS could answer the query, then return that result. Otherwise, return from Angular LS.
+      return tsLsCombinedCodeFix.changes.length > 0 ?
+          tsLsCombinedCodeFix :
+          ngLS.getCombinedCodeFix(scope, fixId, formatOptions, preferences);
+    }
+  }
+
+
   return {
     ...tsLS,
     getSemanticDiagnostics,
@@ -181,6 +213,8 @@ export function create(info: ts.server.PluginCreateInfo): NgLanguageService {
     getComponentLocationsForTemplate,
     getSignatureHelpItems,
     getTemplateLocationForComponent,
+    getCodeFixesAtPosition,
+    getCombinedCodeFix,
   };
 }
 
@@ -189,6 +223,7 @@ export function getExternalFiles(project: ts.server.Project): string[] {
     return [];  // project has not been initialized
   }
   const typecheckFiles: string[] = [];
+  const resourceFiles: string[] = [];
   for (const scriptInfo of project.getScriptInfos()) {
     if (scriptInfo.scriptKind === ts.ScriptKind.External) {
       // script info for typecheck file is marked as external, see
@@ -196,6 +231,14 @@ export function getExternalFiles(project: ts.server.Project): string[] {
       // packages/language-service/src/language_service.ts
       typecheckFiles.push(scriptInfo.fileName);
     }
+    if (scriptInfo.scriptKind === ts.ScriptKind.Unknown) {
+      // script info for resource file is marked as unknown.
+      // Including these as external files is necessary because otherwise they will get removed from
+      // the project when `updateNonInferredProjectFiles` is called as part of the
+      // `updateProjectIfDirty` cycle.
+      // https://sourcegraph.com/github.com/microsoft/TypeScript@c300fea3250abd7f75920d95a58d9e742ac730ee/-/blob/src/server/editorServices.ts?L2363
+      resourceFiles.push(scriptInfo.fileName);
+    }
   }
-  return typecheckFiles;
+  return [...typecheckFiles, ...resourceFiles];
 }

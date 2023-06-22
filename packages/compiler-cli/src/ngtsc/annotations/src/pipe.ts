@@ -6,28 +6,25 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {compileClassMetadata, compileDeclareClassMetadata, compileDeclarePipeFromMetadata, compilePipeFromMetadata, FactoryTarget, R3ClassMetadata, R3PipeMetadata, Statement, WrappedNodeExpr} from '@angular/compiler';
+import {compileClassMetadata, compileDeclareClassMetadata, compileDeclarePipeFromMetadata, compilePipeFromMetadata, FactoryTarget, R3ClassMetadata, R3PipeMetadata, WrappedNodeExpr} from '@angular/compiler';
 import ts from 'typescript';
 
 import {ErrorCode, FatalDiagnosticError} from '../../diagnostics';
 import {Reference} from '../../imports';
 import {SemanticSymbol} from '../../incremental/semantic_graph';
-import {InjectableClassRegistry, MetadataRegistry, MetaType} from '../../metadata';
+import {MetadataRegistry, MetaKind} from '../../metadata';
 import {PartialEvaluator} from '../../partial_evaluator';
 import {PerfEvent, PerfRecorder} from '../../perf';
 import {ClassDeclaration, Decorator, ReflectionHost, reflectObjectLiteral} from '../../reflection';
 import {LocalModuleScopeRegistry} from '../../scope';
 import {AnalysisOutput, CompileResult, DecoratorHandler, DetectResult, HandlerPrecedence, ResolveResult} from '../../transform';
-
-import {createValueHasWrongTypeError} from './diagnostics';
-import {compileDeclareFactory, compileNgFactoryDefField} from './factory';
-import {extractClassMetadata} from './metadata';
-import {compileResults, findAngularDecorator, getValidConstructorDependencies, makeDuplicateDeclarationError, toFactoryMetadata, unwrapExpression, wrapTypeReference} from './util';
+import {compileDeclareFactory, compileNgFactoryDefField, compileResults, createValueHasWrongTypeError, extractClassMetadata, findAngularDecorator, getValidConstructorDependencies, InjectableClassRegistry, makeDuplicateDeclarationError, toFactoryMetadata, unwrapExpression, wrapTypeReference,} from '../common';
 
 export interface PipeHandlerData {
   meta: R3PipeMetadata;
   classMetadata: R3ClassMetadata|null;
   pipeNameExpr: ts.Expression;
+  decorator: ts.Decorator|null;
 }
 
 /**
@@ -123,6 +120,16 @@ export class PipeDecoratorHandler implements
       pure = pureValue;
     }
 
+    let isStandalone = false;
+    if (pipe.has('standalone')) {
+      const expr = pipe.get('standalone')!;
+      const resolved = this.evaluator.evaluate(expr);
+      if (typeof resolved !== 'boolean') {
+        throw createValueHasWrongTypeError(expr, resolved, `standalone flag must be a boolean`);
+      }
+      isStandalone = resolved;
+    }
+
     return {
       analysis: {
         meta: {
@@ -133,23 +140,33 @@ export class PipeDecoratorHandler implements
           pipeName,
           deps: getValidConstructorDependencies(clazz, this.reflector, this.isCore),
           pure,
+          isStandalone,
         },
         classMetadata: extractClassMetadata(clazz, this.reflector, this.isCore),
         pipeNameExpr,
+        decorator: decorator?.node as ts.Decorator | null ?? null,
       },
     };
   }
 
   symbol(node: ClassDeclaration, analysis: Readonly<PipeHandlerData>): PipeSymbol {
-    return new PipeSymbol(node, analysis.meta.name);
+    return new PipeSymbol(node, analysis.meta.pipeName);
   }
 
   register(node: ClassDeclaration, analysis: Readonly<PipeHandlerData>): void {
     const ref = new Reference(node);
-    this.metaRegistry.registerPipeMetadata(
-        {type: MetaType.Pipe, ref, name: analysis.meta.pipeName, nameExpr: analysis.pipeNameExpr});
+    this.metaRegistry.registerPipeMetadata({
+      kind: MetaKind.Pipe,
+      ref,
+      name: analysis.meta.pipeName,
+      nameExpr: analysis.pipeNameExpr,
+      isStandalone: analysis.meta.isStandalone,
+      decorator: analysis.decorator,
+    });
 
-    this.injectableRegistry.registerInjectable(node);
+    this.injectableRegistry.registerInjectable(node, {
+      ctorDeps: analysis.meta.deps,
+    });
   }
 
   resolve(node: ClassDeclaration): ResolveResult<unknown> {

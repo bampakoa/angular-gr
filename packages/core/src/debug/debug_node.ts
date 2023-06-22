@@ -131,9 +131,10 @@ export class DebugElement extends DebugNode {
    * The element tag name, if it is an element.
    */
   get name(): string {
-    const context = getLContext(this.nativeNode);
-    if (context !== null) {
-      const lView = context.lView;
+    const context = getLContext(this.nativeNode)!;
+    const lView = context ? context.lView : null;
+
+    if (lView !== null) {
       const tData = lView[TVIEW].data;
       const tNode = tData[context.nodeIndex] as TNode;
       return tNode.value!;
@@ -154,13 +155,14 @@ export class DebugElement extends DebugNode {
    *  - input property bindings (e.g. `[myCustomInput]="value"`)
    *  - attribute bindings (e.g. `[attr.role]="menu"`)
    */
-  get properties(): {[key: string]: any} {
-    const context = getLContext(this.nativeNode);
-    if (context === null) {
+  get properties(): {[key: string]: any;} {
+    const context = getLContext(this.nativeNode)!;
+    const lView = context ? context.lView : null;
+
+    if (lView === null) {
       return {};
     }
 
-    const lView = context.lView;
     const tData = lView[TVIEW].data;
     const tNode = tData[context.nodeIndex] as TNode;
 
@@ -184,12 +186,13 @@ export class DebugElement extends DebugNode {
       return attributes;
     }
 
-    const context = getLContext(element);
-    if (context === null) {
+    const context = getLContext(element)!;
+    const lView = context ? context.lView : null;
+
+    if (lView === null) {
       return {};
     }
 
-    const lView = context.lView;
     const tNodeAttrs = (lView[TVIEW].data[context.nodeIndex] as TNode).attrs;
     const lowercaseTNodeAttrs: string[] = [];
 
@@ -340,7 +343,7 @@ export class DebugElement extends DebugNode {
    *
    * @see [Testing components scenarios](guide/testing-components-scenarios#trigger-event-handler)
    */
-  triggerEventHandler(eventName: string, eventObj: any): void {
+  triggerEventHandler(eventName: string, eventObj?: any): void {
     const node = this.nativeNode as any;
     const invokedListeners: Function[] = [];
 
@@ -420,11 +423,12 @@ function _queryAll(
 function _queryAll(
     parentElement: DebugElement, predicate: Predicate<DebugElement>|Predicate<DebugNode>,
     matches: DebugElement[]|DebugNode[], elementsOnly: boolean) {
-  const context = getLContext(parentElement.nativeNode);
-  if (context !== null) {
-    const parentTNode = context.lView[TVIEW].data[context.nodeIndex] as TNode;
+  const context = getLContext(parentElement.nativeNode)!;
+  const lView = context ? context.lView : null;
+  if (lView !== null) {
+    const parentTNode = lView[TVIEW].data[context.nodeIndex] as TNode;
     _queryNodeChildren(
-        parentTNode, context.lView, predicate, matches, elementsOnly, parentElement.nativeNode);
+        parentTNode, lView, predicate, matches, elementsOnly, parentElement.nativeNode);
   } else {
     // If the context is null, then `parentElement` was either created with Renderer2 or native DOM
     // APIs.
@@ -471,10 +475,9 @@ function _queryNodeChildren(
       // Renderer2. Note that this is __not__ optimal, because we're walking similar trees multiple
       // times. ViewEngine could do it more efficiently, because all the insertions go through
       // Renderer2, however that's not the case in Ivy. This approach is being used because:
-      // 1. Matching the ViewEngine behavior would mean potentially introducing a depedency
+      // 1. Matching the ViewEngine behavior would mean potentially introducing a dependency
       //    from `Renderer2` to Ivy which could bring Ivy code into ViewEngine.
-      // 2. We would have to make `Renderer3` "know" about debug nodes.
-      // 3. It allows us to capture nodes that were inserted directly via the DOM.
+      // 2. It allows us to capture nodes that were inserted directly via the DOM.
       nativeNode && _queryNativeNodeDescendants(nativeNode, predicate, matches, elementsOnly);
     }
     // In all cases, if a dynamic container exists for this node, each view inside it has to be

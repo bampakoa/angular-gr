@@ -57,14 +57,14 @@ abstract class OverrideResolver<T> implements Resolver<T> {
       const isKnownType = annotation instanceof Directive || annotation instanceof Component ||
           annotation instanceof Pipe || annotation instanceof NgModule;
       if (isKnownType) {
-        return annotation instanceof this.type ? annotation as T : null;
+        return annotation instanceof this.type ? annotation as unknown as T : null;
       }
     }
     return null;
   }
 
   resolve(type: Type<any>): T|null {
-    let resolved = this.resolved.get(type) || null;
+    let resolved: T|null = this.resolved.get(type) || null;
 
     if (!resolved) {
       resolved = this.getAnnotation(type);

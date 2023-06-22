@@ -118,9 +118,9 @@ export class DefaultImportTracker {
         //
         // 1. Using `ts.updateImportDeclaration` does not cause the import to be retained.
         //
-        // 2. Using `ts.createImportDeclaration` with the same `ts.ImportClause` causes the import
-        //    to correctly be retained, but when emitting CommonJS module format code, references
-        //    to the imported value will not match the import variable.
+        // 2. Using `ts.factory.createImportDeclaration` with the same `ts.ImportClause` causes the
+        //    import to correctly be retained, but when emitting CommonJS module format code,
+        //    references to the imported value will not match the import variable.
         //
         // 3. Emitting "import * as" imports instead generates the correct import variable, but
         //    references are missing the ".default" access. This happens to work for tsickle code
@@ -138,6 +138,7 @@ export class DefaultImportTracker {
         //
         // TODO(alxhub): discuss with the TypeScript team and determine if there's a better way to
         // deal with this issue.
+        // tslint:disable-next-line: ban
         stmt = ts.getMutableClone(stmt);
       }
       return stmt;
@@ -147,6 +148,6 @@ export class DefaultImportTracker {
     // file.
     this.sourceFileToUsedImports.delete(originalSf);
 
-    return ts.updateSourceFileNode(sf, statements);
+    return ts.factory.updateSourceFile(sf, statements);
   }
 }

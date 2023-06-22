@@ -8,7 +8,8 @@
 
 import {Type} from '../../interface/type';
 import {getClosureSafeProperty} from '../../util/property';
-import {ClassProvider, ConstructorProvider, ExistingProvider, FactoryProvider, StaticClassProvider, ValueProvider} from './provider';
+
+import {ClassProvider, ConstructorProvider, EnvironmentProviders, ExistingProvider, FactoryProvider, StaticClassProvider, ValueProvider} from './provider';
 
 
 
@@ -36,7 +37,7 @@ export interface ɵɵInjectableDeclaration<T> {
    * - `null`, does not belong to any injector. Must be explicitly listed in the injector
    *   `providers`.
    */
-  providedIn: InjectorType<any>|'root'|'platform'|'any'|null;
+  providedIn: InjectorType<any>|'root'|'platform'|'any'|'environment'|null;
 
   /**
    * The token to which this definition belongs.
@@ -72,7 +73,7 @@ export interface ɵɵInjectorDef<T> {
   // TODO(alxhub): Narrow down the type here once decorators properly change the return type of the
   // class they are decorating (to add the ɵprov property for example).
   providers: (Type<any>|ValueProvider|ExistingProvider|FactoryProvider|ConstructorProvider|
-              StaticClassProvider|ClassProvider|any[])[];
+              StaticClassProvider|ClassProvider|EnvironmentProviders|any[])[];
 
   imports: (InjectorType<any>|InjectorTypeWithProviders<any>)[];
 }
@@ -81,7 +82,7 @@ export interface ɵɵInjectorDef<T> {
  * A `Type` which has a `ɵprov: ɵɵInjectableDeclaration` static field.
  *
  * `InjectableType`s contain their own Dependency Injection metadata and are usable in an
- * `InjectorDef`-based `StaticInjector.
+ * `InjectorDef`-based `StaticInjector`.
  *
  * @publicApi
  */
@@ -118,7 +119,7 @@ export interface InjectorType<T> extends Type<T> {
 export interface InjectorTypeWithProviders<T> {
   ngModule: InjectorType<T>;
   providers?: (Type<any>|ValueProvider|ExistingProvider|FactoryProvider|ConstructorProvider|
-               StaticClassProvider|ClassProvider|any[])[];
+               StaticClassProvider|ClassProvider|EnvironmentProviders|any[])[];
 }
 
 
@@ -141,7 +142,7 @@ export interface InjectorTypeWithProviders<T> {
  */
 export function ɵɵdefineInjectable<T>(opts: {
   token: unknown,
-  providedIn?: Type<any>|'root'|'platform'|'any'|null, factory: () => T,
+  providedIn?: Type<any>|'root'|'platform'|'any'|'environment'|null, factory: () => T,
 }): unknown {
   return {
     token: opts.token,
@@ -187,6 +188,10 @@ export function ɵɵdefineInjector(options: {providers?: any[], imports?: any[]}
  */
 export function getInjectableDef<T>(type: any): ɵɵInjectableDeclaration<T>|null {
   return getOwnDefinition(type, NG_PROV_DEF) || getOwnDefinition(type, NG_INJECTABLE_DEF);
+}
+
+export function isInjectable(type: any): boolean {
+  return getInjectableDef(type) !== null;
 }
 
 /**

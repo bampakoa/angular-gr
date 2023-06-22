@@ -12,8 +12,7 @@ const D_TS = /\.d\.ts$/i;
 import ts from 'typescript';
 import {AbsoluteFsPath, getFileSystem} from '../../file_system';
 import {DeclarationNode} from '../../reflection';
-
-const PARSED_TS_VERSION = parseFloat(ts.versionMajorMinor);
+import {getModifiers} from '../../ts_compatibility';
 
 /**
  * Type describing a symbol that is guaranteed to have a value declaration.
@@ -112,8 +111,9 @@ export function isExported(node: DeclarationNode): boolean {
   if (ts.isVariableDeclaration(node) && ts.isVariableDeclarationList(node.parent)) {
     topLevel = node.parent.parent;
   }
-  return topLevel.modifiers !== undefined &&
-      topLevel.modifiers.some(modifier => modifier.kind === ts.SyntaxKind.ExportKeyword);
+  const modifiers = getModifiers(topLevel);
+  return modifiers !== undefined &&
+      modifiers.some(modifier => modifier.kind === ts.SyntaxKind.ExportKeyword);
 }
 
 export function getRootDirs(
@@ -204,17 +204,4 @@ export function toUnredirectedSourceFile(sf: ts.SourceFile): ts.SourceFile {
     return sf;
   }
   return redirectInfo.unredirected;
-}
-
-/**
- * Backwards-compatible version of `ts.createExportSpecifier`
- * to handle a breaking change between 4.4 and 4.5.
- */
-export function createExportSpecifier(
-    propertyName: string|ts.Identifier|undefined, name: string|ts.Identifier,
-    isTypeOnly = false): ts.ExportSpecifier {
-  return PARSED_TS_VERSION > 4.4 ? ts.createExportSpecifier(isTypeOnly, propertyName, name) :
-                                   // TODO(crisbeto): backwards-compatibility layer for TS 4.4.
-                                   // Should be cleaned up when we drop support for it.
-                                   (ts.createExportSpecifier as any)(propertyName, name);
 }

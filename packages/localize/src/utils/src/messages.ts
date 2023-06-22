@@ -267,7 +267,7 @@ export function parseMetadata(cooked: string, raw: string): MessageMetadata {
  *
  * @param cooked The cooked version of the message part to parse.
  * @param raw The raw version of the message part to parse.
- * @returns A object containing the metadata (`placeholderName` and `associatedMesssageId`) of the
+ * @returns A object containing the metadata (`placeholderName` and `associatedMessageId`) of the
  *     preceding placeholder, along with the static text that follows.
  */
 export function parsePlaceholder(cooked: string, raw: string):
@@ -328,10 +328,6 @@ function computePlaceholderName(index: number) {
  * @throws an error if the block is unterminated
  */
 export function findEndOfBlock(cooked: string, raw: string): number {
-  /************************************************************************************************
-   * This function is repeated in `src/localize/src/localize.ts` and the two should be kept in sync.
-   * (See that file for more explanation of why.)
-   ************************************************************************************************/
   for (let cookedIndex = 1, rawIndex = 1; cookedIndex < cooked.length; cookedIndex++, rawIndex++) {
     if (raw[rawIndex] === '\\') {
       rawIndex++;

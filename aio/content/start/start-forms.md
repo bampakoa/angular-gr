@@ -14,14 +14,12 @@
 1. Κάντε import το service `FormBuilder` από το πακέτο `@angular/forms`.
   Αυτό το service παρέχει βολικές μεθόδους για τη δημιουργία controls της φόρμας.
 
-  <code-example header="src/app/cart/cart.component.ts" path="getting-started/src/app/cart/cart.component.ts" region="imports">
-  </code-example>
+  <code-example header="src/app/cart/cart.component.ts" path="getting-started/src/app/cart/cart.component.ts" region="imports"></code-example>
 
 1. Εισάγετε το service `FormBuilder` στο `constructor()` του `CartComponent`.
   Αυτό το service είναι μέρος του module `ReactiveFormsModule`, που έχετε κάνει ήδη import.
 
-  <code-example header="src/app/cart/cart.component.ts" path="getting-started/src/app/cart/cart.component.ts" region="inject-form-builder">
-  </code-example>
+  <code-example header="src/app/cart/cart.component.ts" path="getting-started/src/app/cart/cart.component.ts" region="inject-form-builder"></code-example>
 
 1. Για να συλλέξετε το όνομα και τη διεύθυνση του χρήστη, χρησιμοποιήστε τη μέθοδο `group()` του `FormBuilder` για να ορίσετε την ιδιότητα `checkoutForm` στο μοντέλο της φόρμας που περιέχει τα πεδία `name` και `address`.
 
@@ -33,8 +31,7 @@
 
   Το class του component του καλαθιού που προκύπτει έχει ως εξής:
 
-  <code-example header="src/app/cart/cart.component.ts" path="getting-started/src/app/cart/cart.component.ts">
-  </code-example>
+  <code-example header="src/app/cart/cart.component.ts" path="getting-started/src/app/cart/cart.component.ts"></code-example>
 
 ## Δημιουργήστε τη φόρμα ολοκλήρωσης αγοράς
 
@@ -44,24 +41,23 @@
 
 1. Χρησιμοποιήστε property binding στο `formGroup` για να συνδέσετε το `checkoutForm` με το HTML `<form>`.
 
-  <code-example header="src/app/cart/cart.component.html" path="getting-started/src/app/cart/cart.component.3.html" region="checkout-form">
-  </code-example>
+  <code-example header="src/app/cart/cart.component.html" path="getting-started/src/app/cart/cart.component.3.html" region="checkout-form"></code-example>
 
 1. Στο στοιχείο HTML `form`, χρησιμοποιήστε ένα event binding `ngSubmit` για να ειδοποιηθείτε κατά την υποβολή της φόρμας και καλέστε την μέθοδο `onSubmit()` με την τιμή `checkoutForm`.
 
-  <code-example path="getting-started/src/app/cart/cart.component.html" header="src/app/cart/cart.component.html (cart component template detail)" region="checkout-form-1">
-  </code-example>
+  <code-example header="src/app/cart/cart.component.html (λεπτομέρεια του cart component template)" path="getting-started/src/app/cart/cart.component.html" region="checkout-form-1"></code-example>
 
 1. Προσθέστε πεδία `<input>` για το `name` και το `address`, το καθένα με ένα attribute `formControlName` που συνδέει τα controls της φόρμας `checkoutForm` με το `name` και το `address` στα πεδία `<input>`.
   Το τελικό component έχει ως εξής:
 
-  <code-example path="getting-started/src/app/cart/cart.component.html" header="src/app/cart/cart.component.html" region="checkout-form-2">
-  </code-example>
+  <code-example header="src/app/cart/cart.component.html" path="getting-started/src/app/cart/cart.component.html" region="checkout-form-2"></code-example>
 
 Αφού βάλουν μερικά προϊόντα στο καλάθι, οι χρήστες μπορούν να ελέγξουν τα προϊόντα τους, να εισαγάγουν το όνομα και τη διεύθυνσή τους και να υποβάλουν την αγορά τους.
 
 <div class="lightbox">
-  <img src='generated/images/guide/start/cart-with-items-and-form.png' alt="Προβολή καλαθιού με φόρμα ολοκλήρωσης αγοράς">
+
+<img alt="Προβολή καλαθιού με φόρμα ολοκλήρωσης αγοράς" src="generated/images/guide/start/cart-with-items-and-form.png">
+
 </div>
 
 Για να επιβεβαιώσετε την υποβολή, ανοίξτε την κονσόλα και θα δείτε ένα αντικείμενο που περιέχει το όνομα και τη διεύθυνση που υποβάλατε.
@@ -72,4 +68,4 @@
 
 [Συνεχίστε στην ενότητα "Deployment"](start/start-deployment "Δοκιμάστε το: Deployment") για να μεταβείτε σε τοπική ανάπτυξη, ή να ανεβάσετε την εφαρμογή σας στο Firebase ή στον δικό σας διακομιστή.
 
-@reviewed 2022-03-09
+@reviewed 2022-05-21

@@ -10,10 +10,11 @@ import {AST, ASTWithSource, BindingPipe, Call, ParseSourceSpan, PropertyRead, Pr
 import ts from 'typescript';
 
 import {AbsoluteFsPath} from '../../file_system';
+import {Reference} from '../../imports';
 import {ClassDeclaration} from '../../reflection';
-import {ComponentScopeReader} from '../../scope';
+import {ComponentScopeKind, ComponentScopeReader} from '../../scope';
 import {isAssignment, isSymbolWithValueDeclaration} from '../../util/src/typescript';
-import {BindingSymbol, DirectiveSymbol, DomBindingSymbol, ElementSymbol, ExpressionSymbol, InputBindingSymbol, OutputBindingSymbol, PipeSymbol, ReferenceSymbol, ShimLocation, Symbol, SymbolKind, TemplateSymbol, TsNodeSymbolInfo, TypeCheckableDirectiveMeta, VariableSymbol} from '../api';
+import {BindingSymbol, DirectiveSymbol, DomBindingSymbol, ElementSymbol, ExpressionSymbol, InputBindingSymbol, OutputBindingSymbol, PipeSymbol, ReferenceSymbol, Symbol, SymbolKind, TcbLocation, TemplateSymbol, TsNodeSymbolInfo, TypeCheckableDirectiveMeta, VariableSymbol} from '../api';
 
 import {ExpressionIdentifier, findAllMatchingNodes, findFirstMatchingNode, hasExpressionIdentifier} from './comments';
 import {TemplateData} from './context';
@@ -29,7 +30,8 @@ export class SymbolBuilder {
   private symbolCache = new Map<AST|TmplAstNode, Symbol|null>();
 
   constructor(
-      private readonly shimPath: AbsoluteFsPath,
+      private readonly tcbPath: AbsoluteFsPath,
+      private readonly tcbIsShim: boolean,
       private readonly typeCheckBlock: ts.Node,
       private readonly templateData: TemplateData,
       private readonly componentScopeReader: ComponentScopeReader,
@@ -133,14 +135,17 @@ export class SymbolBuilder {
             return null;
           }
           const isComponent = meta.isComponent ?? null;
+          const ref = new Reference<ClassDeclaration>(symbol.tsSymbol.valueDeclaration as any);
           const directiveSymbol: DirectiveSymbol = {
             ...symbol,
+            ref,
             tsSymbol: symbol.tsSymbol,
             selector: meta.selector,
             isComponent,
             ngModule,
             kind: SymbolKind.Directive,
             isStructural: meta.isStructural,
+            isInScope: true,
           };
           return directiveSymbol;
         })
@@ -177,7 +182,7 @@ export class SymbolBuilder {
 
   private getDirectiveModule(declaration: ts.ClassDeclaration): ClassDeclaration|null {
     const scope = this.componentScopeReader.getScopeForComponent(declaration as ClassDeclaration);
-    if (scope === null) {
+    if (scope === null || scope.kind !== ComponentScopeKind.NgModule) {
       return null;
     }
     return scope.ngModule;
@@ -233,7 +238,7 @@ export class SymbolBuilder {
         const addEventListener = outputFieldAccess.name;
         const tsSymbol = this.getTypeChecker().getSymbolAtLocation(addEventListener);
         const tsType = this.getTypeChecker().getTypeAtLocation(addEventListener);
-        const positionInShimFile = this.getShimPositionForNode(addEventListener);
+        const positionInFile = this.getTcbPositionForNode(addEventListener);
         const target = this.getSymbol(consumer);
 
         if (target === null || tsSymbol === undefined) {
@@ -245,7 +250,11 @@ export class SymbolBuilder {
           tsSymbol,
           tsType,
           target,
-          shimLocation: {shimPath: this.shimPath, positionInShimFile},
+          tcbLocation: {
+            tcbPath: this.tcbPath,
+            isShimFile: this.tcbIsShim,
+            positionInFile,
+          },
         });
       } else {
         if (!ts.isElementAccessExpression(outputFieldAccess)) {
@@ -263,14 +272,18 @@ export class SymbolBuilder {
           continue;
         }
 
-        const positionInShimFile = this.getShimPositionForNode(outputFieldAccess);
+        const positionInFile = this.getTcbPositionForNode(outputFieldAccess);
         const tsType = this.getTypeChecker().getTypeAtLocation(outputFieldAccess);
         bindings.push({
           kind: SymbolKind.Binding,
           tsSymbol,
           tsType,
           target,
-          shimLocation: {shimPath: this.shimPath, positionInShimFile},
+          tcbLocation: {
+            tcbPath: this.tcbPath,
+            isShimFile: this.tcbIsShim,
+            positionInFile,
+          },
         });
       }
     }
@@ -351,16 +364,19 @@ export class SymbolBuilder {
       return null;
     }
 
+    const ref: Reference<ClassDeclaration> = new Reference(symbol.tsSymbol.valueDeclaration as any);
     const ngModule = this.getDirectiveModule(symbol.tsSymbol.valueDeclaration);
     return {
+      ref,
       kind: SymbolKind.Directive,
       tsSymbol: symbol.tsSymbol,
       tsType: symbol.tsType,
-      shimLocation: symbol.shimLocation,
+      tcbLocation: symbol.tcbLocation,
       isComponent,
       isStructural,
       selector,
       ngModule,
+      isInScope: true,  // TODO: this should always be in scope in this context, right?
     };
   }
 
@@ -379,12 +395,13 @@ export class SymbolBuilder {
     return {
       tsType: expressionSymbol.tsType,
       tsSymbol: expressionSymbol.tsSymbol,
-      initializerLocation: expressionSymbol.shimLocation,
+      initializerLocation: expressionSymbol.tcbLocation,
       kind: SymbolKind.Variable,
       declaration: variable,
       localVarLocation: {
-        shimPath: this.shimPath,
-        positionInShimFile: this.getShimPositionForNode(node.name),
+        tcbPath: this.tcbPath,
+        isShimFile: this.tcbIsShim,
+        positionInFile: this.getTcbPositionForNode(node.name),
       }
     };
   }
@@ -414,9 +431,10 @@ export class SymbolBuilder {
       return null;
     }
 
-    const referenceVarShimLocation: ShimLocation = {
-      shimPath: this.shimPath,
-      positionInShimFile: this.getShimPositionForNode(node),
+    const referenceVarTcbLocation: TcbLocation = {
+      tcbPath: this.tcbPath,
+      isShimFile: this.tcbIsShim,
+      positionInFile: this.getTcbPositionForNode(node),
     };
     if (target instanceof TmplAstTemplate || target instanceof TmplAstElement) {
       return {
@@ -425,8 +443,8 @@ export class SymbolBuilder {
         tsType: symbol.tsType,
         target,
         declaration: ref,
-        targetLocation: symbol.shimLocation,
-        referenceVarLocation: referenceVarShimLocation,
+        targetLocation: symbol.tcbLocation,
+        referenceVarLocation: referenceVarTcbLocation,
       };
     } else {
       if (!ts.isClassDeclaration(target.directive.ref.node)) {
@@ -439,8 +457,8 @@ export class SymbolBuilder {
         tsType: symbol.tsType,
         declaration: ref,
         target: target.directive.ref.node,
-        targetLocation: symbol.shimLocation,
-        referenceVarLocation: referenceVarShimLocation,
+        targetLocation: symbol.tcbLocation,
+        referenceVarLocation: referenceVarTcbLocation,
       };
     }
   }
@@ -561,7 +579,7 @@ export class SymbolBuilder {
       tsSymbol = this.getTypeChecker().getSymbolAtLocation(node);
     }
 
-    const positionInShimFile = this.getShimPositionForNode(node);
+    const positionInFile = this.getTcbPositionForNode(node);
     const type = this.getTypeChecker().getTypeAtLocation(node);
     return {
       // If we could not find a symbol, fall back to the symbol on the type for the node.
@@ -569,13 +587,17 @@ export class SymbolBuilder {
       // Examples of this would be literals and `document.createElement('div')`.
       tsSymbol: tsSymbol ?? type.symbol ?? null,
       tsType: type,
-      shimLocation: {shimPath: this.shimPath, positionInShimFile},
+      tcbLocation: {
+        tcbPath: this.tcbPath,
+        isShimFile: this.tcbIsShim,
+        positionInFile,
+      },
     };
   }
 
-  private getShimPositionForNode(node: ts.Node): number {
+  private getTcbPositionForNode(node: ts.Node): number {
     if (ts.isTypeReferenceNode(node)) {
-      return this.getShimPositionForNode(node.typeName);
+      return this.getTcbPositionForNode(node.typeName);
     } else if (ts.isQualifiedName(node)) {
       return node.right.getStart();
     } else if (ts.isPropertyAccessExpression(node)) {

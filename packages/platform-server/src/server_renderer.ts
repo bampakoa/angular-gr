@@ -69,7 +69,7 @@ class DefaultServerRenderer2 implements Renderer2 {
 
   destroyNode = null;
 
-  createElement(name: string, namespace?: string, debugInfo?: any): any {
+  createElement(name: string, namespace?: string): any {
     if (namespace) {
       const doc = this.document || getDOM().getDefaultDocument();
       return doc.createElementNS(NAMESPACE_URIS[namespace], name);
@@ -78,22 +78,24 @@ class DefaultServerRenderer2 implements Renderer2 {
     return getDOM().createElement(name, this.document);
   }
 
-  createComment(value: string, debugInfo?: any): any {
+  createComment(value: string): any {
     return getDOM().getDefaultDocument().createComment(value);
   }
 
-  createText(value: string, debugInfo?: any): any {
+  createText(value: string): any {
     const doc = getDOM().getDefaultDocument();
     return doc.createTextNode(value);
   }
 
   appendChild(parent: any, newChild: any): void {
-    parent.appendChild(newChild);
+    const targetParent = isTemplateNode(parent) ? parent.content : parent;
+    targetParent.appendChild(newChild);
   }
 
   insertBefore(parent: any, newChild: any, refChild: any): void {
     if (parent) {
-      parent.insertBefore(newChild, refChild);
+      const targetParent = isTemplateNode(parent) ? parent.content : parent;
+      targetParent.insertBefore(newChild, refChild);
     }
   }
 
@@ -103,18 +105,16 @@ class DefaultServerRenderer2 implements Renderer2 {
     }
   }
 
-  selectRootElement(selectorOrNode: string|any, debugInfo?: any): any {
-    let el: any;
-    if (typeof selectorOrNode === 'string') {
-      el = this.document.querySelector(selectorOrNode);
-      if (!el) {
-        throw new Error(`The selector "${selectorOrNode}" did not match any elements`);
-      }
-    } else {
-      el = selectorOrNode;
+  selectRootElement(selectorOrNode: string|any, preserveContent?: boolean): any {
+    const el = typeof selectorOrNode === 'string' ? this.document.querySelector(selectorOrNode) :
+                                                    selectorOrNode;
+    if (!el) {
+      throw new Error(`The selector "${selectorOrNode}" did not match any elements`);
     }
-    while (el.firstChild) {
-      el.removeChild(el.firstChild);
+    if (!preserveContent) {
+      while (el.firstChild) {
+        el.removeChild(el.firstChild);
+      }
     }
     return el;
   }
@@ -153,11 +153,12 @@ class DefaultServerRenderer2 implements Renderer2 {
 
   setStyle(el: any, style: string, value: any, flags: RendererStyleFlags2): void {
     style = style.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
+    value = value == null ? '' : `${value}`.trim();
     const styleMap = _readStyleAttribute(el);
     if (flags & RendererStyleFlags2.Important) {
       value += ' !important';
     }
-    styleMap[style] = value == null ? '' : value;
+    styleMap[style] = value;
     _writeStyleAttribute(el, styleMap);
   }
 
@@ -242,6 +243,10 @@ function checkNoSyntheticProp(name: string, nameKind: string) {
   }
 }
 
+function isTemplateNode(node: any): node is HTMLTemplateElement {
+  return node.tagName === 'TEMPLATE' && node.content !== undefined;
+}
+
 class EmulatedEncapsulationServerRenderer2 extends DefaultServerRenderer2 {
   private contentAttr: string;
   private hostAttr: string;
@@ -264,7 +269,7 @@ class EmulatedEncapsulationServerRenderer2 extends DefaultServerRenderer2 {
   }
 
   override createElement(parent: any, name: string): Element {
-    const el = super.createElement(parent, name, this.document);
+    const el = super.createElement(parent, name);
     super.setAttribute(el, this.contentAttr, '');
     return el;
   }
@@ -282,8 +287,8 @@ function _readStyleAttribute(element: any): {[name: string]: string} {
         if (colonIndex === -1) {
           throw new Error(`Invalid CSS style: ${style}`);
         }
-        const name = style.substr(0, colonIndex).trim();
-        styleMap[name] = style.substr(colonIndex + 1).trim();
+        const name = style.slice(0, colonIndex).trim();
+        styleMap[name] = style.slice(colonIndex + 1).trim();
       }
     }
   }
@@ -291,12 +296,19 @@ function _readStyleAttribute(element: any): {[name: string]: string} {
 }
 
 function _writeStyleAttribute(element: any, styleMap: {[name: string]: string}) {
+  // We have to construct the `style` attribute ourselves, instead of going through
+  // `element.style.setProperty` like the other renderers, because `setProperty` won't
+  // write newer CSS properties that Domino doesn't know about like `clip-path`.
   let styleAttrValue = '';
   for (const key in styleMap) {
     const newValue = styleMap[key];
-    if (newValue != null) {
-      styleAttrValue += key + ':' + styleMap[key] + ';';
+    if (newValue != null && newValue !== '') {
+      styleAttrValue += key + ':' + newValue + ';';
     }
   }
-  element.setAttribute('style', styleAttrValue);
+  if (styleAttrValue) {
+    element.setAttribute('style', styleAttrValue);
+  } else {
+    element.removeAttribute('style');
+  }
 }

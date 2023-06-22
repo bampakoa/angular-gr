@@ -20,6 +20,7 @@ import {IndexedComponent} from '../../src/ngtsc/indexer';
 import {NgtscProgram} from '../../src/ngtsc/program';
 import {DeclarationNode} from '../../src/ngtsc/reflection';
 import {NgtscTestCompilerHost} from '../../src/ngtsc/testing';
+import {TemplateTypeChecker} from '../../src/ngtsc/typecheck/api';
 import {setWrapHostForTest} from '../../src/transformers/compiler_host';
 
 type TsConfigOptionsValue =
@@ -76,9 +77,6 @@ export class NgtscTestEnvironment {
         "moduleResolution": "node",
         "lib": ["es2015", "dom"],
         "typeRoots": ["node_modules/@types"]
-      },
-      "angularCompilerOptions": {
-        "enableIvy": true,
       },
       "exclude": [
         "built"
@@ -162,7 +160,7 @@ export class NgtscTestEnvironment {
     const writtenFiles = new Set<string>();
     this.multiCompileHostExt.getFilesWrittenSinceLastFlush().forEach(rawFile => {
       if (rawFile.startsWith(this.outDir)) {
-        writtenFiles.add(rawFile.substr(this.outDir.length));
+        writtenFiles.add(rawFile.slice(this.outDir.length));
       }
     });
     return writtenFiles;
@@ -194,7 +192,7 @@ export class NgtscTestEnvironment {
   tsconfig(extraOpts: TsConfigOptions = {}, extraRootDirs?: string[], files?: string[]): void {
     const tsconfig: {[key: string]: any} = {
       extends: './tsconfig-base.json',
-      angularCompilerOptions: {...extraOpts, enableIvy: true},
+      angularCompilerOptions: extraOpts,
     };
     if (files !== undefined) {
       tsconfig['files'] = files;
@@ -271,6 +269,17 @@ export class NgtscTestEnvironment {
     return defaultGatherDiagnostics(program as api.Program) as ts.Diagnostic[];
   }
 
+  driveTemplateTypeChecker(): {program: ts.Program, checker: TemplateTypeChecker} {
+    const {rootNames, options} = readNgcCommandLineAndConfiguration(this.commandLineArgs);
+    const host = createCompilerHost({options});
+    const program = createProgram({rootNames, host, options});
+    const checker = (program as NgtscProgram).compiler.getTemplateTypeChecker();
+    return {
+      program: program.getTsProgram(),
+      checker,
+    };
+  }
+
   driveIndexer(): Map<DeclarationNode, IndexedComponent> {
     const {rootNames, options} = readNgcCommandLineAndConfiguration(this.commandLineArgs);
     const host = createCompilerHost({options});
@@ -315,7 +324,7 @@ class FileNameToModuleNameHost extends AugmentedCompilerHost {
     return moduleNames.map(moduleName => {
       if (moduleName.startsWith(ROOT_PREFIX)) {
         // Strip the artificially added root prefix.
-        moduleName = '/' + moduleName.substr(ROOT_PREFIX.length);
+        moduleName = '/' + moduleName.slice(ROOT_PREFIX.length);
       }
 
       return ts

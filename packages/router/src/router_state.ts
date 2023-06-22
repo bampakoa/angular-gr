@@ -7,16 +7,14 @@
  */
 
 import {Type} from '@angular/core';
-import {BehaviorSubject, Observable} from 'rxjs';
+import {BehaviorSubject, Observable, of} from 'rxjs';
 import {map} from 'rxjs/operators';
 
-import {Data, ResolveData, Route} from './config';
-import {convertToParamMap, ParamMap, Params, PRIMARY_OUTLET} from './shared';
+import {Data, ResolveData, Route} from './models';
+import {convertToParamMap, ParamMap, Params, PRIMARY_OUTLET, RouteTitleKey} from './shared';
 import {equalSegments, UrlSegment, UrlSegmentGroup, UrlTree} from './url_tree';
 import {shallowEqual, shallowEqualArrays} from './utils/collection';
 import {Tree, TreeNode} from './utils/tree';
-
-
 
 /**
  * Represents the state of the router as a tree of activated routes.
@@ -121,6 +119,10 @@ export class ActivatedRoute {
   /** @internal */
   _queryParamMap!: Observable<ParamMap>;
 
+  /** An Observable of the resolved route title */
+  readonly title: Observable<string|undefined> =
+      this.data?.pipe(map((d: Data) => d[RouteTitleKey])) ?? of(undefined);
+
   /** @internal */
   constructor(
       /** An observable of the URL segments matched by this route. */
@@ -136,8 +138,7 @@ export class ActivatedRoute {
       /** The outlet name of the route, a constant. */
       public outlet: string,
       /** The component of the route, a constant. */
-      // TODO(vsavkin): remove |string
-      public component: Type<any>|string|null, futureSnapshot: ActivatedRouteSnapshot) {
+      public component: Type<any>|null, futureSnapshot: ActivatedRouteSnapshot) {
     this._futureSnapshot = futureSnapshot;
   }
 
@@ -248,9 +249,10 @@ function flattenInherited(pathFromRoot: ActivatedRouteSnapshot[]): Inherited {
   return pathFromRoot.reduce((res, curr) => {
     const params = {...res.params, ...curr.params};
     const data = {...res.data, ...curr.data};
-    const resolve = {...res.resolve, ...curr._resolvedData};
+    const resolve =
+        {...curr.data, ...res.resolve, ...curr.routeConfig?.data, ...curr._resolvedData};
     return {params, data, resolve};
-  }, <any>{params: {}, data: {}, resolve: {}});
+  }, {params: {}, data: {}, resolve: {}});
 }
 
 /**
@@ -298,6 +300,13 @@ export class ActivatedRouteSnapshot {
   // TODO(issue/24571): remove '!'.
   _queryParamMap!: ParamMap;
 
+  /** The resolved route title */
+  get title(): string|undefined {
+    // Note: This _must_ be a getter because the data is mutated in the resolvers. Title will not be
+    // available at the time of class instantiation.
+    return this.data?.[RouteTitleKey];
+  }
+
   /** @internal */
   constructor(
       /** The URL segments matched by this route */
@@ -331,7 +340,7 @@ export class ActivatedRouteSnapshot {
       /** The outlet name of the route */
       public outlet: string,
       /** The component of the route */
-      public component: Type<any>|string|null, routeConfig: Route|null, urlSegment: UrlSegmentGroup,
+      public component: Type<any>|null, routeConfig: Route|null, urlSegment: UrlSegmentGroup,
       lastPathIndex: number, resolve: ResolveData) {
     this.routeConfig = routeConfig;
     this._urlSegment = urlSegment;
