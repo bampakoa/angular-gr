@@ -99,22 +99,22 @@
       ]
     },
     {
-      "title": "Understanding Angular",
-      "tooltip": "Learn the essential concepts to become a proficient Angular developer.",
+      "title": "Κατανόηση της Angular",
+      "tooltip": "Μάθετε τις βασικές έννοιες για να γίνετε ικανός προγραμματιστής Angular.",
       "children": [
         {
-          "title": "Overview",
+          "title": "Προεπισκόπηση",
           "url": "guide/understanding-angular-overview",
-          "tooltip": "Learn about the most common parts of an Angular application."
+          "tooltip": "Μάθετε για τα πιο κοινά στοιχεία μιας Angular εφαρμογής."
         },
         {
           "title": "Components",
-          "tooltip": "Learn more about how to use data binding to build dynamic views",
+          "tooltip": "Μάθετε περισσότερα σχετικά με τον τρόπο χρήσης του data binding για τη δημιουργία δυναμικών προβολών",
           "children": [
             {
               "url": "guide/component-overview",
-              "title": "Overview",
-              "tooltip": "Overview of how to create Angular components."
+              "title": "Προεπισκόπηση",
+              "tooltip": "Προεπισκόπηση δημιουργίας Angular components."
             },
             {
               "url": "guide/lifecycle-hooks",

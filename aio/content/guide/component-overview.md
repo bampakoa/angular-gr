@@ -7,7 +7,7 @@
 * Ένας selector CSS που ορίζει πώς το component χρησιμοποιείται σε ένα template
 * Προαιρετικά, τα CSS στυλ που εφαρμόζονται στο template
 
-Αυτό το θέμα περιγράφει τον τρόπο δημιουργίας και διαμόρφωσης ενός Angular component.
+Αυτό το θέμα περιγράφει τον τρόπο δημιουργίας και παραμετροποίησης ενός Angular component.
 
 <div class="alert is-helpful">
 
@@ -21,18 +21,18 @@
 
 1. [Εγκαταστήστε το Angular CLI.](guide/setup-local#εγκαταστήστε-το-angular-cli)
 2. [Δημιουργήστε έναν χώρο εργασίας Angular](guide/setup-local#δημιουργήστε-έναν-χώρο-εργασίας-και-μια-αρχική-εφαρμογή) με την αρχική εφαρμογή.
-   Εάν δεν έχετε ένα project, δημιουργήστε ένα χρησιμοποιώντας την εντολή  `ng new <project-name>`, όπου `<project-name>` είναι το όνομα της δικιά σας Angular εφαρμογής.
+   Εάν δεν έχετε ένα project, δημιουργήστε ένα χρησιμοποιώντας το `ng new <project-name>`, όπου `<project-name>` είναι το όνομα της Angular εφαρμογής σας.
 
-## Δημιουργώντας ενα component
+## Δημιουργία ενός component
 
-Ο καλύτερος τρόπος για να δημιουργήσετε ένα component είναι με το Angular CLI. Μπορείτε επίσης να δημιουργήσετε ένα component με χειροκίνητο τρόπο.
+Ο καλύτερος τρόπος για να δημιουργήσετε ένα component είναι με το Angular CLI. Μπορείτε επίσης να δημιουργήσετε ένα component χειροκίνητα.
 
-### Δημιουργώντας ενα component, χρησιμοποιώντας το Angular CLI
+### Δημιουργία ενός component με το Angular CLI
 
 Για να δημιουργήσετε ένα component χρησιμοποιώντας το Angular CLI:
 
-1. Απο το terminal παράθυρο, μεταβείτε στον φάκελο που περιέχει την εφαρμογή σας.
-2. Εκτελέστε την εντολή `ng generate component <component-name>`, όπου `<component-name>` είναι το όνομα του νέου σας component.
+1. Απο το παράθυρο τερματικού, μεταβείτε στον φάκελο που περιέχει την εφαρμογή σας.
+2. Εκτελέστε την εντολή `ng generate component <component-name>`, όπου `<component-name>` είναι το όνομα του νέου component σας.
 
 Από προεπιλογή, αυτή η εντολή δημιουργεί τα ακόλουθα:
 
@@ -46,21 +46,21 @@
 
 <div class="alert is-helpful">
 
-Μπορείτε να αλλάξετε τον τρόπο που η εντολή `ng generate component` δημιουργεί νέα components.
+Μπορείτε να αλλάξετε τον τρόπο που το `ng generate component` δημιουργεί νέα components.
 Για περισσότερες πληροφορίες, δείτε [ng generate component](cli/generate#component-command) στην τεκμηρίωση του Angular CLI.
 
 </div>
 
-### Δημιουργώντας ένα component με χειροκίνητο τρόπο
+### Δημιουργία ενός component χειροκίνητα
 
-Αν και το Angular CLI είναι ο καλύτερος τρόπος για να δημιουργήσετε ένα Angular component, μπορείτε επίσης να δημιουργήσετε ένα component με χειροκίνητο τρόπο.
+Αν και το Angular CLI είναι ο καλύτερος τρόπος για να δημιουργήσετε ένα Angular component, μπορείτε επίσης να δημιουργήσετε ένα component με χειροκίνητα.
 Αυτή η ενότητα περιγράφει τον τρόπο δημιουργίας του βασικού component αρχείου σε ένα υπάρχον Angular project.
 
 Για να δημιουργήσετε ένα νέο component χειροκίνητα:
 
-1. Μεταβείτε στον φάκελο του δικού σας Angular project.
+1. Μεταβείτε στον φάκελο του Angular project σας.
 2. Δημιουργήστε ένα νέο αρχείο, `<component-name>.component.ts`.
-3. Στην κορυφή του αρχείου, προσθέστε το ακόλουθο import.
+3. Στην αρχή του αρχείου, προσθέστε το ακόλουθο import.
 
     <code-example path="component-overview/src/app/component-overview/component-overview.component.ts" region="import"></code-example>
 
@@ -72,7 +72,7 @@
 
     <code-example path="component-overview/src/app/component-overview/component-overview.component.ts" region="selector"></code-example>
 
-   Για περισσότερες πληροφορίες σχετικά με την επιλογή ενός selector, δείτε [Καθορισμός του selector ενός component](#specifying-a-components-css-selector).
+   Για περισσότερες πληροφορίες σχετικά με την επιλογή ενός selector, δείτε [Καθορισμός του component selector](#specifying-a-components-css-selector).
    
 
 6. Καθορίστε το HTML template που χρησιμοποιεί το component για την εμφάνιση πληροφοριών.
@@ -83,35 +83,35 @@
         region="templateUrl">
    </code-example>
 
-   Για περισσότερες πληροφορίες σχετικά με τον ορισμό του template του component, δείτε [Καθορισμός του template ενός component](#defining-a-components-template).
+   Για περισσότερες πληροφορίες σχετικά με τον ορισμό του component template, δείτε [Καθορισμός του component template](#defining-a-components-template).
 
-7. Επιλέξτε τα στυλ για το template του component.
-   Στις περισσότερες περιπτώσεις, ορίζετε εσείς τα στυλ για το template του component σας σε ένα ξεχωριστό αρχείο.
+7. Επιλέξτε τα στυλ για το component template.
+   Στις περισσότερες περιπτώσεις, ορίζετε εσείς τα στυλ για το component template σας σε ένα ξεχωριστό αρχείο.
 
     <code-example path="component-overview/src/app/component-overview/component-overview.component.ts" region="decorator"></code-example>
 
-8.  Προσθέστε ένα  `class` που περιλαμβάνει τον κώδικα για το component.
+8.  Προσθέστε ένα `class` που περιλαμβάνει τον κώδικα για το component.
 
     <code-example path="component-overview/src/app/component-overview/component-overview.component.ts" region="class"></code-example>
 
 ## Καθορισμός του selector CSS ενός component
 
-Κάθε component απαιτεί έναν CSS _selector_. Ένας selector δίνει εντολή στο Angular να δημιουργήσει αυτό το component όπου βρίσκει την αντίστοιχη ετικέτα στο HTML template. Για παράδειγμα, σκεφτείτε ένα component `hello-world.component.ts` που ορίζει τον selector του ως `app-hello-world`. Αυτός ο selector δίνει εντολή στο Angular να δημιουργήσει αυτό το component κάθε φορά που εμφανίζεται η ετικέτα `<app-hello-world>` σε ένα template.
+Κάθε component απαιτεί έναν CSS _selector_. Ένας selector δίνει εντολή στο Angular να δημιουργήσει αυτό το component όπου βρίσκει το αντίστοιχο tag στο HTML template. Για παράδειγμα, σκεφτείτε ένα component `hello-world.component.ts` που ορίζει τον selector του ως `app-hello-world`. Αυτός ο selector δίνει εντολή στην Angular να δημιουργήσει αυτό το component κάθε φορά που εμφανίζεται το tag `<app-hello-world>` σε ένα template.
 
-Καθορίστε τον selector ενός component προσθέτοντας την `selector` δήλωση στον `@Component` decorator.
+Καθορίστε τον component selector προσθέτοντας μια ιδιότητα `selector` στον `@Component` decorator.
 
 <code-example path="component-overview/src/app/component-overview/component-overview.component.ts" region="selector"></code-example>
 
-## Καθορισμός του template ενός component
+## Καθορισμός του component template
 
 Ένα template είναι ένα κομμάτι HTML που λέει στην Angular πώς να απεικονίσει το component στην εφαρμογή σας.
-Ορίστε ένα template για το component σας με έναν από τους δύο τρόπους: με αναφορά σε ένα εξωτερικό αρχείο ή απευθείας μέσα στο component.
+Καθορίστε ένα template για το component σας με έναν από τους δύο τρόπους: με αναφορά σε ένα εξωτερικό αρχείο ή απευθείας μέσα στο component.
 
 Για να ορίσετε ένα template ως εξωτερικό αρχείο, προσθέστε μια `templateUrl` ιδιότητα στον `@Component` decorator.
 
 <code-example path="component-overview/src/app/component-overview/component-overview.component.ts" region="templateUrl"></code-example>
 
-Για να ορίσετε ένα template εντός του component, προσθέστε μια `template` ιδιότητα στον `@Component` decorator, που περιέχει την HTML που θέλετε να χρησιμοποιήσετε.
+Για να ορίσετε ένα template εντός του component, προσθέστε μια `template` ιδιότητα στον `@Component` decorator, που περιέχει το HTML που θέλετε να χρησιμοποιήσετε.
 
 <code-example path="component-overview/src/app/component-overview/component-overview.component.1.ts" region="template"></code-example>
 
@@ -126,7 +126,7 @@
 
 </div>
 
-## Δήλωση του στυλ ενός component
+## Δήλωση στυλ ενός component
 
 Δηλώστε τα στυλ του component για το template του με έναν από τους δύο τρόπους: με αναφορά σε ένα εξωτερικό αρχείο ή απευθείας μέσα στο component.
 
@@ -146,6 +146,6 @@
 * Για μια αρχιτεκτονική επισκόπηση των components, δείτε [Εισαγωγή στα components και τα templates](guide/architecture-components).
 * Για πρόσθετες επιλογές που μπορείτε να χρησιμοποιήσετε κατά τη δημιουργία ενός component, δείτε [Component](api/core/Component) στο API Reference.
 * Για περισσότερες πληροφορίες σχετικά με τα στυλ των components, ανατρέξτε στο [Στυλ του Component](guide/component-styles).
-* Για περισσότερες πληροφορίες σχετικά με τα templates, δειτε [Σύνταξη του Template ](guide/template-syntax).
+* Για περισσότερες πληροφορίες σχετικά με τα templates, δειτε [Σύνταξη του Template](guide/template-syntax).
 
-@reviewed 2022-04-02
+@reviewed 2023-07-29
