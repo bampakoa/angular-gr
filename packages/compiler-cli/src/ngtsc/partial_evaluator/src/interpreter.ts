@@ -12,7 +12,6 @@ import {Reference} from '../../imports';
 import {OwningModule} from '../../imports/src/references';
 import {DependencyTracker} from '../../incremental/api';
 import {Declaration, DeclarationKind, DeclarationNode, EnumMember, FunctionDefinition, isConcreteDeclaration, ReflectionHost, SpecialDeclarationKind} from '../../reflection';
-import {getModifiers} from '../../ts_compatibility';
 import {isDeclaration} from '../../util/src/typescript';
 
 import {ArrayConcatBuiltinFn, ArraySliceBuiltinFn, StringConcatBuiltinFn} from './builtin';
@@ -704,6 +703,10 @@ export class StaticInterpreter {
       return this.visitTupleType(node, context);
     } else if (ts.isNamedTupleMember(node)) {
       return this.visitType(node.type, context);
+    } else if (ts.isTypeOperatorNode(node) && node.operator === ts.SyntaxKind.ReadonlyKeyword) {
+      return this.visitType(node.type, context);
+    } else if (ts.isTypeQueryNode(node)) {
+      return this.visitTypeQuery(node, context);
     }
 
     return DynamicValue.fromDynamicType(node);
@@ -717,6 +720,20 @@ export class StaticInterpreter {
     }
 
     return res;
+  }
+
+  private visitTypeQuery(node: ts.TypeQueryNode, context: Context): ResolvedValue {
+    if (!ts.isIdentifier(node.exprName)) {
+      return DynamicValue.fromUnknown(node);
+    }
+
+    const decl = this.host.getDeclarationOfIdentifier(node.exprName);
+    if (decl === null) {
+      return DynamicValue.fromUnknownIdentifier(node.exprName);
+    }
+
+    const declContext: Context = {...context, ...joinModuleContext(context, node, decl)};
+    return this.visitAmbiguousDeclaration(decl, declContext);
   }
 }
 
@@ -747,7 +764,7 @@ function isVariableDeclarationDeclared(node: ts.VariableDeclaration): boolean {
     return false;
   }
   const varStmt = declList.parent;
-  const modifiers = getModifiers(varStmt);
+  const modifiers = ts.getModifiers(varStmt);
   return modifiers !== undefined &&
       modifiers.some(mod => mod.kind === ts.SyntaxKind.DeclareKeyword);
 }

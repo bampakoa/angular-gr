@@ -1,110 +1,24 @@
-# Εφαρμογή και σεμινάριο Tour of Heroes
+# Angular tutorials
 
-<div class="callout is-helpful">
+This section contains tutorials to help you get started developing applications with Angular.
 
-<header>Πως να ξεκινησετε</header>
+## Tour of heroes
 
-Σε αυτό το σεμινάριο, δημιουργείτε τη δική σας Angular εφαρμογή από την αρχή.
-Αυτός είναι ένας καλός τρόπος για να βιώσετε μια τυπική διαδικασία ανάπτυξης καθώς μαθαίνετε βασικές έννοιες σχεδίασης Angular εφαρμογών, εργαλεία και ορολογία.
+[Tour of Heroes](tutorial/tour-of-heroes) helps you gain confidence that Angular can do whatever you need it to do by showing you how to:
 
-Εάν είστε νέοι στην Angular, δοκιμάστε πρώτα την εφαρμογή γρήγορης εκκίνησης [**Δοκιμάστε το τώρα**](start).
-Το **Δοκιμάστε το τώρα** βασίζεται σε ένα έτοιμο μερικώς ολοκληρωμένο project.
-Μπορείτε να επεξεργαστείτε την εφαρμογή στο StackBlitz και να δείτε τα αποτελέσματα σε πραγματικό χρόνο.
+*   Use Angular [directives](guide/glossary#directive "Directives definition") to show and hide elements and display lists of hero data.
+*   Create Angular [components](guide/glossary#component "Components definition") to display hero details and show an array of heroes.
+*   Use one-way [data binding](guide/glossary#data-binding "Data binding definition") for read-only data.
+*   Add editable fields to update a model with two-way data binding.
+*   Bind component methods to user events, like keystrokes and clicks.
+*   Enable users to select a hero from a list and edit that hero in the details view.
+*   Format data with [pipes](guide/glossary#pipe "Pipe definition").
+*   Create a shared [service](guide/glossary#service "Service definition") to assemble the heroes.
+*   Use [routing](guide/glossary#router "Router definition") to navigate among different views and their components.
 
-Το **Δοκιμάστε το τώρα** καλύπτει τα ίδια κύρια θέματα &mdash;components, σύνταξη template, δρομολόγηση, services, και πρόσβαση σε δεδομένα με την χρήση του HTTP&mdash; σε συνοπτική μορφή, ακολουθώντας τις καλύτερες πρακτικές.
+## Building a template-driven form
 
-</div>
+[Building a template-driven form](guide/forms) shows you how to create a template-driven form.
 
-Αυτό το σεμινάριο *Tour of Heroes* παρέχει μια εισαγωγή στις βασικές αρχές της Angular και σας δείχνει πως να:
-
-* Ρυθμίσετε το τοπικό σας Angular περιβάλλον ανάπτυξης
-* Αναπτύξετε μια εφαρμογή χρησιμοποιώντας το [Angular CLI](cli "Οδηγός εντολών CLI")
-
-Αυτό το σεμινάριο *Tour of Heroes* δείχνει πώς να ρυθμίσετε το τοπικό σας περιβάλλον ανάπτυξης και να αναπτύξετε μια εφαρμογή χρησιμοποιώντας το [εργαλείο Angular CLI](cli "Οδηγός εντολών CLI"), και παρέχει μια εισαγωγή στις βασικές αρχές της Angular.
-
-Η εφαρμογή *Tour of Heroes* που δημιουργείτε βοηθά μια εταιρεία στελέχωσης να διαχειρίζεται τους ήρωές της.
-Η εφαρμογή έχει πολλές από τις δυνατότητες που θα περιμένατε να βρείτε σε οποιαδήποτε εφαρμογή διαχείρισης δεδομένων.
-
-Η τελική εφαρμογή:
-
-* Επιστρέφει μια λίστα ηρώων
-* Εμφανίζει τους ήρωες σε μια λίστα
-* Επεξεργάζεται τις λεπτομέρειες ενός επιλεγμένου ήρωα
-* Πλοηγείται ανάμεσα σε διαφορετικές προβολές δεδομένων ηρώων
-
-Αυτό το σεμινάριο θα σας βοηθήσει να αποκτήσετε σιγουριά ότι η Angular μπορεί να κάνει ό,τι χρειαστείτε, δείχνοντάς σας πώς να:
-
-*   Χρησιμοποιήσετε [directives](guide/glossary#directive "Ορισμός directives") της Angular για να εμφανίσετε και να αποκρύψετε στοιχεία και να εμφανίσετε λίστες με δεδομένα ηρώων
-*   Δημιουργήσετε [components](guide/glossary#component "Ορισμός components") της Angular για να εμφανίσετε τις λεπτομέρειες ενός ήρωα και μια λίστα από ήρωες
-*   Χρησιμοποιήσετε μονόδρομο [data binding](guide/glossary#data-binding "Ορισμός data binding")  για δεδομένα μόνο για ανάγνωση
-*   Προσθέσετε επεξεργάσιμα πεδία για να ενημερώσετε ένα μοντέλο με αμφίδρομο data binding
-*   Συνδέσετε μεθόδους του component σε events του χρήστη, όπως πληκτρολόγηση και κλικ
-*   Δώσετε πρόσβαση στους χρήστες να επιλέξουν έναν ήρωα από μια κύρια λίστα και να επεξεργαστούν αυτόν τον ήρωα στην προβολή λεπτομερειών
-*   Μορφοποίησετε δεδομένα με [pipes](guide/glossary#pipe "Ορισμός pipe")
-*   Δημιουργήσετε ένα κοινόχρηστο [service](guide/glossary#service "Ορισμός service") για να κατασκευάσετε τους ήρωες
-*   Χρησιμοποιήσετε [δρομολόγηση](guide/glossary#router "Ορισμός router") για πλοήγηση μεταξύ διαφορετικών προβολών και των components τους
-
-<div class="callout is-helpful">
-
-<header>Λυση</header>
-
-Μετά την ολοκλήρωση όλων των βημάτων εκμάθησης, η τελική εφαρμογή θα μοιάζει με αυτό το παράδειγμα:
-
-<live-example name="toh-pt6"></live-example>.
-
-</div>
-
-## Σχεδιάστε τη νέα σας εφαρμογή
-
-Ακολουθεί μια εικόνα για το πού οδηγεί αυτό το σεμινάριο, δείχνοντας την προβολή Dashboard
-και τους Top Heroes:
-
-<div class="lightbox">
-
-<img alt="Προβολή dashboard ηρώων" src="generated/images/guide/toh/heroes-dashboard-1.png">
-
-</div>
-
-Μπορείτε να κάνετε κλικ στους συνδέσμους **Dashboard** και **Heroes** στον πίνακα ελέγχου
-για να πλοηγηθείτε μεταξύ των προβολών.
-
-Εάν κάνετε κλικ στον ήρωα "Magneta," το router ανοίγει μια προβολή "Hero Details"
-όπου μπορείτε να αλλάξετε το όνομα του ήρωα.
-
-<div class="lightbox">
-
-<img alt="Λεπτομέρειες του ήρωα στην εφαρμογή" src="generated/images/guide/toh/hero-details-1.png">
-
-</div>
-
-Κάνοντας κλικ στο κουμπί "Back" επιστρέφετε στο Dashboard.
-Οι σύνδεσμοι στο επάνω μέρος σάς μεταφέρουν σε οποιαδήποτε από τις κύριες προβολές.
-Εάν κάνετε κλικ στο "Heroes", η εφαρμογή εμφανίζει την προβολή της λίστας "Heroes".
-
-<div class="lightbox">
-
-<img alt="Προβολή εφαρμογής λίστας ηρώων" src="generated/images/guide/toh/heroes-list-2.png">
-
-</div>
-
-Όταν κάνετε κλικ σε ένα διαφορετικό όνομα ήρωα, οι μίνι λεπτομέρειες  κάτω από τη λίστα αντικατοπτρίζουν την νέα επιλογή.
-
-Μπορείτε να πατήσετε το κουμπί  "View Details" για να διερευνήσετε τις επεξεργάσιμες λεπτομέρειες του επιλεγμένου ήρωα.
-
-Το παρακάτω διάγραμμα απεικονίζει όλες τις επιλογές πλοήγησης.
-
-<div class="lightbox">
-
-<img alt="Προβολή πλοηγήσεων" src="generated/images/guide/toh/nav-diagram.png">
-
-</div>
-
-Εδώ είναι η εφαρμογή σε δράση:
-
-<div class="lightbox">
-
-<img alt="Το Tour of Heroes σε δράση" src="generated/images/guide/toh/toh-anim.gif">
-
-</div>
-
-@reviewed 2022-07-23
+The control elements in the form are bound to data properties that have input validation. The input validation helps maintain data integrity and styling to improve the user experience.
+Template-driven forms use two-way data binding to update the data model in the component as changes are made in the template and vice versa.

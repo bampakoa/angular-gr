@@ -6,7 +6,10 @@
     "warnings": {
       "typescriptMismatch": false
     },
-    "analytics": false
+    "analytics": false,
+    "cache": {
+      "enabled": false
+    }
   },
   "newProjectRoot": "projects",
   "projects": {
@@ -32,11 +35,13 @@
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
-            "ngswConfigPath": "ngsw-config.json",
+            "ngswConfigPath": "src/generated/ngsw-config.json",
             "tsConfig": "tsconfig.app.json",
             "webWorkerTsConfig": "tsconfig.worker.json",
             "optimization": {
-              "fonts": true,
+              "fonts": {
+                "inline": false
+              },
               "scripts": true,
               "styles": {
                 "inlineCritical": false,
@@ -47,11 +52,41 @@
             "sourceMap": true,
             "namedChunks": true,
             "assets": [
-              "src/assets",
-              "src/pwa-manifest.json",
-              "src/google385281288605d160.html",
               {
-                "input": "src/generated",
+                "followSymlinks": true,
+                "input": "src/assets",
+                "glob": "**/*",
+                "output": "/assets/"
+              },
+              {
+                "followSymlinks": true,
+                "input": "src/",
+                "glob": "**/pwa-manifest.json",
+                "output": "/"
+              },
+              {
+                "followSymlinks": true,
+                "input": "src/",
+                "glob": "**/google385281288605d160.html",
+                "output": "/"
+              },
+              {
+                "input": "stackblitz/generated",
+                "output": "generated",
+                "glob": "**"
+              },
+              {
+                "input": "example-zips/generated",
+                "output": "generated",
+                "glob": "**"
+              },
+              {
+                "input": "dgeni/generated",
+                "output": "generated",
+                "glob": "**"
+              },
+              {
+                "input": "dgeni-fast/generated",
                 "output": "generated",
                 "glob": "**"
               }

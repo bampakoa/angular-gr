@@ -8,7 +8,7 @@
 
 /// <reference types="node" />
 
-import cluster from 'cluster';
+import cluster, {Worker} from 'cluster';
 import module from 'module';
 
 import {AbsoluteFsPath, PathManipulation} from '../../../../src/ngtsc/file_system';
@@ -44,7 +44,7 @@ export class ClusterMaster {
     }
 
     // Set the worker entry-point
-    cluster.setupMaster({exec: getClusterWorkerScriptPath(fileSystem)});
+    cluster.setupMaster({exec: ClusterWorkerScriptResolver.resolve(fileSystem)});
 
     this.taskQueue = analyzeEntryPoints();
     this.onTaskCompleted = createTaskCompletedCallback(this.taskQueue);
@@ -112,7 +112,7 @@ export class ClusterMaster {
     }
 
     if (!isWorkerAvailable) {
-      const spawnedWorkerCount = Object.keys(cluster.workers).length;
+      const spawnedWorkerCount = cluster.workers ? Object.keys(cluster.workers).length : 0;
       if (spawnedWorkerCount < this.maxWorkerCount) {
         this.logger.debug('Spawning another worker process as there is more work to be done.');
         cluster.fork();
@@ -144,7 +144,7 @@ export class ClusterMaster {
   }
 
   /** Handle a worker's exiting. (Might be intentional or not.) */
-  private onWorkerExit(worker: cluster.Worker, code: number|null, signal: string|null): void {
+  private onWorkerExit(worker: Worker, code: number|null, signal: string|null): void {
     // If the worker's exiting was intentional, nothing to do.
     if (worker.exitedAfterDisconnect) return;
 
@@ -182,7 +182,7 @@ export class ClusterMaster {
 
       // The crashing might be a result of increased memory consumption by ngcc.
       // Do not spawn another process, unless this was the last worker process.
-      const spawnedWorkerCount = Object.keys(cluster.workers).length;
+      const spawnedWorkerCount = cluster.workers ? Object.keys(cluster.workers).length : 0;
       if (spawnedWorkerCount > 0) {
         this.logger.debug(`Not spawning another worker process to replace #${
             worker.id}. Continuing with ${spawnedWorkerCount} workers...`);
@@ -318,11 +318,13 @@ export class ClusterMaster {
 
   /** Stop all workers and stop listening on cluster events. */
   private stopWorkers(): void {
-    const workers = Object.values(cluster.workers) as cluster.Worker[];
-    this.logger.debug(`Stopping ${workers.length} workers...`);
+    if (cluster.workers) {
+      const workers = Object.values(cluster.workers) as Worker[];
+      this.logger.debug(`Stopping ${workers.length} workers...`);
 
-    cluster.removeAllListeners();
-    workers.forEach(worker => worker.kill());
+      cluster.removeAllListeners();
+      workers.forEach(worker => worker.kill());
+    }
   }
 
   /**
@@ -341,15 +343,15 @@ export class ClusterMaster {
   }
 }
 
-/** Gets the absolute file path to the cluster worker script. */
-export function getClusterWorkerScriptPath(fileSystem: PathManipulation): AbsoluteFsPath {
-  // This is an interop allowing for the worker script to be determined in both
-  // a CommonJS module, or an ES module which does not come with `require` by default.
-  const requireFn =
-      typeof require !== 'undefined' ? require : module.createRequire(__ESM_IMPORT_META_URL__);
-  // We resolve the worker script using module resolution as in the package output,
-  // the worker might be bundled but exposed through a subpath export mapping.
-  const workerScriptPath =
-      requireFn.resolve('@angular/compiler-cli/ngcc/src/execution/cluster/ngcc_cluster_worker');
-  return fileSystem.resolve(workerScriptPath);
+/** Wrapper for resolving the cluster worker script. Useful for test patching. */
+export class ClusterWorkerScriptResolver {
+  static resolve(fileSystem: PathManipulation): AbsoluteFsPath {
+    // NodeJS `import.meta.resolve` is experimental. We leverage `require`.
+    const requireFn = module.createRequire(import.meta.url);
+    // We resolve the worker script using module resolution as in the package output,
+    // the worker might be bundled but exposed through a subpath export mapping.
+    const workerScriptPath =
+        requireFn.resolve('@angular/compiler-cli/ngcc/src/execution/cluster/ngcc_cluster_worker');
+    return fileSystem.resolve(workerScriptPath);
+  }
 }

@@ -189,8 +189,7 @@ function matrixParamsMatch(
  */
 export class UrlTree {
   /** @internal */
-  // TODO(issue/24571): remove '!'.
-  _queryParamMap!: ParamMap;
+  _queryParamMap?: ParamMap;
 
   constructor(
       /** The root segment group of the URL tree */
@@ -299,8 +298,7 @@ export class UrlSegmentGroup {
  */
 export class UrlSegment {
   /** @internal */
-  // TODO(issue/24571): remove '!'.
-  _parameterMap!: ParamMap;
+  _parameterMap?: ParamMap;
 
   constructor(
       /** The path part of a URL segment */
@@ -755,7 +753,7 @@ export function createRoot(rootCandidate: UrlSegmentGroup) {
  * group into something like `/a(aux:)`, where `aux` is an empty child segment.
  */
 export function squashSegmentGroup(segmentGroup: UrlSegmentGroup): UrlSegmentGroup {
-  const newChildren = {} as any;
+  const newChildren: Record<string, UrlSegmentGroup> = {};
   for (const childOutlet of Object.keys(segmentGroup.children)) {
     const child = segmentGroup.children[childOutlet];
     const childCandidate = squashSegmentGroup(child);

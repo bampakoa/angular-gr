@@ -8,10 +8,10 @@
     "node": "^14.20.0 || ^16.13.0 || >=18.10.0"
   },
   "bin": {
-    "ngc-wrapped": "./src/ngc-wrapped/index.js",
-    "packager": "./src/ng_package/packager.js",
-    "types_bundler": "./src/types_bundle/index.js",
-    "xi18n": "./src/ngc-wrapped/extract_i18n.js"
+    "ngc-wrapped": "./src/ngc-wrapped/index.mjs",
+    "packager": "./src/ng_package/packager.mjs",
+    "types_bundler": "./src/types_bundle/index.mjs",
+    "xi18n": "./src/ngc-wrapped/extract_i18n.mjs"
   },
   "typings": "./src/ngc-wrapped/index.d.ts",
   "bazelBin": {
@@ -23,7 +23,7 @@
   },
   "dependencies": {
     "@microsoft/api-extractor": "^7.24.2",
-    "shelljs": "^0.8.5",
+    "magic-string": "^0.27.0",
     "tsickle": "^0.46.3",
     "tslib": "^2.3.0"
   },
@@ -36,7 +36,7 @@
     "rollup": "^2.56.3",
     "rollup-plugin-sourcemaps": "^0.6.3",
     "terser": "^5.9.0",
-    "typescript": ">=4.8.2 <4.9"
+    "typescript": ">=4.8.2 <5.0"
   },
   "peerDependenciesMeta": {
     "terser": {

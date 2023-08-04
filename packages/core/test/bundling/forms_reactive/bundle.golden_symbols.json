@@ -552,9 +552,6 @@
     "name": "_wrapInTimeout"
   },
   {
-    "name": "addComponentLogic"
-  },
-  {
     "name": "addPropertyAlias"
   },
   {
@@ -631,12 +628,6 @@
   },
   {
     "name": "cleanUpView"
-  },
-  {
-    "name": "coerceToAsyncValidator"
-  },
-  {
-    "name": "coerceToValidator"
   },
   {
     "name": "collectNativeNodes"

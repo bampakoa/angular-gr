@@ -111,6 +111,9 @@
     "name": "Console"
   },
   {
+    "name": "CreateUrlTreeStrategy"
+  },
+  {
     "name": "DEFAULT_SERIALIZER"
   },
   {
@@ -126,7 +129,13 @@
     "name": "DefaultIfEmptySubscriber"
   },
   {
+    "name": "DefaultRouteReuseStrategy"
+  },
+  {
     "name": "DefaultTitleStrategy"
+  },
+  {
+    "name": "DefaultUrlHandlingStrategy"
   },
   {
     "name": "DefaultUrlSerializer"
@@ -246,6 +255,9 @@
     "name": "LQuery_"
   },
   {
+    "name": "LegacyCreateUrlTree"
+  },
+  {
     "name": "LifecycleHooksFeature"
   },
   {
@@ -345,7 +357,13 @@
     "name": "NavigationError"
   },
   {
+    "name": "NavigationSkipped"
+  },
+  {
     "name": "NavigationStart"
+  },
+  {
+    "name": "NavigationTransitions"
   },
   {
     "name": "NgModuleFactory"
@@ -463,6 +481,9 @@
   },
   {
     "name": "RootViewRef"
+  },
+  {
+    "name": "RouteReuseStrategy"
   },
   {
     "name": "RouteTitleKey"
@@ -618,6 +639,9 @@
     "name": "UnsubscriptionError"
   },
   {
+    "name": "UrlHandlingStrategy"
+  },
+  {
     "name": "UrlParser"
   },
   {
@@ -691,9 +715,6 @@
   },
   {
     "name": "absoluteRedirect"
-  },
-  {
-    "name": "addComponentLogic"
   },
   {
     "name": "addPropertyAlias"
@@ -1002,9 +1023,6 @@
     "name": "first"
   },
   {
-    "name": "flatten"
-  },
-  {
     "name": "flatten2"
   },
   {
@@ -1087,6 +1105,9 @@
   },
   {
     "name": "getFactoryDef"
+  },
+  {
+    "name": "getFactoryOf"
   },
   {
     "name": "getFirstLContainer"
@@ -1347,6 +1368,9 @@
     "name": "isEnvironmentProviders"
   },
   {
+    "name": "isForwardRef"
+  },
+  {
     "name": "isFunction"
   },
   {
@@ -1525,6 +1549,9 @@
   },
   {
     "name": "noMatch2"
+  },
+  {
+    "name": "noSideEffects"
   },
   {
     "name": "nodeChildrenAsMap"

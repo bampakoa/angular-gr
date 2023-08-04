@@ -1,4 +1,5 @@
 load("//tools:defaults.bzl", "nodejs_binary")
+load("//:yarn.bzl", "YARN_PATH")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -6,29 +7,23 @@ exports_files([
     "LICENSE",
     "karma-js.conf.js",
     "browser-providers.conf.js",
+    YARN_PATH,
     "scripts/ci/bazel-payload-size.sh",
     "scripts/ci/payload-size.sh",
     "scripts/ci/payload-size.js",
     "package.json",
 ])
 
+filegroup(
+    # filegroup is needed so that this package.json file can be a dep
+    # in a js_library target, which doesn't allow source file deps
+    name = "package_json",
+    srcs = ["package.json"],
+)
+
 alias(
     name = "tsconfig.json",
     actual = "//packages:tsconfig-build.json",
-)
-
-filegroup(
-    name = "web_test_bootstrap_scripts",
-    # do not sort
-    srcs = [
-        "@npm//:node_modules/core-js-bundle/index.js",
-        "//packages/zone.js/bundles:zone.umd.js",
-        "//packages/zone.js/bundles:zone-testing.umd.js",
-        "//packages/zone.js/bundles:task-tracking.umd.js",
-        # Including systemjs because it defines `__eval`, which produces correct stack traces.
-        "@npm//:node_modules/systemjs/dist/system.src.js",
-        "@npm//:node_modules/reflect-metadata/Reflect.js",
-    ],
 )
 
 filegroup(
@@ -61,5 +56,8 @@ nodejs_binary(
     name = "yarn_vendored",
     data = [".yarn/releases/yarn-1.22.17.cjs"],
     entry_point = ".yarn/releases/yarn-1.22.17.cjs",
-    visibility = ["//integration:__subpackages__"],
+    visibility = [
+        "//aio/tools/examples/shared:__pkg__",
+        "//integration:__subpackages__",
+    ],
 )

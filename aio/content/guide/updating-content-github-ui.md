@@ -1,6 +1,6 @@
-# Ενημέρωση θεμάτων μέσω του GitHub
+# Updating topics through the GitHub user interface
 
-Αυτό το θέμα έχει αντικατασταθεί από το [Κάντε μια μικρή αλλαγή](guide/contributors-guide-overview#make-a-minor-change).
+This topic has been replaced by [Make a minor change](guide/contributors-guide-overview#make-a-minor-change).
 
 <!-- links -->
 
@@ -8,4 +8,4 @@
 
 <!-- end links -->
 
-@reviewed 2022-11-06
+@reviewed 2022-10-12

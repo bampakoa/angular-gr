@@ -14,6 +14,7 @@
 import {
   Component,
   Directive,
+  EnvironmentInjector,
   InjectFlags,
   InjectionToken,
   InjectOptions,
@@ -104,6 +105,13 @@ export interface TestBed {
   /** @deprecated from v9.0.0 use TestBed.inject */
   get(token: any, notFoundValue?: any): any;
 
+  /**
+   * Runs the given function in the `EnvironmentInjector` context of `TestBed`.
+   *
+   * @see EnvironmentInjector#runInContext
+   */
+  runInInjectionContext<T>(fn: () => T): T;
+
   execute(tokens: any[], fn: Function, context?: any): any;
 
   overrideModule(ngModule: Type<any>, override: MetadataOverride<NgModule>): TestBed;
@@ -119,13 +127,12 @@ export interface TestBed {
   /**
    * Overwrites all providers for the given token with the given provider definition.
    */
-  overrideProvider(token: any, provider: {
-    useFactory: Function,
-    deps: any[],
-  }): TestBed;
-  overrideProvider(token: any, provider: {useValue: any;}): TestBed;
-  overrideProvider(token: any, provider: {useFactory?: Function, useValue?: any, deps?: any[]}):
+  overrideProvider(token: any, provider: {useFactory: Function, deps: any[], multi?: boolean}):
       TestBed;
+  overrideProvider(token: any, provider: {useValue: any, multi?: boolean}): TestBed;
+  overrideProvider(
+      token: any,
+      provider: {useFactory?: Function, useValue?: any, deps?: any[], multi?: boolean}): TestBed;
 
   overrideTemplateUsingTestingModule(component: Type<any>, template: string): TestBed;
 
@@ -325,6 +332,15 @@ export class TestBedImpl implements TestBed {
     return TestBedImpl.INSTANCE.inject(token, notFoundValue, flags);
   }
 
+  /**
+   * Runs the given function in the `EnvironmentInjector` context of `TestBed`.
+   *
+   * @see EnvironmentInjector#runInContext
+   */
+  static runInInjectionContext<T>(fn: () => T): T {
+    return TestBedImpl.INSTANCE.runInInjectionContext(fn);
+  }
+
   static createComponent<T>(component: Type<T>): ComponentFixture<T> {
     return TestBedImpl.INSTANCE.createComponent(component);
   }
@@ -514,6 +530,10 @@ export class TestBedImpl implements TestBed {
   get(token: any, notFoundValue: any = Injector.THROW_IF_NOT_FOUND,
       flags: InjectFlags = InjectFlags.Default): any {
     return this.inject(token, notFoundValue, flags);
+  }
+
+  runInInjectionContext<T>(fn: () => T): T {
+    return this.inject(EnvironmentInjector).runInContext(fn);
   }
 
   execute(tokens: any[], fn: Function, context?: any): any {

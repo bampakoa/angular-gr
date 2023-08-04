@@ -24,6 +24,7 @@ extract_types(
 
 ng_package(
     name = "npm_package",
+    package_name = "@angular/localize",
     srcs = [
         "package.json",
         ":api_type_definitions",
@@ -61,4 +62,12 @@ api_golden_test_npm_package(
     # The tool entry-point uses namespace aliases and API extractor needs to be
     # able to resolve `@babel/core` to fully understand the `types` re-export/alias.
     types = ["@npm//@types/babel__core"],
+)
+
+filegroup(
+    name = "files_for_docgen",
+    srcs = glob([
+        "*.ts",
+        "src/**/*.ts",
+    ]) + ["PACKAGE.md"],
 )

@@ -23,6 +23,8 @@
 2. [Δημιουργήστε έναν χώρο εργασίας Angular](guide/setup-local#δημιουργήστε-έναν-χώρο-εργασίας-και-μια-αρχική-εφαρμογή) με την αρχική εφαρμογή.
    Εάν δεν έχετε ένα project, δημιουργήστε ένα χρησιμοποιώντας το `ng new <project-name>`, όπου `<project-name>` είναι το όνομα της Angular εφαρμογής σας.
 
+<a id="creating-a-component"></a>
+
 ## Δημιουργία ενός component
 
 Ο καλύτερος τρόπος για να δημιουργήσετε ένα component είναι με το Angular CLI. Μπορείτε επίσης να δημιουργήσετε ένα component χειροκίνητα.
@@ -72,7 +74,7 @@
 
     <code-example path="component-overview/src/app/component-overview/component-overview.component.ts" region="selector"></code-example>
 
-   Για περισσότερες πληροφορίες σχετικά με την επιλογή ενός selector, δείτε [Καθορισμός του component selector](#specifying-a-components-css-selector).
+   Για περισσότερες πληροφορίες σχετικά με την επιλογή ενός selector, δείτε [Καθορισμός του selector CSS ενός component](#specifying-a-components-css-selector).
    
 
 6. Καθορίστε το HTML template που χρησιμοποιεί το component για την εμφάνιση πληροφοριών.
@@ -94,6 +96,8 @@
 
     <code-example path="component-overview/src/app/component-overview/component-overview.component.ts" region="class"></code-example>
 
+<a id="specifying-a-components-css-selector"></a>
+
 ## Καθορισμός του selector CSS ενός component
 
 Κάθε component απαιτεί έναν CSS _selector_. Ένας selector δίνει εντολή στο Angular να δημιουργήσει αυτό το component όπου βρίσκει το αντίστοιχο tag στο HTML template. Για παράδειγμα, σκεφτείτε ένα component `hello-world.component.ts` που ορίζει τον selector του ως `app-hello-world`. Αυτός ο selector δίνει εντολή στην Angular να δημιουργήσει αυτό το component κάθε φορά που εμφανίζεται το tag `<app-hello-world>` σε ένα template.
@@ -101,6 +105,8 @@
 Καθορίστε τον component selector προσθέτοντας μια ιδιότητα `selector` στον `@Component` decorator.
 
 <code-example path="component-overview/src/app/component-overview/component-overview.component.ts" region="selector"></code-example>
+
+<a id="defining-a-components-template"></a>
 
 ## Καθορισμός του component template
 

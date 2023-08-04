@@ -117,8 +117,6 @@
 
     <code-example header="src/app/cart/cart.component.ts" path="getting-started/src/app/cart/cart.component.1.ts"></code-example>
 
-    Το StackBlitz δημιουργεί επίσης ένα `ngOnInit()` στα components.  Μπορείτε να αγνοήσετε το `ngOnInit()` του `CartComponent` για αυτό το σεμινάριο.
-
 1.  Παρατηρήστε ότι το νέο `CartComponent` προστέθηκε στα `declarations` του `app.module.ts`.
 
     <code-example header="src/app/app.module.ts" path="getting-started/src/app/app.module.ts" region="declare-cart"></code-example>

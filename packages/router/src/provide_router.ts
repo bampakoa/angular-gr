@@ -6,19 +6,21 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {LOCATION_INITIALIZED, ViewportScroller} from '@angular/common';
+import {HashLocationStrategy, LOCATION_INITIALIZED, LocationStrategy, ViewportScroller} from '@angular/common';
 import {APP_BOOTSTRAP_LISTENER, APP_INITIALIZER, ApplicationRef, ComponentRef, ENVIRONMENT_INITIALIZER, EnvironmentProviders, inject, InjectFlags, InjectionToken, Injector, makeEnvironmentProviders, NgZone, Provider, Type} from '@angular/core';
 import {of, Subject} from 'rxjs';
 import {filter, map, take} from 'rxjs/operators';
 
 import {Event, NavigationCancel, NavigationCancellationCode, NavigationEnd, NavigationError, stringifyEvent} from './events';
 import {Routes} from './models';
+import {NavigationTransitions} from './navigation_transition';
 import {Router} from './router';
 import {InMemoryScrollingOptions, ROUTER_CONFIGURATION, RouterConfigOptions} from './router_config';
 import {ROUTES} from './router_config_loader';
 import {PreloadingStrategy, RouterPreloader} from './router_preloader';
 import {ROUTER_SCROLLER, RouterScroller} from './router_scroller';
 import {ActivatedRoute} from './router_state';
+import {UrlSerializer} from './url_tree';
 
 const NG_DEV_MODE = typeof ngDevMode === 'undefined' || ngDevMode;
 
@@ -65,10 +67,6 @@ export function provideRouter(routes: Routes, ...features: RouterFeatures[]): En
     {provide: ActivatedRoute, useFactory: rootRoute, deps: [Router]},
     {provide: APP_BOOTSTRAP_LISTENER, multi: true, useFactory: getBootstrapListener},
     features.map(feature => feature.ɵproviders),
-    // TODO: All options used by the `assignExtraOptionsToRouter` factory need to be reviewed for
-    // how we want them to be configured. This API doesn't currently have a way to configure them
-    // and we should decide what the _best_ way to do that is rather than just sticking with the
-    // status quo of how it's done today.
   ]);
 }
 
@@ -180,10 +178,11 @@ export function withInMemoryScrolling(options: InMemoryScrollingOptions = {}):
   const providers = [{
     provide: ROUTER_SCROLLER,
     useFactory: () => {
-      const router = inject(Router);
       const viewportScroller = inject(ViewportScroller);
       const zone = inject(NgZone);
-      return new RouterScroller(router, viewportScroller, zone, options);
+      const transitions = inject(NavigationTransitions);
+      const urlSerializer = inject(UrlSerializer);
+      return new RouterScroller(urlSerializer, transitions, viewportScroller, zone, options);
     },
   }];
   return routerFeature(RouterFeatureKind.InMemoryScrollingFeature, providers);
@@ -208,8 +207,10 @@ export function getBootstrapListener() {
     injector.get(ROUTER_PRELOADER, null, InjectFlags.Optional)?.setUpPreloading();
     injector.get(ROUTER_SCROLLER, null, InjectFlags.Optional)?.init();
     router.resetRootComponentType(ref.componentTypes[0]);
-    bootstrapDone.next();
-    bootstrapDone.complete();
+    if (!bootstrapDone.closed) {
+      bootstrapDone.next();
+      bootstrapDone.unsubscribe();
+    }
   };
 }
 
@@ -312,7 +313,6 @@ export function withEnabledBlockingInitialNavigation(): EnabledBlockingInitialNa
       useFactory: (injector: Injector) => {
         const locationInitialized: Promise<any> =
             injector.get(LOCATION_INITIALIZED, Promise.resolve());
-        let initNavigation = false;
 
         /**
          * Performs the given action once the router finishes its next/current navigation.
@@ -356,21 +356,14 @@ export function withEnabledBlockingInitialNavigation(): EnabledBlockingInitialNa
                 // Unblock APP_INITIALIZER in case the initial navigation was canceled or errored
                 // without a redirect.
                 resolve(true);
-                initNavigation = true;
               });
 
-              router.afterPreactivation = () => {
+              injector.get(NavigationTransitions).afterPreactivation = () => {
                 // Unblock APP_INITIALIZER once we get to `afterPreactivation`. At this point, we
                 // assume activation will complete successfully (even though this is not
                 // guaranteed).
                 resolve(true);
-                // only the initial navigation should be delayed until bootstrapping is done.
-                if (!initNavigation) {
-                  return bootstrapDone.closed ? of(void 0) : bootstrapDone;
-                  // subsequent navigations should not be delayed
-                } else {
-                  return of(void 0);
-                }
+                return bootstrapDone.closed ? of(void 0) : bootstrapDone;
               };
               router.initialNavigation();
             });
@@ -588,6 +581,47 @@ export function withRouterConfig(options: RouterConfigOptions): RouterConfigurat
 }
 
 /**
+ * A type alias for providers returned by `withHashLocation` for use with `provideRouter`.
+ *
+ * @see `withHashLocation`
+ * @see `provideRouter`
+ *
+ * @publicApi
+ */
+export type RouterHashLocationFeature = RouterFeature<RouterFeatureKind.RouterHashLocationFeature>;
+
+/**
+ * Provides the location strategy that uses the URL fragment instead of the history API.
+ *
+ * @usageNotes
+ *
+ * Basic example of how you can use the hash location option:
+ * ```
+ * const appRoutes: Routes = [];
+ * bootstrapApplication(AppComponent,
+ *   {
+ *     providers: [
+ *       provideRouter(appRoutes, withHashLocation())
+ *     ]
+ *   }
+ * );
+ * ```
+ *
+ * @see `provideRouter`
+ * @see `HashLocationStrategy`
+ *
+ * @returns A set of providers for use with `provideRouter`.
+ *
+ * @publicApi
+ */
+export function withHashLocation(): RouterConfigurationFeature {
+  const providers = [
+    {provide: LocationStrategy, useClass: HashLocationStrategy},
+  ];
+  return routerFeature(RouterFeatureKind.RouterConfigurationFeature, providers);
+}
+
+/**
  * A type alias that represents all Router features available for use with `provideRouter`.
  * Features can be enabled by adding special functions to the `provideRouter` call.
  * See documentation for each symbol to find corresponding function name. See also `provideRouter`
@@ -609,5 +643,6 @@ export const enum RouterFeatureKind {
   EnabledBlockingInitialNavigationFeature,
   DisabledInitialNavigationFeature,
   InMemoryScrollingFeature,
-  RouterConfigurationFeature
+  RouterConfigurationFeature,
+  RouterHashLocationFeature
 }

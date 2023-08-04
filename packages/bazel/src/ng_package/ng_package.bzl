@@ -14,7 +14,7 @@ specification of this format at https://goo.gl/jB3GVv
 """
 
 load("@rules_nodejs//nodejs:providers.bzl", "StampSettingInfo")
-load("@build_bazel_rules_nodejs//:providers.bzl", "DeclarationInfo", "JSEcmaScriptModuleInfo", "NpmPackageInfo", "node_modules_aspect")
+load("@build_bazel_rules_nodejs//:providers.bzl", "DeclarationInfo", "JSEcmaScriptModuleInfo", "LinkablePackageInfo", "NpmPackageInfo", "node_modules_aspect")
 load("@build_bazel_rules_nodejs//internal/linker:link_node_modules.bzl", "LinkerPackageMappingInfo")
 load(
     "@build_bazel_rules_nodejs//internal/pkg_npm:pkg_npm.bzl",
@@ -32,7 +32,7 @@ def _debug(vars, *args):
 
 _DEFAULT_NG_PACKAGER = "//@angular/bazel/bin:packager"
 _DEFAULT_ROLLUP_CONFIG_TMPL = "//:node_modules/@angular/bazel/src/ng_package/rollup.config.js"
-_DEFAULT_ROLLUP = "//@angular/bazel/src/ng_package:rollup_for_ng_package"
+_DEFAULT_ROLLUP = "//@angular/bazel/src/ng_package/rollup"
 
 _NG_PACKAGE_MODULE_MAPPINGS_ATTR = "ng_package_module_mappings"
 
@@ -112,7 +112,7 @@ def _compute_node_modules_root(ctx):
     """Computes the node_modules root from the node_modules and deps attributes.
 
     Args:
-      ctx: the skylark execution context
+      ctx: the starlark execution context
 
     Returns:
       The node_modules root as a string
@@ -542,6 +542,7 @@ def _ng_package_impl(ctx):
         # More details: https://github.com/bazelbuild/rules_nodejs/issues/2941.
         # TODO(devversion): Consider supporting the `package_name` attribute.
         LinkerPackageMappingInfo(mappings = empty_depset, node_modules_roots = empty_depset),
+        LinkablePackageInfo(path = package_dir.path, files = depset([package_dir])),
     ]
 
 _NG_PACKAGE_DEPS_ASPECTS = [ng_package_module_mappings_aspect, node_modules_aspect]

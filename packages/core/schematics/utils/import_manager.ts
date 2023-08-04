@@ -9,6 +9,9 @@
 import {dirname, resolve} from 'path';
 import ts from 'typescript';
 
+/** Whether the current TypeScript version is after 4.9. */
+const IS_AFTER_TS_49 = isAfterVersion(4, 9);
+
 /** Update recorder for managing imports. */
 export interface ImportManagerUpdateRecorder {
   addNewImport(start: number, importText: string): void;
@@ -26,6 +29,13 @@ export class ImportManager {
       new Map<ts.ImportDeclaration, {propertyName?: ts.Identifier, importName: ts.Identifier}[]>();
   /** Map of source-files and their previously used identifier names. */
   private usedIdentifierNames = new Map<ts.SourceFile, string[]>();
+  /** Map of source files and the new imports that have to be added to them. */
+  private newImports: Map<ts.SourceFile, {
+    importStartIndex: number,
+    defaultImports: Map<string, ts.Identifier>,
+    namedImports: Map<string, ts.ImportSpecifier[]>,
+  }> = new Map();
+
   /**
    * Array of previously resolved symbol imports. Cache can be re-used to return
    * the same identifier without checking the source-file again.
@@ -139,36 +149,33 @@ export class ImportManager {
     }
 
     let identifier: ts.Identifier|null = null;
-    let newImport: ts.ImportDeclaration|null = null;
+
+    if (!this.newImports.has(sourceFile)) {
+      this.newImports.set(sourceFile, {
+        importStartIndex,
+        defaultImports: new Map(),
+        namedImports: new Map(),
+      });
+    }
 
     if (symbolName) {
       const propertyIdentifier = ts.factory.createIdentifier(symbolName);
       const generatedUniqueIdentifier = this._getUniqueIdentifier(sourceFile, symbolName);
       const needsGeneratedUniqueName = generatedUniqueIdentifier.text !== symbolName;
+      const importMap = this.newImports.get(sourceFile)!.namedImports;
       identifier = needsGeneratedUniqueName ? generatedUniqueIdentifier : propertyIdentifier;
 
-      newImport = ts.factory.createImportDeclaration(
-          undefined, undefined,
-          ts.factory.createImportClause(
-              false, undefined,
-              ts.factory.createNamedImports([ts.factory.createImportSpecifier(
-                  false, needsGeneratedUniqueName ? propertyIdentifier : undefined, identifier)])),
-          ts.factory.createStringLiteral(moduleName));
-    } else {
-      identifier = this._getUniqueIdentifier(sourceFile, 'defaultExport');
-      newImport = ts.factory.createImportDeclaration(
-          undefined, undefined, ts.factory.createImportClause(false, identifier, undefined),
-          ts.factory.createStringLiteral(moduleName));
-    }
+      if (!importMap.has(moduleName)) {
+        importMap.set(moduleName, []);
+      }
 
-    const newImportText = this.printer.printNode(ts.EmitHint.Unspecified, newImport, sourceFile);
-    // If the import is generated at the start of the source file, we want to add
-    // a new-line after the import. Otherwise if the import is generated after an
-    // existing import, we need to prepend a new-line so that the import is not on
-    // the same line as the existing import anchor.
-    this.getUpdateRecorder(sourceFile)
-        .addNewImport(
-            importStartIndex, importStartIndex === 0 ? `${newImportText}\n` : `\n${newImportText}`);
+      importMap.get(moduleName)!.push(ts.factory.createImportSpecifier(
+          false, needsGeneratedUniqueName ? propertyIdentifier : undefined, identifier));
+    } else {
+      const importMap = this.newImports.get(sourceFile)!.defaultImports;
+      identifier = this._getUniqueIdentifier(sourceFile, 'defaultExport');
+      importMap.set(moduleName, identifier);
+    }
 
     // Keep track of all generated imports so that we don't generate duplicate
     // similar imports as these can't be statically analyzed in the source-file yet.
@@ -196,6 +203,30 @@ export class ImportManager {
       const newNamedBindingsText =
           this.printer.printNode(ts.EmitHint.Unspecified, newNamedBindings, sourceFile);
       recorder.updateExistingImport(namedBindings, newNamedBindingsText);
+    });
+
+    this.newImports.forEach(({importStartIndex, defaultImports, namedImports}, sourceFile) => {
+      const recorder = this.getUpdateRecorder(sourceFile);
+
+      defaultImports.forEach((identifier, moduleName) => {
+        const newImport = createImportDeclaration(
+            undefined, ts.factory.createImportClause(false, identifier, undefined),
+            ts.factory.createStringLiteral(moduleName));
+
+        recorder.addNewImport(
+            importStartIndex, this._getNewImportText(importStartIndex, newImport, sourceFile));
+      });
+
+      namedImports.forEach((specifiers, moduleName) => {
+        const newImport = createImportDeclaration(
+            undefined,
+            ts.factory.createImportClause(
+                false, undefined, ts.factory.createNamedImports(specifiers)),
+            ts.factory.createStringLiteral(moduleName));
+
+        recorder.addNewImport(
+            importStartIndex, this._getNewImportText(importStartIndex, newImport, sourceFile));
+      });
     });
   }
 
@@ -257,4 +288,43 @@ export class ImportManager {
     }
     return commentRanges[commentRanges.length - 1]!.end;
   }
+
+  /** Gets the text that should be added to the file for a newly-created import declaration. */
+  private _getNewImportText(
+      importStartIndex: number, newImport: ts.ImportDeclaration,
+      sourceFile: ts.SourceFile): string {
+    const text = this.printer.printNode(ts.EmitHint.Unspecified, newImport, sourceFile);
+
+    // If the import is generated at the start of the source file, we want to add
+    // a new-line after the import. Otherwise if the import is generated after an
+    // existing import, we need to prepend a new-line so that the import is not on
+    // the same line as the existing import anchor
+    return importStartIndex === 0 ? `${text}\n` : `\n${text}`;
+  }
+}
+
+/**
+ * Creates a `ts.ImportDeclaration` declaration.
+ *
+ * TODO(crisbeto): this is a backwards-compatibility layer for versions of TypeScript less than 4.9.
+ * We should remove it once we have dropped support for the older versions.
+ */
+function createImportDeclaration(
+    modifiers: readonly ts.Modifier[]|undefined, importClause: ts.ImportClause|undefined,
+    moduleSpecifier: ts.Expression, assertClause?: ts.AssertClause): ts.ImportDeclaration {
+  return IS_AFTER_TS_49 ? (ts.factory.createImportDeclaration as any)(
+                              modifiers, importClause, moduleSpecifier, assertClause) :
+                          (ts.factory.createImportDeclaration as any)(
+                              undefined, modifiers, importClause, moduleSpecifier, assertClause);
+}
+
+/** Checks if the current version of TypeScript is after the specified major/minor versions. */
+function isAfterVersion(targetMajor: number, targetMinor: number): boolean {
+  const [major, minor] = ts.versionMajorMinor.split('.').map(part => parseInt(part));
+
+  if (major < targetMajor) {
+    return false;
+  }
+
+  return major === targetMajor ? minor >= targetMinor : true;
 }
