@@ -204,7 +204,7 @@ ng generate component dashboard
 
 Για πλοήγηση στο dashboard, το router χρειάζεται μια κατάλληλη διαδρομή.
 
-Κάντε import το `DashboardComponent` στο αρχείο `app-routing-module.ts`.
+Κάντε import το `DashboardComponent` στο αρχείο `app-routing.module.ts`.
 
 <code-example header="src/app/app-routing.module.ts (import DashboardComponent)" path="toh-pt5/src/app/app-routing.module.ts" region="import-dashboard"></code-example>
 

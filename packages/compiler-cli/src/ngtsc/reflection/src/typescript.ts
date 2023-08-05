@@ -8,7 +8,7 @@
 
 import ts from 'typescript';
 
-import {ClassDeclaration, ClassMember, ClassMemberKind, CtorParameter, Declaration, DeclarationKind, DeclarationNode, Decorator, FunctionDefinition, Import, isDecoratorIdentifier, ReflectionHost} from './host';
+import {ClassDeclaration, ClassMember, ClassMemberKind, CtorParameter, Declaration, DeclarationNode, Decorator, FunctionDefinition, Import, isDecoratorIdentifier, ReflectionHost} from './host';
 import {typeToValue} from './type_to_value';
 import {isNamedClassDeclaration} from './util';
 
@@ -189,18 +189,6 @@ export class TypeScriptReflectionHost implements ReflectionHost {
     return declaration.initializer || null;
   }
 
-  getDtsDeclaration(_: ClassDeclaration): ts.Declaration|null {
-    return null;
-  }
-
-  getInternalNameOfClass(clazz: ClassDeclaration): ts.Identifier {
-    return clazz.name;
-  }
-
-  getAdjacentNameOfClass(clazz: ClassDeclaration): ts.Identifier {
-    return clazz.name;
-  }
-
   isStaticallyExported(decl: ts.Node): boolean {
     // First check if there's an `export` modifier directly on the declaration.
     let topLevel = decl;
@@ -347,18 +335,12 @@ export class TypeScriptReflectionHost implements ReflectionHost {
     if (symbol.valueDeclaration !== undefined) {
       return {
         node: symbol.valueDeclaration,
-        known: null,
         viaModule,
-        identity: null,
-        kind: DeclarationKind.Concrete,
       };
     } else if (symbol.declarations !== undefined && symbol.declarations.length > 0) {
       return {
         node: symbol.declarations[0],
-        known: null,
         viaModule,
-        identity: null,
-        kind: DeclarationKind.Concrete,
       };
     } else {
       return null;
@@ -470,9 +452,8 @@ export class TypeScriptReflectionHost implements ReflectionHost {
     // declaration.
     //
     // Note: when checking multiple classes declared in the same file, this repeats some operations.
-    // In theory, this could be expensive if run in the context of a massive input file (like a
-    // large FESM in ngcc). If performance does become an issue here, it should be possible to
-    // create a `Set<>`
+    // In theory, this could be expensive if run in the context of a massive input file. If
+    // performance does become an issue here, it should be possible to create a `Set<>`
 
     // Unfortunately, `ts.Iterator` doesn't implement the iterator protocol, so iteration here is
     // done manually.

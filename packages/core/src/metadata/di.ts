@@ -11,45 +11,6 @@ import {ProviderToken} from '../di/provider_token';
 import {makePropDecorator} from '../util/decorators';
 
 /**
- * A DI token that you can use to create a virtual [provider](guide/glossary#provider)
- * that will populate the `entryComponents` field of components and NgModules
- * based on its `useValue` property value.
- * All components that are referenced in the `useValue` value (either directly
- * or in a nested array or map) are added to the `entryComponents` property.
- *
- * @usageNotes
- *
- * The following example shows how the router can populate the `entryComponents`
- * field of an NgModule based on a router configuration that refers
- * to components.
- *
- * ```typescript
- * // helper function inside the router
- * function provideRoutes(routes) {
- *   return [
- *     {provide: ROUTES, useValue: routes},
- *     {provide: ANALYZE_FOR_ENTRY_COMPONENTS, useValue: routes, multi: true}
- *   ];
- * }
- *
- * // user code
- * let routes = [
- *   {path: '/root', component: RootComp},
- *   {path: '/teams', component: TeamsComp}
- * ];
- *
- * @NgModule({
- *   providers: [provideRoutes(routes)]
- * })
- * class ModuleWithRoutes {}
- * ```
- *
- * @publicApi
- * @deprecated Since 9.0.0. With Ivy, this property is no longer necessary.
- */
-export const ANALYZE_FOR_ENTRY_COMPONENTS = new InjectionToken<any>('AnalyzeForEntryComponents');
-
-/**
  * Type of the `Attribute` decorator / constructor function.
  *
  * @publicApi
@@ -189,7 +150,6 @@ export interface ContentChildrenDecorator {
    *
    * {@example core/di/ts/contentChildren/content_children_example.ts region='Component'}
    *
-   * @Annotation
    */
   (selector: ProviderToken<unknown>|Function|string, opts?: {
     descendants?: boolean,
@@ -204,7 +164,6 @@ export interface ContentChildrenDecorator {
  * Type of the ContentChildren metadata.
  *
  *
- * @Annotation
  * @publicApi
  */
 export type ContentChildren = Query;
@@ -213,7 +172,6 @@ export type ContentChildren = Query;
  * ContentChildren decorator and metadata.
  *
  *
- * @Annotation
  * @publicApi
  */
 export const ContentChildren: ContentChildrenDecorator = makePropDecorator(
@@ -281,7 +239,6 @@ export interface ContentChildDecorator {
    *
    * {@example core/di/ts/contentChild/content_child_example.ts region='Component'}
    *
-   * @Annotation
    */
   (selector: ProviderToken<unknown>|Function|string,
    opts?: {descendants?: boolean, read?: any, static?: boolean}): any;
@@ -300,7 +257,7 @@ export type ContentChild = Query;
  * ContentChild decorator and metadata.
  *
  *
- * @Annotation
+
  *
  * @publicApi
  */
@@ -367,7 +324,6 @@ export interface ViewChildrenDecorator {
    *
    * {@example core/di/ts/viewChildren/view_children_example.ts region='Component'}
    *
-   * @Annotation
    */
   (selector: ProviderToken<unknown>|Function|string,
    opts?: {read?: any, emitDistinctChangesOnly?: boolean}): any;
@@ -385,7 +341,7 @@ export type ViewChildren = Query;
 /**
  * ViewChildren decorator and metadata.
  *
- * @Annotation
+
  * @publicApi
  */
 export const ViewChildren: ViewChildrenDecorator = makePropDecorator(
@@ -449,7 +405,6 @@ export interface ViewChildDecorator {
    *
    * {@example core/di/ts/viewChild/view_child_howto.ts region='HowTo'}
    *
-   * @Annotation
    */
   (selector: ProviderToken<unknown>|Function|string, opts?: {read?: any, static?: boolean}): any;
   new(selector: ProviderToken<unknown>|Function|string,
@@ -466,7 +421,7 @@ export type ViewChild = Query;
 /**
  * ViewChild decorator and metadata.
  *
- * @Annotation
+
  * @publicApi
  */
 export const ViewChild: ViewChildDecorator = makePropDecorator(

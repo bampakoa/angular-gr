@@ -6,15 +6,15 @@
 Τα σεμινάρια και οι οδηγοί περιλαμβάνουν υλικό με δυνατότητα λήψης για να σας βοηθήσουν να ξεκινήσετε τα project σας.
 
 <div class="card-container">
+  <a href="tutorial/first-app" class="docs-card" title="Εργαστείτε μέσα από ένα πλήρες σεμινάριο">
+    <section>Δημιουργήστε την πρώτη σας εφαρμογή Angular</section>
+    <p>Δουλέψτε μέσα από ένα πλήρες σεμινάριο για να δημιουργήσετε την πρώτη σας εφαρμογή.</p>
+    <p class="card-footer">Σεμινάριο εφαρμογής σπιτιών</p>
+  </a>
   <a href="guide/what-is-angular" class="docs-card" title="Επισκόπηση της πλατφόρμας">
     <section>Τι είναι η Angular</section>
     <p>Γενική επισκόπηση της πλατφόρμας Angular.</p>
     <p class="card-footer">Επισκόπηση της πλατφόρμας</p>
-  </a>
-  <a href="start" class="docs-card" title="Ξεκινώντας">
-    <section>Ξεκινώντας</section>
-    <p>Δουλέψτε με μια μικρή έτοιμη εφαρμογή Angular, χωρίς καμία ρύθμιση.</p>
-    <p class="card-footer">Δοκιμάστε το τώρα</p>
   </a>
   <a href="guide/architecture" class="docs-card" title="Έννοιες της Angular">
     <section>Μάθετε και εξερευνήστε</section>
@@ -25,11 +25,6 @@
     <section>Ρυθμίστε το περιβάλλον σας</section>
     <p>Ρυθμίστε το τοπικό σας περιβάλλον για ανάπτυξη με το Angular CLI.</p>
     <p class="card-footer">Τοπική ρύθμιση</p>
-  </a>
-  <a href="tutorial" class="docs-card" title="Δουλέψτε με ένα πλήρη σεμινάριο">
-    <section>Hello World</section>
-    <p>Δουλέψτε με ένα πλήρη σεμινάριο για να δημιουργήσετε την πρώτη σας εφαρμογή.</p>
-    <p class="card-footer">Σεμινάριο Tour of Heroes</p>
   </a>
 </div>
 

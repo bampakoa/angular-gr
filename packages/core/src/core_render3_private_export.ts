@@ -248,6 +248,9 @@ export {
 export {
   compilePipe as ɵcompilePipe,
 } from './render3/jit/pipe';
+export {
+  isNgModule as ɵisNgModule
+} from './render3/jit/util';
 export { Profiler as ɵProfiler, ProfilerEvent as ɵProfilerEvent } from './render3/profiler';
 export {
   publishDefaultGlobalUtils as ɵpublishDefaultGlobalUtils
@@ -277,5 +280,6 @@ export {
 export {
   noSideEffects as ɵnoSideEffects,
 } from './util/closure';
+
 
 // clang-format on

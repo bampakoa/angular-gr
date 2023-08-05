@@ -8,6 +8,8 @@
     },
     "analytics": false,
     "cache": {
+      // Disable build caching as the cache folder will just be dropped
+      // when run under Bazel sandboxed execution.
       "enabled": false
     }
   },
@@ -52,6 +54,11 @@
             "sourceMap": true,
             "namedChunks": true,
             "assets": [
+              // Architect on Windows has difficulty service assets files within a
+              // Bazel runfiles symlink forest. Using "followSymlinks" seems to
+              // fix this. Note that the assets below don't need this workaround as
+              // symlinked tree artifacts pointing to the output tree don't appear
+              // to have the same issue.
               {
                 "followSymlinks": true,
                 "input": "src/assets",
@@ -251,15 +258,6 @@
               "devServerTarget": "site:serve:ci"
             }
           }
-        },
-        "deploy": {
-          "builder": "@angular/fire:deploy",
-          "options": {
-            "prerender": false,
-            "ssr": false,
-            "browserTarget": "site:build:stable",
-            "firebaseProject": "angular-gr",
-            "firebaseHostingSite": "angular-gr"
         }
       }
     }

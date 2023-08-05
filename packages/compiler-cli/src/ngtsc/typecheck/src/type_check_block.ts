@@ -10,9 +10,8 @@ import {AST, BindingPipe, BindingType, BoundTarget, Call, DYNAMIC_TYPE, Implicit
 import ts from 'typescript';
 
 import {Reference} from '../../imports';
-import {ClassPropertyName} from '../../metadata';
+import {BindingPropertyName, ClassPropertyName} from '../../metadata';
 import {ClassDeclaration} from '../../reflection';
-import {createFunctionDeclaration, createParameterDeclaration} from '../../ts_compatibility';
 import {TemplateId, TypeCheckableDirectiveMeta, TypeCheckBlockMetadata} from '../api';
 
 import {addExpressionIdentifier, ExpressionIdentifier, markIgnoreDiagnostics} from './comments';
@@ -131,7 +130,7 @@ export function generateTypeCheckBlock(
   // the `ts.Printer` to format the type-check block nicely.
   const body = ts.factory.createBlock(
       [ts.factory.createIfStatement(ts.factory.createTrue(), innerBody, undefined)]);
-  const fnDecl = createFunctionDeclaration(
+  const fnDecl = ts.factory.createFunctionDeclaration(
       /* modifiers */ undefined,
       /* asteriskToken */ undefined,
       /* name */ name,
@@ -634,35 +633,32 @@ class TcbDirectiveCtorOp extends TcbOp {
     addParseSpanInfo(id, this.node.startSourceSpan || this.node.sourceSpan);
 
     const genericInputs = new Map<string, TcbDirectiveInput>();
+    const boundAttrs = getBoundAttributes(this.dir, this.node);
 
-    const inputs = getBoundInputs(this.dir, this.node, this.tcb);
-    for (const input of inputs) {
+    for (const attr of boundAttrs) {
       // Skip text attributes if configured to do so.
       if (!this.tcb.env.config.checkTypeOfAttributes &&
-          input.attribute instanceof TmplAstTextAttribute) {
+          attr.attribute instanceof TmplAstTextAttribute) {
         continue;
       }
-      for (const fieldName of input.fieldNames) {
+      for (const {fieldName} of attr.inputs) {
         // Skip the field if an attribute has already been bound to it; we can't have a duplicate
         // key in the type constructor call.
         if (genericInputs.has(fieldName)) {
           continue;
         }
 
-        const expression = translateInput(input.attribute, this.tcb, this.scope);
-        genericInputs.set(fieldName, {
-          type: 'binding',
-          field: fieldName,
-          expression,
-          sourceSpan: input.attribute.sourceSpan
-        });
+        const expression = translateInput(attr.attribute, this.tcb, this.scope);
+        genericInputs.set(
+            fieldName,
+            {type: 'binding', field: fieldName, expression, sourceSpan: attr.attribute.sourceSpan});
       }
     }
 
     // Add unset directive inputs for each of the remaining unset fields.
-    for (const [fieldName] of this.dir.inputs) {
-      if (!genericInputs.has(fieldName)) {
-        genericInputs.set(fieldName, {type: 'unset', field: fieldName});
+    for (const {classPropertyName} of this.dir.inputs) {
+      if (!genericInputs.has(classPropertyName)) {
+        genericInputs.set(classPropertyName, {type: 'unset', field: classPropertyName});
       }
     }
 
@@ -701,15 +697,22 @@ class TcbDirectiveInputsOp extends TcbOp {
 
     // TODO(joost): report duplicate properties
 
-    const inputs = getBoundInputs(this.dir, this.node, this.tcb);
-    for (const input of inputs) {
+    const boundAttrs = getBoundAttributes(this.dir, this.node);
+    const seenRequiredInputs = new Set<ClassPropertyName>();
+
+    for (const attr of boundAttrs) {
       // For bound inputs, the property is assigned the binding expression.
-      const expr = widenBinding(translateInput(input.attribute, this.tcb, this.scope), this.tcb);
+      const expr = widenBinding(translateInput(attr.attribute, this.tcb, this.scope), this.tcb);
 
       let assignment: ts.Expression = wrapForDiagnostics(expr);
 
-      for (const fieldName of input.fieldNames) {
+      for (const {fieldName, required} of attr.inputs) {
         let target: ts.LeftHandSideExpression;
+
+        if (required) {
+          seenRequiredInputs.add(fieldName);
+        }
+
         if (this.dir.coercedInputFields.has(fieldName)) {
           // The input has a coercion declaration which should be used instead of assigning the
           // expression into the input field directly. To achieve this, a variable is declared
@@ -769,25 +772,42 @@ class TcbDirectiveInputsOp extends TcbOp {
                   dirId, ts.factory.createIdentifier(fieldName));
         }
 
-        if (input.attribute.keySpan !== undefined) {
-          addParseSpanInfo(target, input.attribute.keySpan);
+        if (attr.attribute.keySpan !== undefined) {
+          addParseSpanInfo(target, attr.attribute.keySpan);
         }
         // Finally the assignment is extended by assigning it into the target expression.
         assignment =
             ts.factory.createBinaryExpression(target, ts.SyntaxKind.EqualsToken, assignment);
       }
 
-      addParseSpanInfo(assignment, input.attribute.sourceSpan);
+      addParseSpanInfo(assignment, attr.attribute.sourceSpan);
       // Ignore diagnostics for text attributes if configured to do so.
       if (!this.tcb.env.config.checkTypeOfAttributes &&
-          input.attribute instanceof TmplAstTextAttribute) {
+          attr.attribute instanceof TmplAstTextAttribute) {
         markIgnoreDiagnostics(assignment);
       }
 
       this.scope.addStatement(ts.factory.createExpressionStatement(assignment));
     }
 
+    this.checkRequiredInputs(seenRequiredInputs);
+
     return null;
+  }
+
+  private checkRequiredInputs(seenRequiredInputs: Set<ClassPropertyName>): void {
+    const missing: BindingPropertyName[] = [];
+
+    for (const input of this.dir.inputs) {
+      if (input.required && !seenRequiredInputs.has(input.classPropertyName)) {
+        missing.push(input.bindingPropertyName);
+      }
+    }
+
+    if (missing.length > 0) {
+      this.tcb.oobRecorder.missingRequiredInputs(
+          this.tcb.id, this.node, this.dir.name, this.dir.isComponent, missing);
+    }
   }
 }
 
@@ -1642,9 +1662,9 @@ class Scope {
   }
 }
 
-interface TcbBoundInput {
+interface TcbBoundAttribute {
   attribute: TmplAstBoundAttribute|TmplAstTextAttribute;
-  fieldNames: ClassPropertyName[];
+  inputs: {fieldName: ClassPropertyName, required: boolean}[];
 }
 
 /**
@@ -1653,7 +1673,7 @@ interface TcbBoundInput {
  */
 function tcbThisParam(
     name: ts.EntityName, typeArguments: ts.TypeNode[]|undefined): ts.ParameterDeclaration {
-  return createParameterDeclaration(
+  return ts.factory.createParameterDeclaration(
       /* modifiers */ undefined,
       /* dotDotDotToken */ undefined,
       /* name */ 'this',
@@ -1837,10 +1857,10 @@ function tcbCallTypeCtor(
       /* argumentsArray */[ts.factory.createObjectLiteralExpression(members)]);
 }
 
-function getBoundInputs(
-    directive: TypeCheckableDirectiveMeta, node: TmplAstTemplate|TmplAstElement,
-    tcb: Context): TcbBoundInput[] {
-  const boundInputs: TcbBoundInput[] = [];
+function getBoundAttributes(
+    directive: TypeCheckableDirectiveMeta,
+    node: TmplAstTemplate|TmplAstElement): TcbBoundAttribute[] {
+  const boundInputs: TcbBoundAttribute[] = [];
 
   const processAttribute = (attr: TmplAstBoundAttribute|TmplAstTextAttribute) => {
     // Skip non-property bindings.
@@ -1850,11 +1870,14 @@ function getBoundInputs(
 
     // Skip the attribute if the directive does not have an input for it.
     const inputs = directive.inputs.getByBindingPropertyName(attr.name);
-    if (inputs === null) {
-      return;
+
+    if (inputs !== null) {
+      boundInputs.push({
+        attribute: attr,
+        inputs:
+            inputs.map(input => ({fieldName: input.classPropertyName, required: input.required}))
+      });
     }
-    const fieldNames = inputs.map(input => input.classPropertyName);
-    boundInputs.push({attribute: attr, fieldNames});
   };
 
   node.inputs.forEach(processAttribute);
@@ -1986,7 +2009,7 @@ function tcbCreateEventHandler(
     body = ts.factory.createIfStatement(guards, body);
   }
 
-  const eventParam = createParameterDeclaration(
+  const eventParam = ts.factory.createParameterDeclaration(
       /* modifiers */ undefined,
       /* dotDotDotToken */ undefined,
       /* name */ EVENT_PARAMETER,

@@ -8,15 +8,16 @@
 
 
 import {NgtscProgram} from '@angular/compiler-cli';
-import {Reference, TemplateTypeChecker} from '@angular/compiler-cli/private/migrations';
+import {TemplateTypeChecker} from '@angular/compiler-cli/private/migrations';
 import {dirname, join} from 'path';
 import ts from 'typescript';
 
+import {ChangeTracker, ImportRemapper} from '../../utils/change_tracker';
 import {getAngularDecorators} from '../../utils/ng_decorators';
 import {closestNode} from '../../utils/typescript/nodes';
 
 import {ComponentImportsRemapper, convertNgModuleDeclarationToStandalone, extractDeclarationsFromModule, findTestObjectsToMigrate, migrateTestDeclarations} from './to-standalone';
-import {ChangeTracker, closestOrSelf, findClassDeclaration, findLiteralProperty, getNodeLookup, getRelativeImportPath, ImportRemapper, isClassReferenceInAngularModule, NamedClassDeclaration, NodeLookup, offsetsToNodes, ReferenceResolver, UniqueItemTracker} from './util';
+import {closestOrSelf, findClassDeclaration, findLiteralProperty, getNodeLookup, getRelativeImportPath, isClassReferenceInAngularModule, NamedClassDeclaration, NodeLookup, offsetsToNodes, ReferenceResolver, UniqueItemTracker} from './util';
 
 /** Information extracted from a `bootstrapModule` call necessary to migrate it. */
 interface BootstrapCallAnalysis {
@@ -29,7 +30,7 @@ interface BootstrapCallAnalysis {
   /** Component that the module is bootstrapping. */
   component: NamedClassDeclaration;
   /** Classes declared by the bootstrapped module. */
-  declarations: Reference<ts.ClassDeclaration>[];
+  declarations: ts.ClassDeclaration[];
 }
 
 export function toStandaloneBootstrap(
@@ -42,8 +43,14 @@ export function toStandaloneBootstrap(
   const referenceResolver =
       new ReferenceResolver(program, host, rootFileNames, basePath, referenceLookupExcludedFiles);
   const bootstrapCalls: BootstrapCallAnalysis[] = [];
-  const testObjects: ts.ObjectLiteralExpression[] = [];
-  const allDeclarations: Reference<ts.ClassDeclaration>[] = [];
+  const testObjects = new Set<ts.ObjectLiteralExpression>();
+  const allDeclarations = new Set<ts.ClassDeclaration>();
+
+  // `bootstrapApplication` doesn't include Protractor support by default
+  // anymore so we have to opt the app in, if we detect it being used.
+  const additionalProviders = hasImport(program, rootFileNames, 'protractor') ?
+      new Map([['provideProtractorTestingSupport', '@angular/platform-browser']]) :
+      null;
 
   for (const sourceFile of sourceFiles) {
     sourceFile.forEachChild(function walk(node) {
@@ -59,12 +66,13 @@ export function toStandaloneBootstrap(
       node.forEachChild(walk);
     });
 
-    testObjects.push(...findTestObjectsToMigrate(sourceFile, typeChecker));
+    findTestObjectsToMigrate(sourceFile, typeChecker).forEach(obj => testObjects.add(obj));
   }
 
   for (const call of bootstrapCalls) {
-    allDeclarations.push(...call.declarations);
-    migrateBootstrapCall(call, tracker, referenceResolver, typeChecker, printer);
+    call.declarations.forEach(decl => allDeclarations.add(decl));
+    migrateBootstrapCall(
+        call, tracker, additionalProviders, referenceResolver, typeChecker, printer);
   }
 
   // The previous migrations explicitly skip over bootstrapped
@@ -135,12 +143,15 @@ function analyzeBootstrapCall(
  * Converts a `bootstrapModule` call to `bootstrapApplication`.
  * @param analysis Analysis result of the call.
  * @param tracker Tracker in which to register the changes.
+ * @param additionalFeatures Additional providers, apart from the auto-detected ones, that should
+ * be added to the bootstrap call.
  * @param referenceResolver
  * @param typeChecker
  * @param printer
  */
 function migrateBootstrapCall(
-    analysis: BootstrapCallAnalysis, tracker: ChangeTracker, referenceResolver: ReferenceResolver,
+    analysis: BootstrapCallAnalysis, tracker: ChangeTracker,
+    additionalProviders: Map<string, string>|null, referenceResolver: ReferenceResolver,
     typeChecker: ts.TypeChecker, printer: ts.Printer) {
   const sourceFile = analysis.call.getSourceFile();
   const moduleSourceFile = analysis.metadata.getSourceFile();
@@ -175,6 +186,13 @@ function migrateBootstrapCall(
     migrateImportsForBootstrapCall(
         sourceFile, imports, nodeLookup, moduleImportsInNewCall, providersInNewCall, tracker,
         nodesToCopy, referenceResolver, typeChecker);
+  }
+
+  if (additionalProviders) {
+    additionalProviders.forEach((moduleSpecifier, name) => {
+      providersInNewCall.push(ts.factory.createCallExpression(
+          tracker.addImport(sourceFile, name, moduleSpecifier), undefined, undefined));
+    });
   }
 
   if (nodesToCopy.size > 0) {
@@ -226,9 +244,13 @@ function replaceBootstrapCallExpression(
 
     // Push the providers after `importProvidersFrom` call for better readability.
     combinedProviders.push(...providers);
+
+    const providersArray = ts.factory.createNodeArray(
+        combinedProviders,
+        analysis.metadata.properties.hasTrailingComma && combinedProviders.length > 2);
     const initializer = remapDynamicImports(
         sourceFile.fileName,
-        ts.factory.createArrayLiteralExpression(combinedProviders, combinedProviders.length > 1));
+        ts.factory.createArrayLiteralExpression(providersArray, combinedProviders.length > 1));
 
     args.push(ts.factory.createObjectLiteralExpression(
         [ts.factory.createPropertyAssignment('providers', initializer)], true));
@@ -603,7 +625,7 @@ function referencesToNodeWithinSameFile(
  */
 function remapDynamicImports<T extends ts.Node>(targetFileName: string, rootNode: T): T {
   let hasChanged = false;
-  const transformer: ts.TransformerFactory<T> = context => {
+  const transformer: ts.TransformerFactory<ts.Node> = context => {
     return sourceFile => ts.visitNode(sourceFile, function walk(node: ts.Node): ts.Node {
       if (ts.isCallExpression(node) && node.expression.kind === ts.SyntaxKind.ImportKeyword &&
           node.arguments.length > 0 && ts.isStringLiteralLike(node.arguments[0]) &&
@@ -619,7 +641,7 @@ function remapDynamicImports<T extends ts.Node>(targetFileName: string, rootNode
     });
   };
 
-  const result = ts.transform(rootNode, [transformer]).transformed[0];
+  const result = ts.transform(rootNode, [transformer]).transformed[0] as T;
   return hasChanged ? result : rootNode;
 }
 
@@ -702,4 +724,28 @@ function getLastImportEnd(sourceFile: ts.SourceFile): number {
   }
 
   return index;
+}
+
+/** Checks if any of the program's files has an import of a specific module. */
+function hasImport(program: NgtscProgram, rootFileNames: string[], moduleName: string): boolean {
+  const tsProgram = program.getTsProgram();
+  const deepImportStart = moduleName + '/';
+
+  for (const fileName of rootFileNames) {
+    const sourceFile = tsProgram.getSourceFile(fileName);
+
+    if (!sourceFile) {
+      continue;
+    }
+
+    for (const statement of sourceFile.statements) {
+      if (ts.isImportDeclaration(statement) && ts.isStringLiteralLike(statement.moduleSpecifier) &&
+          (statement.moduleSpecifier.text === moduleName ||
+           statement.moduleSpecifier.text.startsWith(deepImportStart))) {
+        return true;
+      }
+    }
+  }
+
+  return false;
 }

@@ -135,7 +135,7 @@
         "source": "/guide/set-document-title",
         "destination": "/guide/router#setting-the-page-title"
       },
-      {"type": 301, "source": "/guide/update-to-latest-version", "destination": "/guide/update-to-version-15"},
+      {"type": 301, "source": "/guide/update-to-latest-version", "destination": "/guide/update-to-version-16"},
       {
         "type": 301,
         "source": "/start/data",

@@ -61,7 +61,7 @@ We're working on updating the Angular getting started experience with standalone
 
 ### Improvements in the image directive
 
-We released the Angular [image directive](https://developer.chrome.com/blog/angular-image-directive/) as stable in v15. We introduced a new fill mode feature that enables images to fit within their parent container rather than having explicit dimensions. Currently, this feature is in [developer preview](https://angular.io/guide/releases#developer-preview). Next we'll be working on collecting feedback from developers before we promote fill mode as stable.
+We released the Angular [image directive](https://developer.chrome.com/blog/angular-image-directive/) as stable in v15. We introduced a new fill mode feature that enables images to fit within their parent container rather than having explicit dimensions. Currently, this feature is in [developer preview](/guide/releases#developer-preview). Next we'll be working on collecting feedback from developers before we promote fill mode as stable.
 
 ## Future
 
@@ -144,7 +144,7 @@ Using MDC Web aligns Angular Material more closely with the Material Design spec
 
 *Completed Q4 2022*
 
-In the process of making Angular simpler, we are working on [introducing APIs](https://angular.io/guide/standalone-components) that allow developers to initialize applications, instantiate components, and use the router without NgModules. Angular v14 introduces developer preview of the APIs for standalone components, directives, and pipes. In the next few quarters we'll collect feedback from developers and finalize the project making the APIs stable. As the next step we will work on improving use cases such as `TestBed`, Angular elements, etc.
+In the process of making Angular simpler, we are working on [introducing APIs](/guide/standalone-components) that allow developers to initialize applications, instantiate components, and use the router without NgModules. Angular v14 introduces developer preview of the APIs for standalone components, directives, and pipes. In the next few quarters we'll collect feedback from developers and finalize the project making the APIs stable. As the next step we will work on improving use cases such as `TestBed`, Angular elements, etc.
 
 ### Allow binding to protected fields in templates
 
@@ -217,7 +217,7 @@ As the next step, we need to finalize the recommendations and compile a list of 
 
 Earlier in 2020, we shared an [RFC](https://github.com/angular/angular/issues/38366) for Ivy library distribution.
 After invaluable feedback from the community, we developed a design of the project.
-We are now investing in the development of Ivy library distribution, including an update of the library package format to use Ivy compilation, unblock the deprecation of the View Engine library format, and [ngcc](guide/glossary#ngcc).
+We are now investing in the development of Ivy library distribution, including an update of the library package format to use Ivy compilation, unblock the deprecation of the View Engine library format, and ngcc.
 
 ### Improve test times and debugging with automatic test environment tear down
 

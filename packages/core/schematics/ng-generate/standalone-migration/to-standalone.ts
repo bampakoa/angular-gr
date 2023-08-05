@@ -10,19 +10,20 @@ import {NgtscProgram} from '@angular/compiler-cli';
 import {PotentialImport, PotentialImportKind, PotentialImportMode, Reference, TemplateTypeChecker} from '@angular/compiler-cli/private/migrations';
 import ts from 'typescript';
 
+import {ChangesByFile, ChangeTracker, ImportRemapper} from '../../utils/change_tracker';
 import {getAngularDecorators, NgDecorator} from '../../utils/ng_decorators';
 import {getImportSpecifier} from '../../utils/typescript/imports';
 import {closestNode} from '../../utils/typescript/nodes';
 import {isReferenceToImport} from '../../utils/typescript/symbol';
 
-import {ChangesByFile, ChangeTracker, findClassDeclaration, findLiteralProperty, ImportRemapper, isClassReferenceInAngularModule, NamedClassDeclaration} from './util';
+import {findClassDeclaration, findLiteralProperty, isClassReferenceInAngularModule, NamedClassDeclaration} from './util';
 
 /**
  * Function that can be used to prcess the dependencies that
  * are going to be added to the imports of a component.
  */
 export type ComponentImportsRemapper =
-    (imports: PotentialImport[], component: Reference<ts.ClassDeclaration>) => PotentialImport[];
+    (imports: PotentialImport[], component: ts.ClassDeclaration) => PotentialImport[];
 
 /**
  * Converts all declarations in the specified files to standalone.
@@ -39,9 +40,9 @@ export function toStandalone(
     componentImportRemapper?: ComponentImportsRemapper): ChangesByFile {
   const templateTypeChecker = program.compiler.getTemplateTypeChecker();
   const typeChecker = program.getTsProgram().getTypeChecker();
-  const modulesToMigrate: ts.ClassDeclaration[] = [];
-  const testObjectsToMigrate: ts.ObjectLiteralExpression[] = [];
-  const declarations: Reference<ts.ClassDeclaration>[] = [];
+  const modulesToMigrate = new Set<ts.ClassDeclaration>();
+  const testObjectsToMigrate = new Set<ts.ObjectLiteralExpression>();
+  const declarations = new Set<ts.ClassDeclaration>();
   const tracker = new ChangeTracker(printer, fileImportRemapper);
 
   for (const sourceFile of sourceFiles) {
@@ -54,12 +55,12 @@ export function toStandalone(
           allModuleDeclarations, module, templateTypeChecker, typeChecker);
 
       if (unbootstrappedDeclarations.length > 0) {
-        modulesToMigrate.push(module);
-        declarations.push(...unbootstrappedDeclarations);
+        modulesToMigrate.add(module);
+        unbootstrappedDeclarations.forEach(decl => declarations.add(decl));
       }
     }
 
-    testObjectsToMigrate.push(...testObjects);
+    testObjects.forEach(obj => testObjectsToMigrate.add(obj));
   }
 
   for (const declaration of declarations) {
@@ -78,36 +79,40 @@ export function toStandalone(
 
 /**
  * Converts a single declaration defined through an NgModule to standalone.
- * @param ref References to the declaration being converted.
+ * @param decl Declaration being converted.
  * @param tracker Tracker used to track the file changes.
  * @param allDeclarations All the declarations that are being converted as a part of this migration.
  * @param typeChecker
  * @param importRemapper
  */
 export function convertNgModuleDeclarationToStandalone(
-    ref: Reference<ts.ClassDeclaration>, allDeclarations: Reference<ts.ClassDeclaration>[],
-    tracker: ChangeTracker, typeChecker: TemplateTypeChecker,
-    importRemapper?: ComponentImportsRemapper): void {
-  const directiveMeta = typeChecker.getDirectiveMetadata(ref.node);
+    decl: ts.ClassDeclaration, allDeclarations: Set<ts.ClassDeclaration>, tracker: ChangeTracker,
+    typeChecker: TemplateTypeChecker, importRemapper?: ComponentImportsRemapper): void {
+  const directiveMeta = typeChecker.getDirectiveMetadata(decl);
 
   if (directiveMeta && directiveMeta.decorator && !directiveMeta.isStandalone) {
     let decorator = addStandaloneToDecorator(directiveMeta.decorator);
 
     if (directiveMeta.isComponent) {
-      const importsToAdd =
-          getComponentImportExpressions(ref, allDeclarations, tracker, typeChecker, importRemapper);
+      const importsToAdd = getComponentImportExpressions(
+          decl, allDeclarations, tracker, typeChecker, importRemapper);
 
       if (importsToAdd.length > 0) {
+        const hasTrailingComma = importsToAdd.length > 2 &&
+            !!extractMetadataLiteral(directiveMeta.decorator)?.properties.hasTrailingComma;
         decorator = addPropertyToAngularDecorator(
             decorator,
             ts.factory.createPropertyAssignment(
-                'imports', ts.factory.createArrayLiteralExpression(importsToAdd)));
+                'imports',
+                ts.factory.createArrayLiteralExpression(
+                    // Create a multi-line array when it has a trailing comma.
+                    ts.factory.createNodeArray(importsToAdd, hasTrailingComma), hasTrailingComma)));
       }
     }
 
     tracker.replaceNode(directiveMeta.decorator, decorator);
   } else {
-    const pipeMeta = typeChecker.getPipeMetadata(ref.node);
+    const pipeMeta = typeChecker.getPipeMetadata(decl);
 
     if (pipeMeta && pipeMeta.decorator && !pipeMeta.isStandalone) {
       tracker.replaceNode(pipeMeta.decorator, addStandaloneToDecorator(pipeMeta.decorator));
@@ -118,26 +123,25 @@ export function convertNgModuleDeclarationToStandalone(
 /**
  * Gets the expressions that should be added to a component's
  * `imports` array based on its template dependencies.
- * @param ref Reference to the component class.
+ * @param decl Component class declaration.
  * @param allDeclarations All the declarations that are being converted as a part of this migration.
  * @param tracker
  * @param typeChecker
  * @param importRemapper
  */
 function getComponentImportExpressions(
-    ref: Reference<ts.ClassDeclaration>, allDeclarations: Reference<ts.ClassDeclaration>[],
-    tracker: ChangeTracker, typeChecker: TemplateTypeChecker,
-    importRemapper?: ComponentImportsRemapper): ts.Expression[] {
-  const templateDependencies = findTemplateDependencies(ref, typeChecker);
-  const usedDependenciesInMigration = new Set(templateDependencies.filter(
-      dep => allDeclarations.find(current => current.node === dep.node)));
+    decl: ts.ClassDeclaration, allDeclarations: Set<ts.ClassDeclaration>, tracker: ChangeTracker,
+    typeChecker: TemplateTypeChecker, importRemapper?: ComponentImportsRemapper): ts.Expression[] {
+  const templateDependencies = findTemplateDependencies(decl, typeChecker);
+  const usedDependenciesInMigration =
+      new Set(templateDependencies.filter(dep => allDeclarations.has(dep.node)));
   const imports: ts.Expression[] = [];
   const seenImports = new Set<string>();
   const resolvedDependencies: PotentialImport[] = [];
 
   for (const dep of templateDependencies) {
     const importLocation = findImportLocation(
-        dep as Reference<NamedClassDeclaration>, ref,
+        dep as Reference<NamedClassDeclaration>, decl,
         usedDependenciesInMigration.has(dep) ? PotentialImportMode.ForceDirect :
                                                PotentialImportMode.Normal,
         typeChecker);
@@ -149,19 +153,19 @@ function getComponentImportExpressions(
   }
 
   const processedDependencies =
-      importRemapper ? importRemapper(resolvedDependencies, ref) : resolvedDependencies;
+      importRemapper ? importRemapper(resolvedDependencies, decl) : resolvedDependencies;
 
   for (const importLocation of processedDependencies) {
     if (importLocation.moduleSpecifier) {
       const identifier = tracker.addImport(
-          ref.node.getSourceFile(), importLocation.symbolName, importLocation.moduleSpecifier);
+          decl.getSourceFile(), importLocation.symbolName, importLocation.moduleSpecifier);
       imports.push(identifier);
     } else {
       const identifier = ts.factory.createIdentifier(importLocation.symbolName);
 
       if (importLocation.isForwardReference) {
         const forwardRefExpression =
-            tracker.addImport(ref.node.getSourceFile(), 'forwardRef', '@angular/core');
+            tracker.addImport(decl.getSourceFile(), 'forwardRef', '@angular/core');
         const arrowFunction = ts.factory.createArrowFunction(
             undefined, undefined, [], undefined, undefined, identifier);
         imports.push(
@@ -184,15 +188,13 @@ function getComponentImportExpressions(
  * @param templateTypeChecker
  */
 function migrateNgModuleClass(
-    node: ts.ClassDeclaration, allDeclarations: Reference<ts.ClassDeclaration>[],
-    tracker: ChangeTracker, typeChecker: ts.TypeChecker, templateTypeChecker: TemplateTypeChecker) {
+    node: ts.ClassDeclaration, allDeclarations: Set<ts.ClassDeclaration>, tracker: ChangeTracker,
+    typeChecker: ts.TypeChecker, templateTypeChecker: TemplateTypeChecker) {
   const decorator = templateTypeChecker.getNgModuleMetadata(node)?.decorator;
   const metadata = decorator ? extractMetadataLiteral(decorator) : null;
 
   if (metadata) {
-    moveDeclarationsToImports(
-        metadata, allDeclarations.map(decl => decl.node), typeChecker, templateTypeChecker,
-        tracker);
+    moveDeclarationsToImports(metadata, allDeclarations, typeChecker, templateTypeChecker, tracker);
   }
 }
 
@@ -205,7 +207,7 @@ function migrateNgModuleClass(
  * @param tracker
  */
 function moveDeclarationsToImports(
-    literal: ts.ObjectLiteralExpression, allDeclarations: ts.ClassDeclaration[],
+    literal: ts.ObjectLiteralExpression, allDeclarations: Set<ts.ClassDeclaration>,
     typeChecker: ts.TypeChecker, templateTypeChecker: TemplateTypeChecker,
     tracker: ChangeTracker): void {
   const declarationsProp = findLiteralProperty(literal, 'declarations');
@@ -218,6 +220,9 @@ function moveDeclarationsToImports(
   const declarationsToCopy: ts.Expression[] = [];
   const properties: ts.ObjectLiteralElementLike[] = [];
   const importsProp = findLiteralProperty(literal, 'imports');
+  const hasAnyArrayTrailingComma = literal.properties.some(
+      prop => ts.isPropertyAssignment(prop) && ts.isArrayLiteralExpression(prop.initializer) &&
+          prop.initializer.elements.hasTrailingComma);
 
   // Separate the declarations that we want to keep and ones we need to copy into the `imports`.
   if (ts.isPropertyAssignment(declarationsProp)) {
@@ -251,7 +256,9 @@ function moveDeclarationsToImports(
   // If there are no `imports`, create them with the declarations we want to copy.
   if (!importsProp && declarationsToCopy.length > 0) {
     properties.push(ts.factory.createPropertyAssignment(
-        'imports', ts.factory.createArrayLiteralExpression(declarationsToCopy)));
+        'imports',
+        ts.factory.createArrayLiteralExpression(ts.factory.createNodeArray(
+            declarationsToCopy, hasAnyArrayTrailingComma && declarationsToCopy.length > 2))));
   }
 
   for (const prop of literal.properties) {
@@ -263,8 +270,13 @@ function moveDeclarationsToImports(
     // If we have declarations to preserve, update the existing property, otherwise drop it.
     if (prop === declarationsProp) {
       if (declarationsToPreserve.length > 0) {
+        const hasTrailingComma = ts.isArrayLiteralExpression(prop.initializer) ?
+            prop.initializer.elements.hasTrailingComma :
+            hasAnyArrayTrailingComma;
         properties.push(ts.factory.updatePropertyAssignment(
-            prop, prop.name, ts.factory.createArrayLiteralExpression(declarationsToPreserve)));
+            prop, prop.name,
+            ts.factory.createArrayLiteralExpression(ts.factory.createNodeArray(
+                declarationsToPreserve, hasTrailingComma && declarationsToPreserve.length > 2))));
       }
       continue;
     }
@@ -276,10 +288,16 @@ function moveDeclarationsToImports(
 
       if (ts.isArrayLiteralExpression(prop.initializer)) {
         initializer = ts.factory.updateArrayLiteralExpression(
-            prop.initializer, [...prop.initializer.elements, ...declarationsToCopy]);
+            prop.initializer,
+            ts.factory.createNodeArray(
+                [...prop.initializer.elements, ...declarationsToCopy],
+                prop.initializer.elements.hasTrailingComma));
       } else {
-        initializer = ts.factory.createArrayLiteralExpression(
-            [ts.factory.createSpreadElement(prop.initializer), ...declarationsToCopy]);
+        initializer = ts.factory.createArrayLiteralExpression(ts.factory.createNodeArray(
+            [ts.factory.createSpreadElement(prop.initializer), ...declarationsToCopy],
+            // Expect the declarations to be greater than 1 since
+            // we have the pre-existing initializer already.
+            hasAnyArrayTrailingComma && declarationsToCopy.length > 1));
       }
 
       properties.push(ts.factory.updatePropertyAssignment(prop, prop.name, initializer));
@@ -291,7 +309,9 @@ function moveDeclarationsToImports(
   }
 
   tracker.replaceNode(
-      literal, ts.factory.updateObjectLiteralExpression(literal, properties),
+      literal,
+      ts.factory.updateObjectLiteralExpression(
+          literal, ts.factory.createNodeArray(properties, literal.properties.hasTrailingComma)),
       ts.EmitHint.Expression);
 }
 
@@ -316,10 +336,12 @@ function addPropertyToAngularDecorator(
   }
 
   let literalProperties: ts.ObjectLiteralElementLike[];
+  let hasTrailingComma = false;
 
   if (node.expression.arguments.length === 0) {
     literalProperties = [property];
   } else if (ts.isObjectLiteralExpression(node.expression.arguments[0])) {
+    hasTrailingComma = node.expression.arguments[0].properties.hasTrailingComma;
     literalProperties = [...node.expression.arguments[0].properties, property];
   } else {
     // Unsupported case (e.g. `@Component(SOME_CONST)`). Return the original node.
@@ -330,7 +352,9 @@ function addPropertyToAngularDecorator(
   // the latter ends up duplicating the node's leading comment.
   return ts.factory.createDecorator(ts.factory.createCallExpression(
       node.expression.expression, node.expression.typeArguments,
-      [ts.factory.createObjectLiteralExpression(literalProperties, literalProperties.length > 1)]));
+      [ts.factory.createObjectLiteralExpression(
+          ts.factory.createNodeArray(literalProperties, hasTrailingComma),
+          literalProperties.length > 1)]));
 }
 
 /** Checks if a node is a `PropertyAssignment` with a name. */
@@ -347,9 +371,9 @@ function isNamedPropertyAssignment(node: ts.Node): node is ts.PropertyAssignment
  * @param typeChecker
  */
 function findImportLocation(
-    target: Reference<NamedClassDeclaration>, inComponent: Reference<ts.ClassDeclaration>,
+    target: Reference<NamedClassDeclaration>, inComponent: ts.ClassDeclaration,
     importMode: PotentialImportMode, typeChecker: TemplateTypeChecker): PotentialImport|null {
-  const importLocations = typeChecker.getPotentialImportsFor(target, inComponent.node, importMode);
+  const importLocations = typeChecker.getPotentialImportsFor(target, inComponent, importMode);
   let firstSameFileImport: PotentialImport|null = null;
   let firstModuleImport: PotentialImport|null = null;
 
@@ -439,15 +463,14 @@ export function findTestObjectsToMigrate(sourceFile: ts.SourceFile, typeChecker:
 
 /**
  * Finds the classes corresponding to dependencies used in a component's template.
- * @param ref Component in whose template we're looking for dependencies.
+ * @param decl Component in whose template we're looking for dependencies.
  * @param typeChecker
  */
-function findTemplateDependencies(
-    ref: Reference<ts.ClassDeclaration>,
-    typeChecker: TemplateTypeChecker): Reference<NamedClassDeclaration>[] {
+function findTemplateDependencies(decl: ts.ClassDeclaration, typeChecker: TemplateTypeChecker):
+    Reference<NamedClassDeclaration>[] {
   const results: Reference<NamedClassDeclaration>[] = [];
-  const usedDirectives = typeChecker.getUsedDirectives(ref.node);
-  const usedPipes = typeChecker.getUsedPipes(ref.node);
+  const usedDirectives = typeChecker.getUsedDirectives(decl);
+  const usedPipes = typeChecker.getUsedPipes(decl);
 
   if (usedDirectives !== null) {
     for (const dir of usedDirectives) {
@@ -458,7 +481,7 @@ function findTemplateDependencies(
   }
 
   if (usedPipes !== null) {
-    const potentialPipes = typeChecker.getPotentialPipes(ref.node);
+    const potentialPipes = typeChecker.getPotentialPipes(decl);
 
     for (const pipe of potentialPipes) {
       if (ts.isClassDeclaration(pipe.ref.node) &&
@@ -480,7 +503,7 @@ function findTemplateDependencies(
  * @param typeChecker
  */
 function filterNonBootstrappedDeclarations(
-    declarations: Reference<ts.ClassDeclaration>[], ngModule: ts.ClassDeclaration,
+    declarations: ts.ClassDeclaration[], ngModule: ts.ClassDeclaration,
     templateTypeChecker: TemplateTypeChecker, typeChecker: ts.TypeChecker) {
   const metadata = templateTypeChecker.getNgModuleMetadata(ngModule);
   const metaLiteral =
@@ -513,7 +536,7 @@ function filterNonBootstrappedDeclarations(
     }
   }
 
-  return declarations.filter(ref => !bootstrappedClasses.has(ref.node));
+  return declarations.filter(ref => !bootstrappedClasses.has(ref));
 }
 
 /**
@@ -523,10 +546,10 @@ function filterNonBootstrappedDeclarations(
  */
 export function extractDeclarationsFromModule(
     ngModule: ts.ClassDeclaration,
-    templateTypeChecker: TemplateTypeChecker): Reference<ts.ClassDeclaration>[] {
+    templateTypeChecker: TemplateTypeChecker): ts.ClassDeclaration[] {
   const metadata = templateTypeChecker.getNgModuleMetadata(ngModule);
-  return metadata ? metadata.declarations.filter(decl => ts.isClassDeclaration(decl.node)) as
-          Reference<ts.ClassDeclaration>[] :
+  return metadata ? metadata.declarations.filter(decl => ts.isClassDeclaration(decl.node))
+                        .map(decl => decl.node) as ts.ClassDeclaration[] :
                     [];
 }
 
@@ -539,12 +562,11 @@ export function extractDeclarationsFromModule(
  * @param typeChecker
  */
 export function migrateTestDeclarations(
-    testObjects: ts.ObjectLiteralExpression[],
-    declarationsOutsideOfTestFiles: Reference<ts.ClassDeclaration>[], tracker: ChangeTracker,
+    testObjects: Set<ts.ObjectLiteralExpression>,
+    declarationsOutsideOfTestFiles: Set<ts.ClassDeclaration>, tracker: ChangeTracker,
     templateTypeChecker: TemplateTypeChecker, typeChecker: ts.TypeChecker) {
   const {decorators, componentImports} = analyzeTestingModules(testObjects, typeChecker);
-  const allDeclarations: ts.ClassDeclaration[] =
-      declarationsOutsideOfTestFiles.map(ref => ref.node);
+  const allDeclarations = new Set(declarationsOutsideOfTestFiles);
 
   for (const decorator of decorators) {
     const closestClass = closestNode(decorator.node, ts.isClassDeclaration);
@@ -553,23 +575,27 @@ export function migrateTestDeclarations(
       tracker.replaceNode(decorator.node, addStandaloneToDecorator(decorator.node));
 
       if (closestClass) {
-        allDeclarations.push(closestClass);
+        allDeclarations.add(closestClass);
       }
     } else if (decorator.name === 'Component') {
       const newDecorator = addStandaloneToDecorator(decorator.node);
       const importsToAdd = componentImports.get(decorator.node);
 
       if (closestClass) {
-        allDeclarations.push(closestClass);
+        allDeclarations.add(closestClass);
       }
 
       if (importsToAdd && importsToAdd.size > 0) {
+        const hasTrailingComma = importsToAdd.size > 2 &&
+            !!extractMetadataLiteral(decorator.node)?.properties.hasTrailingComma;
+        const importsArray = ts.factory.createNodeArray(Array.from(importsToAdd), hasTrailingComma);
+
         tracker.replaceNode(
             decorator.node,
             addPropertyToAngularDecorator(
                 newDecorator,
                 ts.factory.createPropertyAssignment(
-                    'imports', ts.factory.createArrayLiteralExpression(Array.from(importsToAdd)))));
+                    'imports', ts.factory.createArrayLiteralExpression(importsArray))));
       } else {
         tracker.replaceNode(decorator.node, newDecorator);
       }
@@ -588,7 +614,7 @@ export function migrateTestDeclarations(
  * @param testObjects Object literals that should be analyzed.
  */
 function analyzeTestingModules(
-    testObjects: ts.ObjectLiteralExpression[], typeChecker: ts.TypeChecker) {
+    testObjects: Set<ts.ObjectLiteralExpression>, typeChecker: ts.TypeChecker) {
   const seenDeclarations = new Set<ts.Declaration>();
   const decorators: NgDecorator[] = [];
   const componentImports = new Map<ts.Decorator, Set<ts.Expression>>();
@@ -685,9 +711,9 @@ function extractMetadataLiteral(decorator: ts.Decorator): ts.ObjectLiteralExpres
  * @param templateTypeChecker
  */
 function isStandaloneDeclaration(
-    node: ts.ClassDeclaration, declarationsInMigration: ts.ClassDeclaration[],
+    node: ts.ClassDeclaration, declarationsInMigration: Set<ts.ClassDeclaration>,
     templateTypeChecker: TemplateTypeChecker): boolean {
-  if (declarationsInMigration.includes(node)) {
+  if (declarationsInMigration.has(node)) {
     return true;
   }
 

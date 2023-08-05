@@ -81,6 +81,9 @@
     "name": "ERROR_ORIGINAL_ERROR"
   },
   {
+    "name": "EffectManager"
+  },
+  {
     "name": "ElementRef"
   },
   {
@@ -109,6 +112,9 @@
   },
   {
     "name": "INJECTOR_SCOPE"
+  },
+  {
+    "name": "INTERNAL_APPLICATION_ERROR_HANDLER"
   },
   {
     "name": "InjectFlags"
@@ -156,6 +162,9 @@
     "name": "NG_ELEMENT_ID"
   },
   {
+    "name": "NG_ENV_ID"
+  },
+  {
     "name": "NG_FACTORY_DEF"
   },
   {
@@ -181,6 +190,9 @@
   },
   {
     "name": "NG_TOKEN_PATH"
+  },
+  {
+    "name": "NOOP_CLEANUP_FN"
   },
   {
     "name": "NOT_FOUND"
@@ -219,6 +231,9 @@
     "name": "NgZone"
   },
   {
+    "name": "NgZoneChangeDetectionScheduler"
+  },
+  {
     "name": "NodeInjector"
   },
   {
@@ -243,10 +258,22 @@
     "name": "PLATFORM_INITIALIZER"
   },
   {
+    "name": "PRESERVE_HOST_CONTENT"
+  },
+  {
+    "name": "PRESERVE_HOST_CONTENT_DEFAULT"
+  },
+  {
     "name": "PlatformRef"
   },
   {
     "name": "R3Injector"
+  },
+  {
+    "name": "ReactiveLViewConsumer"
+  },
+  {
+    "name": "ReactiveNode"
   },
   {
     "name": "RefCountOperator"
@@ -327,6 +354,15 @@
     "name": "ViewRef"
   },
   {
+    "name": "Watch"
+  },
+  {
+    "name": "WeakRefImpl"
+  },
+  {
+    "name": "ZONE_IS_STABLE_OBSERVABLE"
+  },
+  {
     "name": "_DOM"
   },
   {
@@ -334,6 +370,9 @@
   },
   {
     "name": "__forward_ref__"
+  },
+  {
+    "name": "_applyRootElementTransformImpl"
   },
   {
     "name": "_currentInjector"
@@ -351,10 +390,19 @@
     "name": "_injectImplementation"
   },
   {
+    "name": "_nextReactiveId"
+  },
+  {
     "name": "_platformInjector"
   },
   {
+    "name": "_retrieveHydrationInfoImpl"
+  },
+  {
     "name": "_wrapInTimeout"
+  },
+  {
+    "name": "activeConsumer"
   },
   {
     "name": "addPropertyAlias"
@@ -390,6 +438,9 @@
     "name": "callHook"
   },
   {
+    "name": "callHookInternal"
+  },
+  {
     "name": "callHooks"
   },
   {
@@ -399,7 +450,13 @@
     "name": "cleanUpView"
   },
   {
+    "name": "clearViewRefreshFlag"
+  },
+  {
     "name": "collectNativeNodes"
+  },
+  {
+    "name": "commitLViewConsumerIfHasProducers"
   },
   {
     "name": "concatStringsWithSpace"
@@ -439,6 +496,9 @@
   },
   {
     "name": "createTView"
+  },
+  {
+    "name": "currentConsumer"
   },
   {
     "name": "deepForEach"
@@ -549,6 +609,9 @@
     "name": "getNullInjector"
   },
   {
+    "name": "getOrCreateCurrentLViewConsumer"
+  },
+  {
     "name": "getOrCreateInjectable"
   },
   {
@@ -582,10 +645,13 @@
     "name": "getPromiseCtor"
   },
   {
+    "name": "getReactiveLViewConsumer"
+  },
+  {
     "name": "getSimpleChangesStore"
   },
   {
-    "name": "getSymbolIterator2"
+    "name": "getSymbolIterator"
   },
   {
     "name": "getTNodeFromLView"
@@ -603,10 +669,16 @@
     "name": "importProvidersFrom"
   },
   {
+    "name": "inNotificationPhase"
+  },
+  {
     "name": "includeViewProviders"
   },
   {
     "name": "incrementInitPhaseFlags"
+  },
+  {
+    "name": "inject"
   },
   {
     "name": "injectArgs"
@@ -672,6 +744,9 @@
     "name": "isPromise2"
   },
   {
+    "name": "isStableFactory"
+  },
+  {
     "name": "isTypeProvider"
   },
   {
@@ -699,6 +774,12 @@
     "name": "makeRecord"
   },
   {
+    "name": "markViewDirty"
+  },
+  {
+    "name": "markViewForRefresh"
+  },
+  {
     "name": "maybeWrapInNotSelector"
   },
   {
@@ -718,6 +799,9 @@
   },
   {
     "name": "ngOnChangesSetInput"
+  },
+  {
+    "name": "ngZoneApplicationErrorHandlerFactory"
   },
   {
     "name": "noop"
@@ -789,6 +873,9 @@
     "name": "resolveForwardRef"
   },
   {
+    "name": "retrieveHydrationInfo"
+  },
+  {
     "name": "rxSubscriber"
   },
   {
@@ -799,6 +886,9 @@
   },
   {
     "name": "searchTokensOnInjector"
+  },
+  {
+    "name": "setActiveConsumer"
   },
   {
     "name": "setBindingRootForHostBindings"
@@ -858,7 +948,7 @@
     "name": "updateMicroTaskStatus"
   },
   {
-    "name": "updateTransplantedViewCount"
+    "name": "updateViewsToRefresh"
   },
   {
     "name": "urlParsingNode"
@@ -871,6 +961,9 @@
   },
   {
     "name": "writeDirectClass"
+  },
+  {
+    "name": "writeToDirectiveInput"
   },
   {
     "name": "ɵɵdefineInjectable"

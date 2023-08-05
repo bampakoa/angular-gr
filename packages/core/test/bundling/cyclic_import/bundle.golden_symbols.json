@@ -54,6 +54,9 @@
     "name": "CONTAINER_HEADER_OFFSET"
   },
   {
+    "name": "CSP_NONCE"
+  },
+  {
     "name": "ChangeDetectionStrategy"
   },
   {
@@ -84,7 +87,13 @@
     "name": "ConnectableSubscriber"
   },
   {
+    "name": "DEFAULT_APP_ID"
+  },
+  {
     "name": "DI_DECORATOR_FLAG"
+  },
+  {
+    "name": "DOCUMENT"
   },
   {
     "name": "DOCUMENT2"
@@ -105,9 +114,6 @@
     "name": "DomRendererFactory2"
   },
   {
-    "name": "DomSharedStylesHost"
-  },
-  {
     "name": "EMPTY_ARRAY"
   },
   {
@@ -124,6 +130,9 @@
   },
   {
     "name": "EVENT_MANAGER_PLUGINS"
+  },
+  {
+    "name": "EffectManager"
   },
   {
     "name": "ElementRef"
@@ -160,6 +169,9 @@
   },
   {
     "name": "INJECTOR_SCOPE"
+  },
+  {
+    "name": "INTERNAL_APPLICATION_ERROR_HANDLER"
   },
   {
     "name": "InjectFlags"
@@ -225,6 +237,9 @@
     "name": "NG_ELEMENT_ID"
   },
   {
+    "name": "NG_ENV_ID"
+  },
+  {
     "name": "NG_FACTORY_DEF"
   },
   {
@@ -253,6 +268,9 @@
   },
   {
     "name": "NG_TOKEN_PATH"
+  },
+  {
+    "name": "NOOP_CLEANUP_FN"
   },
   {
     "name": "NOT_FOUND"
@@ -291,6 +309,9 @@
     "name": "NgZone"
   },
   {
+    "name": "NgZoneChangeDetectionScheduler"
+  },
+  {
     "name": "NodeInjector"
   },
   {
@@ -318,6 +339,15 @@
     "name": "PLATFORM_INITIALIZER"
   },
   {
+    "name": "PLATFORM_SERVER_ID"
+  },
+  {
+    "name": "PRESERVE_HOST_CONTENT"
+  },
+  {
+    "name": "PRESERVE_HOST_CONTENT_DEFAULT"
+  },
+  {
     "name": "PlatformRef"
   },
   {
@@ -325,6 +355,12 @@
   },
   {
     "name": "REMOVE_STYLES_ON_COMPONENT_DESTROY"
+  },
+  {
+    "name": "ReactiveLViewConsumer"
+  },
+  {
+    "name": "ReactiveNode"
   },
   {
     "name": "RefCountOperator"
@@ -343,9 +379,6 @@
   },
   {
     "name": "RuntimeError"
-  },
-  {
-    "name": "SERVER_TRANSITION_PROVIDERS"
   },
   {
     "name": "SIMPLE_CHANGES_STORE"
@@ -405,9 +438,6 @@
     "name": "TRACKED_LVIEWS"
   },
   {
-    "name": "TRANSITION_ID"
-  },
-  {
     "name": "TYPE"
   },
   {
@@ -435,6 +465,15 @@
     "name": "ViewRef"
   },
   {
+    "name": "Watch"
+  },
+  {
+    "name": "WeakRefImpl"
+  },
+  {
+    "name": "ZONE_IS_STABLE_OBSERVABLE"
+  },
+  {
     "name": "_DOM"
   },
   {
@@ -442,6 +481,9 @@
   },
   {
     "name": "__forward_ref__"
+  },
+  {
+    "name": "_applyRootElementTransformImpl"
   },
   {
     "name": "_currentInjector"
@@ -465,19 +507,31 @@
     "name": "_keyMap"
   },
   {
+    "name": "_locateOrCreateElementNode"
+  },
+  {
+    "name": "_nextReactiveId"
+  },
+  {
     "name": "_platformInjector"
   },
   {
     "name": "_processI18nInsertBefore"
   },
   {
-    "name": "_randomChar"
+    "name": "_retrieveHydrationInfoImpl"
   },
   {
     "name": "_testabilityGetter"
   },
   {
+    "name": "_wasLastNodeCreated"
+  },
+  {
     "name": "_wrapInTimeout"
+  },
+  {
+    "name": "activeConsumer"
   },
   {
     "name": "addPropertyAlias"
@@ -519,6 +573,9 @@
     "name": "callHook"
   },
   {
+    "name": "callHookInternal"
+  },
+  {
     "name": "callHooks"
   },
   {
@@ -531,10 +588,13 @@
     "name": "cleanUpView"
   },
   {
+    "name": "clearViewRefreshFlag"
+  },
+  {
     "name": "collectNativeNodes"
   },
   {
-    "name": "componentDefCount"
+    "name": "commitLViewConsumerIfHasProducers"
   },
   {
     "name": "computeStaticStyling"
@@ -582,7 +642,7 @@
     "name": "createTView"
   },
   {
-    "name": "decoratePreventDefault"
+    "name": "currentConsumer"
   },
   {
     "name": "deepForEach"
@@ -627,13 +687,13 @@
     "name": "executeViewQueryFn"
   },
   {
+    "name": "extractDefListOrFactory"
+  },
+  {
     "name": "extractDirectiveDef"
   },
   {
     "name": "findAttrIndexInNode"
-  },
-  {
-    "name": "flattenStyles"
   },
   {
     "name": "flattenUnsubscriptionErrors"
@@ -720,6 +780,9 @@
     "name": "getOrCreateComponentTView"
   },
   {
+    "name": "getOrCreateCurrentLViewConsumer"
+  },
+  {
     "name": "getOrCreateInjectable"
   },
   {
@@ -756,10 +819,13 @@
     "name": "getPromiseCtor"
   },
   {
+    "name": "getReactiveLViewConsumer"
+  },
+  {
     "name": "getSimpleChangesStore"
   },
   {
-    "name": "getSymbolIterator2"
+    "name": "getSymbolIterator"
   },
   {
     "name": "getTNodeFromLView"
@@ -783,6 +849,9 @@
     "name": "importProvidersFrom"
   },
   {
+    "name": "inNotificationPhase"
+  },
+  {
     "name": "includeViewProviders"
   },
   {
@@ -790,6 +859,9 @@
   },
   {
     "name": "initializeDirectives"
+  },
+  {
+    "name": "inject"
   },
   {
     "name": "injectArgs"
@@ -870,6 +942,9 @@
     "name": "isObject"
   },
   {
+    "name": "isPlatformServer"
+  },
+  {
     "name": "isPositive"
   },
   {
@@ -877,6 +952,9 @@
   },
   {
     "name": "isPromise2"
+  },
+  {
+    "name": "isStableFactory"
   },
   {
     "name": "isTemplateNode"
@@ -889,6 +967,9 @@
   },
   {
     "name": "iterator"
+  },
+  {
+    "name": "lastNodeWasCreated"
   },
   {
     "name": "leaveDI"
@@ -910,6 +991,12 @@
   },
   {
     "name": "markAsComponentHost"
+  },
+  {
+    "name": "markViewDirty"
+  },
+  {
+    "name": "markViewForRefresh"
   },
   {
     "name": "maybeWrapInNotSelector"
@@ -937,6 +1024,9 @@
   },
   {
     "name": "ngOnChangesSetInput"
+  },
+  {
+    "name": "ngZoneApplicationErrorHandlerFactory"
   },
   {
     "name": "noSideEffects"
@@ -1017,6 +1107,9 @@
     "name": "resolveForwardRef"
   },
   {
+    "name": "retrieveHydrationInfo"
+  },
+  {
     "name": "rxSubscriber"
   },
   {
@@ -1030,6 +1123,9 @@
   },
   {
     "name": "searchTokensOnInjector"
+  },
+  {
+    "name": "setActiveConsumer"
   },
   {
     "name": "setBindingRootForHostBindings"
@@ -1074,6 +1170,9 @@
     "name": "shareSubjectFactory"
   },
   {
+    "name": "shimStylesContent"
+  },
+  {
     "name": "shouldSearchParent"
   },
   {
@@ -1104,7 +1203,7 @@
     "name": "updateMicroTaskStatus"
   },
   {
-    "name": "updateTransplantedViewCount"
+    "name": "updateViewsToRefresh"
   },
   {
     "name": "urlParsingNode"
@@ -1116,7 +1215,13 @@
     "name": "walkProviderTree"
   },
   {
+    "name": "wasLastNodeCreated"
+  },
+  {
     "name": "writeDirectClass"
+  },
+  {
+    "name": "writeToDirectiveInput"
   },
   {
     "name": "ɵɵdefineComponent"

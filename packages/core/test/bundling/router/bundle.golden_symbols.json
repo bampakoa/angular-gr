@@ -33,9 +33,6 @@
     "name": "ApplicationRef"
   },
   {
-    "name": "ApplyRedirects"
-  },
-  {
     "name": "ArgumentOutOfRangeError"
   },
   {
@@ -73,6 +70,9 @@
   },
   {
     "name": "CONTAINER_HEADER_OFFSET"
+  },
+  {
+    "name": "CSP_NONCE"
   },
   {
     "name": "CanActivate"
@@ -135,7 +135,7 @@
     "name": "Console"
   },
   {
-    "name": "CreateUrlTreeStrategy"
+    "name": "DEFAULT_APP_ID"
   },
   {
     "name": "DEFAULT_LOCALE_ID"
@@ -145,6 +145,9 @@
   },
   {
     "name": "DI_DECORATOR_FLAG"
+  },
+  {
+    "name": "DOCUMENT"
   },
   {
     "name": "DOCUMENT2"
@@ -180,9 +183,6 @@
     "name": "DomRendererFactory2"
   },
   {
-    "name": "DomSharedStylesHost"
-  },
-  {
     "name": "EMPTY"
   },
   {
@@ -202,6 +202,9 @@
   },
   {
     "name": "EVENT_MANAGER_PLUGINS"
+  },
+  {
+    "name": "EffectManager"
   },
   {
     "name": "ElementRef"
@@ -273,7 +276,16 @@
     "name": "INJECTOR_SCOPE"
   },
   {
+    "name": "INPUT_BINDER"
+  },
+  {
+    "name": "INTERNAL_APPLICATION_ERROR_HANDLER"
+  },
+  {
     "name": "INTERNAL_BROWSER_PLATFORM_PROVIDERS"
+  },
+  {
+    "name": "InitialRenderPendingTasks"
   },
   {
     "name": "InjectFlags"
@@ -300,9 +312,6 @@
     "name": "LQuery_"
   },
   {
-    "name": "LegacyCreateUrlTree"
-  },
-  {
     "name": "LifecycleHooksFeature"
   },
   {
@@ -313,6 +322,9 @@
   },
   {
     "name": "LocationStrategy"
+  },
+  {
+    "name": "MATRIX_PARAM_SEGMENT_RE"
   },
   {
     "name": "MODIFIER_KEYS"
@@ -360,16 +372,13 @@
     "name": "NG_COMP_DEF"
   },
   {
-    "name": "NG_DEV_MODE"
-  },
-  {
-    "name": "NG_DEV_MODE5"
-  },
-  {
     "name": "NG_DIR_DEF"
   },
   {
     "name": "NG_ELEMENT_ID"
+  },
+  {
+    "name": "NG_ENV_ID"
   },
   {
     "name": "NG_FACTORY_DEF"
@@ -405,6 +414,9 @@
     "name": "NONE"
   },
   {
+    "name": "NOOP_CLEANUP_FN"
+  },
+  {
     "name": "NOT_FOUND"
   },
   {
@@ -438,6 +450,9 @@
     "name": "NavigationError"
   },
   {
+    "name": "NavigationResult"
+  },
+  {
     "name": "NavigationSkipped"
   },
   {
@@ -465,10 +480,10 @@
     "name": "NgZone"
   },
   {
-    "name": "NoMatch"
+    "name": "NgZoneChangeDetectionScheduler"
   },
   {
-    "name": "NoMatch2"
+    "name": "NoMatch"
   },
   {
     "name": "NodeInjector"
@@ -502,6 +517,15 @@
   },
   {
     "name": "PLATFORM_INITIALIZER"
+  },
+  {
+    "name": "PLATFORM_SERVER_ID"
+  },
+  {
+    "name": "PRESERVE_HOST_CONTENT"
+  },
+  {
+    "name": "PRESERVE_HOST_CONTENT_DEFAULT"
   },
   {
     "name": "PRIMARY_OUTLET"
@@ -550,6 +574,12 @@
   },
   {
     "name": "ROUTES"
+  },
+  {
+    "name": "ReactiveLViewConsumer"
+  },
+  {
+    "name": "ReactiveNode"
   },
   {
     "name": "Recognizer"
@@ -717,9 +747,6 @@
     "name": "TakeSubscriber"
   },
   {
-    "name": "TakeWhileSubscriber"
-  },
-  {
     "name": "TapSubscriber"
   },
   {
@@ -789,7 +816,16 @@
     "name": "ViewRef"
   },
   {
+    "name": "Watch"
+  },
+  {
+    "name": "WeakRefImpl"
+  },
+  {
     "name": "XSS_SECURITY_URL"
+  },
+  {
+    "name": "ZONE_IS_STABLE_OBSERVABLE"
   },
   {
     "name": "_DOM"
@@ -801,10 +837,16 @@
     "name": "__forward_ref__"
   },
   {
+    "name": "_applyRootElementTransformImpl"
+  },
+  {
     "name": "_currentInjector"
   },
   {
     "name": "_enable_super_gross_mode_that_will_cause_bad_things"
+  },
+  {
+    "name": "_findMatchingDehydratedViewImpl"
   },
   {
     "name": "_getInsertInFrontOfRNodeWithI18n"
@@ -822,25 +864,43 @@
     "name": "_keyMap"
   },
   {
+    "name": "_locateOrCreateAnchorNode"
+  },
+  {
+    "name": "_locateOrCreateElementNode"
+  },
+  {
+    "name": "_locateOrCreateTextNode"
+  },
+  {
+    "name": "_nextReactiveId"
+  },
+  {
     "name": "_platformInjector"
   },
   {
     "name": "_processI18nInsertBefore"
   },
   {
-    "name": "_randomChar"
+    "name": "_retrieveHydrationInfoImpl"
   },
   {
     "name": "_stripIndexHtml"
   },
   {
-    "name": "_symbolIterator"
+    "name": "_wasLastNodeCreated"
   },
   {
     "name": "_wrapInTimeout"
   },
   {
     "name": "absoluteRedirect"
+  },
+  {
+    "name": "activeConsumer"
+  },
+  {
+    "name": "addEmptyPathsToChildrenIfNeeded"
   },
   {
     "name": "addPropertyAlias"
@@ -894,6 +954,9 @@
     "name": "callHook"
   },
   {
+    "name": "callHookInternal"
+  },
+  {
     "name": "callHooks"
   },
   {
@@ -909,6 +972,9 @@
     "name": "cleanUpView"
   },
   {
+    "name": "clearViewRefreshFlag"
+  },
+  {
     "name": "coerceToBoolean"
   },
   {
@@ -921,10 +987,10 @@
     "name": "combineLatest"
   },
   {
-    "name": "compare"
+    "name": "commitLViewConsumerIfHasProducers"
   },
   {
-    "name": "componentDefCount"
+    "name": "compare"
   },
   {
     "name": "computeStaticStyling"
@@ -961,6 +1027,9 @@
   },
   {
     "name": "convertToParamMap"
+  },
+  {
+    "name": "createChildrenForEmptyPaths"
   },
   {
     "name": "createContainerRef"
@@ -1008,13 +1077,19 @@
     "name": "createRoot"
   },
   {
+    "name": "createSegmentGroupFromRoute"
+  },
+  {
     "name": "createTView"
   },
   {
     "name": "createTemplateRef"
   },
   {
-    "name": "createUrlTree"
+    "name": "createUrlTreeFromSegmentGroup"
+  },
+  {
+    "name": "currentConsumer"
   },
   {
     "name": "deactivateRouteAndItsChildren"
@@ -1024,9 +1099,6 @@
   },
   {
     "name": "decodeQuery"
-  },
-  {
-    "name": "decoratePreventDefault"
   },
   {
     "name": "deepForEach"
@@ -1128,6 +1200,9 @@
     "name": "executeViewQueryFn"
   },
   {
+    "name": "extractDefListOrFactory"
+  },
+  {
     "name": "extractDirectiveDef"
   },
   {
@@ -1140,6 +1215,9 @@
     "name": "findAttrIndexInNode"
   },
   {
+    "name": "findMatchingDehydratedView"
+  },
+  {
     "name": "findNode"
   },
   {
@@ -1149,22 +1227,10 @@
     "name": "first"
   },
   {
-    "name": "flatten2"
-  },
-  {
-    "name": "flattenStyles"
-  },
-  {
     "name": "flattenUnsubscriptionErrors"
   },
   {
-    "name": "forEach"
-  },
-  {
     "name": "forEachSingleProvider"
-  },
-  {
-    "name": "formatRuntimeError"
   },
   {
     "name": "forwardRef"
@@ -1272,6 +1338,9 @@
     "name": "getNextLContainer"
   },
   {
+    "name": "getNgDirectiveDef"
+  },
+  {
     "name": "getNgModuleDef"
   },
   {
@@ -1284,6 +1353,9 @@
     "name": "getOrCreateComponentTView"
   },
   {
+    "name": "getOrCreateCurrentLViewConsumer"
+  },
+  {
     "name": "getOrCreateInjectable"
   },
   {
@@ -1291,9 +1363,6 @@
   },
   {
     "name": "getOrCreateNodeInjectorForNode"
-  },
-  {
-    "name": "getOrCreateRouteInjectorIfNeeded"
   },
   {
     "name": "getOrCreateTNode"
@@ -1323,9 +1392,6 @@
     "name": "getParentInjectorView"
   },
   {
-    "name": "getPathIndexShift"
-  },
-  {
     "name": "getPipeDef"
   },
   {
@@ -1333,6 +1399,9 @@
   },
   {
     "name": "getPromiseCtor"
+  },
+  {
+    "name": "getReactiveLViewConsumer"
   },
   {
     "name": "getResolve"
@@ -1347,13 +1416,7 @@
     "name": "getSimpleChangesStore"
   },
   {
-    "name": "getSourceSegmentGroup"
-  },
-  {
     "name": "getSymbolIterator"
-  },
-  {
-    "name": "getSymbolIterator2"
   },
   {
     "name": "getTNode"
@@ -1401,6 +1464,9 @@
     "name": "importProvidersFrom"
   },
   {
+    "name": "inNotificationPhase"
+  },
+  {
     "name": "includeViewProviders"
   },
   {
@@ -1408,6 +1474,9 @@
   },
   {
     "name": "inheritedParamsDataResolve"
+  },
+  {
+    "name": "initFeatures"
   },
   {
     "name": "initializeDirectives"
@@ -1506,9 +1575,6 @@
     "name": "isFunction2"
   },
   {
-    "name": "isImmediateMatch"
-  },
-  {
     "name": "isInlineTemplate"
   },
   {
@@ -1536,7 +1602,7 @@
     "name": "isObject"
   },
   {
-    "name": "isObservable"
+    "name": "isPlatformServer"
   },
   {
     "name": "isPositive"
@@ -1552,6 +1618,9 @@
   },
   {
     "name": "isScheduler"
+  },
+  {
+    "name": "isStableFactory"
   },
   {
     "name": "isTemplateNode"
@@ -1572,10 +1641,10 @@
     "name": "joinWithSlash"
   },
   {
-    "name": "last"
+    "name": "last2"
   },
   {
-    "name": "last2"
+    "name": "lastNodeWasCreated"
   },
   {
     "name": "leaveDI"
@@ -1596,6 +1665,9 @@
     "name": "lookupTokenUsingNodeInjector"
   },
   {
+    "name": "makeEnvironmentProviders"
+  },
+  {
     "name": "makeRecord"
   },
   {
@@ -1606,6 +1678,9 @@
   },
   {
     "name": "markViewDirty"
+  },
+  {
+    "name": "markViewForRefresh"
   },
   {
     "name": "match"
@@ -1671,7 +1746,7 @@
     "name": "ngOnChangesSetInput"
   },
   {
-    "name": "noLeftoversInUrl"
+    "name": "ngZoneApplicationErrorHandlerFactory"
   },
   {
     "name": "noMatch"
@@ -1737,6 +1812,9 @@
     "name": "promise"
   },
   {
+    "name": "provideZoneChangeDetection"
+  },
+  {
     "name": "redirectIfUrlTree"
   },
   {
@@ -1788,6 +1866,9 @@
     "name": "resolveForwardRef"
   },
   {
+    "name": "retrieveHydrationInfo"
+  },
+  {
     "name": "rootRoute"
   },
   {
@@ -1798,9 +1879,6 @@
   },
   {
     "name": "saveNameToExportMap"
-  },
-  {
-    "name": "scan"
   },
   {
     "name": "scheduleArray"
@@ -1819,6 +1897,9 @@
   },
   {
     "name": "serializeSegment"
+  },
+  {
+    "name": "setActiveConsumer"
   },
   {
     "name": "setBindingRootForHostBindings"
@@ -1869,10 +1950,10 @@
     "name": "shareSubjectFactory"
   },
   {
-    "name": "shouldSearchParent"
+    "name": "shimStylesContent"
   },
   {
-    "name": "sortByMatchingOutlets"
+    "name": "shouldSearchParent"
   },
   {
     "name": "split"
@@ -1884,9 +1965,6 @@
     "name": "standardizeConfig"
   },
   {
-    "name": "storeCleanupWithContext"
-  },
-  {
     "name": "stringify"
   },
   {
@@ -1894,9 +1972,6 @@
   },
   {
     "name": "stringifyCSSSelector"
-  },
-  {
-    "name": "stringifyForError"
   },
   {
     "name": "stripTrailingSlash"
@@ -1974,7 +2049,7 @@
     "name": "updateSegmentGroupChildren"
   },
   {
-    "name": "updateTransplantedViewCount"
+    "name": "updateViewsToRefresh"
   },
   {
     "name": "urlParsingNode"
@@ -1986,6 +2061,9 @@
     "name": "walkProviderTree"
   },
   {
+    "name": "wasLastNodeCreated"
+  },
+  {
     "name": "wrapIntoObservable"
   },
   {
@@ -1993,6 +2071,9 @@
   },
   {
     "name": "writeDirectClass"
+  },
+  {
+    "name": "writeToDirectiveInput"
   },
   {
     "name": "ɵEmptyOutletComponent"

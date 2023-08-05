@@ -42,6 +42,9 @@
     "name": "CONTAINER_HEADER_OFFSET"
   },
   {
+    "name": "CSP_NONCE"
+  },
+  {
     "name": "ChangeDetectionStrategy"
   },
   {
@@ -69,10 +72,16 @@
     "name": "ConnectableSubscriber"
   },
   {
+    "name": "DEFAULT_APP_ID"
+  },
+  {
     "name": "DEFAULT_LOCALE_ID"
   },
   {
     "name": "DI_DECORATOR_FLAG"
+  },
+  {
+    "name": "DOCUMENT"
   },
   {
     "name": "DOCUMENT2"
@@ -85,9 +94,6 @@
   },
   {
     "name": "DomRendererFactory2"
-  },
-  {
-    "name": "DomSharedStylesHost"
   },
   {
     "name": "EMPTY_ARRAY"
@@ -106,6 +112,9 @@
   },
   {
     "name": "EVENT_MANAGER_PLUGINS"
+  },
+  {
+    "name": "EffectManager"
   },
   {
     "name": "ElementRef"
@@ -145,6 +154,9 @@
   },
   {
     "name": "INJECTOR_SCOPE"
+  },
+  {
+    "name": "INTERNAL_APPLICATION_ERROR_HANDLER"
   },
   {
     "name": "INTERNAL_BROWSER_PLATFORM_PROVIDERS"
@@ -201,13 +213,13 @@
     "name": "NG_COMP_DEF"
   },
   {
-    "name": "NG_DEV_MODE"
-  },
-  {
     "name": "NG_DIR_DEF"
   },
   {
     "name": "NG_ELEMENT_ID"
+  },
+  {
+    "name": "NG_ENV_ID"
   },
   {
     "name": "NG_FACTORY_DEF"
@@ -237,6 +249,9 @@
     "name": "NG_TOKEN_PATH"
   },
   {
+    "name": "NOOP_CLEANUP_FN"
+  },
+  {
     "name": "NOT_FOUND"
   },
   {
@@ -262,6 +277,9 @@
   },
   {
     "name": "NgZone"
+  },
+  {
+    "name": "NgZoneChangeDetectionScheduler"
   },
   {
     "name": "NodeInjector"
@@ -291,10 +309,25 @@
     "name": "PLATFORM_INITIALIZER"
   },
   {
+    "name": "PLATFORM_SERVER_ID"
+  },
+  {
+    "name": "PRESERVE_HOST_CONTENT"
+  },
+  {
+    "name": "PRESERVE_HOST_CONTENT_DEFAULT"
+  },
+  {
     "name": "R3Injector"
   },
   {
     "name": "REMOVE_STYLES_ON_COMPONENT_DESTROY"
+  },
+  {
+    "name": "ReactiveLViewConsumer"
+  },
+  {
+    "name": "ReactiveNode"
   },
   {
     "name": "RefCountOperator"
@@ -387,6 +420,15 @@
     "name": "ViewRef"
   },
   {
+    "name": "Watch"
+  },
+  {
+    "name": "WeakRefImpl"
+  },
+  {
+    "name": "ZONE_IS_STABLE_OBSERVABLE"
+  },
+  {
     "name": "_DOM"
   },
   {
@@ -394,6 +436,9 @@
   },
   {
     "name": "__forward_ref__"
+  },
+  {
+    "name": "_applyRootElementTransformImpl"
   },
   {
     "name": "_currentInjector"
@@ -417,16 +462,28 @@
     "name": "_keyMap"
   },
   {
+    "name": "_locateOrCreateTextNode"
+  },
+  {
+    "name": "_nextReactiveId"
+  },
+  {
     "name": "_platformInjector"
   },
   {
     "name": "_processI18nInsertBefore"
   },
   {
-    "name": "_randomChar"
+    "name": "_retrieveHydrationInfoImpl"
+  },
+  {
+    "name": "_wasLastNodeCreated"
   },
   {
     "name": "_wrapInTimeout"
+  },
+  {
+    "name": "activeConsumer"
   },
   {
     "name": "addPropertyAlias"
@@ -465,6 +522,9 @@
     "name": "callHook"
   },
   {
+    "name": "callHookInternal"
+  },
+  {
     "name": "callHooks"
   },
   {
@@ -474,10 +534,13 @@
     "name": "cleanUpView"
   },
   {
+    "name": "clearViewRefreshFlag"
+  },
+  {
     "name": "collectNativeNodes"
   },
   {
-    "name": "componentDefCount"
+    "name": "commitLViewConsumerIfHasProducers"
   },
   {
     "name": "concatStringsWithSpace"
@@ -498,9 +561,6 @@
     "name": "createElementRef"
   },
   {
-    "name": "createEnvironmentInjector"
-  },
-  {
     "name": "createInjector"
   },
   {
@@ -516,7 +576,7 @@
     "name": "createTView"
   },
   {
-    "name": "decoratePreventDefault"
+    "name": "currentConsumer"
   },
   {
     "name": "deepForEach"
@@ -558,19 +618,16 @@
     "name": "executeViewQueryFn"
   },
   {
-    "name": "extractDirectiveDef"
+    "name": "extractDefListOrFactory"
   },
   {
-    "name": "flattenStyles"
+    "name": "extractDirectiveDef"
   },
   {
     "name": "flattenUnsubscriptionErrors"
   },
   {
     "name": "forEachSingleProvider"
-  },
-  {
-    "name": "formatRuntimeError"
   },
   {
     "name": "forwardRef"
@@ -642,6 +699,9 @@
     "name": "getNullInjector"
   },
   {
+    "name": "getOrCreateCurrentLViewConsumer"
+  },
+  {
     "name": "getOrCreateInjectable"
   },
   {
@@ -675,10 +735,13 @@
     "name": "getPromiseCtor"
   },
   {
+    "name": "getReactiveLViewConsumer"
+  },
+  {
     "name": "getSimpleChangesStore"
   },
   {
-    "name": "getSymbolIterator2"
+    "name": "getSymbolIterator"
   },
   {
     "name": "getTNodeFromLView"
@@ -696,10 +759,16 @@
     "name": "importProvidersFrom"
   },
   {
+    "name": "inNotificationPhase"
+  },
+  {
     "name": "includeViewProviders"
   },
   {
     "name": "incrementInitPhaseFlags"
+  },
+  {
+    "name": "inject"
   },
   {
     "name": "injectArgs"
@@ -759,6 +828,9 @@
     "name": "isObject"
   },
   {
+    "name": "isPlatformServer"
+  },
+  {
     "name": "isPositive"
   },
   {
@@ -766,6 +838,9 @@
   },
   {
     "name": "isPromise2"
+  },
+  {
+    "name": "isStableFactory"
   },
   {
     "name": "isTemplateNode"
@@ -798,6 +873,12 @@
     "name": "makeRecord"
   },
   {
+    "name": "markViewDirty"
+  },
+  {
+    "name": "markViewForRefresh"
+  },
+  {
     "name": "maybeWrapInNotSelector"
   },
   {
@@ -825,6 +906,9 @@
     "name": "ngOnChangesSetInput"
   },
   {
+    "name": "ngZoneApplicationErrorHandlerFactory"
+  },
+  {
     "name": "nonNull"
   },
   {
@@ -850,6 +934,9 @@
   },
   {
     "name": "promise"
+  },
+  {
+    "name": "provideZoneChangeDetection"
   },
   {
     "name": "refCount"
@@ -888,6 +975,9 @@
     "name": "resolveForwardRef"
   },
   {
+    "name": "retrieveHydrationInfo"
+  },
+  {
     "name": "rxSubscriber"
   },
   {
@@ -898,6 +988,9 @@
   },
   {
     "name": "searchTokensOnInjector"
+  },
+  {
+    "name": "setActiveConsumer"
   },
   {
     "name": "setBindingRootForHostBindings"
@@ -930,6 +1023,9 @@
     "name": "shareSubjectFactory"
   },
   {
+    "name": "shimStylesContent"
+  },
+  {
     "name": "shouldSearchParent"
   },
   {
@@ -937,9 +1033,6 @@
   },
   {
     "name": "stringifyCSSSelector"
-  },
-  {
-    "name": "stringifyForError"
   },
   {
     "name": "subscribeTo"
@@ -963,7 +1056,7 @@
     "name": "updateMicroTaskStatus"
   },
   {
-    "name": "updateTransplantedViewCount"
+    "name": "updateViewsToRefresh"
   },
   {
     "name": "urlParsingNode"
@@ -976,6 +1069,9 @@
   },
   {
     "name": "writeDirectClass"
+  },
+  {
+    "name": "writeToDirectiveInput"
   },
   {
     "name": "ɵɵStandaloneFeature"

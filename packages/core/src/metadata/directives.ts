@@ -98,7 +98,6 @@ export interface DirectiveDecorator {
    *    accessible for components outside of the NgModule.
    *
    *
-   * @Annotation
    */
   (obj?: Directive): TypeDecorator;
 
@@ -111,7 +110,6 @@ export interface DirectiveDecorator {
 /**
  * Directive decorator and metadata.
  *
- * @Annotation
  * @publicApi
  */
 export interface Directive {
@@ -148,13 +146,19 @@ export interface Directive {
    * Enumerates the set of data-bound input properties for a directive
    *
    * Angular automatically updates input properties during change detection.
-   * The `inputs` property defines a set of `directiveProperty` to `bindingProperty`
-   * configuration:
+   * The `inputs` property accepts either strings or object literals that configure the directive
+   * properties that should be exposed as inputs.
    *
-   * - `directiveProperty` specifies the component property where the value is written.
-   * - `bindingProperty` specifies the DOM property where the value is read from.
+   * When an object literal is passed in, the `name` property indicates which property on the
+   * class the input should write to, while the `alias` determines the name under
+   * which the input will be available in template bindings. The `required` property indicates that
+   * the input is required which will trigger a compile-time error if it isn't passed in when the
+   * directive is used.
    *
-   * When `bindingProperty` is not provided, it is assumed to be equal to `directiveProperty`.
+   * When a string is passed into the `inputs` array, it can have a format of `'name'` or
+   * `'name: alias'` where `name` is the property on the class that the directive should write
+   * to, while the `alias` determines the name under which the input will be available in
+   * template bindings. String-based input definitions are assumed to be optional.
    *
    * @usageNotes
    *
@@ -163,7 +167,7 @@ export interface Directive {
    * ```typescript
    * @Component({
    *   selector: 'bank-account',
-   *   inputs: ['bankName', 'id: account-id'],
+   *   inputs: ['bankName', {name: 'id', alias: 'account-id'}],
    *   template: `
    *     Bank Name: {{bankName}}
    *     Account Id: {{id}}
@@ -176,7 +180,7 @@ export interface Directive {
    * ```
    *
    */
-  inputs?: string[];
+  inputs?: ({name: string, alias?: string, required?: boolean}|string)[];
 
   /**
    * Enumerates the set of event-bound output properties.
@@ -184,11 +188,11 @@ export interface Directive {
    * When an output property emits an event, an event handler attached to that event
    * in the template is invoked.
    *
-   * The `outputs` property defines a set of `directiveProperty` to `bindingProperty`
+   * The `outputs` property defines a set of `directiveProperty` to `alias`
    * configuration:
    *
    * - `directiveProperty` specifies the component property that emits events.
-   * - `bindingProperty` specifies the DOM property the event handler is attached to.
+   * - `alias` specifies the DOM property the event handler is attached to.
    *
    * @usageNotes
    *
@@ -285,7 +289,6 @@ export interface Directive {
    * }
    * ```
    *
-   * @Annotation
    */
   queries?: {[key: string]: any};
 
@@ -498,7 +501,6 @@ export interface ComponentDecorator {
    * To preserve sequences of whitespace characters, use the
    * `ngPreserveWhitespaces` attribute.
    *
-   * @Annotation
    */
   (obj: Component): TypeDecorator;
   /**
@@ -537,6 +539,7 @@ export interface Component extends Directive {
    * SystemJS exposes the `__moduleName` variable within each module.
    * In CommonJS, this can  be set to `module.id`.
    *
+   * @deprecated This option does not have any effect. Will be removed in Angular v17.
    */
   moduleId?: string;
 
@@ -597,15 +600,6 @@ export interface Component extends Directive {
   interpolation?: [string, string];
 
   /**
-   * A set of components that should be compiled along with
-   * this component. For each component listed here,
-   * Angular creates a {@link ComponentFactory} and stores it in the
-   * {@link ComponentFactoryResolver}.
-   * @deprecated Since 9.0.0. With Ivy, this property is no longer necessary.
-   */
-  entryComponents?: Array<Type<any>|any[]>;
-
-  /**
    * True to preserve or false to remove potentially superfluous whitespace characters
    * from the compiled template. Whitespace characters are those matching the `\s`
    * character class in JavaScript regular expressions. Default is false, unless
@@ -652,7 +646,7 @@ export interface Component extends Directive {
 /**
  * Component decorator and metadata.
  *
- * @Annotation
+
  * @publicApi
  */
 export const Component: ComponentDecorator = makeDecorator(
@@ -730,7 +724,7 @@ export interface Pipe {
 }
 
 /**
- * @Annotation
+
  * @publicApi
  */
 export const Pipe: PipeDecorator = makeDecorator(
@@ -787,8 +781,8 @@ export interface InputDecorator {
    *
    * @see [Input and Output properties](guide/inputs-outputs)
    */
-  (bindingPropertyName?: string): any;
-  new(bindingPropertyName?: string): any;
+  (arg?: string|Input): any;
+  new(arg?: string|Input): any;
 }
 
 /**
@@ -800,15 +794,25 @@ export interface Input {
   /**
    * The name of the DOM property to which the input property is bound.
    */
-  bindingPropertyName?: string;
+  alias?: string;
+
+  /**
+   * Whether the input is required for the directive to function.
+   */
+  required?: boolean;
 }
 
 /**
- * @Annotation
+
  * @publicApi
  */
 export const Input: InputDecorator =
-    makePropDecorator('Input', (bindingPropertyName?: string) => ({bindingPropertyName}));
+    makePropDecorator('Input', (arg?: string|{alias?: string, required?: boolean}) => {
+      if (!arg) {
+        return {};
+      }
+      return typeof arg === 'string' ? {alias: arg} : arg;
+    });
 
 /**
  * Type of the Output decorator / constructor function.
@@ -832,8 +836,8 @@ export interface OutputDecorator {
    * @see [Input and Output properties](guide/inputs-outputs)
    *
    */
-  (bindingPropertyName?: string): any;
-  new(bindingPropertyName?: string): any;
+  (alias?: string): any;
+  new(alias?: string): any;
 }
 
 /**
@@ -845,15 +849,14 @@ export interface Output {
   /**
    * The name of the DOM property to which the output property is bound.
    */
-  bindingPropertyName?: string;
+  alias?: string;
 }
 
 /**
- * @Annotation
+
  * @publicApi
  */
-export const Output: OutputDecorator =
-    makePropDecorator('Output', (bindingPropertyName?: string) => ({bindingPropertyName}));
+export const Output: OutputDecorator = makePropDecorator('Output', (alias?: string) => ({alias}));
 
 
 
@@ -909,7 +912,7 @@ export interface HostBinding {
 }
 
 /**
- * @Annotation
+
  * @publicApi
  */
 export const HostBinding: HostBindingDecorator =
@@ -1013,7 +1016,7 @@ export interface HostListener {
  * The global target names that can be used to prefix an event name are
  * `document:`, `window:` and `body:`.
  *
- * @Annotation
+
  * @publicApi
  */
 export const HostListener: HostListenerDecorator =
