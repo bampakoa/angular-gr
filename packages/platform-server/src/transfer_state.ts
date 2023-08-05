@@ -35,6 +35,10 @@ function serializeTransferStateFactory(doc: Document, appId: string, transferSto
     script.id = appId + '-state';
     script.setAttribute('type', 'application/json');
     script.textContent = escapeHtml(content);
+
+    // It is intentional that we add the script at the very bottom. Angular CLI script tags for
+    // bundles are always `type="module"`. These are deferred by default and cause the transfer
+    // transfer data to be queried only after the browser has finished parsing the DOM.
     doc.body.appendChild(script);
   };
 }

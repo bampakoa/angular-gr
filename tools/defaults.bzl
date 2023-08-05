@@ -110,7 +110,6 @@ def ts_library(
         # Match the types[] in //packages:tsconfig-test.json
         deps.append("@npm//@types/jasmine")
         deps.append("@npm//@types/node")
-        deps.append("@npm//@types/events")
     if not tsconfig and testonly:
         tsconfig = _DEFAULT_TSCONFIG_TEST
 
@@ -154,7 +153,6 @@ def ng_module(name, tsconfig = None, entry_point = None, testonly = False, deps 
         # Match the types[] in //packages:tsconfig-test.json
         deps.append("@npm//@types/jasmine")
         deps.append("@npm//@types/node")
-        deps.append("@npm//@types/events")
     if not tsconfig and testonly:
         tsconfig = _DEFAULT_TSCONFIG_TEST
 
@@ -200,7 +198,7 @@ def ng_package(name, readme_md = None, license_banner = None, deps = [], **kwarg
         "0.0.0-PLACEHOLDER": "0.0.0",
     })
     stamped_substitutions = dict(common_substitutions, **{
-        "0.0.0-PLACEHOLDER": "{BUILD_SCM_VERSION}",
+        "0.0.0-PLACEHOLDER": "{STABLE_PROJECT_VERSION}",
     })
 
     _ng_package(
@@ -239,7 +237,7 @@ def pkg_npm(name, deps = [], validate = True, **kwargs):
         "0.0.0-PLACEHOLDER": "0.0.0",
     })
     stamped_substitutions = dict(common_substitutions, **{
-        "0.0.0-PLACEHOLDER": "{BUILD_SCM_VERSION}",
+        "0.0.0-PLACEHOLDER": "{STABLE_PROJECT_VERSION}",
     })
 
     # NOTE: We keep this to avoid the linker mappings from `deps` to be forwarded.

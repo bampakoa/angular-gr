@@ -25,7 +25,6 @@ function log_verbose(...m) {
 const workspaceName = 'TMPL_workspace_name';
 const rootDir = 'TMPL_root_dir';
 const bannerFile = TMPL_banner_file;
-const stampData = TMPL_stamp_data;
 const moduleMappings = TMPL_module_mappings;
 const downlevelToES2015 = TMPL_downlevel_to_es2015;
 const nodeModulesRoot = 'TMPL_node_modules_root';
@@ -35,7 +34,6 @@ log_verbose(`running with
   workspaceName: ${workspaceName}
   rootDir: ${rootDir}
   bannerFile: ${bannerFile}
-  stampData: ${stampData}
   moduleMappings: ${JSON.stringify(moduleMappings)}
   nodeModulesRoot: ${nodeModulesRoot}
 `);
@@ -133,19 +131,9 @@ function resolveBazel(importee, importer) {
   return resolved;
 }
 
-let banner = '';
+let bannerContent = '';
 if (bannerFile) {
-  banner = fs.readFileSync(bannerFile, {encoding: 'utf-8'});
-  if (stampData) {
-    const versionTag = fs.readFileSync(stampData, {encoding: 'utf-8'})
-                           .split('\n')
-                           .find(s => s.startsWith('BUILD_SCM_VERSION'));
-    // Don't assume BUILD_SCM_VERSION exists
-    if (versionTag) {
-      const version = versionTag.split(' ')[1].trim();
-      banner = banner.replace(/0.0.0-PLACEHOLDER/, version);
-    }
-  }
+  bannerContent = fs.readFileSync(bannerFile, {encoding: 'utf-8'});
 }
 
 // Transform that is enabled for ES2015 FESM generation. It transforms existing ES2020
@@ -190,7 +178,7 @@ const stripBannerPlugin = {
         hires: true,
       }),
     };
-  }
+  },
 };
 
 const plugins = [
@@ -201,7 +189,7 @@ const plugins = [
   nodeResolve({
     mainFields: ['es2020', 'es2015', 'module', 'browser'],
     jail: process.cwd(),
-    customResolveOptions: {moduleDirectory: nodeModulesRoot}
+    customResolveOptions: {moduleDirectory: nodeModulesRoot},
   }),
   stripBannerPlugin,
   commonjs({ignoreGlobal: true}),
@@ -217,8 +205,8 @@ const config = {
   plugins,
   external: [TMPL_external],
   output: {
-    banner,
-  }
+    banner: bannerContent,
+  },
 };
 
 module.exports = config;

@@ -308,7 +308,7 @@ ng generate component dashboard
 
 <code-example header="src/app/heroes/heroes.component.html (λίστα με onSelect)" path="toh-pt4/src/app/heroes/heroes.component.html" region="list"></code-example>
 
-Αφαιρέστε το `<li>` μόνο στο `*ngFor` του.
+Αφαιρέστε το εσωτερικό HTML του `<li>`.
 Προσθέστε ένα στοιχείο anchor `<a>` γύρω από το badge και το name.
 Προσθέστε ένα attribute `routerLink` στο anchor το οποίο είναι το ίδιο όπως στο template του dashboard.
 

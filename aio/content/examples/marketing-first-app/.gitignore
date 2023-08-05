@@ -1,5 +1,0 @@
-# git should ignore the cached files
-.angular
-
-# git should ignore the generated files
-dist
