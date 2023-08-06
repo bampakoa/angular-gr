@@ -532,7 +532,11 @@ if (getDOM().supportsDOMEvents) return;  // NODE only
 
 describe('platform-server integration', () => {
   beforeEach(() => {
-    if (getPlatform()) destroyPlatform();
+    destroyPlatform();
+  });
+
+  afterAll(() => {
+    destroyPlatform();
   });
 
   it('should bootstrap', async () => {
@@ -842,7 +846,7 @@ describe('platform-server integration', () => {
                renderModule(MyTransferStateModule, options);
            const expectedOutput =
                '<html><head></head><body><app ng-version="0.0.0-PLACEHOLDER" ng-server-context="other"><div>Works!</div></app>' +
-               '<script id="ng-state" type="application/json">{&q;some-key&q;:&q;some-value&q;}</script></body></html>';
+               '<script id="ng-state" type="application/json">{"some-key":"some-value"}</script></body></html>';
            const output = await bootstrap;
            expect(output).toEqual(expectedOutput);
          });
@@ -994,12 +998,11 @@ describe('platform-server integration', () => {
             renderApplication(
                 getStandaloneBoostrapFn(MyServerAppStandalone, RenderHookProviders), options) :
             renderModule(RenderHookModule, options);
-        bootstrap.then(output => {
-          // title should be added by the render hook.
-          expect(output).toBe(
-              '<html><head><title>RenderHook</title></head><body>' +
-              '<app ng-version="0.0.0-PLACEHOLDER" ng-server-context="other">Works!</app></body></html>');
-        });
+        const output = await bootstrap;
+        // title should be added by the render hook.
+        expect(output).toBe(
+            '<html><head><title>RenderHook</title></head><body>' +
+            '<app ng-version="0.0.0-PLACEHOLDER" ng-server-context="other">Works!</app></body></html>');
       });
 
       it('should call multiple render hooks', async () => {

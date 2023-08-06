@@ -28,8 +28,8 @@ http_archive(
     patches = [
         "//tools/esm-interop:patches/bazel/nodejs_binary_esm_support.patch",
     ],
-    sha256 = "94070eff79305be05b7699207fbac5d2608054dd53e6109f7d00d923919ff45a",
-    urls = ["https://github.com/bazelbuild/rules_nodejs/releases/download/5.8.2/rules_nodejs-5.8.2.tar.gz"],
+    sha256 = "5dd1e5dea1322174c57d3ca7b899da381d516220793d0adef3ba03b9d23baa8e",
+    urls = ["https://github.com/bazelbuild/rules_nodejs/releases/download/5.8.3/rules_nodejs-5.8.3.tar.gz"],
 )
 
 load("@build_bazel_rules_nodejs//:repositories.bzl", "build_bazel_rules_nodejs_dependencies")
@@ -65,6 +65,11 @@ load("@rules_nodejs//nodejs:repositories.bzl", "nodejs_register_toolchains")
 nodejs_register_toolchains(
     name = "nodejs",
     node_version = "16.14.0",
+)
+
+nodejs_register_toolchains(
+    name = "node18",
+    node_version = "18.10.0",
 )
 
 # Download npm dependencies.
@@ -194,10 +199,10 @@ cldr_xml_data_repository(
 # sass rules
 http_archive(
     name = "io_bazel_rules_sass",
-    sha256 = "44e325c09a8a97c0b6f918400c10836fa61753c576e77ca74ec682c6ecc518c0",
-    strip_prefix = "rules_sass-236d2fc016738820e8dc6bea483074034c66ec0a",
+    sha256 = "3ea31a241f8a5930278d54e9b5dcb9654d622e1daecfa784f9ce98dd7bbf5cea",
+    strip_prefix = "rules_sass-6e0915ee27679aa61965bbb41de1891de3614fac",
     urls = [
-        "https://github.com/bazelbuild/rules_sass/archive/236d2fc016738820e8dc6bea483074034c66ec0a.zip",
+        "https://github.com/bazelbuild/rules_sass/archive/6e0915ee27679aa61965bbb41de1891de3614fac.zip",
     ],
 )
 
@@ -214,4 +219,21 @@ register_toolchains(
     "@npm//@angular/build-tooling/bazel/git-toolchain:git_macos_x86_toolchain",
     "@npm//@angular/build-tooling/bazel/git-toolchain:git_macos_arm64_toolchain",
     "@npm//@angular/build-tooling/bazel/git-toolchain:git_windows_toolchain",
+)
+
+# Fetch sauce connect (tool to open Saucelabs tunnel for Saucelabs browser tests)
+http_archive(
+    name = "sauce_connect_linux_amd64",
+    build_file_content = """exports_files(["bin/sc"], visibility = ["//visibility:public"])""",
+    sha256 = "26b9c3630f441b47854b6032f7eca6f1d88d3f62e50ee44c27015d71a5155c36",
+    strip_prefix = "sc-4.8.2-linux",
+    url = "https://saucelabs.com/downloads/sc-4.8.2-linux.tar.gz",
+)
+
+http_archive(
+    name = "sauce_connect_mac",
+    build_file_content = """exports_files(["bin/sc"], visibility = ["//visibility:public"])""",
+    sha256 = "28277ce81ef9ab84f5b87b526258920a8ead44789a5034346e872629bbf38089",
+    strip_prefix = "sc-4.8.2-osx",
+    url = "https://saucelabs.com/downloads/sc-4.8.2-osx.zip",
 )

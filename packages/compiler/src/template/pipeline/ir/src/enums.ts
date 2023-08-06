@@ -49,6 +49,21 @@ export enum OpKind {
   ElementEnd,
 
   /**
+   * An operation to begin an `ng-container`.
+   */
+  ContainerStart,
+
+  /**
+   * An operation for an `ng-container` with no children.
+   */
+  Container,
+
+  /**
+   * An operation to end an `ng-container`.
+   */
+  ContainerEnd,
+
+  /**
    * An operation to render a text node.
    */
   Text,
@@ -69,9 +84,19 @@ export enum OpKind {
   Property,
 
   /**
+   * An operation to interpolate text into a property binding.
+   */
+  InterpolateProperty,
+
+  /**
    * An operation to advance the runtime's implicit slot context during the update phase of a view.
    */
   Advance,
+
+  /**
+   * An operation to instantiate a pipe.
+   */
+  Pipe,
 }
 
 /**
@@ -117,6 +142,26 @@ export enum ExpressionKind {
    * Runtime operation to reset the current view context after `RestoreView`.
    */
   ResetView,
+
+  /**
+   * Defines and calls a function with change-detected arguments.
+   */
+  PureFunctionExpr,
+
+  /**
+   * Indicates a positional parameter to a pure function definition.
+   */
+  PureFunctionParameterExpr,
+
+  /**
+   * Binding to a pipe transformation.
+   */
+  PipeBinding,
+
+  /**
+   * Binding to a pipe transformation with a variable number of arguments.
+   */
+  PipeBindingVariadic,
 }
 
 /**

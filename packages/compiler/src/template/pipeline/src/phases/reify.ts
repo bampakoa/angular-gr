@@ -50,6 +50,21 @@ function reifyCreateOperations(view: ViewCompilation, ops: ir.OpList<ir.CreateOp
       case ir.OpKind.ElementEnd:
         ir.OpList.replace(op, ng.elementEnd());
         break;
+      case ir.OpKind.ContainerStart:
+        ir.OpList.replace(
+            op,
+            ng.elementContainerStart(
+                op.slot!, op.attributes as number | null, op.localRefs as number | null));
+        break;
+      case ir.OpKind.Container:
+        ir.OpList.replace(
+            op,
+            ng.elementContainer(
+                op.slot!, op.attributes as number | null, op.localRefs as number | null));
+        break;
+      case ir.OpKind.ContainerEnd:
+        ir.OpList.replace(op, ng.elementContainerEnd());
+        break;
       case ir.OpKind.Template:
         const childView = view.tpl.views.get(op.xref)!;
         ir.OpList.replace(
@@ -63,6 +78,9 @@ function reifyCreateOperations(view: ViewCompilation, ops: ir.OpList<ir.CreateOp
                 op.attributes as number,
                 ),
         );
+        break;
+      case ir.OpKind.Pipe:
+        ir.OpList.replace(op, ng.pipe(op.slot!, op.name));
         break;
       case ir.OpKind.Listener:
         const listenerFn = reifyListenerHandler(view, op.handlerFnName!, op.handlerOps);
@@ -103,6 +121,9 @@ function reifyUpdateOperations(_view: ViewCompilation, ops: ir.OpList<ir.UpdateO
       case ir.OpKind.Property:
         ir.OpList.replace(op, ng.property(op.name, op.expression));
         break;
+      case ir.OpKind.InterpolateProperty:
+        ir.OpList.replace(op, ng.propertyInterpolate(op.name, op.strings, op.expressions));
+        break;
       case ir.OpKind.InterpolateText:
         ir.OpList.replace(op, ng.textInterpolate(op.strings, op.expressions));
         break;
@@ -125,7 +146,11 @@ function reifyUpdateOperations(_view: ViewCompilation, ops: ir.OpList<ir.UpdateO
   }
 }
 
-function reifyIrExpression(expr: ir.Expression): o.Expression {
+function reifyIrExpression(expr: o.Expression): o.Expression {
+  if (!ir.isIrExpression(expr)) {
+    return expr;
+  }
+
   switch (expr.kind) {
     case ir.ExpressionKind.NextContext:
       return ng.nextContext(expr.steps);
@@ -147,6 +172,17 @@ function reifyIrExpression(expr: ir.Expression): o.Expression {
         throw new Error(`Read of unnamed variable ${expr.xref}`);
       }
       return o.variable(expr.name);
+    case ir.ExpressionKind.PureFunctionExpr:
+      if (expr.fn === null) {
+        throw new Error(`AssertionError: expected PureFunctions to have been extracted`);
+      }
+      return ng.pureFunction(expr.varOffset!, expr.fn, expr.args);
+    case ir.ExpressionKind.PureFunctionParameterExpr:
+      throw new Error(`AssertionError: expected PureFunctionParameterExpr to have been extracted`);
+    case ir.ExpressionKind.PipeBinding:
+      return ng.pipeBind(expr.slot!, expr.varOffset!, expr.args);
+    case ir.ExpressionKind.PipeBindingVariadic:
+      return ng.pipeBindV(expr.slot!, expr.varOffset!, expr.args);
     default:
       throw new Error(`AssertionError: Unsupported reification of ir.Expression kind: ${
           ir.ExpressionKind[(expr as ir.Expression).kind]}`);

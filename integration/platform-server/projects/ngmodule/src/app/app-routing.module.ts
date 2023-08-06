@@ -19,6 +19,22 @@ const routes: Routes = [
         (m) => m.HttpTransferStateModule
       ),
   },
+  {
+    path: 'http-transferstate-lazy-on-init',
+    loadChildren: () =>
+      import('./http-transferstate-lazy-on-init/http-transferstate-lazy-on-init.module').then(
+        (m) => m.HttpTransferStateOnInitModule
+      ),
+  },
+  {
+    path: 'error',
+    component: HelloWorldComponent,
+    resolve: {
+      'id': () => {
+        throw new Error('Error in resolver.');
+      },
+    },
+  },
 ];
 
 @NgModule({

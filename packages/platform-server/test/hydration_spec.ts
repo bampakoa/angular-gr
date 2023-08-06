@@ -12,9 +12,7 @@ import {CommonModule, DOCUMENT, isPlatformServer, NgComponentOutlet, NgFor, NgIf
 import {MockPlatformLocation} from '@angular/common/testing';
 import {ApplicationRef, Component, ComponentRef, createComponent, destroyPlatform, Directive, ElementRef, EnvironmentInjector, ErrorHandler, getPlatform, inject, Injectable, Input, NgZone, PLATFORM_ID, Provider, TemplateRef, Type, ViewChild, ViewContainerRef, ViewEncapsulation, ɵsetDocument} from '@angular/core';
 import {Console} from '@angular/core/src/console';
-import {InitialRenderPendingTasks} from '@angular/core/src/initial_render_pending_tasks';
 import {getComponentDef} from '@angular/core/src/render3/definition';
-import {unescapeTransferStateContent} from '@angular/core/src/transfer_state';
 import {NoopNgZone} from '@angular/core/src/zone/ng_zone';
 import {TestBed} from '@angular/core/testing';
 import {bootstrapApplication, HydrationFeature, HydrationFeatureKind, provideClientHydration, withNoDomReuse} from '@angular/platform-browser';
@@ -100,10 +98,8 @@ function stripExcessiveSpaces(html: string): string {
 }
 
 /** Returns a Promise that resolves when the ApplicationRef becomes stable. */
-function whenStable(appRef: ApplicationRef): Promise<unknown> {
-  const isStablePromise = appRef.isStable.pipe(first((isStable: boolean) => isStable)).toPromise();
-  const pendingTasksPromise = appRef.injector.get(InitialRenderPendingTasks).whenAllTasksComplete;
-  return Promise.allSettled([isStablePromise, pendingTasksPromise]);
+function whenStable(appRef: ApplicationRef): Promise<void> {
+  return appRef.isStable.pipe(first((isStable: boolean) => isStable)).toPromise().then(() => {});
 }
 
 function verifyClientAndSSRContentsMatch(ssrContents: string, clientAppRootElement: HTMLElement) {
@@ -185,9 +181,8 @@ function resetTViewsFor(...types: Type<unknown>[]) {
   }
 }
 
-function getHydrationInfoFromTransferState(input: string): string|null {
-  const rawContents = input.match(/<script[^>]+>(.*?)<\/script>/)?.[1];
-  return rawContents ? unescapeTransferStateContent(rawContents) : null;
+function getHydrationInfoFromTransferState(input: string): string|undefined {
+  return input.match(/<script[^>]+>(.*?)<\/script>/)?.[1];
 }
 
 function withNoopErrorHandler() {
@@ -217,7 +212,7 @@ function withDebugConsole() {
   return [{provide: Console, useClass: DebugConsole}];
 }
 
-describe('platform-server integration', () => {
+describe('platform-server hydration integration', () => {
   beforeEach(() => {
     if (typeof ngDevMode === 'object') {
       // Reset all ngDevMode counters.
@@ -283,9 +278,6 @@ describe('platform-server integration', () => {
     async function hydrate(
         html: string, component: Type<unknown>, envProviders?: Provider[],
         hydrationFeatures: HydrationFeature<HydrationFeatureKind>[] = []): Promise<ApplicationRef> {
-      // Destroy existing platform, a new one will be created later by the `bootstrapApplication`.
-      destroyPlatform();
-
       // Get HTML contents of the `<app>`, create a DOM element and append it into the body.
       const container = convertHtmlToDom(html, doc);
       Array.from(container.children).forEach(node => doc.body.appendChild(node));
@@ -1523,6 +1515,36 @@ describe('platform-server integration', () => {
                verifyAllNodesClaimedForHydration(clientRootNode, exceptions);
                verifyClientAndSSRContentsMatch(ssrContents, clientRootNode);
              });
+
+          it('should allow injecting ViewContainerRef in the root component', async () => {
+            @Component({
+              standalone: true,
+              selector: 'app',
+              template: `Hello World!`,
+            })
+            class SimpleComponent {
+              private vcRef = inject(ViewContainerRef);
+            }
+
+            const html = await ssr(SimpleComponent);
+            const ssrContents = getAppContents(html);
+
+            expect(ssrContents).toContain(`<app ${NGH_ATTR_NAME}`);
+
+            resetTViewsFor(SimpleComponent);
+
+            const appRef = await hydrate(html, SimpleComponent);
+            const compRef = getComponentRef<SimpleComponent>(appRef);
+            appRef.tick();
+
+            const clientRootNode = compRef.location.nativeElement;
+            verifyAllNodesClaimedForHydration(clientRootNode);
+
+            // Replace the trailing comment node (added as a result of the
+            // `ViewContainerRef` injection) before comparing contents.
+            const _ssrContents = ssrContents.replace(/<\/app><!--container-->/, '</app>');
+            verifyClientAndSSRContentsMatch(_ssrContents, clientRootNode);
+          });
         });
 
         describe('<ng-template>', () => {
@@ -1820,6 +1842,46 @@ describe('platform-server integration', () => {
            verifyAllNodesClaimedForHydration(clientRootNode);
            verifyClientAndSSRContentsMatch(ssrContents, clientRootNode);
          });
+
+      it('should exclude components with i18n from hydration automatically', async () => {
+        @Component({
+          standalone: true,
+          selector: 'nested',
+          template: `
+            <div i18n>Hi!</div>
+          `,
+        })
+        class NestedComponent {
+        }
+
+        @Component({
+          standalone: true,
+          imports: [NestedComponent],
+          selector: 'app',
+          template: `
+            Nested component with i18n inside
+            (the content of this component would be excluded from hydration):
+            <nested />
+          `,
+        })
+        class SimpleComponent {
+        }
+
+        const html = await ssr(SimpleComponent);
+        const ssrContents = getAppContents(html);
+
+        expect(ssrContents).toContain('<app ngh');
+
+        resetTViewsFor(SimpleComponent);
+
+        const appRef = await hydrate(html, SimpleComponent);
+        const compRef = getComponentRef<SimpleComponent>(appRef);
+        appRef.tick();
+
+        const clientRootNode = compRef.location.nativeElement;
+        verifyAllNodesClaimedForHydration(clientRootNode);
+        verifyClientAndSSRContentsMatch(ssrContents, clientRootNode);
+      });
     });
 
     describe('ShadowDom encapsulation', () => {
@@ -2002,6 +2064,268 @@ describe('platform-server integration', () => {
            expect(ssrContents).toContain(`<app ${NGH_ATTR_NAME}`);
 
            resetTViewsFor(SimpleComponent, Nested);
+
+           const appRef = await hydrate(html, SimpleComponent);
+           const compRef = getComponentRef<SimpleComponent>(appRef);
+           appRef.tick();
+
+           const clientRootNode = compRef.location.nativeElement;
+           verifyAllNodesClaimedForHydration(clientRootNode);
+           verifyClientAndSSRContentsMatch(ssrContents, clientRootNode);
+         });
+
+      it('should allow projecting hydrated content into components that skip hydration ' +
+             '(view containers with embedded views as projection root nodes)',
+         async () => {
+           @Component({
+             standalone: true,
+             selector: 'regular-cmp',
+             template: `
+                <ng-content />
+              `
+           })
+           class RegularCmp {
+           }
+
+           @Component({
+             standalone: true,
+             selector: 'deeply-nested',
+             host: {ngSkipHydration: 'true'},
+             template: `
+                <ng-content />
+              `
+           })
+           class DeeplyNested {
+           }
+
+           @Component({
+             standalone: true,
+             selector: 'deeply-nested-wrapper',
+             host: {ngSkipHydration: 'true'},
+             imports: [RegularCmp],
+             template: `
+                <regular-cmp>
+                  <ng-content />
+                </regular-cmp>
+              `
+           })
+           class DeeplyNestedWrapper {
+           }
+
+           @Component({
+             standalone: true,
+             selector: 'layout',
+             imports: [DeeplyNested, DeeplyNestedWrapper],
+             template: `
+                <deeply-nested>
+                  <deeply-nested-wrapper>
+                    <ng-content />
+                  </deeply-nested-wrapper>
+                </deeply-nested>
+              `
+           })
+           class Layout {
+           }
+
+           @Component({
+             standalone: true,
+             selector: 'app',
+             imports: [NgIf, Layout],
+             template: `
+              <layout>
+                <h1 *ngIf="true">Hi!</h1>
+              </layout>
+            `,
+           })
+           class SimpleComponent {
+           }
+
+           const html = await ssr(SimpleComponent);
+           const ssrContents = getAppContents(html);
+
+           expect(ssrContents).toContain(`<app ${NGH_ATTR_NAME}`);
+
+           resetTViewsFor(SimpleComponent, Layout, RegularCmp, DeeplyNested, DeeplyNestedWrapper);
+
+           const appRef = await hydrate(html, SimpleComponent);
+           const compRef = getComponentRef<SimpleComponent>(appRef);
+           appRef.tick();
+
+           const clientRootNode = compRef.location.nativeElement;
+           verifyAllNodesClaimedForHydration(clientRootNode);
+           verifyClientAndSSRContentsMatch(ssrContents, clientRootNode);
+         });
+
+      it('should allow projecting hydrated content into components that skip hydration ' +
+             '(view containers with components as projection root nodes)',
+         async () => {
+           @Component({
+             standalone: true,
+             selector: 'dynamic-cmp',
+             template: `DynamicComponent content`,
+           })
+           class DynamicComponent {
+           }
+
+           @Component({
+             standalone: true,
+             selector: 'regular-cmp',
+             template: `
+            <ng-content />
+          `
+           })
+           class RegularCmp {
+           }
+
+           @Component({
+             standalone: true,
+             selector: 'deeply-nested',
+             host: {ngSkipHydration: 'true'},
+             template: `
+            <ng-content />
+          `
+           })
+           class DeeplyNested {
+           }
+
+           @Component({
+             standalone: true,
+             selector: 'deeply-nested-wrapper',
+             host: {ngSkipHydration: 'true'},
+             imports: [RegularCmp],
+             template: `
+            <regular-cmp>
+              <ng-content />
+            </regular-cmp>
+          `
+           })
+           class DeeplyNestedWrapper {
+           }
+
+           @Component({
+             standalone: true,
+             selector: 'layout',
+             imports: [DeeplyNested, DeeplyNestedWrapper],
+             template: `
+            <deeply-nested>
+              <deeply-nested-wrapper>
+                <ng-content />
+              </deeply-nested-wrapper>
+            </deeply-nested>
+          `
+           })
+           class Layout {
+           }
+
+           @Component({
+             standalone: true,
+             selector: 'app',
+             imports: [NgIf, Layout],
+             template: `
+              <layout>
+                <div #target></div>
+              </layout>
+            `,
+           })
+           class SimpleComponent {
+             @ViewChild('target', {read: ViewContainerRef}) vcr!: ViewContainerRef;
+
+             ngAfterViewInit() {
+               const compRef = this.vcr.createComponent(DynamicComponent);
+               compRef.changeDetectorRef.detectChanges();
+             }
+           }
+
+           const html = await ssr(SimpleComponent);
+           const ssrContents = getAppContents(html);
+
+           expect(ssrContents).toContain(`<app ${NGH_ATTR_NAME}`);
+
+           resetTViewsFor(
+               SimpleComponent, Layout, DynamicComponent, RegularCmp, DeeplyNested,
+               DeeplyNestedWrapper);
+
+           const appRef = await hydrate(html, SimpleComponent);
+           const compRef = getComponentRef<SimpleComponent>(appRef);
+           appRef.tick();
+
+           const clientRootNode = compRef.location.nativeElement;
+           verifyAllNodesClaimedForHydration(clientRootNode);
+           verifyClientAndSSRContentsMatch(ssrContents, clientRootNode);
+         });
+
+      it('should allow projecting hydrated content into components that skip hydration ' +
+             '(with ng-containers as projection root nodes)',
+         async () => {
+           @Component({
+             standalone: true,
+             selector: 'regular-cmp',
+             template: `
+                <ng-content />
+              `
+           })
+           class RegularCmp {
+           }
+
+           @Component({
+             standalone: true,
+             selector: 'deeply-nested',
+             host: {ngSkipHydration: 'true'},
+             template: `
+              <ng-content />
+            `
+           })
+           class DeeplyNested {
+           }
+
+           @Component({
+             standalone: true,
+             selector: 'deeply-nested-wrapper',
+             host: {ngSkipHydration: 'true'},
+             imports: [RegularCmp],
+             template: `
+              <regular-cmp>
+                <ng-content />
+              </regular-cmp>
+            `
+           })
+           class DeeplyNestedWrapper {
+           }
+
+           @Component({
+             standalone: true,
+             selector: 'layout',
+             imports: [DeeplyNested, DeeplyNestedWrapper],
+             template: `
+              <deeply-nested>
+                <deeply-nested-wrapper>
+                  <ng-content />
+                </deeply-nested-wrapper>
+              </deeply-nested>
+            `
+           })
+           class Layout {
+           }
+
+           @Component({
+             standalone: true,
+             selector: 'app',
+             imports: [NgIf, Layout],
+             template: `
+              <layout>
+                <ng-container>Hi!</ng-container>
+              </layout>
+            `,
+           })
+           class SimpleComponent {
+           }
+
+           const html = await ssr(SimpleComponent);
+           const ssrContents = getAppContents(html);
+
+           expect(ssrContents).toContain(`<app ${NGH_ATTR_NAME}`);
+
+           resetTViewsFor(SimpleComponent, Layout, RegularCmp, DeeplyNested, DeeplyNestedWrapper);
 
            const appRef = await hydrate(html, SimpleComponent);
            const compRef = getComponentRef<SimpleComponent>(appRef);
@@ -4489,7 +4813,7 @@ describe('platform-server integration', () => {
           }
         }
 
-        ssr(SimpleComponent, undefined, withNoopErrorHandler()).catch((err: unknown) => {
+        await ssr(SimpleComponent, undefined, withNoopErrorHandler()).catch((err: unknown) => {
           const message = (err as Error).message;
           expect(message).toContain(
               'During serialization, Angular was unable to find an element in the DOM');

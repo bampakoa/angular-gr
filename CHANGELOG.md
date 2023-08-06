@@ -1,9 +1,101 @@
+<a name="16.1.0"></a>
+# 16.1.0 (2023-06-13)
+### common
+| Commit | Type | Description |
+| -- | -- | -- |
+| [f3867597f0](https://github.com/angular/angular/commit/f3867597f079794ae9c7ed8be3788c9cea5123a3) | feat | add component input binding support for NgComponentOutlet ([#49735](https://github.com/angular/angular/pull/49735)) |
+### compiler
+| Commit | Type | Description |
+| -- | -- | -- |
+| [4e663297c5](https://github.com/angular/angular/commit/4e663297c564078c8185c6a73e2baa844406a315) | fix | error when reading compiled input transforms metadata in JIT mode ([#50600](https://github.com/angular/angular/pull/50600)) |
+| [721bc72649](https://github.com/angular/angular/commit/721bc72649b7d73f730298e04a4606a8bfd53011) | fix | resolve deprecation warning with TypeScript 5.1 ([#50460](https://github.com/angular/angular/pull/50460)) |
+### core
+| Commit | Type | Description |
+| -- | -- | -- |
+| [68017d4e75](https://github.com/angular/angular/commit/68017d4e75abed78b378dce54f860cfa0d0fa42f) | feat | add ability to transform input values ([#50420](https://github.com/angular/angular/pull/50420)) |
+| [69dadd2502](https://github.com/angular/angular/commit/69dadd25020ee84364466c0740f695984dd8c84d) | feat | support TypeScript 5.1 ([#50156](https://github.com/angular/angular/pull/50156)) |
+| [c0ebe34cbd](https://github.com/angular/angular/commit/c0ebe34cbd235dc0b5e56fbe37429b77c0d91170) | fix | add additional component metadata to component ID generation ([#50336](https://github.com/angular/angular/pull/50336)) |
+### http
+| Commit | Type | Description |
+| -- | -- | -- |
+| [85c5427582](https://github.com/angular/angular/commit/85c54275825a57fd3c7055a99e58bb211e085af9) | feat | Introduction of the `fetch` Backend for the `HttpClient` ([#50247](https://github.com/angular/angular/pull/50247)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
+<a name="16.0.4"></a>
+# 16.0.4 (2023-06-01)
+### animations
+| Commit | Type | Description |
+| -- | -- | -- |
+| [df65c4fc8f](https://github.com/angular/angular/commit/df65c4fc8f71ab9bf59ec4e5e820d136b12fb570) | fix | Trigger leave animation when ViewContainerRef is injected ([#48705](https://github.com/angular/angular/pull/48705)) |
+### common
+| Commit | Type | Description |
+| -- | -- | -- |
+| [7e1bc513de](https://github.com/angular/angular/commit/7e1bc513dead7d809f5ba2e6edc45b85af12f828) | fix | untrack subscription and unsubscription in async pipe ([#50522](https://github.com/angular/angular/pull/50522)) |
+### core
+| Commit | Type | Description |
+| -- | -- | -- |
+| [9970b29ace](https://github.com/angular/angular/commit/9970b29acef11f1dfedd2640520b4bca4b996f81) | fix | update `ApplicationRef.isStable` to account for rendering pending tasks ([#50425](https://github.com/angular/angular/pull/50425)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
+<a name="16.0.3"></a>
+# 16.0.3 (2023-05-24)
+### core
+| Commit | Type | Description |
+| -- | -- | -- |
+| [c11041e372](https://github.com/angular/angular/commit/c11041e37260ac658e96e98fde5dea6d85b24aae) | fix | adds missing symbols for animation standalone bundling test ([#50434](https://github.com/angular/angular/pull/50434)) |
+| [98e8fdf40e](https://github.com/angular/angular/commit/98e8fdf40e598f2c2a4d0c11de302ea13e586a1a) | fix | fix `Self` flag inside embedded views with custom injectors ([#50270](https://github.com/angular/angular/pull/50270)) |
+| [199ff4fe7f](https://github.com/angular/angular/commit/199ff4fe7f2cd4b561703e8520c2d6ccc1e2afb7) | fix | host directives incorrectly validating aliased bindings ([#50364](https://github.com/angular/angular/pull/50364)) |
+### http
+| Commit | Type | Description |
+| -- | -- | -- |
+| [080bbd2137](https://github.com/angular/angular/commit/080bbd21377d099c91aa0c6ea8ca634423cd8125) | fix | create macrotask during request handling instead of load start ([#50406](https://github.com/angular/angular/pull/50406)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
+<a name="16.0.2"></a>
+# 16.0.2 (2023-05-17)
+### core
+| Commit | Type | Description |
+| -- | -- | -- |
+| [c1016d4e57](https://github.com/angular/angular/commit/c1016d4e578152dcdfe7c4a4673f27e12bfabf8d) | fix | add additional component metadata to component ID generation ([#50340](https://github.com/angular/angular/pull/50340)) |
+| [cc41758b59](https://github.com/angular/angular/commit/cc41758b595da46a3fd14a58b3832c77b251b940) | fix | allow onDestroy unregistration while destroying ([#50237](https://github.com/angular/angular/pull/50237)) |
+| [7d679bdb59](https://github.com/angular/angular/commit/7d679bdb59815e7e816337532d069d68cf45a6d8) | fix | allow passing value of any type to `isSignal` function ([#50035](https://github.com/angular/angular/pull/50035)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
+<a name="16.0.1"></a>
+# 16.0.1 (2023-05-10)
+### core
+| Commit | Type | Description |
+| -- | -- | -- |
+| [52c74d3b4a](https://github.com/angular/angular/commit/52c74d3b4a8d60b60c9e572541b6ccae0d704754) | fix | add additional component metadata to component ID generation ([#50203](https://github.com/angular/angular/pull/50203)) |
+| [048b6b1e0d](https://github.com/angular/angular/commit/048b6b1e0d9d93d63e6fde2c16a9c3e2b221b581) | fix | bootstrapApplication call not rejected when error is thrown in importProvidersFrom module ([#50120](https://github.com/angular/angular/pull/50120)) |
+| [d68796782f](https://github.com/angular/angular/commit/d68796782ff4ce1f389f14dcff31d393ddaa195d) | fix | handle hydration of root components with injected ViewContainerRef ([#50136](https://github.com/angular/angular/pull/50136)) |
+| [f751ce6445](https://github.com/angular/angular/commit/f751ce64453f6ccede13b7bfd02b817eda0b40f7) | fix | handle projection of hydrated containters into components that skip hydration ([#50199](https://github.com/angular/angular/pull/50199)) |
+| [346ab73dd9](https://github.com/angular/angular/commit/346ab73dd95fd2adfd8cb4064b9f12a6171e51d5) | fix | only try to retrieve transferred state on the browser ([#50144](https://github.com/angular/angular/pull/50144)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="16.0.0"></a>
 # 16.0.0 (2023-05-03)
+
+[Blog post "Angular v16 is now available"](http://goo.gle/angular-v16).
+
 ## Breaking Changes
 ### 
 - Angular Compatibility Compiler (ngcc) has been removed and as a result Angular View Engine libraries will no longer work
 - Deprecated `EventManager` method `addGlobalEventListener` has been removed as it is not used by Ivy.
+### bazel
+- Several changes to the Angular Package Format (APF)
+  - Removal of FESM2015
+  - Replacing ES2020 with ES2022
+  - Replacing FESM2020 with FESM2022
+- Several changes to the Angular Package Format (APF)
+  - Removal of FESM2015
+  - Replacing ES2020 with ES2022
+  - Replacing FESM2020 with FESM2022
 ### common
 - `MockPlatformLocation` is now provided by default in tests.
   Existing tests may have behaviors which rely on
@@ -46,16 +138,12 @@
   - add '$any(...)' inside the template to make the error disappear. However, adding '$any(...)' does not correct the error but only preserves the previous behavior of the code.
 - Deprecated `XhrFactory` export from `@angular/common/http` has been removed. Use `XhrFactory` from `@angular/common` instead.
 ### compiler
-- Several changes to the Angular Package Format (APF)
-  - Removal of FESM2015
-  - Replacing ES2020 with ES2022
-  - Replacing FESM2020 with FESM2022
-- TypeScript 4.8 is no longer supported.
+- * TypeScript 4.8 is no longer supported.
 ### core
 - QueryList.filter now supports type guard functions, which will result in type narrowing. Previously if you used type guard functions, it resulted in no changes to the return type. Now the type would be narrowed, which might require updates to the application code that relied on the old behavior.
 - `zone.js` versions `0.11.x` and `0.12.x` are not longer supported.
-- `entryComponents` has been deleted from the `@NgModule` and `@Component` public APIs. Any usages can be removed since they weren't doing anyting.
-  `ANALYZE_FOR_ENTRY_COMPONENTS` injection token has been deleted. Any references can be removed.
+- * `entryComponents` has been deleted from the `@NgModule` and `@Component` public APIs. Any usages can be removed since they weren't doing anyting.
+  * `ANALYZE_FOR_ENTRY_COMPONENTS` injection token has been deleted. Any references can be removed.
 - ComponentRef.setInput will only set the input on the
   component if it is different from the previous value (based on `Object.is`
   equality). If code relies on the input always being set, it should be
@@ -296,6 +384,66 @@
 | Commit | Type | Description |
 | -- | -- | -- |
 | [5e7fc259ea](https://github.com/angular/angular/commit/5e7fc259ead62ee9b4f8a9a77a455065b6a8e2d8) | feat | add function to provide service worker ([#48247](https://github.com/angular/angular/pull/48247)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
+<a name="15.2.9"></a>
+# 15.2.9 (2023-05-03)
+### common
+| Commit | Type | Description |
+| -- | -- | -- |
+| [9107e931ca](https://github.com/angular/angular/commit/9107e931cad6c7543f717796a75648cefee2fd12) | fix | fix incorrectly reported distortion for padded images ([#49889](https://github.com/angular/angular/pull/49889)) |
+### compiler-cli
+| Commit | Type | Description |
+| -- | -- | -- |
+| [7c58885797](https://github.com/angular/angular/commit/7c58885797af407d8399206340e79fe3d2beffb8) | fix | catch fatal diagnostic when getting diagnostics for components ([#50046](https://github.com/angular/angular/pull/50046)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
+<a name="15.2.8"></a>
+# 15.2.8 (2023-04-19)
+### core
+| Commit | Type | Description |
+| -- | -- | -- |
+| [2fff8fadbe](https://github.com/angular/angular/commit/2fff8fadbeff9df3bc09b8847dbf08febbe3b5f8) | fix | handle invalid classes in class array bindings ([#49924](https://github.com/angular/angular/pull/49924)) |
+### http
+| Commit | Type | Description |
+| -- | -- | -- |
+| [05a0225deb](https://github.com/angular/angular/commit/05a0225deb126849f3798e828f6dbef7c221ec57) | fix | prevent headers from throwing an error when initializing numerical values ([#49379](https://github.com/angular/angular/pull/49379)) |
+### router
+| Commit | Type | Description |
+| -- | -- | -- |
+| [09a42d988e](https://github.com/angular/angular/commit/09a42d988e654825648205c8df90f7ca4d034c74) | fix | canceledNavigationResolution: 'computed' with redirects to the current URL ([#49793](https://github.com/angular/angular/pull/49793)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
+<a name="15.2.7"></a>
+# 15.2.7 (2023-04-12)
+### compiler
+| Commit | Type | Description |
+| -- | -- | -- |
+| [b0c1a90f55](https://github.com/angular/angular/commit/b0c1a90f55ecfafb4fd5c22cdd1b4a5f12573f22) | fix | Produce diagnositc if directive used in host binding is not exported ([#49792](https://github.com/angular/angular/pull/49792)) |
+### compiler-cli
+| Commit | Type | Description |
+| -- | -- | -- |
+| [a40529af2e](https://github.com/angular/angular/commit/a40529af2e2923f1dbdae8898a0e94e9e63a3fcf) | fix | Catch FatalDiagnosticError during template type checking ([#49792](https://github.com/angular/angular/pull/49792)) |
+### core
+| Commit | Type | Description |
+| -- | -- | -- |
+| [702ec90110](https://github.com/angular/angular/commit/702ec901100b2d84efdf0b16d8347f8b28b94d5d) | fix | When using setInput, mark view dirty in same way as `markForCheck` ([#49747](https://github.com/angular/angular/pull/49747)) |
+## Special Thanks
+Alan Agius, Andrew Kushnir, Andrew Scott, Kristiyan Kostadinov, Matthieu Riegler and Nikola Kološnjaji
+
+<!-- CHANGELOG SPLIT MARKER -->
+
+<a name="13.4.0"></a>
+# 13.4.0 (2023-04-06)
+### common
+| Commit | Type | Description |
+| -- | -- | -- |
+| [ae34dbca1b](https://github.com/angular/angular/commit/ae34dbca1be10b0245a751bb0596599e95d7b4aa) | feat | Backport NgOptimizedImage to v13 |
+## Special Thanks
+Alex Castle and Paul Gschwendtner
 
 <!-- CHANGELOG SPLIT MARKER -->
 

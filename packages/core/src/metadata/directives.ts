@@ -98,6 +98,7 @@ export interface DirectiveDecorator {
    *    accessible for components outside of the NgModule.
    *
    *
+   * @Annotation
    */
   (obj?: Directive): TypeDecorator;
 
@@ -110,6 +111,7 @@ export interface DirectiveDecorator {
 /**
  * Directive decorator and metadata.
  *
+ * @Annotation
  * @publicApi
  */
 export interface Directive {
@@ -180,7 +182,12 @@ export interface Directive {
    * ```
    *
    */
-  inputs?: ({name: string, alias?: string, required?: boolean}|string)[];
+  inputs?: ({
+    name: string,
+    alias?: string,
+    required?: boolean,
+    transform?: (value: any) => any,
+  }|string)[];
 
   /**
    * Enumerates the set of event-bound output properties.
@@ -289,6 +296,7 @@ export interface Directive {
    * }
    * ```
    *
+   * @Annotation
    */
   queries?: {[key: string]: any};
 
@@ -333,6 +341,13 @@ export interface Directive {
    * guide](guide/standalone-components).
    */
   standalone?: boolean;
+
+  /**
+   * // TODO(signals): Remove internal and add public documentation
+   *
+   * @internal
+   */
+  signals?: boolean;
 
   /**
    * Standalone directives that should be applied to the host whenever the directive is matched.
@@ -501,6 +516,7 @@ export interface ComponentDecorator {
    * To preserve sequences of whitespace characters, use the
    * `ngPreserveWhitespaces` attribute.
    *
+   * @Annotation
    */
   (obj: Component): TypeDecorator;
   /**
@@ -618,6 +634,12 @@ export interface Component extends Directive {
   standalone?: boolean;
 
   /**
+   * // TODO(signals): Remove internal and add public documentation.
+   * @internal
+   */
+  signals?: boolean;
+
+  /**
    * The imports property specifies the standalone component's template dependencies — those
    * directives, components, and pipes that can be used within its template. Standalone components
    * can import other standalone components, directives, and pipes as well as existing NgModules.
@@ -646,7 +668,7 @@ export interface Component extends Directive {
 /**
  * Component decorator and metadata.
  *
-
+ * @Annotation
  * @publicApi
  */
 export const Component: ComponentDecorator = makeDecorator(
@@ -724,7 +746,7 @@ export interface Pipe {
 }
 
 /**
-
+ * @Annotation
  * @publicApi
  */
 export const Pipe: PipeDecorator = makeDecorator(
@@ -800,10 +822,15 @@ export interface Input {
    * Whether the input is required for the directive to function.
    */
   required?: boolean;
+
+  /**
+   * Function with which to transform the input value before assigning it to the directive instance.
+   */
+  transform?: (value: any) => any;
 }
 
 /**
-
+ * @Annotation
  * @publicApi
  */
 export const Input: InputDecorator =
@@ -853,7 +880,7 @@ export interface Output {
 }
 
 /**
-
+ * @Annotation
  * @publicApi
  */
 export const Output: OutputDecorator = makePropDecorator('Output', (alias?: string) => ({alias}));
@@ -912,7 +939,7 @@ export interface HostBinding {
 }
 
 /**
-
+ * @Annotation
  * @publicApi
  */
 export const HostBinding: HostBindingDecorator =
@@ -1016,7 +1043,7 @@ export interface HostListener {
  * The global target names that can be used to prefix an event name are
  * `document:`, `window:` and `body:`.
  *
-
+ * @Annotation
  * @publicApi
  */
 export const HostListener: HostListenerDecorator =

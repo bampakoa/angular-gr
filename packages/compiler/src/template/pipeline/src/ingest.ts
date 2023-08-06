@@ -6,19 +6,22 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {ConstantPool} from '../../../constant_pool';
 import * as e from '../../../expression_parser/ast';
 import * as o from '../../../output/output_ast';
 import * as t from '../../../render3/r3_ast';
 import * as ir from '../ir';
 
 import {ComponentCompilation, ViewCompilation} from './compilation';
+import {BINARY_OPERATORS} from './conversion';
 
 /**
  * Process a template AST and convert it into a `ComponentCompilation` in the intermediate
  * representation.
  */
-export function ingest(componentName: string, template: t.Node[]): ComponentCompilation {
-  const cpl = new ComponentCompilation(componentName);
+export function ingest(
+    componentName: string, template: t.Node[], constantPool: ConstantPool): ComponentCompilation {
+  const cpl = new ComponentCompilation(componentName, constantPool);
   ingestNodes(cpl.root, template);
   return cpl;
 }
@@ -122,6 +125,14 @@ function convertAst(ast: e.AST, cpl: ComponentCompilation): o.Expression {
     } else {
       return new o.ReadPropExpr(convertAst(ast.receiver, cpl), ast.name);
     }
+  } else if (ast instanceof e.PropertyWrite) {
+    return new o.WritePropExpr(convertAst(ast.receiver, cpl), ast.name, convertAst(ast.value, cpl));
+  } else if (ast instanceof e.KeyedWrite) {
+    return new o.WriteKeyExpr(
+        convertAst(ast.receiver, cpl),
+        convertAst(ast.key, cpl),
+        convertAst(ast.value, cpl),
+    );
   } else if (ast instanceof e.Call) {
     if (ast.receiver instanceof e.ImplicitReceiver) {
       throw new Error(`Unexpected ImplicitReceiver`);
@@ -131,8 +142,42 @@ function convertAst(ast: e.AST, cpl: ComponentCompilation): o.Expression {
     }
   } else if (ast instanceof e.LiteralPrimitive) {
     return o.literal(ast.value);
+  } else if (ast instanceof e.Binary) {
+    const operator = BINARY_OPERATORS.get(ast.operation);
+    if (operator === undefined) {
+      throw new Error(`AssertionError: unknown binary operator ${ast.operation}`);
+    }
+    return new o.BinaryOperatorExpr(
+        operator, convertAst(ast.left, cpl), convertAst(ast.right, cpl));
   } else if (ast instanceof e.ThisReceiver) {
     return new ir.ContextExpr(cpl.root.xref);
+  } else if (ast instanceof e.KeyedRead) {
+    return new o.ReadKeyExpr(convertAst(ast.receiver, cpl), convertAst(ast.key, cpl));
+  } else if (ast instanceof e.Chain) {
+    throw new Error(`AssertionError: Chain in unknown context`);
+  } else if (ast instanceof e.LiteralMap) {
+    const entries = ast.keys.map((key, idx) => {
+      const value = ast.values[idx];
+      return new o.LiteralMapEntry(key.key, convertAst(value, cpl), key.quoted);
+    });
+    return new o.LiteralMapExpr(entries);
+  } else if (ast instanceof e.LiteralArray) {
+    return new o.LiteralArrayExpr(ast.expressions.map(expr => convertAst(expr, cpl)));
+  } else if (ast instanceof e.Conditional) {
+    return new o.ConditionalExpr(
+        convertAst(ast.condition, cpl),
+        convertAst(ast.trueExp, cpl),
+        convertAst(ast.falseExp, cpl),
+    );
+  } else if (ast instanceof e.BindingPipe) {
+    return new ir.PipeBindingExpr(
+        cpl.allocateXrefId(),
+        ast.name,
+        [
+          convertAst(ast.exp, cpl),
+          ...ast.args.map(arg => convertAst(arg, cpl)),
+        ],
+    );
   } else {
     throw new Error(`Unhandled expression type: ${ast.constructor.name}`);
   }
@@ -154,7 +199,6 @@ function ingestAttributes(op: ir.ElementOpBase, element: t.Element|t.Template): 
   for (const output of element.outputs) {
     op.attributes.add(ir.ElementAttributeKind.Binding, output.name, null);
   }
-
   if (element instanceof t.Template) {
     for (const attr of element.templateAttrs) {
       // TODO: what do we do about the value here?
@@ -170,24 +214,60 @@ function ingestAttributes(op: ir.ElementOpBase, element: t.Element|t.Template): 
 function ingestBindings(
     view: ViewCompilation, op: ir.ElementOpBase, element: t.Element|t.Template): void {
   if (element instanceof t.Template) {
-    for (const attr of element.templateAttrs) {
-      if (typeof attr.value === 'string') {
-        // TODO: do we need to handle static attribute bindings here?
-      } else {
-        view.update.push(ir.createPropertyOp(op.xref, attr.name, convertAst(attr.value, view.tpl)));
+    for (const attr of [...element.templateAttrs, ...element.inputs]) {
+      if (!(attr instanceof t.BoundAttribute)) {
+        continue;
       }
+      ingestPropertyBinding(view, op.xref, attr.name, attr.value);
     }
   } else {
     for (const input of element.inputs) {
-      view.update.push(ir.createPropertyOp(op.xref, input.name, convertAst(input.value, view.tpl)));
+      ingestPropertyBinding(view, op.xref, input.name, input.value);
     }
 
     for (const output of element.outputs) {
       const listenerOp = ir.createListenerOp(op.xref, output.name, op.tag);
-      listenerOp.handlerOps.push(
-          ir.createStatementOp(new o.ReturnStatement(convertAst(output.handler, view.tpl))));
+      // if output.handler is a chain, then push each statement from the chain separately, and
+      // return the last one?
+      let inputExprs: e.AST[];
+      let handler: e.AST = output.handler;
+      if (handler instanceof e.ASTWithSource) {
+        handler = handler.ast;
+      }
+
+      if (handler instanceof e.Chain) {
+        inputExprs = handler.expressions;
+      } else {
+        inputExprs = [handler];
+      }
+
+      if (inputExprs.length === 0) {
+        throw new Error('Expected listener to have non-empty expression list.');
+      }
+
+      const expressions = inputExprs.map(expr => convertAst(expr, view.tpl));
+      const returnExpr = expressions.pop()!;
+
+      for (const expr of expressions) {
+        const stmtOp = ir.createStatementOp<ir.UpdateOp>(new o.ExpressionStatement(expr));
+        listenerOp.handlerOps.push(stmtOp);
+      }
+      listenerOp.handlerOps.push(ir.createStatementOp(new o.ReturnStatement(returnExpr)));
       view.create.push(listenerOp);
     }
+  }
+}
+
+function ingestPropertyBinding(
+    view: ViewCompilation, xref: ir.XrefId, name: string, value: e.AST): void {
+  if (value instanceof e.ASTWithSource) {
+    value = value.ast;
+  }
+  if (value instanceof e.Interpolation) {
+    view.update.push(ir.createInterpolatePropertyOp(
+        xref, name, value.strings, value.expressions.map(expr => convertAst(expr, view.tpl))));
+  } else {
+    view.update.push(ir.createPropertyOp(xref, name, convertAst(value, view.tpl)));
   }
 }
 

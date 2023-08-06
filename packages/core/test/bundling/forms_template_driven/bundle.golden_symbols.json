@@ -54,6 +54,9 @@
     "name": "BaseControlValueAccessor"
   },
   {
+    "name": "BehaviorSubject"
+  },
+  {
     "name": "BrowserDomAdapter"
   },
   {
@@ -153,6 +156,9 @@
     "name": "DefaultValueAccessor"
   },
   {
+    "name": "DistinctUntilChangedSubscriber"
+  },
+  {
     "name": "DomAdapter"
   },
   {
@@ -172,9 +178,6 @@
   },
   {
     "name": "ENVIRONMENT_INITIALIZER"
-  },
-  {
-    "name": "ERROR_ORIGINAL_ERROR"
   },
   {
     "name": "EVENT_MANAGER_PLUGINS"
@@ -232,6 +235,9 @@
   },
   {
     "name": "INTERNAL_APPLICATION_ERROR_HANDLER"
+  },
+  {
+    "name": "InitialRenderPendingTasks"
   },
   {
     "name": "InjectFlags"
@@ -330,12 +336,6 @@
     "name": "NG_TEMPLATE_SELECTOR"
   },
   {
-    "name": "NG_TEMP_TOKEN_PATH"
-  },
-  {
-    "name": "NG_TOKEN_PATH"
-  },
-  {
     "name": "NG_VALIDATORS"
   },
   {
@@ -355,9 +355,6 @@
   },
   {
     "name": "NO_CHANGE"
-  },
-  {
-    "name": "NO_NEW_LINE"
   },
   {
     "name": "NO_PARENT_INJECTOR"
@@ -429,9 +426,6 @@
     "name": "Optional"
   },
   {
-    "name": "PARAMETERS"
-  },
-  {
     "name": "PLATFORM_DESTROY_LISTENERS"
   },
   {
@@ -441,13 +435,7 @@
     "name": "PLATFORM_INITIALIZER"
   },
   {
-    "name": "PLATFORM_SERVER_ID"
-  },
-  {
     "name": "PRESERVE_HOST_CONTENT"
-  },
-  {
-    "name": "PRESERVE_HOST_CONTENT_DEFAULT"
   },
   {
     "name": "PlatformRef"
@@ -507,9 +495,6 @@
     "name": "SIMPLE_CHANGES_STORE"
   },
   {
-    "name": "SOURCE"
-  },
-  {
     "name": "SafeSubscriber"
   },
   {
@@ -550,6 +535,12 @@
   },
   {
     "name": "Subscription"
+  },
+  {
+    "name": "SwitchMapOperator"
+  },
+  {
+    "name": "SwitchMapSubscriber"
   },
   {
     "name": "TESTABILITY"
@@ -597,9 +588,6 @@
     "name": "VE_ViewContainerRef"
   },
   {
-    "name": "VIEW_REFS"
-  },
-  {
     "name": "ViewContainerRef"
   },
   {
@@ -640,9 +628,6 @@
   },
   {
     "name": "_enable_super_gross_mode_that_will_cause_bad_things"
-  },
-  {
-    "name": "_findMatchingDehydratedViewImpl"
   },
   {
     "name": "_getInsertInFrontOfRNodeWithI18n"
@@ -747,6 +732,9 @@
     "name": "bloomHasToken"
   },
   {
+    "name": "booleanAttribute"
+  },
+  {
     "name": "callHook"
   },
   {
@@ -766,9 +754,6 @@
   },
   {
     "name": "clearViewRefreshFlag"
-  },
-  {
-    "name": "coerceToBoolean"
   },
   {
     "name": "collectNativeNodes"
@@ -864,6 +849,18 @@
     "name": "detachView"
   },
   {
+    "name": "detectChangesInChildComponents"
+  },
+  {
+    "name": "detectChangesInComponent"
+  },
+  {
+    "name": "detectChangesInEmbeddedViews"
+  },
+  {
+    "name": "detectChangesInView"
+  },
+  {
     "name": "detectChangesInternal"
   },
   {
@@ -915,9 +912,6 @@
     "name": "findAttrIndexInNode"
   },
   {
-    "name": "findMatchingDehydratedView"
-  },
-  {
     "name": "findStylingValue"
   },
   {
@@ -940,6 +934,9 @@
   },
   {
     "name": "from"
+  },
+  {
+    "name": "fromArray"
   },
   {
     "name": "generateInitialInputs"
@@ -1185,6 +1182,9 @@
     "name": "injectableDefOrInjectorDefFactory"
   },
   {
+    "name": "innerSubscribe"
+  },
+  {
     "name": "insertBloom"
   },
   {
@@ -1276,6 +1276,9 @@
   },
   {
     "name": "isPromise2"
+  },
+  {
+    "name": "isScheduler"
   },
   {
     "name": "isStableFactory"
@@ -1470,12 +1473,6 @@
     "name": "refCount"
   },
   {
-    "name": "refreshComponent"
-  },
-  {
-    "name": "refreshContainsDirtyView"
-  },
-  {
     "name": "refreshContentQueries"
   },
   {
@@ -1620,6 +1617,9 @@
     "name": "setupStaticAttributes"
   },
   {
+    "name": "share"
+  },
+  {
     "name": "shareSubjectFactory"
   },
   {
@@ -1639,6 +1639,9 @@
   },
   {
     "name": "subscribeToArray"
+  },
+  {
+    "name": "switchMap"
   },
   {
     "name": "throwProviderNotFoundError"
@@ -1672,9 +1675,6 @@
   },
   {
     "name": "urlParsingNode"
-  },
-  {
-    "name": "viewAttachedToChangeDetector"
   },
   {
     "name": "walkProviderTree"

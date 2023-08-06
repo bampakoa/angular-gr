@@ -10,7 +10,7 @@ import {Injector} from '../../di/injector';
 import {ErrorHandler} from '../../error_handler';
 import {RuntimeError, RuntimeErrorCode} from '../../errors';
 import {DehydratedView} from '../../hydration/interfaces';
-import {SKIP_HYDRATION_ATTR_NAME} from '../../hydration/skip_hydration';
+import {hasInSkipHydrationBlockFlag, hasSkipHydrationAttrOnRElement, SKIP_HYDRATION_ATTR_NAME} from '../../hydration/skip_hydration';
 import {PRESERVE_HOST_CONTENT, PRESERVE_HOST_CONTENT_DEFAULT} from '../../hydration/tokens';
 import {processTextNodeMarkersBeforeHydration} from '../../hydration/utils';
 import {DoCheck, OnChanges, OnInit} from '../../interface/lifecycle_hooks';
@@ -42,7 +42,7 @@ import {clearElementContents, updateTextNode} from '../node_manipulation';
 import {isInlineTemplate, isNodeMatchingSelectorList} from '../node_selector_matcher';
 import {profiler, ProfilerEvent} from '../profiler';
 import {commitLViewConsumerIfHasProducers, getReactiveLViewConsumer} from '../reactive_lview_consumer';
-import {getBindingsEnabled, getCurrentDirectiveIndex, getCurrentParentTNode, getCurrentTNodePlaceholderOk, getSelectedIndex, isCurrentTNodeParent, isInCheckNoChangesMode, isInI18nBlock, leaveView, setBindingRootForHostBindings, setCurrentDirectiveIndex, setCurrentQueryIndex, setCurrentTNode, setSelectedIndex} from '../state';
+import {getBindingsEnabled, getCurrentDirectiveIndex, getCurrentParentTNode, getCurrentTNodePlaceholderOk, getSelectedIndex, isCurrentTNodeParent, isInCheckNoChangesMode, isInI18nBlock, isInSkipHydrationBlock, leaveView, setBindingRootForHostBindings, setCurrentDirectiveIndex, setCurrentQueryIndex, setCurrentTNode, setSelectedIndex} from '../state';
 import {NO_CHANGE} from '../tokens';
 import {mergeHostAttrs} from '../util/attrs_utils';
 import {INTERPOLATION_DELIMITER} from '../util/misc_utils';
@@ -497,7 +497,7 @@ let _applyRootElementTransformImpl: typeof applyRootElementTransformImpl =
  * @param rootElement the app root HTML Element
  */
 export function applyRootElementTransformImpl(rootElement: HTMLElement) {
-  if (rootElement.hasAttribute(SKIP_HYDRATION_ATTR_NAME)) {
+  if (hasSkipHydrationAttrOnRElement(rootElement)) {
     // Handle a situation when the `ngSkipHydration` attribute is applied
     // to the root node of an application. In this case, we should clear
     // the contents and render everything from scratch.
@@ -584,6 +584,10 @@ export function createTNode(
   ngDevMode && ngDevMode.tNode++;
   ngDevMode && tParent && assertTNodeForTView(tParent, tView);
   let injectorIndex = tParent ? tParent.injectorIndex : -1;
+  let flags = 0;
+  if (isInSkipHydrationBlock()) {
+    flags |= TNodeFlags.inSkipHydrationBlock;
+  }
   const tNode = {
     type,
     index,
@@ -594,7 +598,7 @@ export function createTNode(
     directiveStylingLast: -1,
     componentOffset: -1,
     propertyBindings: null,
-    flags: 0,
+    flags,
     providerIndexes: 0,
     value: value,
     attrs: attrs,
@@ -1226,12 +1230,17 @@ function addComponentLogic<T>(lView: LView, hostTNode: TElementNode, def: Compon
   // Only component views should be added to the view tree directly. Embedded views are
   // accessed through their containers because they may be removed / re-added later.
   const rendererFactory = lView[ENVIRONMENT].rendererFactory;
+  let lViewFlags = LViewFlags.CheckAlways;
+  if (def.signals) {
+    lViewFlags = LViewFlags.SignalView;
+  } else if (def.onPush) {
+    lViewFlags = LViewFlags.Dirty;
+  }
   const componentView = addToViewTree(
       lView,
       createLView(
-          lView, tView, null, def.onPush ? LViewFlags.Dirty : LViewFlags.CheckAlways, native,
-          hostTNode as TElementNode, null, rendererFactory.createRenderer(native, def), null, null,
-          null));
+          lView, tView, null, lViewFlags, native, hostTNode as TElementNode, null,
+          rendererFactory.createRenderer(native, def), null, null, null));
 
   // Component view will always be created before any injected LContainers,
   // so this is a regular element, wrap it with the component view
@@ -1302,6 +1311,10 @@ function writeToDirectiveInput<T>(
     def: DirectiveDef<T>, instance: T, publicName: string, privateName: string, value: string) {
   const prevConsumer = setActiveConsumer(null);
   try {
+    const inputTransforms = def.inputTransforms;
+    if (inputTransforms !== null && inputTransforms.hasOwnProperty(privateName)) {
+      value = inputTransforms[privateName].call(instance, value);
+    }
     if (def.setInput !== null) {
       def.setInput(instance, value, publicName, privateName);
     } else {

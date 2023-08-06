@@ -23,6 +23,15 @@ export function phaseVarCounting(cpl: ComponentCompilation): void {
       }
 
       ir.visitExpressionsInOp(op, expr => {
+        if (!ir.isIrExpression(expr)) {
+          return;
+        }
+
+        // Some expressions require knowledge of the number of variable slots consumed.
+        if (ir.hasUsesVarOffsetTrait(expr)) {
+          expr.varOffset = varCount;
+        }
+
         if (ir.hasConsumesVarsTrait(expr)) {
           varCount += varsUsedByIrExpression(expr);
         }
@@ -58,11 +67,25 @@ function varsUsedByOp(op: (ir.CreateOp|ir.UpdateOp)&ir.ConsumesVarsTrait): numbe
     case ir.OpKind.InterpolateText:
       // `ir.InterpolateTextOp`s use a variable slot for each dynamic expression.
       return op.expressions.length;
+    case ir.OpKind.InterpolateProperty:
+      // `ir.InterpolatePropertyOp`s use a variable slot for each dynamic expression, plus one for
+      // the result.
+      return 1 + op.expressions.length;
     default:
       throw new Error(`Unhandled op: ${ir.OpKind[op.kind]}`);
   }
 }
 
-function varsUsedByIrExpression(expr: ir.Expression&ir.ConsumesVarsTrait): number {
-  return 0;
+export function varsUsedByIrExpression(expr: ir.Expression&ir.ConsumesVarsTrait): number {
+  switch (expr.kind) {
+    case ir.ExpressionKind.PureFunctionExpr:
+      return 1 + expr.args.length;
+    case ir.ExpressionKind.PipeBinding:
+      return 1 + expr.args.length;
+    case ir.ExpressionKind.PipeBindingVariadic:
+      return 1 + expr.numArgs;
+    default:
+      throw new Error(
+          `AssertionError: unhandled ConsumesVarsTrait expression ${expr.constructor.name}`);
+  }
 }

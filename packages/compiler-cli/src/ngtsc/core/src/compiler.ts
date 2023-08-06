@@ -624,9 +624,14 @@ export class NgCompiler {
     ];
 
     const afterDeclarations: ts.TransformerFactory<ts.SourceFile>[] = [];
-    if (compilation.dtsTransforms !== null) {
-      afterDeclarations.push(
-          declarationTransformFactory(compilation.dtsTransforms, importRewriter));
+
+    // In local compilation mode we don't make use of .d.ts files for Angular compilation, so their
+    // transformation can be ditched.
+    if (this.options.compilationMode !== 'experimental-local' &&
+        compilation.dtsTransforms !== null) {
+      afterDeclarations.push(declarationTransformFactory(
+          compilation.dtsTransforms, compilation.reflector, compilation.refEmitter,
+          importRewriter));
     }
 
     // Only add aliasing re-exports to the .d.ts output if the `AliasingHost` requests it.

@@ -54,6 +54,18 @@ npm install angular-in-memory-web-api --save
 
 </code-example>
 
+Δημιουργήστε το class `src/app/in-memory-data.service.ts` με την ακόλουθη εντολή:
+
+<code-example format="shell" language="shell">
+
+ng generate service InMemoryData
+
+</code-example>
+
+Αντικαταστήστε τα προεπιλεγμένα περιεχόμενα του `in-memory-data.service.ts` με τα εξής:
+
+<code-example header="src/app/in-memory-data.service.ts" path="toh-pt6/src/app/in-memory-data.service.ts" region="init"></code-example>
+
 Στο `AppModule`, κάντε import το `HttpClientInMemoryWebApiModule` και το `InMemoryDataService` class,
 που δημιουργείτε στην συνέχεια.
 
@@ -66,18 +78,6 @@ npm install angular-in-memory-web-api --save
 
 Η μέθοδος διαμόρφωσης `forRoot()` παίρνει ένα class `InMemoryDataService`
 που εκκινεί τη βάση δεδομένων στη μνήμη.
-
-Δημιουργήστε το class `src/app/in-memory-data.service.ts` με την ακόλουθη εντολή:
-
-<code-example format="shell" language="shell">
-
-ng generate service InMemoryData
-
-</code-example>
-
-Αντικαταστήστε τα προεπιλεγμένα περιεχόμενα του `in-memory-data.service.ts` με τα εξής:
-
-<code-example header="src/app/in-memory-data.service.ts" path="toh-pt6/src/app/in-memory-data.service.ts" region="init"></code-example>
 
 Το αρχείο `in-memory-data.service.ts` αναλαμβάνει τη λειτουργία του `mock-heroes.ts`.
 Μην διαγράψετε ακόμα το `mock-heroes.ts`. Το χρειάζεστε για μερικά ακόμη βήματα αυτού του σεμιναρίου.
@@ -194,7 +194,7 @@ ng generate service InMemoryData
 
 ### Πατήστε στο Observable
 
-Η μέθοδος `getHero()` χρησιμοποιείται στη ροή των τιμών του observable
+Η μέθοδος `getHeros()` χρησιμοποιείται στη ροή των τιμών του observable
 και στέλνει ένα μήνυμα, χρησιμοποιώντας τη μέθοδο `log()`, στην περιοχή μηνυμάτων στο κάτω μέρος της σελίδας.
 
 Ο τελεστής `tap()` του RxJS ενεργοποιεί αυτή την ικανότητα, κοιτώντας τις τιμές του observable, κάνοντας κάτι με αυτές τις τιμές,

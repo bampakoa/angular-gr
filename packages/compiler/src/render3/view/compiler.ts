@@ -84,6 +84,9 @@ function baseDirectiveFields(
   if (meta.isStandalone) {
     definitionMap.set('standalone', o.literal(true));
   }
+  if (meta.isSignal) {
+    definitionMap.set('signals', o.literal(true));
+  }
 
   return definitionMap;
 }
@@ -99,6 +102,8 @@ function addFeatures(
 
   const providers = meta.providers;
   const viewProviders = (meta as R3ComponentMetadata<R3TemplateDependency>).viewProviders;
+  const inputKeys = Object.keys(meta.inputs);
+
   if (providers || viewProviders) {
     const args = [providers || new o.LiteralArrayExpr([])];
     if (viewProviders) {
@@ -106,7 +111,12 @@ function addFeatures(
     }
     features.push(o.importExpr(R3.ProvidersFeature).callFn(args));
   }
-
+  for (const key of inputKeys) {
+    if (meta.inputs[key].transformFunction !== null) {
+      features.push(o.importExpr(R3.InputTransformsFeatureFeature));
+      break;
+    }
+  }
   if (meta.usesInheritance) {
     features.push(o.importExpr(R3.InheritDefinitionFeature));
   }
@@ -224,7 +234,7 @@ export function compileComponentFromMetadata(
   } else {
     // This path compiles the template using the prototype template pipeline. First the template is
     // ingested into IR:
-    const tpl = ingest(meta.name, meta.template.nodes);
+    const tpl = ingest(meta.name, meta.template.nodes, constantPool);
 
     // Then the IR is transformed to prepare it for cod egeneration.
     transformTemplate(tpl);
@@ -302,6 +312,7 @@ export function createComponentType(meta: R3ComponentMetadata<R3TemplateDependen
   typeParams.push(stringArrayAsType(meta.template.ngContentSelectors));
   typeParams.push(o.expressionType(o.literal(meta.isStandalone)));
   typeParams.push(createHostDirectivesType(meta));
+  typeParams.push(o.expressionType(o.literal(meta.isSignal)));
   return o.expressionType(o.importExpr(R3.ComponentDeclaration, typeParams));
 }
 
@@ -483,6 +494,7 @@ export function createDirectiveType(meta: R3DirectiveMetadata): o.Type {
   typeParams.push(o.NONE_TYPE);
   typeParams.push(o.expressionType(o.literal(meta.isStandalone)));
   typeParams.push(createHostDirectivesType(meta));
+  typeParams.push(o.expressionType(o.literal(meta.isSignal)));
   return o.expressionType(o.importExpr(R3.DirectiveDeclaration, typeParams));
 }
 

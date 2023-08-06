@@ -49,6 +49,8 @@ export const enum RuntimeErrorCode {
     // (undocumented)
     HYDRATION_NODE_MISMATCH = -500,
     // (undocumented)
+    HYDRATION_STABLE_TIMEDOUT = -506,
+    // (undocumented)
     IMPORT_PROVIDERS_FROM_STANDALONE = 800,
     // (undocumented)
     INJECTOR_ALREADY_DESTROYED = 205,
@@ -68,6 +70,8 @@ export const enum RuntimeErrorCode {
     INVALID_MULTI_PROVIDER = -209,
     // (undocumented)
     INVALID_SKIP_HYDRATION_HOST = -504,
+    // (undocumented)
+    MISSING_DOCUMENT = 210,
     // (undocumented)
     MISSING_GENERATED_DEF = 906,
     // (undocumented)

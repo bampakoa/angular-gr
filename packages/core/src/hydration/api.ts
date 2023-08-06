@@ -14,7 +14,6 @@ import {Console} from '../console';
 import {ENVIRONMENT_INITIALIZER, EnvironmentProviders, Injector, makeEnvironmentProviders} from '../di';
 import {inject} from '../di/injector_compatibility';
 import {formatRuntimeError, RuntimeErrorCode} from '../errors';
-import {InitialRenderPendingTasks} from '../initial_render_pending_tasks';
 import {enableLocateOrCreateContainerRefImpl} from '../linker/view_container_ref';
 import {enableLocateOrCreateElementNodeImpl} from '../render3/instructions/element';
 import {enableLocateOrCreateElementContainerNodeImpl} from '../render3/instructions/element_container';
@@ -22,6 +21,7 @@ import {enableApplyRootElementTransformImpl} from '../render3/instructions/share
 import {enableLocateOrCreateContainerAnchorImpl} from '../render3/instructions/template';
 import {enableLocateOrCreateTextNodeImpl} from '../render3/instructions/text';
 import {TransferState} from '../transfer_state';
+import {NgZone} from '../zone';
 
 import {cleanupDehydratedViews} from './cleanup';
 import {IS_HYDRATION_DOM_REUSE_ENABLED, PRESERVE_HOST_CONTENT} from './tokens';
@@ -34,6 +34,12 @@ import {enableFindMatchingDehydratedViewImpl} from './views';
  * prevents adding it multiple times.
  */
 let isHydrationSupportEnabled = false;
+
+/**
+ * Defines a period of time that Angular waits for the `ApplicationRef.isStable` to emit `true`.
+ * If there was no event with the `true` value during this time, Angular reports a warning.
+ */
+const APPLICATION_IS_STABLE_TIMEOUT = 10_000;
 
 /**
  * Brings the necessary hydration code in tree-shakable manner.
@@ -78,7 +84,7 @@ function printHydrationStats(injector: Injector) {
       `and ${ngDevMode!.hydratedNodes} node(s), ` +
       `${ngDevMode!.componentsSkippedHydration} component(s) were skipped. ` +
       `Note: this feature is in Developer Preview mode. ` +
-      `Learn more at https://next.angular.io/guide/hydration.`;
+      `Learn more at https://angular.io/guide/hydration.`;
   // tslint:disable-next-line:no-console
   console.log(message);
 }
@@ -87,11 +93,24 @@ function printHydrationStats(injector: Injector) {
 /**
  * Returns a Promise that is resolved when an application becomes stable.
  */
-function whenStable(
-    appRef: ApplicationRef, pendingTasks: InitialRenderPendingTasks): Promise<unknown> {
+function whenStable(appRef: ApplicationRef, injector: Injector): Promise<void> {
   const isStablePromise = appRef.isStable.pipe(first((isStable: boolean) => isStable)).toPromise();
-  const pendingTasksPromise = pendingTasks.whenAllTasksComplete;
-  return Promise.allSettled([isStablePromise, pendingTasksPromise]);
+  if (typeof ngDevMode !== 'undefined' && ngDevMode) {
+    const timeoutTime = APPLICATION_IS_STABLE_TIMEOUT;
+    const console = injector.get(Console);
+    const ngZone = injector.get(NgZone);
+
+    // The following call should not and does not prevent the app to become stable
+    // We cannot use RxJS timer here because the app would remain unstable.
+    // This also avoids an extra change detection cycle.
+    const timeoutId = ngZone.runOutsideAngular(() => {
+      return setTimeout(() => logWarningOnStableTimedout(timeoutTime, console), timeoutTime);
+    });
+
+    isStablePromise.finally(() => clearTimeout(timeoutId));
+  }
+
+  return isStablePromise.then(() => {});
 }
 
 /**
@@ -163,10 +182,9 @@ export function withDomHydration(): EnvironmentProviders {
       useFactory: () => {
         if (isBrowser() && inject(IS_HYDRATION_DOM_REUSE_ENABLED)) {
           const appRef = inject(ApplicationRef);
-          const pendingTasks = inject(InitialRenderPendingTasks);
           const injector = inject(Injector);
           return () => {
-            whenStable(appRef, pendingTasks).then(() => {
+            whenStable(appRef, injector).then(() => {
               // Wait until an app becomes stable and cleanup all views that
               // were not claimed during the application bootstrap process.
               // The timing is similar to when we start the serialization process
@@ -184,4 +202,18 @@ export function withDomHydration(): EnvironmentProviders {
       multi: true,
     }
   ]);
+}
+
+/**
+ *
+ * @param time The time in ms until the stable timedout warning message is logged
+ */
+function logWarningOnStableTimedout(time: number, console: Console): void {
+  const message =
+      `Angular hydration expected the ApplicationRef.isStable() to emit \`true\`, but it ` +
+      `didn't happen within ${
+          time}ms. Angular hydration logic depends on the application becoming stable ` +
+      `as a signal to complete hydration process.`;
+
+  console.warn(formatRuntimeError(RuntimeErrorCode.HYDRATION_STABLE_TIMEDOUT, message));
 }
