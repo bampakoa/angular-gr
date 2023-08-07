@@ -3,6 +3,7 @@ const path = require('path');
 const { exec } = require('child_process');
 
 const angularGrPath = path.resolve('.');
+const angularGrIoPath = path.resolve('.', 'aio');
 const angularPath = path.resolve('..', 'angular');
 const angularIoPath = path.resolve('..', 'angular', 'aio');
 const translationsPath = path.resolve('..', 'aio-translations');
@@ -16,8 +17,17 @@ if (angularVersion.length === 0) {
 // Αφαιρούμε τα περιεχόμενα του angular-gr
 fs.readdir(angularGrPath, (_, entries) => {
   for(entry of entries) {
-    if (!['.git', 'upgrade.js', '.github', 'node_modules'].includes(entry)) {
+    if (!['.git', 'upgrade.js', '.github', 'node_modules', 'restore.js', 'aio'].includes(entry)) {
       fs.rmSync(path.join(angularGrPath, entry), { recursive: true, force: true });
+    }
+  }
+});
+
+// Αφαιρούμε τα περιεχόμενα του aio μέσα από το angular-gr
+fs.readdir(angularGrIoPath, (_, entries) => {
+  for(entry of entries) {
+    if (entry !== 'node_modules') {
+      fs.rmSync(path.join(angularGrIoPath, entry), { recursive: true, force: true });
     }
   }
 });
