@@ -1,6 +1,6 @@
 # Επισκόπηση των Angular Components
 
-Τα components είναι το κύριο δομικό στοιχείο για τις Angular εφαρμογές. Κάθε component αποτελείται από:
+Τα components είναι τα βασικά δομικά στοιχεία για τις Angular εφαρμογές. Κάθε component αποτελείται από:
 
 * Ένα HTML template που δηλώνει τι απεικονίζεται στη σελίδα
 * Ένα TypeScript class που ορίζει τη συμπεριφορά
@@ -33,10 +33,10 @@
 
 Για να δημιουργήσετε ένα component χρησιμοποιώντας το Angular CLI:
 
-1. Απο το παράθυρο τερματικού, μεταβείτε στον φάκελο που περιέχει την εφαρμογή σας.
+1. Απο ένα παράθυρο τερματικού, μεταβείτε στον φάκελο που περιέχει την εφαρμογή σας.
 2. Εκτελέστε την εντολή `ng generate component <component-name>`, όπου `<component-name>` είναι το όνομα του νέου component σας.
 
-Από προεπιλογή, αυτή η εντολή δημιουργεί τα ακόλουθα:
+Αυτή η εντολή δημιουργεί τα ακόλουθα:
 
 * Ένα φάκελο με το όνομα του component
 * Ένα component αρχείο, `<component-name>.component.ts`
@@ -49,13 +49,13 @@
 <div class="alert is-helpful">
 
 Μπορείτε να αλλάξετε τον τρόπο που το `ng generate component` δημιουργεί νέα components.
-Για περισσότερες πληροφορίες, δείτε [ng generate component](cli/generate#component-command) στην τεκμηρίωση του Angular CLI.
+Για περισσότερες πληροφορίες, δείτε το [ng generate component](cli/generate#component-command) στην τεκμηρίωση του Angular CLI.
 
 </div>
 
 ### Δημιουργία ενός component χειροκίνητα
 
-Αν και το Angular CLI είναι ο καλύτερος τρόπος για να δημιουργήσετε ένα Angular component, μπορείτε επίσης να δημιουργήσετε ένα component με χειροκίνητα.
+Αν και το Angular CLI είναι ο καλύτερος τρόπος για να δημιουργήσετε ένα Angular component, μπορείτε επίσης να δημιουργήσετε ένα component χειροκίνητα.
 Αυτή η ενότητα περιγράφει τον τρόπο δημιουργίας του βασικού component αρχείου σε ένα υπάρχον Angular project.
 
 Για να δημιουργήσετε ένα νέο component χειροκίνητα:
