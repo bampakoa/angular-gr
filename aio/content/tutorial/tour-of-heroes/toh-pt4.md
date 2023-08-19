@@ -175,7 +175,7 @@ To `HeroesComponent` καταναλώνει το αποτέλεσμα του `ge
 
 Σε αυτό το σεμινάριο, το `HeroService.getHeroes()` επιστρέφει ένα `Observable`
 έτσι ώστε να μπορέσει να χρησιμοποιήσει τη μέθοδο `HttpClient.get` της Angular για να φέρει τους ήρωες
-και η [`HttpClient.get()` επιστρέφει ένα `Observable`](guide/http).
+και η [`HttpClient.get()` επιστρέφει ένα `Observable`](guide/understanding-communicating-with-http).
 
 ### Observable `HeroService`
 

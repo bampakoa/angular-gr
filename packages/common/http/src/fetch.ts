@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {inject, Injectable} from '@angular/core';
+import {inject, Injectable, NgZone} from '@angular/core';
 import {Observable, Observer} from 'rxjs';
 
 import {HttpBackend} from './backend';
@@ -48,6 +48,7 @@ export class FetchBackend implements HttpBackend {
   // We need to bind the native fetch to its context or it will throw an "illegal invocation"
   private readonly fetchImpl =
       inject(FetchFactory, {optional: true})?.fetch ?? fetch.bind(globalThis);
+  private readonly ngZone = inject(NgZone);
 
   handle(request: HttpRequest<any>): Observable<HttpEvent<any>> {
     return new Observable(observer => {
@@ -65,7 +66,7 @@ export class FetchBackend implements HttpBackend {
     let response;
 
     try {
-      const fetchPromise = this.fetchImpl(request.url, {signal, ...init});
+      const fetchPromise = this.fetchImpl(request.urlWithParams, {signal, ...init});
 
       // Make sure Zone.js doesn't trigger false-positive unhandled promise
       // error in case the Promise is rejected synchronously. See function
@@ -81,7 +82,7 @@ export class FetchBackend implements HttpBackend {
         error,
         status: error.status ?? 0,
         statusText: error.statusText,
-        url: request.url,
+        url: request.urlWithParams,
         headers: error.headers,
       }));
       return;
@@ -89,7 +90,7 @@ export class FetchBackend implements HttpBackend {
 
     const headers = new HttpHeaders(response.headers);
     const statusText = response.statusText;
-    const url = getResponseUrl(response) ?? request.url;
+    const url = getResponseUrl(response) ?? request.urlWithParams;
 
     let status = response.status;
     let body: string|ArrayBuffer|Blob|object|null = null;
@@ -108,29 +109,39 @@ export class FetchBackend implements HttpBackend {
       let decoder: TextDecoder;
       let partialText: string|undefined;
 
-      while (true) {
-        const {done, value} = await reader.read();
+      // We have to check whether the Zone is defined in the global scope because this may be called
+      // when the zone is nooped.
+      const reqZone = typeof Zone !== 'undefined' && Zone.current;
 
-        if (done) {
-          break;
+      // Perform response processing outside of Angular zone to
+      // ensure no excessive change detection runs are executed
+      // Here calling the async ReadableStreamDefaultReader.read() is responsible for triggering CD
+      await this.ngZone.runOutsideAngular(async () => {
+        while (true) {
+          const {done, value} = await reader.read();
+
+          if (done) {
+            break;
+          }
+
+          chunks.push(value);
+          receivedLength += value.length;
+
+          if (request.reportProgress) {
+            partialText = request.responseType === 'text' ?
+                (partialText ?? '') + (decoder ??= new TextDecoder).decode(value, {stream: true}) :
+                undefined;
+
+            const reportProgress = () => observer.next({
+              type: HttpEventType.DownloadProgress,
+              total: contentLength ? +contentLength : undefined,
+              loaded: receivedLength,
+              partialText,
+            } as HttpDownloadProgressEvent);
+            reqZone ? reqZone.run(reportProgress) : reportProgress();
+          }
         }
-
-        chunks.push(value);
-        receivedLength += value.length;
-
-        if (request.reportProgress) {
-          partialText = request.responseType === 'text' ?
-              (partialText ?? '') + (decoder ??= new TextDecoder).decode(value, {stream: true}) :
-              undefined;
-
-          observer.next({
-            type: HttpEventType.DownloadProgress,
-            total: contentLength ? +contentLength : undefined,
-            loaded: receivedLength,
-            partialText,
-          } as HttpDownloadProgressEvent);
-        }
-      }
+      });
 
       // Combine all chunks.
       const chunksAll = this.concatChunks(chunks, receivedLength);
@@ -143,7 +154,7 @@ export class FetchBackend implements HttpBackend {
           headers: new HttpHeaders(response.headers),
           status: response.status,
           statusText: response.statusText,
-          url: getResponseUrl(response) ?? request.url,
+          url: getResponseUrl(response) ?? request.urlWithParams,
         }));
         return;
       }
@@ -221,7 +232,7 @@ export class FetchBackend implements HttpBackend {
     }
 
     return {
-      body: req.body,
+      body: req.serializeBody(),
       method: req.method,
       headers,
       credentials,

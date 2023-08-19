@@ -1,25 +1,27 @@
-const fs = require('fs-extra');
-const path = require('path');
+const { copySync, mkdirSync, readdir, rmSync } = require('fs-extra');
+const { join, resolve } = require('path');
 const { spawn } = require('child_process');
 
-const buildPath = path.resolve('.', 'dist/bin/aio/build');
-const angularIoPath = path.resolve('.', 'aio');
-const angularIoDistPath = path.resolve(angularIoPath, 'dist');
+const buildPath = resolve('.', 'dist', 'bin', 'aio', 'build');
+const ioPath = resolve('.', 'aio');
+const ioDistPath = join(ioPath, 'dist');
 
-process.chdir(angularIoPath);
+// build is done by the aio folder
+process.chdir(ioPath);
 const build = spawn('yarn.cmd', ['build-prod'], { stdio: 'inherit' });
-build.on('exit', () => {
-  // recreate the dist path needed by the firebase configuration
-  fs.removeSync(angularIoDistPath);
-  fs.mkdirSync(angularIoDistPath);
 
-  fs.readdir(buildPath, (_, entries) => {
+build.on('exit', () => {
+  // recreate the dist path in case it exists already
+  rmSync(ioDistPath, { force: true, recursive: true });
+  mkdirSync(ioDistPath);
+
+  readdir(buildPath, (_, entries) => {
     for(entry of entries) {
-      fs.copySync(path.join(buildPath, entry), path.join(angularIoDistPath, entry));
+      copySync(join(buildPath, entry), join(ioDistPath, entry));
     }
 
     // deployment is done by the root folder
-    process.chdir(path.resolve('.'));
+    process.chdir(resolve('.'));
     spawn('firebase.cmd', ['deploy', '--only', 'hosting'], { stdio: 'inherit' });
   });
 });

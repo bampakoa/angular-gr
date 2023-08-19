@@ -228,7 +228,7 @@
 
     <code-example header="src/app/cart.service.ts" path="getting-started/src/app/cart.service.ts" region="get-shipping"></code-example>
 
-Για περισσότερες πληροφορίες σχετικά με το `HttpClient` της Angular, ανατρέξτε στον οδηγό [Αλληλεπίδραση πελάτη-διακομιστή](guide/http "Αλληλεπίδραση διακομιστή μέσω HTTP").
+Για περισσότερες πληροφορίες σχετικά με το `HttpClient` της Angular, ανατρέξτε στον οδηγό [Αλληλεπίδραση πελάτη-διακομιστή](guide/understanding-communicating-with-http "Αλληλεπίδραση διακομιστή μέσω HTTP").
 
 ## Δημιουργήστε το component αποστολής
 

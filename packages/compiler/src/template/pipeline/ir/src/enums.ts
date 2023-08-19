@@ -64,6 +64,17 @@ export enum OpKind {
   ContainerEnd,
 
   /**
+   * An operation disable binding for subsequent elements, which are descendants of a non-bindable
+   * node.
+   */
+  DisableBindings,
+
+  /**
+   * An operation to re-enable binding, after it was previously disabled.
+   */
+  EnableBindings,
+
+  /**
    * An operation to render a text node.
    */
   Text,
@@ -79,14 +90,35 @@ export enum OpKind {
   InterpolateText,
 
   /**
+   * An intermediate binding op, that has not yet been processed into an individual property,
+   * attribute, style, etc.
+   */
+  Binding,
+
+  /**
    * An operation to bind an expression to a property of an element.
    */
   Property,
 
   /**
-   * An operation to interpolate text into a property binding.
+   * An operation to bind an expression to a style property of an element.
    */
-  InterpolateProperty,
+  StyleProp,
+
+  /**
+   * An operation to bind an expression to a class property of an element.
+   */
+  ClassProp,
+
+  /**
+   * An operation to bind an expression to the styles of an element.
+   */
+  StyleMap,
+
+  /**
+   * An operation to bind an expression to the classes of an element.
+   */
+  ClassMap,
 
   /**
    * An operation to advance the runtime's implicit slot context during the update phase of a view.
@@ -97,6 +129,23 @@ export enum OpKind {
    * An operation to instantiate a pipe.
    */
   Pipe,
+
+  /**
+   * An operation to associate an attribute with an element.
+   */
+  Attribute,
+
+  /**
+   * A host binding property.
+   */
+  HostProperty,
+
+  /**
+   * A namespace change, which causes the subsequent elements to be processed as either HTML or SVG.
+   */
+  Namespace,
+
+  // TODO: Add Host Listeners, and possibly other host ops also.
 }
 
 /**
@@ -162,6 +211,46 @@ export enum ExpressionKind {
    * Binding to a pipe transformation with a variable number of arguments.
    */
   PipeBindingVariadic,
+
+  /*
+   * A safe property read requiring expansion into a null check.
+   */
+  SafePropertyRead,
+
+  /**
+   * A safe keyed read requiring expansion into a null check.
+   */
+  SafeKeyedRead,
+
+  /**
+   * A safe function call requiring expansion into a null check.
+   */
+  SafeInvokeFunction,
+
+  /**
+   * An intermediate expression that will be expanded from a safe read into an explicit ternary.
+   */
+  SafeTernaryExpr,
+
+  /**
+   * An empty expression that will be stipped before generating the final output.
+   */
+  EmptyExpr,
+
+  /*
+   * An assignment to a temporary variable.
+   */
+  AssignTemporaryExpr,
+
+  /**
+   * A reference to a temporary variable.
+   */
+  ReadTemporaryExpr,
+
+  /**
+   * An expression representing a sanitizer function.
+   */
+  SanitizerExpr,
 }
 
 /**
@@ -182,4 +271,26 @@ export enum SemanticVariableKind {
    * Represents a saved state that can be used to restore a view in a listener handler function.
    */
   SavedView,
+}
+
+/**
+ * Whether to compile in compatibilty mode. In compatibility mode, the template pipeline will
+ * attempt to match the output of `TemplateDefinitionBuilder` as exactly as possible, at the cost of
+ * producing quirky or larger code in some cases.
+ */
+export enum CompatibilityMode {
+  Normal,
+  TemplateDefinitionBuilder,
+}
+
+/**
+ * Represents functions used to sanitize different pieces of a template.
+ */
+export enum SanitizerFn {
+  Html,
+  Script,
+  Style,
+  Url,
+  ResourceUrl,
+  IframeAttribute,
 }

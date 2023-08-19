@@ -170,6 +170,31 @@ export const enum DeclarationListEmitMode {
 }
 
 /**
+ * Describes a dependency used within a `{#defer}` block.
+ */
+export interface DeferBlockTemplateDependency {
+  /**
+   * Reference to a dependency.
+   */
+  type: o.WrappedNodeExpr<unknown>;
+
+  /**
+   * Dependency class name.
+   */
+  symbolName: string;
+
+  /**
+   * Whether this dependency can be defer-loaded.
+   */
+  isDeferrable: boolean;
+
+  /**
+   * Import path where this dependency is located.
+   */
+  importPath: string|null;
+}
+
+/**
  * Information needed to compile a component for the render3 runtime.
  */
 export interface R3ComponentMetadata<DeclarationT extends R3TemplateDependency> extends
@@ -191,6 +216,18 @@ export interface R3ComponentMetadata<DeclarationT extends R3TemplateDependency> 
   };
 
   declarations: DeclarationT[];
+
+  /**
+   * Map of all types that can be defer loaded (ts.ClassDeclaration) ->
+   * corresponding import declaration (ts.ImportDeclaration) within
+   * the current source file.
+   */
+  deferrableDeclToImportDecl: Map<o.Expression, o.Expression>;
+
+  /**
+   * Map of {#defer} blocks -> their corresponding dependencies.
+   */
+  deferBlocks: Map<t.DeferredBlock, Array<DeferBlockTemplateDependency>>;
 
   /**
    * Specifies how the 'directives' and/or `pipes` array, if generated, need to be emitted.

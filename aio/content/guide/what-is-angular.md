@@ -153,7 +153,7 @@
 |:---                                       |:---     |
 | [Angular Router](guide/router)            | Προηγμένη πλοήγηση και δρομολόγηση στον client που βασίζεται στα components της Angular. Υποστηρίζει lazy-loading, nested routes, προσαρμοσμένη αντιστοίχιση διαδρομής και πολλά άλλα. |
 | [Angular Forms](guide/forms-overview)     | Ενιαίο σύστημα για δημιουργία και επικύρωση φορμών.                                                                                          |
-| [Angular HttpClient](guide/http)          | Πρόγραμμα HTTP που μπορεί να χρησημοποιηθεί ακόμα και στα πιο προηγμένα συστήματα επικοινωνίας πελάτη-διακομιστή.                                                                   |
+| [Angular HttpClient](guide/understanding-communicating-with-http)          | Πρόγραμμα HTTP που μπορεί να χρησημοποιηθεί ακόμα και στα πιο προηγμένα συστήματα επικοινωνίας πελάτη-διακομιστή.                                                                   |
 | [Angular Animations](guide/animations)    | Σύστημα για την χρήση κινούμενων εικόνων που βασίζονται στην κατάσταση της εφαρμογής.                                                                                 |
 | [Angular PWA](guide/service-worker-intro) | Εργαλεία για την δημιουργία Progressive Web Applications \(PWA\) συμπεριλαμβανομένου ενός service worker και ενός Web application manifest.                                      |
 | [Angular Schematics](guide/schematics)    | Αυτοματοποιημένα εργαλεία για την δημιουργία, ανακατασκευή, και ενημέρωση που απλοποιούν την ανάπτυξη σε μεγάλη κλίμακα.                                                 |

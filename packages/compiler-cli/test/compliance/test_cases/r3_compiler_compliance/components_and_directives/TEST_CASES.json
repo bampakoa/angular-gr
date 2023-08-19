@@ -164,8 +164,7 @@
             "ng_template_empty_binding.js"
           ]
         }
-      ],
-      "skipForTemplatePipeline": true
+      ]
     },
     {
       "description": "should support inline non-literal templates",

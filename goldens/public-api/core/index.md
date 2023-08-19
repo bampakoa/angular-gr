@@ -25,6 +25,22 @@ export interface AfterContentInit {
 }
 
 // @public
+export function afterNextRender(callback: VoidFunction, options?: AfterRenderOptions): AfterRenderRef;
+
+// @public
+export function afterRender(callback: VoidFunction, options?: AfterRenderOptions): AfterRenderRef;
+
+// @public
+export interface AfterRenderOptions {
+    injector?: Injector;
+}
+
+// @public
+export interface AfterRenderRef {
+    destroy(): void;
+}
+
+// @public
 export interface AfterViewChecked {
     ngAfterViewChecked(): void;
 }
@@ -225,6 +241,7 @@ export abstract class ComponentFactory<C> {
     abstract get inputs(): {
         propName: string;
         templateName: string;
+        transform?: (value: any) => any;
     }[];
     abstract get ngContentSelectors(): string[];
     abstract get outputs(): {
@@ -246,6 +263,7 @@ export interface ComponentMirror<C> {
     get inputs(): ReadonlyArray<{
         readonly propName: string;
         readonly templateName: string;
+        readonly transform?: (value: any) => any;
     }>;
     get isStandalone(): boolean;
     get ngContentSelectors(): ReadonlyArray<string>;
@@ -793,7 +811,7 @@ export abstract class Injector {
     // @deprecated (undocumented)
     static create(providers: StaticProvider[], parent?: Injector): Injector;
     static create(options: {
-        providers: StaticProvider[];
+        providers: Array<Provider | StaticProvider>;
         parent?: Injector;
         name?: string;
     }): Injector;
@@ -1034,15 +1052,12 @@ export class NgZone {
         shouldCoalesceEventChangeDetection?: boolean | undefined;
         shouldCoalesceRunChangeDetection?: boolean | undefined;
     });
-    // (undocumented)
     static assertInAngularZone(): void;
-    // (undocumented)
     static assertNotInAngularZone(): void;
     // (undocumented)
     readonly hasPendingMacrotasks: boolean;
     // (undocumented)
     readonly hasPendingMicrotasks: boolean;
-    // (undocumented)
     static isInAngularZone(): boolean;
     readonly isStable: boolean;
     readonly onError: EventEmitter<any>;
@@ -1111,7 +1126,7 @@ export interface OutputDecorator {
     new (alias?: string): any;
 }
 
-// @public
+// @public @deprecated
 export const PACKAGE_ROOT_URL: InjectionToken<string>;
 
 // @public

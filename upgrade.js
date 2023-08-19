@@ -1,65 +1,71 @@
-const fs = require('fs-extra');
-const path = require('path');
+const { copySync, readdir, rmSync } = require('fs-extra');
+const { join, resolve } = require('path');
 const { exec } = require('child_process');
 
-const angularGrPath = path.resolve('.');
-const angularGrIoPath = path.resolve('.', 'aio');
-const angularPath = path.resolve('..', 'angular');
-const angularIoPath = path.resolve('..', 'angular', 'aio');
-const translationsPath = path.resolve('..', 'aio-translations');
+// Το script προϋποθέτει ότι τα αποθετήρια angular και aio-translations είναι στο ίδιο επίπεδο με το angular-gr
+const angularGrPath = resolve('.');
+const angularGrIoPath = join(angularGrPath, 'aio');
+const angularPath = resolve('..', 'angular');
+const angularIoPath = join(angularPath, 'aio');
+const translationsPath = resolve('..', 'aio-translations');
+
 const angularVersion = process.argv.slice(2);
 
-// Το script περιμένει πάντα μια έκδοση της Angular σαν παράμετρο διαφορετικά επιστρέφει σφάλμα.
+const angularGrBlacklist = ['.git', 'upgrade.js', '.github', 'node_modules', 'restore.js', 'deploy.js', 'aio'];
+const angularBlacklist = ['.git', '.github', '.circleci', '.devcontainer', '.husky', '.pullapprove.yml', '.gitmessage'];
+const gitBlacklist = ['.git', '.gitignore'];
+
+// Το script περιμένει πάντα μια έκδοση της Angular σαν παράμετρο.
 if (angularVersion.length === 0) {
   throw 'Angular version was not specified!'
 }
 
-// Αφαιρούμε τα περιεχόμενα του angular-gr
-fs.readdir(angularGrPath, (_, entries) => {
+// Βήμα 1: Αφαιρούμε τα περιεχόμενα του angular-gr
+readdir(angularGrPath, (_, entries) => {
   for(entry of entries) {
-    if (!['.git', 'upgrade.js', '.github', 'node_modules', 'restore.js', 'aio'].includes(entry)) {
-      fs.rmSync(path.join(angularGrPath, entry), { recursive: true, force: true });
+    if (!angularGrBlacklist.includes(entry)) {
+      rmSync(join(angularGrPath, entry), { recursive: true, force: true });
     }
   }
 });
 
-// Αφαιρούμε τα περιεχόμενα του aio μέσα από το angular-gr
-fs.readdir(angularGrIoPath, (_, entries) => {
+// Βήμα 2: Αφαιρούμε τα περιεχόμενα του aio
+readdir(angularGrIoPath, (_, entries) => {
   for(entry of entries) {
     if (entry !== 'node_modules') {
-      fs.rmSync(path.join(angularGrIoPath, entry), { recursive: true, force: true });
+      rmSync(join(angularGrIoPath, entry), { recursive: true, force: true });
     }
   }
 });
 
-// Μεταβαίνουμε στον φάκελο που περιέχει το αποθετήριο της Angular, κάνουμε fetch για να πάρουμε τα τελευταία tags
+// Βήμα 3: Μεταβαίνουμε στον φάκελο που περιέχει το αποθετήριο της Angular, κάνουμε fetch για να πάρουμε τα τελευταία tags
 // και μετά κάνουμε checkout την έκδοση που έρχεται από την παράμετρο του script
 process.chdir(angularPath);
 exec(`git fetch --all && git checkout ${angularVersion}`);
 
-// Αντιγράφουμε τα περιεχόμενα από το angular στο angular-gr για να πάρουμε τις αλλαγές της ζητούμενης έκδοσης
-fs.readdir(angularPath, (_, entries) => {
+// Βήμα 4: Αντιγράφουμε τα περιεχόμενα από το angular στο angular-gr για να πάρουμε τις αλλαγές της ζητούμενης έκδοσης
+readdir(angularPath, (_, entries) => {
   for(entry of entries) {
-    if (!['.git', '.github', '.circleci', '.devcontainer', '.husky', '.pullapprove.yml', '.gitmessage'].includes(entry)) {
-      fs.copy(path.join(angularPath, entry), path.join(angularGrPath, entry));
+    if (!angularBlacklist.includes(entry)) {
+      copySync(join(angularPath, entry), join(angularGrPath, entry));
     }
   }
 });
 
-// Αφαιρούμε τα περιεχόμενα του aio-translations
-fs.readdir(translationsPath, (_, entries) => {
+// Βήμα 5: Αφαιρούμε τα περιεχόμενα του aio-translations
+readdir(translationsPath, (_, entries) => {
   for(entry of entries) {
-    if (!['.git', '.gitignore'].includes(entry)) {
-      fs.rmSync(path.join(translationsPath, entry), { recursive: true, force: true });
+    if (!gitBlacklist.includes(entry)) {
+      rmSync(join(translationsPath, entry), { recursive: true, force: true });
     }
   }
 });
 
-// Αντιγράφουμε τα περιεχόμενα από το angular στο aio-translations για να δούμε αν έχει αλλάξει κάτι σε ήδη μεταφρασμένο περιεχόμενο
-fs.readdir(angularIoPath, (_, entries) => {
+// Βήμα 6: Αντιγράφουμε τα περιεχόμενα από το angular στο aio-translations για να δούμε αν έχει αλλάξει κάτι σε ήδη μεταφρασμένο περιεχόμενο
+readdir(angularIoPath, (_, entries) => {
   for(entry of entries) {
-    if (!['.git', '.gitignore'].includes(entry)) {
-      fs.copy(path.join(angularIoPath, entry), path.join(translationsPath, entry));
+    if (!gitBlacklist.includes(entry)) {
+      copySync(join(angularIoPath, entry), join(translationsPath, entry));
     }
   }
 });

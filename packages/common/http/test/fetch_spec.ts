@@ -11,7 +11,7 @@ import {TestBed} from '@angular/core/testing';
 import {Observable, of, Subject} from 'rxjs';
 import {catchError, retry, scan, skip, take, toArray} from 'rxjs/operators';
 
-import {HttpDownloadProgressEvent, HttpErrorResponse, HttpHeaderResponse, HttpStatusCode} from '../public_api';
+import {HttpDownloadProgressEvent, HttpErrorResponse, HttpHeaderResponse, HttpParams, HttpStatusCode} from '../public_api';
 import {FetchBackend, FetchFactory} from '../src/fetch';
 
 function trackEvents(obs: Observable<any>): Promise<any[]> {
@@ -30,6 +30,10 @@ function trackEvents(obs: Observable<any>): Promise<any[]> {
 }
 
 const TEST_POST = new HttpRequest('POST', '/test', 'some body', {
+  responseType: 'text',
+});
+
+const TEST_POST_WITH_JSON_BODY = new HttpRequest('POST', '/test', {'some': 'body'}, {
   responseType: 'text',
 });
 
@@ -94,9 +98,24 @@ describe('FetchBackend', async () => {
     expect(fetchMock.request.url).toBe('/test');
   });
 
+  it('use query params from request', () => {
+    const requestWithQuery = new HttpRequest('GET', '/test', 'some body', {
+      params: new HttpParams({fromObject: {query: 'foobar'}}),
+      responseType: 'text',
+    });
+    callFetchAndFlush(requestWithQuery);
+    expect(fetchMock.request.method).toBe('GET');
+    expect(fetchMock.request.url).toBe('/test?query=foobar');
+  });
+
   it('sets outgoing body correctly', () => {
     callFetchAndFlush(TEST_POST);
     expect(fetchMock.request.body).toBe('some body');
+  });
+
+  it('sets outgoing body correctly when request payload is json', () => {
+    callFetchAndFlush(TEST_POST_WITH_JSON_BODY);
+    expect(fetchMock.request.body).toBe('{"some":"body"}');
   });
 
   it('sets outgoing headers, including default headers', () => {

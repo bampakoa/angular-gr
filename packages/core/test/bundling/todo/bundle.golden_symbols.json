@@ -12,6 +12,9 @@
     "name": "APP_INITIALIZER"
   },
   {
+    "name": "AfterRenderEventManager"
+  },
+  {
     "name": "AnonymousSubject"
   },
   {
@@ -604,6 +607,9 @@
   },
   {
     "name": "activeConsumer"
+  },
+  {
+    "name": "addLViewToLContainer"
   },
   {
     "name": "addPropertyAlias"
@@ -1290,9 +1296,6 @@
     "name": "profiler"
   },
   {
-    "name": "promise"
-  },
-  {
     "name": "refCount"
   },
   {
@@ -1345,9 +1348,6 @@
   },
   {
     "name": "scheduleArray"
-  },
-  {
-    "name": "scheduleMicroTask"
   },
   {
     "name": "searchTokensOnInjector"

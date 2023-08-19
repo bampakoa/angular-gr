@@ -6,20 +6,42 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {ParseSourceSpan} from '../../../../../parse_util';
 import {ElementAttributes} from '../element';
 import {OpKind} from '../enums';
 import {Op, OpList, XrefId} from '../operations';
 import {ConsumesSlotOpTrait, TRAIT_CONSUMES_SLOT, TRAIT_USES_SLOT_INDEX, UsesSlotIndexTrait} from '../traits';
 
 import {ListEndOp, NEW_OP, StatementOp, VariableOp} from './shared';
+
 import type {UpdateOp} from './update';
 
 /**
  * An operation usable on the creation side of the IR.
  */
-export type CreateOp =
-    ListEndOp<CreateOp>|StatementOp<CreateOp>|ElementOp|ElementStartOp|ElementEndOp|ContainerOp|
-    ContainerStartOp|ContainerEndOp|TemplateOp|TextOp|ListenerOp|PipeOp|VariableOp<CreateOp>;
+export type CreateOp = ListEndOp<CreateOp>|StatementOp<CreateOp>|ElementOp|ElementStartOp|
+    ElementEndOp|ContainerOp|ContainerStartOp|ContainerEndOp|TemplateOp|EnableBindingsOp|
+    DisableBindingsOp|TextOp|ListenerOp|PipeOp|VariableOp<CreateOp>|NamespaceOp;
+
+/**
+ * An operation representing the creation of an element or container.
+ */
+export type ElementOrContainerOps =
+    ElementOp|ElementStartOp|ContainerOp|ContainerStartOp|TemplateOp;
+
+/**
+ * The set of OpKinds that represent the creation of an element or container
+ */
+const elementContainerOpKinds = new Set([
+  OpKind.Element, OpKind.ElementStart, OpKind.Container, OpKind.ContainerStart, OpKind.Template
+]);
+
+/**
+ * Checks whether the given operation represents the creation of an element or container.
+ */
+export function isElementOrContainerOp(op: CreateOp): op is ElementOrContainerOps {
+  return elementContainerOpKinds.has(op.kind);
+}
 
 /**
  * Representation of a local reference on an element.
@@ -41,7 +63,7 @@ export interface LocalRef {
  * used to represent their element-like nature.
  */
 export interface ElementOrContainerOpBase extends Op<CreateOp>, ConsumesSlotOpTrait {
-  kind: OpKind.Element|OpKind.ElementStart|OpKind.Container|OpKind.ContainerStart|OpKind.Template;
+  kind: ElementOrContainerOps['kind'];
 
   /**
    * `XrefId` allocated for this element.
@@ -70,6 +92,14 @@ export interface ElementOrContainerOpBase extends Op<CreateOp>, ConsumesSlotOpTr
    * compilation.
    */
   localRefs: LocalRef[]|ConstIndex|null;
+
+  /**
+   * Whether this container is marked `ngNonBindable`, which disabled Angular binding for itself and
+   * all descendants.
+   */
+  nonBindable: boolean;
+
+  sourceSpan: ParseSourceSpan;
 }
 
 export interface ElementOpBase extends ElementOrContainerOpBase {
@@ -79,6 +109,11 @@ export interface ElementOpBase extends ElementOrContainerOpBase {
    * The HTML tag name for this element.
    */
   tag: string;
+
+  /**
+   * The namespace of this element, which controls the preceding namespace instruction.
+   */
+  namespace: Namespace;
 }
 
 /**
@@ -91,13 +126,17 @@ export interface ElementStartOp extends ElementOpBase {
 /**
  * Create an `ElementStartOp`.
  */
-export function createElementStartOp(tag: string, xref: XrefId): ElementStartOp {
+export function createElementStartOp(
+    tag: string, xref: XrefId, namespace: Namespace, sourceSpan: ParseSourceSpan): ElementStartOp {
   return {
     kind: OpKind.ElementStart,
     xref,
     tag,
     attributes: new ElementAttributes(),
     localRefs: [],
+    nonBindable: false,
+    namespace,
+    sourceSpan,
     ...TRAIT_CONSUMES_SLOT,
     ...NEW_OP,
   };
@@ -132,7 +171,8 @@ export interface TemplateOp extends ElementOpBase {
 /**
  * Create a `TemplateOp`.
  */
-export function createTemplateOp(xref: XrefId, tag: string): TemplateOp {
+export function createTemplateOp(
+    xref: XrefId, tag: string, namespace: Namespace, sourceSpan: ParseSourceSpan): TemplateOp {
   return {
     kind: OpKind.Template,
     xref,
@@ -141,6 +181,9 @@ export function createTemplateOp(xref: XrefId, tag: string): TemplateOp {
     decls: null,
     vars: null,
     localRefs: [],
+    nonBindable: false,
+    namespace,
+    sourceSpan,
     ...TRAIT_CONSUMES_SLOT,
     ...NEW_OP,
   };
@@ -158,15 +201,18 @@ export interface ElementEndOp extends Op<CreateOp> {
    * The `XrefId` of the element declared via `ElementStart`.
    */
   xref: XrefId;
+
+  sourceSpan: ParseSourceSpan|null;
 }
 
 /**
  * Create an `ElementEndOp`.
  */
-export function createElementEndOp(xref: XrefId): ElementEndOp {
+export function createElementEndOp(xref: XrefId, sourceSpan: ParseSourceSpan|null): ElementEndOp {
   return {
     kind: OpKind.ElementEnd,
     xref,
+    sourceSpan,
     ...NEW_OP,
   };
 }
@@ -197,6 +243,49 @@ export interface ContainerEndOp extends Op<CreateOp> {
    * The `XrefId` of the element declared via `ContainerStart`.
    */
   xref: XrefId;
+
+  sourceSpan: ParseSourceSpan;
+}
+
+/**
+ * Logical operation causing binding to be disabled in descendents of a non-bindable container.
+ */
+export interface DisableBindingsOp extends Op<CreateOp> {
+  kind: OpKind.DisableBindings;
+
+  /**
+   * `XrefId` of the element that was marked non-bindable.
+   */
+  xref: XrefId;
+}
+
+export function createDisableBindingsOp(xref: XrefId): DisableBindingsOp {
+  return {
+    kind: OpKind.DisableBindings,
+    xref,
+    ...NEW_OP,
+  };
+}
+
+/**
+ * Logical operation causing binding to be re-enabled after visiting descendants of a non-bindable
+ * container.
+ */
+export interface EnableBindingsOp extends Op<CreateOp> {
+  kind: OpKind.EnableBindings;
+
+  /**
+   * `XrefId` of the element that was marked non-bindable.
+   */
+  xref: XrefId;
+}
+
+export function createEnableBindingsOp(xref: XrefId): EnableBindingsOp {
+  return {
+    kind: OpKind.EnableBindings,
+    xref,
+    ...NEW_OP,
+  };
 }
 
 /**
@@ -214,16 +303,20 @@ export interface TextOp extends Op<CreateOp>, ConsumesSlotOpTrait {
    * The static initial value of the text node.
    */
   initialValue: string;
+
+  sourceSpan: ParseSourceSpan|null;
 }
 
 /**
  * Create a `TextOp`.
  */
-export function createTextOp(xref: XrefId, initialValue: string): TextOp {
+export function createTextOp(
+    xref: XrefId, initialValue: string, sourceSpan: ParseSourceSpan|null): TextOp {
   return {
     kind: OpKind.Text,
     xref,
     initialValue,
+    sourceSpan,
     ...TRAIT_CONSUMES_SLOT,
     ...NEW_OP,
   };
@@ -254,6 +347,21 @@ export interface ListenerOp extends Op<CreateOp>, UsesSlotIndexTrait {
    * Name of the function
    */
   handlerFnName: string|null;
+
+  /**
+   * Whether this listener is known to consume `$event` in its body.
+   */
+  consumesDollarEvent: boolean;
+
+  /**
+   * Whether the listener is listening for an animation event.
+   */
+  isAnimationListener: boolean;
+
+  /**
+   * The animation phase of the listener.
+   */
+  animationPhase: string|null;
 }
 
 /**
@@ -267,6 +375,29 @@ export function createListenerOp(target: XrefId, name: string, tag: string): Lis
     name,
     handlerOps: new OpList(),
     handlerFnName: null,
+    consumesDollarEvent: false,
+    isAnimationListener: false,
+    animationPhase: null,
+    ...NEW_OP,
+    ...TRAIT_USES_SLOT_INDEX,
+  };
+}
+
+/**
+ * Create a `ListenerOp` for an animation.
+ */
+export function createListenerOpForAnimation(
+    target: XrefId, name: string, animationPhase: string, tag: string): ListenerOp {
+  return {
+    kind: OpKind.Listener,
+    target,
+    tag,
+    name,
+    handlerOps: new OpList(),
+    handlerFnName: null,
+    consumesDollarEvent: false,
+    isAnimationListener: true,
+    animationPhase,
     ...NEW_OP,
     ...TRAIT_USES_SLOT_INDEX,
   };
@@ -285,6 +416,31 @@ export function createPipeOp(xref: XrefId, name: string): PipeOp {
     name,
     ...NEW_OP,
     ...TRAIT_CONSUMES_SLOT,
+  };
+}
+
+/**
+ * Whether the active namespace is HTML, MathML, or SVG mode.
+ */
+export enum Namespace {
+  HTML,
+  SVG,
+  Math,
+}
+
+/**
+ * An op corresponding to a namespace instruction, for switching between HTML, SVG, and MathML.
+ */
+export interface NamespaceOp extends Op<CreateOp> {
+  kind: OpKind.Namespace;
+  active: Namespace;
+}
+
+export function createNamespaceOp(namespace: Namespace): NamespaceOp {
+  return {
+    kind: OpKind.Namespace,
+    active: namespace,
+    ...NEW_OP,
   };
 }
 

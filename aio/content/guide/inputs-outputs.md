@@ -207,10 +207,37 @@
 
 Για να συνδυάσετε property και event bindings χρησιμοποιώντας την σύνταξη banana-in-a-box, `[()]`, ανατρέξτε στην ενότητα [Two-way Binding](guide/two-way-binding).
 
+## Πρόσθετες παραμετροποιήσεις
+### Παραμετροποίηση του child component input ως απαιτούμενο πεδίο
+
+Για να ορίσετε την ιδιότητα `Input` ως απαιτούμενη για ένα child component κατά την μεταφορά τιμών από το parent component. Πρώτα κάντε import το `Input` και στην συνέχεια παραμετροποιήστε την ιδιότητα με `@Input({ required: true })`, όπως στο παρακάτω παράδειγμα.
+
+<code-example header="src/app/item-details-metadata/item-details-metadata.component.ts" path="inputs-outputs/src/app/item-details-metadata/item-details-metadata.component.ts" region="use-input-metadata-required"></code-example>
+
+Στη συνέχεια, στο parent template προσθέστε τα εξής:
+
+<code-example header="src/app/app.component.html" path="inputs-outputs/src/app/app.component.html" region="input-parent-metadata"></code-example>
+
+Εάν τα απαιτούμενα inputs `property binding` σε ένα child component δεν καθορίζονται στο parent component template θα έχει ως αποτέλεσμα ένα σφάλμα κατά την μεταγλώττιση: 
+
+<div class="alert is-helpful">
+NG8008: Required input item from component ItemDetailMetadataComponent must be specified.
+</div>
+
+### Παραμετροποίηση του child component input με συναρτήσεις μετασχηματισμού
+
+Για να μετατρέψετε μια ιδιότητα `Input` από string σε boolean σε ένα child component κατά την μεταφορά τιμών από το parent component. Πρώτα κάντε import το `booleanAttribute` και στην συνέχεια παραμετροποιήστε την ιδιότητα με `@Input({ transform: booleanAttribute })`, όπως στο παρακάτω παράδειγμα.
+
+<code-example header="src/app/item-details-metadata/item-details-metadata.component.ts" path="inputs-outputs/src/app/item-details-metadata/item-details-metadata.component.ts" region="use-input-metadata-boolean-transform"></code-example>
+
+<code-example header="src/app/app.component.html" path="inputs-outputs/src/app/app.component.html" region="input-parent-metadata"></code-example>
+
+Παρομοίως, μπορείτε να χρησιμοποιήσετε προκαθορισμένες συναρτήσεις από την βιβλιοθήκη angular/core για να μετατρέψετε το string σε αριθμό, βλ. `numberAttribute`.
+
 <!-- links -->
 
 <!-- external links -->
 
 <!-- end links -->
 
-@reviewed 2022-08-31
+@reviewed 2023-08-20

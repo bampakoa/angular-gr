@@ -13,7 +13,8 @@
             "static_and_dynamic.js"
           ]
         }
-      ]
+      ],
+      "skipForTemplatePipeline": true
     },
     {
       "description": "should generate style/class instructions for multiple host binding definitions",
@@ -34,6 +35,7 @@
       "inputFiles": [
         "important.ts"
       ],
+      "skipForTemplatePipeline": true,
       "expectations": [
         {
           "failureMessage": "Incorrect template",
@@ -53,8 +55,7 @@
             }
           ]
         }
-      ],
-      "skipForTemplatePipeline": true
+      ]
     },
     {
       "description": "should support class interpolation",
@@ -68,8 +69,7 @@
             "class_interpolation.js"
           ]
         }
-      ],
-      "skipForTemplatePipeline": true
+      ]
     },
     {
       "description": "should support style interpolation",
@@ -83,8 +83,7 @@
             "style_interpolation.js"
           ]
         }
-      ],
-      "skipForTemplatePipeline": true
+      ]
     },
     {
       "description": "should generate styling instructions for multiple directives that contain host binding definitions",

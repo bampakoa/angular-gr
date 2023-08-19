@@ -12,6 +12,9 @@
     "name": "APP_INITIALIZER"
   },
   {
+    "name": "AfterRenderEventManager"
+  },
+  {
     "name": "AnonymousSubject"
   },
   {
@@ -1086,9 +1089,6 @@
     "name": "profiler"
   },
   {
-    "name": "promise"
-  },
-  {
     "name": "refCount"
   },
   {
@@ -1132,9 +1132,6 @@
   },
   {
     "name": "scheduleArray"
-  },
-  {
-    "name": "scheduleMicroTask"
   },
   {
     "name": "searchTokensOnInjector"

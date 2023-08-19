@@ -477,6 +477,32 @@ class TemplateTargetVisitor implements t.Visitor {
     }
   }
 
+  visitDeferredBlock(deferred: t.DeferredBlock) {
+    this.visitAll(deferred.children);
+    deferred.placeholder && this.visit(deferred.placeholder);
+    deferred.loading && this.visit(deferred.loading);
+    deferred.error && this.visit(deferred.error);
+  }
+
+  visitDeferredBlockPlaceholder(block: t.DeferredBlockPlaceholder) {
+    this.visitAll(block.children);
+  }
+
+  visitDeferredBlockError(block: t.DeferredBlockError) {
+    this.visitAll(block.children);
+  }
+
+  visitDeferredBlockLoading(block: t.DeferredBlockLoading) {
+    this.visitAll(block.children);
+  }
+
+  visitDeferredTrigger(trigger: t.DeferredTrigger) {
+    if (trigger instanceof t.BoundDeferredTrigger) {
+      const visitor = new ExpressionVisitor(this.position);
+      visitor.visit(trigger.value, this.path);
+    }
+  }
+
   visitAll(nodes: t.Node[]) {
     for (const node of nodes) {
       this.visit(node);
@@ -494,7 +520,7 @@ class ExpressionVisitor extends e.RecursiveAstVisitor {
     if (node instanceof e.ASTWithSource) {
       // In order to reduce noise, do not include `ASTWithSource` in the path.
       // For the purpose of source spans, there is no difference between
-      // `ASTWithSource` and and underlying node that it wraps.
+      // `ASTWithSource` and underlying node that it wraps.
       node = node.ast;
     }
     // The third condition is to account for the implicit receiver, which should
