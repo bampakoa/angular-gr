@@ -9,10 +9,9 @@ import {SearchService} from 'app/search/search.service';
   selector: 'aio-file-not-found-search',
   template: `<div class="alert is-helpful">
       <p *ngIf="redirectedFrom">
-        You were redirected from the Angular v{{ redirectedFrom }} documentation, but this page doesn't
-        exist in this version.
+        Ανακατευθυνθήκατε από την τεκμηρίωση της Angular v{{ redirectedFrom }}, αλλά αυτή η σελίδα δεν υπάρχει σε αυτήν την έκδοση.
       </p>
-      <p>Let's see if any of these search results help...</p>
+      <p>Ας δούμε αν κάποιο από αυτά τα αποτελέσματα αναζήτησης βοηθά...</p>
     </div>
     <aio-search-results
       class="embedded"

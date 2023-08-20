@@ -1,11 +1,11 @@
 <div class="search-results" [ngSwitch]="searchState">
 
   <ng-container *ngSwitchCase="'in-progress'">
-    <p class="no-results">Searching ...</p>
+    <p class="no-results">Αναζήτηση ...</p>
   </ng-container>
 
   <ng-container *ngSwitchCase="'results-found'">
-    <h2 class="visually-hidden">Search Results</h2>
+    <h2 class="visually-hidden">Αποτελέσματα Αναζήτησης</h2>
     <div class="search-area" *ngFor="let area of searchAreas">
       <h3 class="search-section-header">{{area.name}} ({{area.pages.length + area.priorityPages.length}})</h3>
       <ul class="priority-pages" >
@@ -26,34 +26,34 @@
       </ul>
     </div>
   </ng-container>
-  
+
   <ng-container *ngSwitchCase="'no-results-found'">
     <div class="search-area">
       <p class="no-results">
-        No results found.<br>
-        Here are a few links that might be helpful in finding what you are looking for:
+        Δεν βρέθηκαν αποτελέσματα.<br>
+        Ακολουθούν μερικοί σύνδεσμοι που μπορεί να σας βοηθήσουν να βρείτε αυτό που ψάχνετε:
       </p>
       <ul class="priority-pages">
         <li class="search-page">
-          <a class="search-result-item" href="api">API reference</a>
+          <a class="search-result-item" href="api">Παραπομπή API</a>
         </li>
         <li class="search-page">
-          <a class="search-result-item" href="resources">Resources</a>
+          <a class="search-result-item" href="resources">Πόροι</a>
         </li>
         <li class="search-page">
-          <a class="search-result-item" href="guide/glossary">Glossary</a>
+          <a class="search-result-item" href="guide/glossary">Γλωσσάριο</a>
         </li>
         <li class="search-page">
           <a class="search-result-item" href="guide/cheatsheet">Cheat-sheet</a>
         </li>
         <li class="search-page">
-          <a class="search-result-item" href="https://blog.angular.io/">Angular blog</a>
+          <a class="search-result-item" href="https://blog.angular.io/">Άρθρα Angular</a>
         </li>
       </ul>
     </div>
   </ng-container>
 
-  <button mat-icon-button class="close-button" aria-label="Close search results panel" (click)="onCloseClicked()">
+  <button mat-icon-button class="close-button" aria-label="Κλείστε το πλαίσιο αποτελεσμάτων αναζήτησης" (click)="onCloseClicked()">
     <mat-icon svgIcon="close"></mat-icon>
   </button>
 </div>
