@@ -1,4 +1,5 @@
 const { exec } = require('child_process');
+const { resolve } = require('path');
 
 const ignoredArtifacts= [
   '.firebaserc',
@@ -32,7 +33,7 @@ const ignoredArtifacts= [
 let restoreCmd = 'git restore';
 
 for(artifact of ignoredArtifacts) {
-  restoreCmd += ` aio/${artifact} `;
+  restoreCmd += ` ${resolve('aio/' + artifact)} `;
 }
 
 exec(restoreCmd);
